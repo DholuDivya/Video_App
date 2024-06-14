@@ -14,17 +14,14 @@ class _AccountPageState extends State<AccountPage> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: const Text('Account'),
-        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
               Container(
-                color: Colors.white,
                 height: screenHeight*0.51,
                 width: double.infinity,
                 child: Column(
@@ -44,7 +41,7 @@ class _AccountPageState extends State<AccountPage> {
                     SizedBox(height: screenHeight*0.02,),
 
                     Material(
-                      color: Colors.white,
+                      // color: Colors.white,
                       elevation: 3,
                       borderRadius: BorderRadius.circular(10),
                       child:  Container(
@@ -102,7 +99,7 @@ class _AccountPageState extends State<AccountPage> {
 
               // Setting Section
               Container(
-                color: Colors.white,
+                // color: Colors.white,
                 height: screenHeight*0.17,
                 width: double.infinity,
 
@@ -125,7 +122,7 @@ class _AccountPageState extends State<AccountPage> {
 
               // Library Section
               Container(
-                color: Colors.white,
+                // color: Colors.white,
                 height: screenHeight*0.29,
                 width: double.infinity,
 
@@ -149,7 +146,7 @@ class _AccountPageState extends State<AccountPage> {
 
               // Company Section
               Container(
-                color: Colors.white,
+                // color: Colors.white,
                 height: screenHeight*0.35,
                 width: double.infinity,
 
@@ -175,7 +172,7 @@ class _AccountPageState extends State<AccountPage> {
               Container(
                 height: screenHeight*0.07,
                 width: double.infinity,
-                color: Colors.white,
+                // color: Colors.white,
                 child: MaterialButton(
                   onPressed: (){
                     Navigator.pushReplacement(
@@ -200,10 +197,10 @@ class _AccountPageState extends State<AccountPage> {
     final double screenWidth = MediaQuery.of(context).size.width;
     return MaterialButton(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
+      // shape: RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.zero,
+      //   side: BorderSide(color: Colors.grey.shade200),
+      // ),
 
       height: screenHeight*0.06,
       onPressed: (){},
