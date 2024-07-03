@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:vimeo_clone/Config/constants.dart';
 
 
+import '../../../Utils/Widgets/shimmer.dart';
 import '../../../Utils/Widgets/video_container.dart';
 
 class AllCategory extends StatefulWidget {
@@ -121,6 +123,20 @@ class _AllCategoryState extends State<AllCategory> {
     }
   ];
 
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 1), () {
+      if(mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> filteredList = videoList.where((video) {
@@ -131,19 +147,51 @@ class _AllCategoryState extends State<AllCategory> {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.only(
+        top: ScreenSize.screenHeight(context) * 0.02
+      ),
       itemCount: filteredList.length,
       itemBuilder: (BuildContext context, int index) {
-        return VideoListItem(
-          thumbnailUrl: filteredList[index]['thumbnailUrl'],
-          duration: filteredList[index]['duration'],
-          title: filteredList[index]['title'],
-          author: filteredList[index]['author'],
-          views: filteredList[index]['views'],
-          uploadTime: filteredList[index]['uploadTime'],
-          onMorePressed: () {
-            // Add your onMorePressed logic here
-          },
-        );
+        if (_isLoading) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShimmerWidget.rectangular(height: 200, isBorder: false,),
+                SizedBox(height: 16),
+
+                Row(
+                  children: [
+                    ShimmerWidget.circular(width: 50, height: 50, isBorder: true),
+                    SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ShimmerWidget.rectangular(height: 20, width: 120, isBorder: true,),
+                        SizedBox(height: 8),
+                        ShimmerWidget.rectangular(height: 20, width: 200, isBorder: true,),
+                      ],
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
+          );
+        } else {
+          return VideoListItem(
+            thumbnailUrl: filteredList[index]['thumbnailUrl'],
+            duration: filteredList[index]['duration'],
+            title: filteredList[index]['title'],
+            author: filteredList[index]['author'],
+            views: filteredList[index]['views'],
+            uploadTime: filteredList[index]['uploadTime'],
+            onMorePressed: () {
+              // Add your onMorePressed logic here
+            },
+          );
+        }
       },
     );
   }

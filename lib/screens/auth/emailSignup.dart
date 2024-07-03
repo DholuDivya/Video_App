@@ -1,7 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:remixicon/remixicon.dart';
-import 'package:vimeo_clone/Config/colors.dart';
+import 'package:vimeo_clone/config/colors.dart';
+import 'package:vimeo_clone/config/constants.dart';
 
 
 class SignupWithEmail extends StatefulWidget {
@@ -12,9 +13,9 @@ class SignupWithEmail extends StatefulWidget {
 }
 
 class _SignupWithEmailState extends State<SignupWithEmail> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   String pattern = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$';
   String emailRegex = r'^[a-zA-Z0-9._%+-]+@[gmail]+\.[a-zA-Z]{2,}$';
@@ -34,7 +35,7 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
       return "Please enter First Name !";
     }
     if (value.length < 6) {
-      return "Passowrd must be at least 6 characters";
+      return "Password must be at least 6 characters";
     }
     RegExp regexp = RegExp(pattern);
     if(!regexp.hasMatch(value)){
@@ -74,58 +75,52 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Form(
           key: _formkey,
           child: Padding(
             padding: EdgeInsets.only(
-                left: screenWidth*0.055,
-                right: screenWidth*0.055
+                left: ScreenSize.screenWidth(context) * 0.055,
+                right: ScreenSize.screenWidth(context) * 0.055
             ),
             child: Column(
               children: [
-                appName(),
-                SizedBox(height: screenHeight*0.04,),
-          
-          
+                CustomAppName(),
+                SizedBox(height: ScreenSize.screenHeight(context) * 0.04,),
+
                 nameTextField(),
-                SizedBox(height: screenHeight*0.015,),
-          
-          
+                SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
+
+
                 emailTextField(),
-                SizedBox(height: screenHeight*0.015,),
-          
-          
+                SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
+
+
                 passwordTextField(),
-                SizedBox(height: screenHeight*0.025,),
-          
-          
+                SizedBox(height: ScreenSize.screenHeight(context) * 0.001,),
+
+
                 termsAndCondition(),
-                SizedBox(height: screenHeight*0.028,),
-          
-          
+                SizedBox(height: ScreenSize.screenHeight(context) * 0.028,),
+
+
                 joinButton(),
-                SizedBox(height: screenHeight*0.028,),
-          
-          
-                orText(),
-                SizedBox(height: screenHeight*0.03,),
-          
-          
-                googleLogin(),
-                SizedBox(height: screenHeight*0.08,),
-          
-          
-                logInButton(),
-          
+                SizedBox(height: ScreenSize.screenHeight(context) * 0.028,),
+
+
+                // orText(),
+                // SizedBox(height: ScreenSize.screenHeight(context) * 0.03,),
+                //
+                //
+                // // googleLogin(),
+                // // SizedBox(height: ScreenSize.screenHeight(context) * 0.08,),
+                //
+                //
+                // logInButton(),
+
               ],
             ),
           ),
@@ -135,29 +130,43 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
   }
 
   // App Name/ Label
-  Widget appName(){
+  Widget CustomAppName(){
     return const AutoSizeText(
-        "Join Vimeo",
+        appName,
       style: TextStyle(
-        fontSize: 40,
+        fontSize: 35,
+        fontFamily: fontFamily
       ),
     );
   }
 
 
   Widget nameTextField(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    // final double screenWidth = MediaQuery.of(context).size.width;
-    return SizedBox(
-      height: screenHeight*0.075,
+    return Container(
+      height: ScreenSize.screenHeight(context) * 0.1,
       child: TextFormField(
         controller: _nameController,
         validator: _validateName,
+        cursorColor: Theme.of(context).colorScheme.tertiary,
         decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.grey[100],
-          labelText: "Name"
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              borderSide: const BorderSide(),
+            ),
+          // filled: true,
+          // fillColor: Colors.grey[100],
+          labelText: "Name",
+            labelStyle: TextStyle(
+                color: Theme.of(context).colorScheme.tertiary
+            ),
+
+          helperText: ''
         ),
+
       ),
     );
   }
@@ -165,17 +174,29 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
 
 
   Widget emailTextField(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    // final double screenWidth = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: screenHeight*0.075,
+      height: ScreenSize.screenHeight(context) * 0.1,
       child: TextFormField(
         controller: _emailController,
         validator: _validateEmail,
+        cursorColor: Theme.of(context).colorScheme.tertiary,
         decoration: InputDecoration(
-          filled: true,
-            fillColor: Colors.grey[100],
-            labelText: "Email"
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              borderSide: const BorderSide(),
+            ),
+            // filled: true,
+            // fillColor: Colors.grey[100],
+            // fillColor: Colors.grey[100],
+            labelText: "Email",
+            labelStyle: TextStyle(
+                color: Theme.of(context).colorScheme.tertiary
+            ),
+          helperText: ''
         ),
       ),
     );
@@ -183,15 +204,22 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
 
 
   Widget passwordTextField(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    // final double screenWidth = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: screenHeight*0.075,
+      height: ScreenSize.screenHeight(context) * 0.1,
       child: TextFormField(
         controller: _passwordController,
         obscureText: true && !isPasswordVisible,
+        cursorColor: Theme.of(context).colorScheme.tertiary,
         validator: _validatePassword,
         decoration: InputDecoration(
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              borderSide: BorderSide(color: primaryColor),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              borderSide: const BorderSide(),
+            ),
           suffixIcon: IconButton(
               onPressed: (){
                 setState(() {
@@ -202,9 +230,11 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
                 isPasswordVisible ? Icons.visibility : Icons.visibility_off
               )
           ),
-          filled: true,
-            fillColor: Colors.grey[100],
-            labelText: "Password"
+            labelText: "Password",
+            labelStyle: TextStyle(
+                color: Theme.of(context).colorScheme.tertiary
+            ),
+            helperText: ''
         ),
       ),
     );
@@ -217,7 +247,7 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Checkbox(
-            activeColor: Colors.black,
+          activeColor: Colors.blue,
             value: isChecked,
             onChanged: (value){
               setState(() {
@@ -227,10 +257,11 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
         ),
         const Expanded(
             child: AutoSizeText(""
-                "By Joining Vimeo, you agree to our Terms of Service and "
+                "By $appName, you agree to our Terms of Service and "
                 "acknowledge our Privacy Policy and Cookie Policy.",
               style: TextStyle(
-                fontSize: 12
+                fontSize: 12,
+                fontFamily: fontFamily
               ),
             )
         ),
@@ -241,13 +272,11 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
   }
 
   Widget joinButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    // final double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      height: screenHeight*0.070,
+      height: ScreenSize.screenHeight(context) * 0.070,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.lightBlueAccent,
+        color: primaryColor,
         borderRadius: BorderRadius.circular(15)
       ),
       child: ElevatedButton(
@@ -260,21 +289,19 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
               print("Form is not Valid");
             }
           },
-        child: const AutoSizeText("Join", style: TextStyle(fontSize: 17),),
+        child: const AutoSizeText("Join", style: TextStyle(fontSize: 17, fontFamily: fontFamily),),
       ),
     );
   }
 
 
   Widget orText(){
-    // final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
     return Row(
       children: [
         Expanded(child: Divider(thickness: 0.3,)),
-        SizedBox(width: screenWidth*0.025,),
-        AutoSizeText("or", style: TextStyle(color: Colors.grey[500]),),
-        SizedBox(width: screenWidth*0.025,),
+        SizedBox(width: ScreenSize.screenWidth(context) * 0.025,),
+        AutoSizeText("or", style: TextStyle(color: Colors.grey[500], fontFamily: fontFamily),),
+        SizedBox(width: ScreenSize.screenWidth(context) * 0.025,),
         Expanded(child: Divider(thickness: 0.3,)),
       ],
     );
@@ -282,13 +309,11 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
 
 
   Widget googleLogin(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    // final double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      height: screenHeight*0.070,
+      height: ScreenSize.screenHeight(context) * 0.070,
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Colors.grey[200],
+          // color: Colors.grey[200],
           borderRadius: BorderRadius.circular(15)
       ),
       child: ElevatedButton(
@@ -298,7 +323,7 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Icon(Remix.google_fill),
-            AutoSizeText("Continue with Google", style: TextStyle(fontSize: 17),),
+            AutoSizeText("Continue with Google", style: TextStyle(fontSize: 17, fontFamily: fontFamily),),
           ],
         ),
       ),
@@ -313,14 +338,18 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
         const AutoSizeText(
           'Have an account? ',
           style: TextStyle(
-            fontSize: 15
+            fontSize: 15,
+            fontFamily: fontFamily
           ),
         ),
         GestureDetector(
           onTap: () {},
           child: const AutoSizeText(
             'Log in.',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+              fontFamily: fontFamily
+            ),
           ),
         )
       ],

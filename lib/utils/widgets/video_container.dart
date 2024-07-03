@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vimeo_clone/Config/constants.dart';
-
-import '../../Screens/VideoPage/videopage.dart';
+import 'package:vimeo_clone/config/colors.dart';
 
 class VideoListItem extends StatelessWidget {
   final String thumbnailUrl;
@@ -12,7 +12,8 @@ class VideoListItem extends StatelessWidget {
   final String uploadTime;
   final Function()? onMorePressed;
 
-  const VideoListItem({
+  const VideoListItem(
+      {super.key,
     required this.thumbnailUrl,
     required this.duration,
     required this.title,
@@ -24,41 +25,33 @@ class VideoListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => VideoPage()),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.only(bottom: ScreenSize.screenHeight(context) * 0.025),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 6.0,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
+    return Container(
+      margin: EdgeInsets.only(bottom: ScreenSize.screenHeight(context) * 0.025),
+      decoration: BoxDecoration(
+        // color: Theme.of(context).colorScheme.surface,
+      ),
+      child: GestureDetector(
+        onTap: (){
+          GoRouter.of(context).pushNamed('videoPage');
+        },
         child: Column(
           children: [
             Stack(
               children: [
+
+                // VIDEO THUMBNAIL --------------------------------------------------------------------------
                 ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(0.0),
-                    topRight: Radius.circular(0.0),
-                  ),
+                  // borderRadius: BorderRadius.circular(10),
                   child: Image.network(
                     thumbnailUrl,
                     height: ScreenSize.screenHeight(context) * 0.25,
                     width: double.infinity,
+                    // width: ScreenSize.screenWidth(context) * 0.97,
                     fit: BoxFit.cover,
                   ),
                 ),
+
+                // VIDEO DURATION -----------------------------------------------------------------------------
                 Positioned(
                   bottom: ScreenSize.screenHeight(context) * 0.010,
                   right: ScreenSize.screenWidth(context) * 0.022,
@@ -82,15 +75,23 @@ class VideoListItem extends StatelessWidget {
                 ),
               ],
             ),
+
+
+            // CHANNEL PHOTO, VIDEO TITLE, CHANNEL NAME, UPLOAD TIME,---------------------------------------------
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Colors.grey[300],
-                    child: Icon(Icons.person, color: Colors.white),
+                  InkWell(
+                    onTap: (){
+                      GoRouter.of(context).pushNamed('channelProfilePage');
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      child: Icon(Icons.person, color: Theme.of(context).colorScheme.surface),
+                    ),
                   ),
                   SizedBox(width: ScreenSize.screenWidth(context) * 0.028),
                   Expanded(
@@ -118,9 +119,11 @@ class VideoListItem extends StatelessWidget {
                       ],
                     ),
                   ),
+
+                  // VERTICAL MORE BUTTON ------------------------------------------------------------------
                   IconButton(
                     onPressed: onMorePressed ?? () {},
-                    icon: Icon(Icons.more_vert),
+                    icon: Icon(Icons.more_vert, size: 18,),
                     color: Colors.grey[700],
                   ),
                 ],

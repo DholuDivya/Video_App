@@ -1,522 +1,305 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vimeo_clone/Screens/Auth/signup.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/Utils/Widgets/setting_page_btn.dart';
+import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
+import 'package:vimeo_clone/bloc/theme/theme_event.dart';
+import 'package:vimeo_clone/config/colors.dart';
 
-class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+import '../../config/constants.dart';
+
+class SettingPage extends StatefulWidget {
+  const SettingPage({super.key});
 
   @override
-  State<AccountPage> createState() => _AccountPageState();
+  State<SettingPage> createState() => _SettingPageState();
 }
 
-class _AccountPageState extends State<AccountPage> {
+enum AppearanceTheme { lightAppearance, darkAppearance, systemAppearance }
+
+class _SettingPageState extends State<SettingPage> {
+
+  AppearanceTheme? _selectedAppearance = AppearanceTheme.lightAppearance;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _setSelectedAppearance();
+  }
+
+  void _setSelectedAppearance() {
+    final themeBlocState = context.read<ThemeBloc>().state;
+    _selectedAppearance = themeBlocState == ThemeMode.dark
+        ? AppearanceTheme.darkAppearance
+        : (themeBlocState == ThemeMode.light
+        ? AppearanceTheme.lightAppearance
+        : AppearanceTheme.systemAppearance
+    );
+  }
+
+  void _showAppearanceDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text('Appearance'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: [
+                    ListTile(
+                      title: Text('Light Mode'),
+                      leading: Radio<AppearanceTheme>(
+                        activeColor: primaryColor,
+                        value: AppearanceTheme.lightAppearance,
+                        groupValue: _selectedAppearance,
+                        onChanged: (AppearanceTheme? value) {
+                          setState(() {
+                            _selectedAppearance = value;
+                          });
+                          // Update the state of the parent widget
+
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: Text('Dark Mode'),
+                      leading: Radio<AppearanceTheme>(
+                        activeColor: primaryColor,
+                        value: AppearanceTheme.darkAppearance,
+                        groupValue: _selectedAppearance,
+                        onChanged: (AppearanceTheme? value) {
+                          setState(() {
+                            _selectedAppearance = value;
+                          });
+
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: Text('System Mode'),
+                      leading: Radio<AppearanceTheme>(
+                        activeColor: primaryColor,
+                        value: AppearanceTheme.systemAppearance,
+                        groupValue: _selectedAppearance,
+                        onChanged: (AppearanceTheme? value) {
+                          setState(() {
+                            _selectedAppearance = value;
+                          });
+
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Done',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: fontFamily
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Account'),
+        title: Text('Settings', style:  TextStyle(fontFamily: fontFamily),),
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              Container(
-                height: screenHeight*0.51,
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: screenHeight*0.03
-                      ),
-                      child: CircleAvatar(
-                        radius: 50,
-                        child: Icon(Icons.person, size: 80,),
-                      ),
-                    ),
+        child: Column(
+          children: [
 
-                    SizedBox(height: screenHeight*0.01,),
-                    Text('test', style: TextStyle(fontSize: 25, ),),
-                    SizedBox(height: screenHeight*0.02,),
+            // EDIT MY CHANNEL
+            CustomSettingButton(
+              icon: HeroiconsOutline.pencilSquare,
+                btnName: ('Edit My Channel'),
+                onTap: (){}
+            ),
 
-                    Material(
-                      // color: Colors.white,
-                      elevation: 3,
-                      borderRadius: BorderRadius.circular(10),
-                      child:  Container(
-                          height: screenHeight*0.2,
-                          width: screenWidth*0.9,
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          children: [
+            // WITHDRAWALS
+            CustomSettingButton(
+              icon: HeroiconsOutline.buildingLibrary,
+                btnName: ('Withdrawals'),
+                onTap: (){}
+            ),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Basic'),
-                                MaterialButton(
-                                    onPressed: (){},
-                                  child: Text('Try Vimeo Plus', style: TextStyle(color: Colors.green)),
-                                )
-                              ],
-                            ),
+            // GO PRO
+            CustomSettingButton(
+              icon: Remix.star_fill,
+                btnName: ('Go Pro'),
+                onTap: (){}
+            ),
 
-                            const Divider(thickness: 8,),
-                            SizedBox(height: screenHeight*0.015,),
+            // AUTOPLAY
+            CustomSettingButton(
+              icon: HeroiconsOutline.checkBadge,
+                btnName: ('Verification'),
+                onTap: (){}
+            ),
 
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Weekly limit'),
-                                Text('0MB / 500MB'),
-                              ],
-                            ),
-                            SizedBox(height: screenHeight*0.010,),
+            // POINTS
+            CustomSettingButton(
+              icon: Remix.sticky_note_line,
+                btnName: ('Points'),
+                onTap: (){}
+            ),
 
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Total limit'),
-                                Text('0MB / 5GB'),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: screenHeight*0.02,),
+            // BLOCKED USERS
+            CustomSettingButton(
+              icon: HeroiconsOutline.noSymbol,
+                btnName: ('Blocked Users'),
+                onTap: (){}
+            ),
 
-                    // Divider(thickness: 1, color: Colors.grey[200],),
-
-                    viewProfileButton(),
-
-                  ],
-                ),
-              ),
-              SizedBox(height: screenHeight*0.025,),
-
-
-              // Setting Section
-              Container(
-                // color: Colors.white,
-                height: screenHeight*0.17,
-                width: double.infinity,
-
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text('Settings'),
-                    ),
-                    // SizedBox(height: screenHeight*0.01,),
-                    accountButton(),
-                    dataUsageButton()
-                  ],
-                ),
-              ),
-              SizedBox(height: screenHeight*0.025,),
+            // WALLETS
+            CustomSettingButton(
+              icon: HeroiconsOutline.wallet,
+                btnName: ('Wallet'),
+                onTap: (){}
+            ),
 
 
 
-              // Library Section
-              Container(
-                // color: Colors.white,
-                height: screenHeight*0.29,
-                width: double.infinity,
-
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text('Library'),
-                    ),
-                    // SizedBox(height: screenHeight*0.01,),
-                    purchasesButton(),
-                    offlineButton(),
-                    watchLaterButton(),
-                    likesButton(),
-                  ],
-                ),
-              ),
-              SizedBox(height: screenHeight*0.025,),
+            SizedBox(height: 10,),
+            Divider(thickness: 0.5, color: Colors.grey,),
+            SizedBox(height: 10,),
 
 
-              // Company Section
-              Container(
-                // color: Colors.white,
-                height: screenHeight*0.35,
-                width: double.infinity,
+            // PASSWORD
+            CustomSettingButton(
+              icon: HeroiconsOutline.lockClosed,
+                btnName: ('Password'),
+                onTap: (){}
+            ),
 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text('Library'),
-                    ),
-                    // SizedBox(height: screenHeight*0.01,),
-                    uploadGuidelinesButton(),
-                    termsOfServicesButton(),
-                    privacyPolicyButton(),
-                    supportButton(),
-                    openSourceLicensesButton()
-                  ],
-                ),
-              ),
-              SizedBox(height: screenHeight*0.025,),
+            // TWO-FACTOR AUTHENTICATION
+            CustomSettingButton(
+              icon: HeroiconsOutline.key,
+                btnName: ('Two-factor authentication'),
+                onTap: (){}
+            ),
+
+            // MANAGE SESSIONS
+            CustomSettingButton(
+              icon: HeroiconsOutline.tv,
+                btnName: ('Manage Sessions'),
+                onTap: (){}
+            ),
 
 
-              Container(
-                height: screenHeight*0.07,
-                width: double.infinity,
-                // color: Colors.white,
-                child: MaterialButton(
-                  onPressed: (){
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context)=> SignupPage()));
-                  },
-                  child: Text('Log out', style: TextStyle(color: Colors.red),),
-                ),
-              )
+            SizedBox(height: 10,),
+            Divider(thickness: 0.5, color: Colors.grey,),
+            SizedBox(height: 10,),
 
-            ],
-          ),
+
+
+            // THEME
+            CustomSettingButton(
+              icon: Remix.palette_line,
+                btnName: ('Theme'),
+                onTap: _showAppearanceDialog
+            ),
+
+            // PICTURE IN PICTURE
+            CustomSettingButton(
+              icon: Remix.picture_in_picture_2_line,
+                btnName: ('Picture in picture'),
+                onTap: (){}
+            ),
+
+
+            SizedBox(height: 10,),
+            Divider(thickness: 0.5, color: Colors.grey,),
+            SizedBox(height: 10,),
+
+
+            // CLEAR WATCHED HISTORY
+            CustomSettingButton(
+              icon: HeroiconsOutline.xCircle,
+                btnName: ('Clear watched history'),
+                onTap: (){}
+            ),
+
+            // PAUSE WATCH HISTORY
+            CustomSettingButton(
+              icon: HeroiconsOutline.pauseCircle,
+                btnName: ('Pause watch history'),
+                onTap: (){}
+            ),
+
+            // CLEAR CACHE
+            CustomSettingButton(
+              icon: Remix.brush_2_line,
+                btnName: ('Clear cache'),
+                onTap: (){}
+            ),
+
+
+            SizedBox(height: 10,),
+            Divider(thickness: 0.5, color: Colors.grey,),
+            SizedBox(height: 10,),
+
+
+
+            // RATE OUR APP
+            CustomSettingButton(
+              icon: HeroiconsOutline.star,
+                btnName: ('Rate our app'),
+                onTap: (){}
+            ),
+
+            // INVITE FRIENDS
+            CustomSettingButton(
+              icon: HeroiconsOutline.userPlus,
+                btnName: ('Invite friends'),
+                onTap: (){}
+            ),
+
+            // ABOUT US
+            CustomSettingButton(
+              icon: HeroiconsOutline.informationCircle,
+                btnName: ('About us'),
+                onTap: (){}
+            ),
+
+            // TERMS OF USE
+            CustomSettingButton(
+              icon: HeroiconsOutline.clipboardDocumentList,
+                btnName: ('Terms of use '),
+                onTap: (){}
+            ),
+
+
+            // HELP
+            CustomSettingButton(
+              icon: HeroiconsOutline.questionMarkCircle,
+                btnName: ('Help'),
+                onTap: (){}
+            ),
+
+          ],
         ),
       ),
     );
   }
-
-
-
-  Widget viewProfileButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      // shape: RoundedRectangleBorder(
-      //   borderRadius: BorderRadius.zero,
-      //   side: BorderSide(color: Colors.grey.shade200),
-      // ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.person, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('View profile', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
-
-  Widget accountButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        // borderRadius: BorderRadius.zero,
-        // side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.manage_accounts_rounded, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Account', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
-  Widget dataUsageButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.data_usage, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Data usage', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-  Widget purchasesButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        // borderRadius: BorderRadius.zero,
-        // side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.monetization_on_outlined, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Purchases', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
-
-  Widget offlineButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.download, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Offline', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
-
-  Widget watchLaterButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.watch_later_outlined, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Watch Later', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
-
-  Widget likesButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.favorite_outline, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Likes', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
-  Widget uploadGuidelinesButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        // borderRadius: BorderRadius.zero,
-        // side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.upload_file_rounded, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Upload Guidelines', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
-  Widget termsOfServicesButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.event_note_outlined, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Terms of Services', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
-  Widget privacyPolicyButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.privacy_tip_outlined, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Privacy policy', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
-  Widget supportButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.support, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Support', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
-  Widget openSourceLicensesButton(){
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return MaterialButton(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-
-      height: screenHeight*0.06,
-      onPressed: (){},
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.grey[200],
-            radius: 15,
-            child: Icon(Icons.lock_open, size: 25,),
-          ),
-          SizedBox(width: screenWidth*0.03,),
-          Text('Open source licenses', style: TextStyle(fontSize: 17),)
-        ],
-      ),
-    );
-  }
-
-
 }
