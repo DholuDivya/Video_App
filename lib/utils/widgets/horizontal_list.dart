@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vimeo_clone/config/colors.dart';
 
 import '../../Config/constants.dart';
+import '../../model/video_categories_model.dart';
 
 class CustomHorizontalList extends StatelessWidget {
   final List<Map<String, dynamic>> categoryList;
@@ -28,7 +29,7 @@ class CustomHorizontalList extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.only(
                     left: ScreenSize.screenWidth(context) * 0.02,
-                    right: ScreenSize.screenWidth(context) * 0.01
+                    // right: ScreenSize.screenWidth(context) * 0.001
                 ),
                 child: GestureDetector(
                   onTap: (){
@@ -36,12 +37,12 @@ class CustomHorizontalList extends StatelessWidget {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: index == selectedIndex ? blue : null,
+                      color: index == selectedIndex ? blue : Colors.blue.shade50,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                          color: index == selectedIndex ? unSelectedTabOutline : selectedTabOutline,
-                          width: 0.5
-                      )
+                      // border: Border.all(
+                      //     color: index == selectedIndex ?  selectedTabOutline : unSelectedTabOutline,
+                      //     width: 0.5
+                      // )
                     ),
                     padding: EdgeInsets.symmetric(
                       horizontal: ScreenSize.screenWidth(context) * 0.05,
@@ -52,10 +53,10 @@ class CustomHorizontalList extends StatelessWidget {
                         categoryList[index]['type'],
                         style: TextStyle(
                           // color: index == selectedIndex ? tabButton1 : tabButton2,
-                            color: index == selectedIndex ? Colors.white : null,
+                            color: index == selectedIndex ? Colors.white : Colors.black87,
                             fontSize: 11,
                           fontFamily: fontFamily,
-                          fontWeight: FontWeight.w500
+                          fontWeight: FontWeight.w400
                         ),
                       ),
                     ),
@@ -69,6 +70,76 @@ class CustomHorizontalList extends StatelessWidget {
 }
 
 
+
+
+
+
+class CustomHomePageCategoriesList extends StatelessWidget {
+  final List<VideoCategoriesModel> categoryList;
+  final int selectedIndex;
+  final ValueChanged<int> onCategorySelected;
+  final categoryName;
+
+  const CustomHomePageCategoriesList({
+    super.key,
+    required this.categoryList,
+    required this.selectedIndex,
+    required this.onCategorySelected,
+    required this.categoryName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Container(
+      // color: Colors.red,
+      height: ScreenSize.screenHeight(context) * 0.04,
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: categoryList.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: ScreenSize.screenWidth(context) * 0.02,
+                // right: ScreenSize.screenWidth(context) * 0.001
+              ),
+              child: GestureDetector(
+                onTap: (){
+                  onCategorySelected(index);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: index == selectedIndex ? blue : Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(20),
+                    // border: Border.all(
+                    //     color: index == selectedIndex ?  selectedTabOutline : unSelectedTabOutline,
+                    //     width: 0.5
+                    // )
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ScreenSize.screenWidth(context) * 0.05,
+                    // vertical: screenHeight*0.0001
+                  ),
+                  child: Center(
+                    child: Text(
+                      categoryName,
+                      style: TextStyle(
+                        // color: index == selectedIndex ? tabButton1 : tabButton2,
+                          color: index == selectedIndex ? Colors.white : Colors.black87,
+                          fontSize: 11,
+                          fontFamily: fontFamily,
+                          fontWeight: FontWeight.w400
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }
+      ),
+    );
+  }
+}
 
 
 

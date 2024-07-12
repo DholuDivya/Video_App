@@ -67,6 +67,7 @@ class VideoListItem extends StatelessWidget {
                     child: Text(
                       duration,
                       style: TextStyle(
+                        fontFamily: fontFamily,
                         color: Colors.white,
                         fontSize: 12.0,
                       ),
@@ -101,8 +102,9 @@ class VideoListItem extends StatelessWidget {
                         Text(
                           title,
                           style: TextStyle(
+                            fontFamily: fontFamily,
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -110,8 +112,9 @@ class VideoListItem extends StatelessWidget {
                         Text(
                           '$author - $views views - $uploadTime',
                           style: TextStyle(
+                            fontFamily: fontFamily,
                             fontSize: 12,
-                            color: Colors.grey[700],
+                            color: Colors.grey[600],
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

@@ -2,25 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vimeo_clone/Screens/NotificationPage/notification_page.dart';
 import 'package:vimeo_clone/Screens/SearchScreen/search_screen.dart';
-import 'package:vimeo_clone/Screens/SettingPage/Widgets/general_setting.dart';
 import 'package:vimeo_clone/Screens/SettingPage/setting_page.dart';
 import 'package:vimeo_clone/Screens/SplashScreen/splash_screen.dart';
 import 'package:vimeo_clone/Screens/SubscriptionScreen/subscription_page.dart';
-import 'package:vimeo_clone/Screens/Auth/emailSignup.dart';
 import 'package:vimeo_clone/Screens/ShortsScreen/shorts_page.dart';
 import 'package:vimeo_clone/Screens/Auth/signup.dart';
 import 'package:vimeo_clone/Screens/VideoPage/videopage.dart';
+import 'package:vimeo_clone/screens/auth/forgot_password_page.dart';
+import 'package:vimeo_clone/screens/auth/registration_page.dart';
+import 'package:vimeo_clone/screens/auth/numebr_signup.dart';
+import 'package:vimeo_clone/screens/auth/reset_password.dart';
+import 'package:vimeo_clone/screens/auth/verification_page.dart';
 import 'package:vimeo_clone/screens/user_page/user_page.dart';
 import '../Screens/HomePage/homepage.dart';
 import '../screens/channel_profile_page/channel_profile_page.dart';
 
-class MyAppRoute {
+// class MyAppRoute {
   final GoRouter router = GoRouter(
-    initialLocation: '/splashScreen',
+    // initialLocation: '/SignupPage',
       routes: [
         GoRoute(
           name: 'splashScreen',
-          path: '/splashScreen',
+          path: '/',
           pageBuilder: (context, state) => const MaterialPage (
             child: SplashScreen(),
           ),
@@ -38,7 +41,41 @@ class MyAppRoute {
           name: 'emailSignup',
           path: '/emailSignup',
           pageBuilder: (context, state) => const MaterialPage (
-            child: SignupWithEmail(),
+            child: RegistrationPage(),
+          ),
+        ),
+
+        GoRoute(
+          name: 'verificationPage',
+          path: '/verificationPage/:verificationId',
+          builder: (context, state) {
+            final verificationId = state.pathParameters['verificationId']!;
+            return VerificationPage(verificationId: verificationId);
+          },
+        ),
+
+        GoRoute(
+          name: 'forgotPasswordPage',
+          path: '/forgotPasswordPage',
+          pageBuilder: (context, state) => const MaterialPage (
+            child: ForgotPasswordPage(),
+          ),
+        ),
+
+        GoRoute(
+          name: 'resetPasswordPage',
+          path: '/resetPasswordPage',
+          pageBuilder: (context, state) => const MaterialPage (
+            child: ResetPasswordPage(),
+          ),
+        ),
+
+        GoRoute(
+          name: 'numberSignup',
+          path: '/numberSignup',
+          pageBuilder: (context, state) => const MaterialPage (
+            child: SignupWithPhoneNumber(),
+            // child: SignupScreen(),
           ),
         ),
 
@@ -125,4 +162,4 @@ class MyAppRoute {
 
       ]
   );
-}
+// }

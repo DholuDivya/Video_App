@@ -1,8 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/config/global_variable.dart';
+import 'package:vimeo_clone/config/security.dart';
+import 'package:vimeo_clone/screens/splashScreen/splash_screen.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/custom_user_page_button.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_header_widget.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_history_widget.dart';
@@ -37,6 +42,8 @@ class _UserPageState extends State<UserPage> {
           IconButton(
             icon: Icon(HeroiconsOutline.cog8Tooth),
             onPressed: () {
+              log('Next Setting Page ${headers}');
+              log('***********************${Global.token}*********************');
               GoRouter.of(context).pushNamed('settingPage');
             },
 
@@ -48,7 +55,7 @@ class _UserPageState extends State<UserPage> {
         child: Column(
           children: [
             UserHeaderWidget(),
-            SizedBox(height: ScreenSize.screenHeight(context) * 0.01,),
+            // SizedBox(height: ScreenSize.screenHeight(context) * 0.00,),
 
             UserHistoryWidget(),
 

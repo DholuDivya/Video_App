@@ -73,15 +73,19 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                       GoRouter.of(context).pushNamed('channelProfilePage');
                     },
                     child: ListTile(
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Image.asset(
-                            'assets/images/sonysab.jpg',
-                            fit: BoxFit.cover,
-                          height: ScreenSize.screenHeight(context) * 0.05,
-                          width: ScreenSize.screenWidth(context) * 0.12,
-                        ),
+                      leading: CircleAvatar(
+                        radius: 22,
+                        backgroundImage: AssetImage('assets/images/sonysab.jpg'),
                       ),
+                      // leading: ClipRRect(
+                      //   borderRadius: BorderRadius.circular(100),
+                      //   child: Image.asset(
+                      //       'assets/images/sonysab.jpg',
+                      //       fit: BoxFit.cover,
+                      //     height: ScreenSize.screenHeight(context) * 0.05,
+                      //     width: ScreenSize.screenWidth(context) * 0.12,
+                      //   ),
+                      // ),
                       title: Text('Sony Sab'),
                       trailing: Container(
                           width: 55,

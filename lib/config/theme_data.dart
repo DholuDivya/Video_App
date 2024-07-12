@@ -12,7 +12,7 @@ ThemeData lightTheme = ThemeData(
       surface: Colors.white,
       secondary: Colors.grey.shade300,
       tertiary: Colors.grey.shade900,
-
+      primaryFixedDim: textFieldLabelLight
     ),
 
     floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -36,18 +36,18 @@ ThemeData lightTheme = ThemeData(
         )
     ),
 
-    textButtonTheme: TextButtonThemeData(
-      style: ButtonStyle(
-        shape: MaterialStateProperty.all<OutlinedBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
-        backgroundColor: MaterialStateProperty.all<Color>(
-          primaryColor,
-        ),
-      ),
-    ),
+    // textButtonTheme: TextButtonThemeData(
+    //   style: ButtonStyle(
+    //     shape: MaterialStateProperty.all<OutlinedBorder>(
+    //       RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.circular(10.0),
+    //       ),
+    //     ),
+    //     backgroundColor: MaterialStateProperty.all<Color>(
+    //       primaryColor,
+    //     ),
+    //   ),
+    // ),
 
 
     checkboxTheme: CheckboxThemeData(
@@ -66,7 +66,8 @@ ThemeData darkTheme = ThemeData(
       primary: Colors.grey.shade500,
       surface: Colors.grey.shade900,
       secondary: Colors.grey.shade800,
-      tertiary: Colors.white
+      tertiary: Colors.white,
+      primaryFixedDim: textFieldLabelDark
     ),
 
   floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -89,21 +90,21 @@ ThemeData darkTheme = ThemeData(
       )
   ),
 
-    textButtonTheme: TextButtonThemeData(
-      style: ButtonStyle(
-        // textStyle: WidgetStatePropertyAll<TextStyle>(
-        //
-        // ),
-        shape: MaterialStateProperty.all<OutlinedBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
-        backgroundColor: MaterialStateProperty.all<Color>(
-          primaryColor,
-        ),
-      ),
-    ),
+    // textButtonTheme: TextButtonThemeData(
+    //   style: ButtonStyle(
+    //     // textStyle: WidgetStatePropertyAll<TextStyle>(
+    //     //
+    //     // ),
+    //     shape: MaterialStateProperty.all<OutlinedBorder>(
+    //       RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.circular(10.0),
+    //       ),
+    //     ),
+    //     backgroundColor: MaterialStateProperty.all<Color>(
+    //       primaryColor,
+    //     ),
+    //   ),
+    // ),
 
     checkboxTheme: CheckboxThemeData(
         side: BorderSide(

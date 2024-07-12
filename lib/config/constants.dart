@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-const String appName = "Youtube";
-const String apiUrl = "https://backend.com/api/";
+const String appName = "Divya";
+const String apiUrl = "https://videoapp.taskhub.company/api/";
 const String firebase = "";
-// final double screenHeight = MediaQuery.of(context).size.height;
-// final double screenWidth = MediaQuery.of(context).size.width;
 
+
+// FONT FAMILY
 const String fontFamily = 'Poppins';
-
 
 
 

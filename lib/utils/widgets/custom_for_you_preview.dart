@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:vimeo_clone/Config/constants.dart';
+import 'package:vimeo_clone/config/constants.dart';
 
 class ForYouPreview extends StatelessWidget {
   final String videoTitle;
@@ -18,7 +18,7 @@ class ForYouPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: ScreenSize.screenHeight(context) * 0.28,
+        height: ScreenSize.screenHeight(context) * 0.285,
         // color: Colors.yellow,
         child: ListView.builder(
           shrinkWrap: true,
@@ -36,8 +36,8 @@ class ForYouPreview extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: ScreenSize.screenHeight(context) * 0.2,
-                      width: ScreenSize.screenWidth(context) * 0.8,
+                      height: ScreenSize.screenHeight(context) * 0.19,
+                      width: ScreenSize.screenWidth(context) * 0.78,
                       // color: Colors.green,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
@@ -45,14 +45,15 @@ class ForYouPreview extends StatelessWidget {
                           fit: BoxFit.fill,),
                       ),
                     ),
+                    SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
 
                     Container(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            height: ScreenSize.screenHeight(context) * 0.08,
-                            width: ScreenSize.screenWidth(context) * 0.72,
+                            height: ScreenSize.screenHeight(context) * 0.085,
+                            width: ScreenSize.screenWidth(context) * 0.70,
                             // color: Colors.red,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +63,8 @@ class ForYouPreview extends StatelessWidget {
                                   style: TextStyle(
                                       fontFamily: fontFamily,
                                       fontSize: 14,
-                                      overflow: TextOverflow.ellipsis
+                                      overflow: TextOverflow.ellipsis,
+                                      // fontWeight: FontWeight.w500
                                   ),
                                   maxLines: 2,
                                 ),
@@ -71,7 +73,7 @@ class ForYouPreview extends StatelessWidget {
                                   style: TextStyle(
                                       fontFamily: fontFamily,
                                       fontSize: 11,
-                                      color: Theme.of(context).colorScheme.tertiary
+                                      color: Colors.grey[500]
                                   ),
                                 )
                               ],

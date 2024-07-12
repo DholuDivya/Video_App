@@ -153,6 +153,7 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                   style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 18,
+                    fontWeight: FontWeight.w500
                   ),
                 ),
               ),
@@ -172,6 +173,7 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                   style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 18,
+                      fontWeight: FontWeight.w500
                   ),
                 ),
               ),

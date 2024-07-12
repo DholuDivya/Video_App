@@ -43,63 +43,86 @@ class _NotificationPageState extends State<NotificationPage> {
 
             NotificationCard(
               videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 254',
-              channelName: 'Sony Liv',
-              // videoThumbnail: null,
+              uploadTime: '7 minutes'
             ),
-            SizedBox(height: ScreenSize.screenHeight(context) * 0.01,),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
 
             NotificationCard(
               // userProfile: null,
               videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 255',
-              channelName: 'Sony Liv',
+              uploadTime: '15 minutes',
               // videoThumbnail: null,
             ),
-            SizedBox(height: ScreenSize.screenHeight(context) * 0.01,),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
 
 
             NotificationCard(
               // userProfile: null,
               videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 256',
-              channelName: 'Sony Liv',
+              uploadTime: '28 minutes',
               // videoThumbnail: null,
             ),
-            SizedBox(height: ScreenSize.screenHeight(context) * 0.01,),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
 
 
             NotificationCard(
               // userProfile: null,
               videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 257',
-              channelName: 'Sony Liv',
+              uploadTime: '55 minutes',
               // videoThumbnail: null,
             ),
-            SizedBox(height: ScreenSize.screenHeight(context) * 0.01,),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
 
 
             NotificationCard(
               // userProfile: null,
               videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 258',
-              channelName: 'Sony Liv',
+              uploadTime: '1 month',
               // videoThumbnail: null,
             ),
-            SizedBox(height: ScreenSize.screenHeight(context) * 0.01,),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
 
 
             NotificationCard(
               // userProfile: null,
               videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 259',
-              channelName: 'Sony Liv',
+              uploadTime: '2 months',
               // videoThumbnail: null,
             ),
-            SizedBox(height: ScreenSize.screenHeight(context) * 0.01,),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
 
 
             NotificationCard(
               // userProfile: null,
               videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 260',
-              channelName: 'Sony Liv',
+              uploadTime: '3 months',
               // videoThumbnail: null,
             ),
-            SizedBox(height: ScreenSize.screenHeight(context) * 0.01,),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
+
+            NotificationCard(
+              // userProfile: null,
+              videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 260',
+              uploadTime: '4 months',
+              // videoThumbnail: null,
+            ),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
+
+            NotificationCard(
+              // userProfile: null,
+              videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 260',
+              uploadTime: '5 months',
+              // videoThumbnail: null,
+            ),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
+
+            NotificationCard(
+              // userProfile: null,
+              videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 260',
+              uploadTime: '6 months',
+              // videoThumbnail: null,
+            ),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
 
 
           ],

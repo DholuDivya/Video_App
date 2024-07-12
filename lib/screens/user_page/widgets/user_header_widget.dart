@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 
 class UserHeaderWidget extends StatelessWidget {
@@ -9,6 +11,7 @@ class UserHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // color: red,
       height: ScreenSize.screenHeight(context) * 0.12,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -23,8 +26,8 @@ class UserHeaderWidget extends StatelessWidget {
               child: Image.asset(
                 'assets/images/sonysab.jpg',
                 fit: BoxFit.cover,
-                height: ScreenSize.screenHeight(context) * 0.1,
-                width: ScreenSize.screenHeight(context) * 0.1,
+                height: ScreenSize.screenHeight(context) * 0.08,
+                width: ScreenSize.screenHeight(context) * 0.08,
               ),
             ),
           ),
@@ -38,21 +41,27 @@ class UserHeaderWidget extends StatelessWidget {
                 'Sony Sab',
                 style: TextStyle(
                   fontFamily: fontFamily,
-                  fontSize: 25
+                  fontSize: 22
                 )
               ),
 
-                Row(
-                  children: [
-                    Text(
-                      'View channel ',
-                      style: TextStyle(
-                        fontFamily: fontFamily,
-                        color: Colors.grey
-                      )
-                    ),
-                    Icon(HeroiconsOutline.chevronRight, size: 15, color: Colors.grey)
-                  ],
+                GestureDetector(
+                  onTap: (){
+                    GoRouter.of(context).pushNamed('channelProfilePage');
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        'View channel ',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontFamily: fontFamily,
+                          color: Colors.grey
+                        )
+                      ),
+                      Icon(HeroiconsOutline.chevronRight, size: 10, color: Colors.grey)
+                    ],
+                  ),
                 ),
             ],
           )

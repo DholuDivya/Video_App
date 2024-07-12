@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFieldPassword extends StatelessWidget {
   final TextEditingController controller;
   final bool isPasswordVisible;
-  final Function validator;
+  final Function? validator;
   final VoidCallback? onPressed;
   final IconData? icon;
 
-  const CustomTextFormField({
+  const CustomTextFieldPassword({
     super.key,
     required this.controller,
     required this.isPasswordVisible,
-    required this.validator,
+    this.validator,
     this.onPressed,
     this.icon
   });

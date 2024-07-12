@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
+import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
+import 'package:vimeo_clone/bloc/video_category/video_category_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/HomePage/Widgets/all_category.dart';
 import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/screens/ShortsScreen/shorts_page.dart';
-import 'package:vimeo_clone/utils/Widgets/horizontal_list.dart';
 import '../../Utils/Widgets/bottom_nav_bar.dart';
+import '../../bloc/video_category/video_category_event.dart';
+import '../../config/colors.dart';
 import '../user_page/user_page.dart';
 import '../user_page/widgets/custom_user_page_button.dart';
 
@@ -230,22 +236,25 @@ class _HomePageContentState extends State<HomePageContent> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              title: Text(appName, style: TextStyle(
-                fontFamily: fontFamily,
+
+              title: const Text(
+                appName,
+                style: TextStyle(
+                  fontFamily: fontFamily,
                 // fontWeight: FontWeight
-              ),),
-              // centerTitle: true,
+                ),
+              ),
               floating: true,
               pinned: false,
               snap: false,
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              leading: Icon(Remix.youtube_fill, size: 35, color: Colors.red,),
+              // backgroundColor: Theme.of(context).colorScheme.surface,
+              leading: const Icon(Remix.youtube_fill, size: 35, color: Colors.red,),
               actions: [
                 IconButton(
                   onPressed: () {
                     GoRouter.of(context).pushNamed('searchPage');
                   },
-                  icon: Icon(HeroiconsOutline.magnifyingGlass, size: 22,),
+                  icon: const Icon(HeroiconsOutline.magnifyingGlass, size: 22,),
                 ),
                 // SizedBox(width: screenWidth * 0.01),
                 IconButton(
@@ -279,14 +288,84 @@ class _HomePageContentState extends State<HomePageContent> {
 
 
   Widget categoryListView(){
-    return CustomHorizontalList(
-      categoryList: categoryList,
-      selectedIndex: isCategory,
-      onCategorySelected: (index) {
-        setState(() {
-          isCategory = index;
-        });
+    return BlocBuilder<VideoCategoriesBloc, VideoCategoryState>(
+      builder: (BuildContext context, state) {
+        if(state is VideoCategoriesLoading){
+          return Center(child: CircularProgressIndicator(),);
+        }else if(state is VideoCategoriesLoaded){
+          return Container(
+            // color: Colors.red,
+            height: ScreenSize.screenHeight(context) * 0.04,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: state.categories.length,
+                itemBuilder: (context, index) {
+
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      left: ScreenSize.screenWidth(context) * 0.02,
+                      // right: ScreenSize.screenWidth(context) * 0.001
+                    ),
+                    child: GestureDetector(
+                      onTap: (){
+                        // onCategorySelected(index);
+                        context.read<VideoCategoriesBloc>().add(SelectCategory(selectedCategory: index));
+
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: index == state.selectedCategory ? blue : Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(20),
+                          // border: Border.all(
+                          //     color: index == state.selectedCategory ?  selectedTabOutline : unSelectedTabOutline,
+                          //     width: 0.5
+                          // )
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ScreenSize.screenWidth(context) * 0.05,
+                          // vertical: screenHeight*0.0001
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${state.categories[index].name}',
+                            style: TextStyle(
+                              // color: index == state.selectedCategory ? tabButton1 : tabButton2,
+                                color: index == state.selectedCategory ? Colors.white : Colors.black87,
+                                fontSize: 11,
+                                fontFamily: fontFamily,
+                                fontWeight: FontWeight.w400
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+            ),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: 8,
+            itemBuilder: (context, index){
+              return ShimmerWidget.rectangular(
+                  height: 20.h,
+                  isBorder: false
+              );
+            }
+        );
       },
     );
   }
+
+// CustomHomePageCategoriesList(
+//   categoryList: state.categories,
+//   categoryName: state.categories,
+//   selectedIndex: isCategory,
+//   onCategorySelected: (index) {
+//     setState(() {
+//       isCategory = index;
+//     });
+//   },
+// );
 }

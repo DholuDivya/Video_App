@@ -25,8 +25,9 @@ class UserHistoryWidget extends StatelessWidget {
                 const Text(
                   'History',
                   style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: fontFamily
+                    fontSize: 16,
+                    fontFamily: fontFamily,
+                    fontWeight: FontWeight.w500
                   ),
                 ),
                 MaterialButton(

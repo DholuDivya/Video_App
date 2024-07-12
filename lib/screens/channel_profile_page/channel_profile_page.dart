@@ -113,7 +113,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .tertiary,
-                                        // fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                     SizedBox(
@@ -125,10 +125,10 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                       style: TextStyle(
                                         fontFamily: fontFamily,
                                         fontSize: 12,
-                                        // color: Colors.white
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .tertiary,
+                                        color: Colors.grey[600],
+                                        // color: Theme.of(context)
+                                        //     .colorScheme
+                                        //     .tertiary,
                                       ),
                                     ),
                                   ],
@@ -162,9 +162,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                     _isSubscribed ? 'Unsubscribe' : 'Subscribe',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: _isSubscribed
-                                          ? Colors.black
-                                          : Colors.white,
+                                      color: _isSubscribed ? Colors.black : Colors.white,
                                       fontFamily: fontFamily,
                                     ),
                                   ),
@@ -195,11 +193,11 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                         labelColor: primaryColor,
                         indicatorColor: primaryColor,
                         tabs: const [
-                          Tab(child: Text('Home')),
-                          Tab(child: Text('Videos')),
-                          Tab(child: Text('Shorts')),
-                          Tab(child: Text('Live')),
-                          Tab(child: Text('Playlist')),
+                          Tab(child: Text('Home', style: TextStyle(fontFamily: fontFamily),)),
+                          Tab(child: Text('Videos', style: TextStyle(fontFamily: fontFamily))),
+                          Tab(child: Text('Shorts', style: TextStyle(fontFamily: fontFamily))),
+                          Tab(child: Text('Live', style: TextStyle(fontFamily: fontFamily))),
+                          Tab(child: Text('Playlist', style: TextStyle(fontFamily: fontFamily))),
                         ],
                       ),
                     ],

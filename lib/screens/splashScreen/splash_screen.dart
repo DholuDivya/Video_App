@@ -30,8 +30,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
-import 'package:vimeo_clone/Screens/Auth/signup.dart';
+import 'package:vimeo_clone/config/global_variable.dart';
+import 'package:vimeo_clone/config/security.dart';
+
+import 'package:vimeo_clone/routes/myapproute.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -49,10 +53,17 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigateToNextScreen() async {
     await Future.delayed(Duration(seconds: 2), () {});
-    // Navigator.of(context).pushReplacement(
-    //   MaterialPageRoute(builder: (context) => const SignupPage()),
-    // );
-    GoRouter.of(context).pushReplacementNamed('signupPage');
+
+    print('${Global.token}');
+    if(Global.token == null){
+      print('Token: --- NULLLLLLLl');
+        // GoRouter.of(context).pushReplacementNamed('signupPage');
+      router.go('/signupPage');
+    }else{
+      print('-----------------------------');
+      GoRouter.of(context).pushReplacementNamed('homePage');
+    }
+
   }
 
   @override
@@ -69,3 +80,4 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+

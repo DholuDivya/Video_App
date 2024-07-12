@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "888231558500",
+    "project_id": "video-app-228cf",
+    "storage_bucket": "video-app-228cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888231558500:android:e9e787974a78dcfefd4e71",
+        "android_client_info": {
+          "package_name": "com.example.vimeo_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGRJzIcFD3KjEenxSkvkGfwM-t0ybY-hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
