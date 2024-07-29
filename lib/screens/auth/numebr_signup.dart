@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,6 +24,7 @@ class _SignupWithPhoneNumberState extends State<SignupWithPhoneNumber> {
   // final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   String _phoneNumber = '';
   String _countryCode = '';
+  TextEditingController _nameController = TextEditingController();
 
   // String verifyPhone = '${_countryCode}+_phoneNumber';
   late AuthBloc _authBloc;
@@ -107,6 +109,7 @@ class _SignupWithPhoneNumberState extends State<SignupWithPhoneNumber> {
                 // SizedBox(height: ScreenSize.screenHeight(context) * 0.01),
 
                 CustomTextField(
+                  controller: _nameController,
                   obscureText: false,
                   label: 'Name',
                 ),

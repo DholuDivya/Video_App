@@ -5,7 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_state.dart';
+import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
+import 'package:vimeo_clone/config/security.dart';
 
 
 import '../../Repo/auth_repo.dart';
@@ -18,7 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthProgress());
       try {
         String firebaseUserToken = await authRepository.signInWithGoogle();
-        String? userToken = await authRepository.verifyToken(firebaseUserToken);
+        String? userToken = await authRepository.loginWithGoogle(firebaseUserToken);
         print('Firebase Token ::: ${firebaseUserToken}');
         print('User Token ::: ${userToken}');
         emit(AuthSuccess(userToken!));
@@ -79,7 +81,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             '----   ${firebaseUserToken}\n----refreshToken   ${userCredential.user!.refreshToken}  ');
 
 
-        final userToken = await authRepository.verifyToken(firebaseUserToken!);
+        final userToken = await authRepository.loginWithPhone(firebaseUserToken!);
         print('Firebase Token of Phone Number Login ::: ${firebaseUserToken}');
         print('User Token by Phone Number Login ::: ${userToken}');
 
@@ -139,12 +141,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<OnLogOutRequestEvent>((event, emit) async {
       emit(AuthProgress());
       try {
-        await FirebaseAuth.instance.signOut();
-        final box = await Hive.openBox('UserData');
-        await box.clear();
-        print('Hive Box ************ ${box.values} ************');
-        await Global.clearToken();
-        print('Token ---- ${Global.token}');
+        await authRepository.logOutUser();
+        print('${headers}');
         emit(AuthLogOut());
       } catch (e) {
         emit(AuthFailure(error: e.toString()));

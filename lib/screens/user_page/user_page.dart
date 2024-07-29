@@ -24,6 +24,7 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         actions: [
           IconButton(
               onPressed: () {
@@ -42,8 +43,9 @@ class _UserPageState extends State<UserPage> {
           IconButton(
             icon: Icon(HeroiconsOutline.cog8Tooth),
             onPressed: () {
-              log('Next Setting Page ${headers}');
+              print('Next Setting Page ${headers}');
               log('***********************${Global.token}*********************');
+              // log('***********************${Global.userName}*********************');
               GoRouter.of(context).pushNamed('settingPage');
             },
 
@@ -61,7 +63,10 @@ class _UserPageState extends State<UserPage> {
 
             UserPageButton(
                 buttonName: 'Your Videos',
-                buttonIcon: HeroiconsOutline.play
+                buttonIcon: HeroiconsOutline.play,
+              onTap: (){
+                  GoRouter.of(context).pushNamed('uploadVideoPage');
+              },
             ),
 
 

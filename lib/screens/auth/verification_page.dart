@@ -18,6 +18,7 @@ import '../../bloc/auth/auth_state.dart';
 
 class VerificationPage extends StatefulWidget {
   final String verificationId;
+  // final String name;
   const VerificationPage({super.key, required this.verificationId});
 
   @override
@@ -118,6 +119,7 @@ class _VerificationPageState extends State<VerificationPage> {
               listener: (BuildContext context, state) {
                 if(state is AuthSuccess){
                   log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${Global.token}');
+                  // log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${Global.userName}');
                   // GoRouter.of(context).pushReplacementNamed('homePage');
                   router.goNamed('homePage');
                 }else if(state is AuthFailure){

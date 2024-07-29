@@ -4,6 +4,7 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:video_player/video_player.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class ContentScreen extends StatefulWidget {
   final Map<String, dynamic> videoData;
@@ -32,15 +33,58 @@ class _ContentScreenState extends State<ContentScreen> {
     _videoPlayerController = VideoPlayerController.network(widget.videoData['url']);
     // _videoPlayerController.setVolume(1.0);
     await Future.wait([_videoPlayerController.initialize()]);
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoInitialize: true,
-      autoPlay: true,
-      showControls: false,
-      looping: true,
-      draggableProgressBar: true,
+    final video = YoutubePlayer.convertUrlToId(widget.videoData['url']);
+    YoutubePlayer(
+      controller: YoutubePlayerController(
+        initialVideoId: video!,
+
+        flags: YoutubePlayerFlags(
+            autoPlay: false,
+            hideControls: false,
+            hideThumbnail: true
+        ),
+
+        // initialVideoId: YoutubePlayer.convertUrlToId(videoUrl!) ?? '',
+        //     flags: YoutubePlayerFlags(
+        //       autoPlay: true,
+        //       hideThumbnail: true,
+        //       controlsVisibleAtStart: true,
+        //       hideControls: false
+        //     ),
+        //
+        //   ),
+        // showVideoProgressIndicator: true,
+        // progressIndicatorColor: Colors.amber,
+        // progressColors: const ProgressBarColors(
+        //   playedColor: Colors.amber,
+        //   handleColor: Colors.amberAccent,
+      ),
+      showVideoProgressIndicator: true,
+      onReady: () => debugPrint('Ready'),
+      bottomActions: [
+        CurrentPosition(),
+        ProgressBar(
+            isExpanded: true,
+            colors: const ProgressBarColors(
+                playedColor: Colors.red,
+                handleColor: Colors.red
+            )
+        )
+      ],
+
     );
 
+    
+    
+    // _chewieController = ChewieController(
+      // videoPlayerController: _videoPlayerController,
+      // autoInitialize: true,
+      // autoPlay: true,
+      // showControls: false,
+      // looping: true,
+      // draggableProgressBar: true,
+    // );
+    
     // _videoPlayerController.addListener(() {
     //   if (_videoPlayerController.value.isInitialized) {
     //     final duration = _videoPlayerController.value.duration;
@@ -52,7 +96,7 @@ class _ContentScreenState extends State<ContentScreen> {
     //   }
     // });
 
-    setState(() {});
+  //   setState(() {});
   }
 
   @override

@@ -13,7 +13,7 @@ class ReportButton extends StatelessWidget {
         child: InkWell(
           child: Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.surfaceDim,
               borderRadius: BorderRadius.circular(25),
             ),
             padding: EdgeInsets.only(

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerWidget extends StatelessWidget {
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final ShapeBorder shapeBorder;
   final bool isBorder;
 
   ShimmerWidget.rectangular({
     super.key,
     this.width = double.infinity,
-    required this.height,
+    this.height = 150,
     required this.isBorder,
   }) : shapeBorder = RoundedRectangleBorder(
     borderRadius: isBorder ? BorderRadius.circular(15) : BorderRadius.zero,

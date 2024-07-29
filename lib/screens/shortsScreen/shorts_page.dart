@@ -100,7 +100,7 @@ class ShortsPage extends StatefulWidget {
 class _ShortsPageState extends State<ShortsPage> {
   final List<Map<String, dynamic>> videos = [
     {
-      'url': 'https://assets.mixkit.co/videos/preview/mixkit-mountain-range-with-a-clear-blue-sky-1543-large.mp4',
+      'url': 'https://youtube.com/shorts/nL6fU1Lgeas?si=fwg8gYyB3baybAXJ',
       'name': 'flutter_developer01',
       'likes': '120k',
       'profilePhoto': 'https://example.com/profile1.jpg',

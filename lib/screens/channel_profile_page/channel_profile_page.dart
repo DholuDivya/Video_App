@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/home_preview_page.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/live_preview_page.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/playlist_preview_page.dart';

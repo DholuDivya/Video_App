@@ -294,8 +294,12 @@ class _SignupPageState extends State<SignupPage> {
                             BlocBuilder<AuthBloc, AuthState>(
                               builder: (BuildContext context, state) {
                                  if(state is AuthSuccess) {
-                                  print('Login Success');
-                                  GoRouter.of(context).pushReplacementNamed('homePage');
+                                  print('Login success with email and password');
+
+                                  Future.delayed(Duration(seconds: 1),(){
+                                    GoRouter.of(context).pushReplacementNamed('homePage');
+                                  });
+
                                 }else if(state is AuthFailure){
                                   print('Login Fail');
                                 }
@@ -357,7 +361,10 @@ class _SignupPageState extends State<SignupPage> {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(content: Text('Login Successful')),
                                       );
-                                      GoRouter.of(context).pushReplacementNamed('homePage');
+
+                                      Future.delayed(Duration(seconds: 1),(){
+                                        GoRouter.of(context).pushReplacementNamed('homePage');
+                                      });
                                     } else if (state is AuthFailure) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(content: Text('Login Failed')),

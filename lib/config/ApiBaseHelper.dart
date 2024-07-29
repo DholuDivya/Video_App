@@ -48,6 +48,7 @@ class ApiBaseHelper {
     var responseJson;
     // var timeOut = 10;
     final dio_.Dio dio = dio_.Dio();
+    // print('#@###########   ${params}');
     try {
       final response =
       await dio.post(
@@ -81,7 +82,7 @@ class ApiBaseHelper {
 
   // FIREBASE LOGIN [*  Access token will be allocated to user when the user is logged in successfully *]
 
-  Future<dynamic> firebaseLoginPostAPICall(String url, String token) async {
+  Future<dynamic> firebaseLoginPostAPICall(String url, dynamic params, String token) async {
     var responseJson;
     // var timeOut = 10;
     final dio_.Dio dio = dio_.Dio();
@@ -89,6 +90,7 @@ class ApiBaseHelper {
       final response =
       await dio.post(
         url,
+        data: params.isNotEmpty ? params : [],
         options: dio_.Options(
           headers: {
             'Content-Type':'application/json',
@@ -101,7 +103,7 @@ class ApiBaseHelper {
       log('+++ HEADERS  ${headers}');
       if (kDebugMode) {
         print(
-            'response api****$url***************${response.statusCode}*********${response.data['token']}');
+            'response api****$url***************${response.statusCode}*********${response.data}');
       }
 
       // responseJson = _response(response);
@@ -159,12 +161,16 @@ class ApiBaseHelper {
 
 
 
-  Future<dynamic> getAPICall(String url) async {
+  Future<dynamic> getAPICall(String url, dynamic params) async {
     var responseJson;
     final dio_.Dio dio = dio_.Dio();
     try {
       final response =
-      await dio.get(url,options: dio_.Options(headers: headers));
+      await dio.get(
+          url,
+          data: params.isNotEmpty ? params : [],
+          options: dio_.Options(headers: headers)
+      );
       if (kDebugMode) {
         print(
             'response api****$url*****************${response.statusCode}*********${response.data}');

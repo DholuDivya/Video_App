@@ -9,6 +9,8 @@ class CustomToggleButton extends StatelessWidget {
   final VoidCallback onTap;
   final String toggleName;
   final onChanged;
+  final double? borderRadius;
+  final Color? splashColor;
 
   const CustomToggleButton({
     super.key,
@@ -16,19 +18,23 @@ class CustomToggleButton extends StatelessWidget {
     required this.toggleName,
     required this.toggleValue,
     required this.onChanged,
-    required this.toggleState
+    required this.toggleState,
+    this.borderRadius,
+    this.splashColor
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      splashColor: splashColor,
+      borderRadius: BorderRadius.circular(borderRadius!),
       onTap: onTap,
       child: Container(
         height: ScreenSize.screenHeight(context) * 0.09,
         width: double.infinity,
         padding: EdgeInsets.only(
-          left: ScreenSize.screenWidth(context) * 0.05,
-          right: ScreenSize.screenWidth(context) * 0.05,
+          left: ScreenSize.screenWidth(context) * 0.03,
+          right: ScreenSize.screenWidth(context) * 0.03,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,12 +51,12 @@ class CustomToggleButton extends StatelessWidget {
                     fontFamily: fontFamily
                   ),
                 ),
-                Text(toggleState, style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.tertiary),)
+                Text(toggleState, style: TextStyle(fontFamily: fontFamily, fontSize: 15, color: Colors.grey.shade600),)
               ],
             ),
             Container(
               height: ScreenSize.screenHeight(context) * 0.05,
-              width: ScreenSize.screenWidth(context) * 0.1,
+              width: ScreenSize.screenWidth(context) * 0.12,
               child: FittedBox(
                 fit: BoxFit.contain,
                 child: CupertinoSwitch(

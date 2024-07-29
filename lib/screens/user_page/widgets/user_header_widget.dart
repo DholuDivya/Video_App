@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/config/global_variable.dart';
 
 class UserHeaderWidget extends StatelessWidget {
   const UserHeaderWidget({super.key});
@@ -38,7 +39,7 @@ class UserHeaderWidget extends StatelessWidget {
             children: [
 
               Text(
-                'Sony Sab',
+                '${Global.userName}',
                 style: TextStyle(
                   fontFamily: fontFamily,
                   fontSize: 22
@@ -52,9 +53,9 @@ class UserHeaderWidget extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        'View channel ',
+                        '${Global.userEmail} ',
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 11,
                           fontFamily: fontFamily,
                           color: Colors.grey
                         )

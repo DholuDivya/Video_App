@@ -1,11 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:pod_player/pod_player.dart';
 import 'package:readmore/readmore.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:video_player/video_player.dart';
+import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
+import 'package:vimeo_clone/bloc/play_video/play_video_state.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/Utils/Widgets/download_button.dart';
@@ -16,6 +21,7 @@ import 'package:vimeo_clone/Utils/Widgets/save_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/share_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/Utils/Widgets/video_container.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 
 class VideoPage extends StatefulWidget {
@@ -135,376 +141,533 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   ];
 
 
-
-  late AnimationController _controller;
-  late Animation _animation;
-
-  FocusNode _focusNode = FocusNode();
-
-  bool _isLoading = true;
-
-
-  late FlickManager flickManager;
-  bool _isSubscribed = false;
+  PodPlayerController? _podController;
 
   @override
   void initState() {
     super.initState();
 
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _animation = Tween(begin: 300.0, end: 50.0).animate(_controller)
-      ..addListener(() {
-        setState(() {});
-      });
+    // Access the Bloc
+    final videoBloc = context.read<PlayVideoBloc>();
 
-    _focusNode.addListener(() {
-      if (_focusNode.hasFocus) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
+    // Handle state changes
+    videoBloc.stream.listen((state) {
+      if (state is PlayVideoLoaded) {
+        final videoData = state.playVideo[0].data!;
+        setState(() {
+          _podController = PodPlayerController(
+            playVideoFrom: videoData.uploadSourceType == "external"
+                ? PlayVideoFrom.youtube(videoData.video!)
+                : PlayVideoFrom.network(videoData.video!),
+            // podPlayerConfig: const PodPlayerConfig(
+            //     autoPlay: true,
+            //     isLooping: false,
+            //     videoQualityPriority: [1080, 720, 360]
+            // )
+          )..initialise();
+        });
       }
-    });
-
-    Future.delayed(Duration(seconds: 3), () {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-
-    flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.network(
-        'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
-      ),
-      autoPlay: true,
-
-    );
-
-
-    flickManager.flickVideoManager?.videoPlayerController?.addListener(() {
-      setState(() {}); // Update the UI when the video player state changes
-    });
-
-    // Initialize the video player
-    flickManager.flickVideoManager?.videoPlayerController?.initialize().then((_) {
-      setState(() {}); // Ensure the UI is updated once the initialization is complete
-      flickManager.flickVideoManager?.videoPlayerController?.play();
     });
   }
 
   @override
   void dispose() {
-    flickManager.dispose();
-    _controller.dispose();
-    _focusNode.dispose();
+    _podController?.dispose(); // Ensure to check if _podController is not null
     super.dispose();
   }
+
+
+  // late final PodPlayerController youtubeController;
+  // late final PodPlayerController networkController;
+  //
+  // @override
+  // void initState() {
+  //   youtubeController = PodPlayerController(
+  //     playVideoFrom: PlayVideoFrom.youtube('https://youtu.be/A3ltMaM6noM'),
+  //   )..initialise();
+  //
+  //   networkController = PodPlayerController(
+  //     playVideoFrom: PlayVideoFrom.network(),
+  //   )..initialise();
+  //
+  //
+  //   super.initState();
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   controller.dispose();
+  //   super.dispose();
+  // }
+
+
+
+
+  // late AnimationController _controller;
+  // late Animation _animation;
+
+  // FocusNode _focusNode = FocusNode();
+
+  bool _isLoading = true;
+
+
+  // late FlickManager flickManager;
+  bool _isSubscribed = false;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+
+    // _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    // _animation = Tween(begin: 300.0, end: 50.0).animate(_controller)
+    //   ..addListener(() {
+    //     setState(() {});
+    // });
+
+    // _focusNode.addListener(() {
+    //   if (_focusNode.hasFocus) {
+    //     _controller.forward();
+    //   } else {
+    //     _controller.reverse();
+    //   }
+    // });
+
+
+  // }
+
+    // flickManager = FlickManager(
+    //   videoPlayerController: VideoPlayerController.network(
+    //     'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
+    //   ),
+    //   autoPlay: true,
+    //
+    // );
+    //
+    //
+    // flickManager.flickVideoManager?.videoPlayerController?.addListener(() {
+    //   setState(() {}); // Update the UI when the video player state changes
+    // });
+    //
+    // // Initialize the video player
+    // flickManager.flickVideoManager?.videoPlayerController?.initialize().then((_) {
+    //   setState(() {}); // Ensure the UI is updated once the initialization is complete
+    //   flickManager.flickVideoManager?.videoPlayerController?.play();
+    // });
+  // }
+
+  // @override
+  // void dispose() {
+  //   flickManager.dispose();
+  //   _controller.dispose();
+  //   _focusNode.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.only(top: ScreenSize.screenHeight(context) * 0.335),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title of the video, Views and Upload time
-                InkWell(
-                  onTap: () {
-                    videoDescriptionSheet(context);
-                  },
-                  child: Padding(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            BlocBuilder<PlayVideoBloc, PlayVideoState>(
+              builder: (BuildContext context, state) {
+                if(state is PlayVideoLoaded) {
+                  return SingleChildScrollView(
                     padding: EdgeInsets.only(
-                      top: ScreenSize.screenHeight(context) * 0.01,
-                      left: ScreenSize.screenWidth(context) * 0.03,
-                      right: ScreenSize.screenWidth(context) * 0.03,
-                    ),
+                        top: 180.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AutoSizeText(
-                          'Tarak Mehta ka Ooltah Chashma Episode - 321',
-                          style: TextStyle(
-                            fontFamily: fontFamily,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        AutoSizeText(
-                          '10M Views - 2 Days ago',
-                          style: TextStyle(
-                            fontFamily: fontFamily,
-                            fontSize: 12,
-                            color: Colors.grey[700],
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: ScreenSize.screenHeight(context) * 0.01),
-
-                // Channel Photo, Channel Name, Subscriber, Subscribe Button
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: ScreenSize.screenWidth(context) * 0.03,
-                    right: ScreenSize.screenWidth(context) * 0.03,
-                  ),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 18,
-                        child: Icon(Remix.user_3_line),
-                      ),
-                      SizedBox(width: ScreenSize.screenWidth(context) * 0.02),
-
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: (){
-                            GoRouter.of(context).pushNamed('channelProfilePage');
+                        // Title of the video, Views and Upload time
+                        InkWell(
+                          onTap: () {
+                            videoDescriptionSheet(context);
                           },
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  'Sony Liv',
-                                  style: TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: 14,
+                          child: Container(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: ScreenSize.screenHeight(context) * 0.01,
+                                left: ScreenSize.screenWidth(context) * 0.03,
+                                right: ScreenSize.screenWidth(context) * 0.03,
+                                bottom: ScreenSize.screenWidth(context) * 0.015,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${state.playVideo[0].data!.title}',
+                                    style: TextStyle(
+                                      fontFamily: fontFamily,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              SizedBox(width: ScreenSize.screenWidth(context) * 0.03),
-                              Text(
-                                '75k',
-                                style: TextStyle(
-                                  fontFamily: fontFamily,
-                                  fontSize: 12,
-                                  color: Colors.grey[700],
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(width: ScreenSize.screenWidth(context) * 0.02),
-                      GestureDetector(
-                        onTap: (){
-                          setState(() {
-                            _isSubscribed = !_isSubscribed;
-                          });
-                        },
-                        child: Container(
-                          height: ScreenSize.screenHeight(context) * 0.045,
-                          width: _isSubscribed ? ScreenSize.screenWidth(context) * 0.28 : ScreenSize.screenWidth(context) * 0.25,
-                          decoration: BoxDecoration(
-                            color: _isSubscribed ? Colors.grey.shade200 : Colors.red,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Center(
-                            child: Text(
-                              _isSubscribed ? 'Unsubscribe' : 'Subscribe',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: _isSubscribed ? Colors.black : Colors.white,
-                                fontFamily: fontFamily,
+                                  AutoSizeText(
+                                    '10M Views - ${state.playVideo[0].data!.createdAtHuman}',
+                                    style: TextStyle(
+                                      fontFamily: fontFamily,
+                                      fontSize: 12,
+                                      color: Colors.grey[700],
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: ScreenSize.screenHeight(context) * 0.02),
-
-                // Like, DisLike, Save, Download, Share, Report Buttons
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.only(
-                    left: ScreenSize.screenWidth(context) * 0.03,
-                    right: ScreenSize.screenWidth(context) * 0.03,
-                  ),
-                  child: Row(
-                    children: [
-                      LikeDislikeButton(
-                        initialLikeCount: 5824,
-                      ),
-                      SizedBox(width: ScreenSize.screenWidth(context) * 0.03),
-
-                      ShareButton(),
-                      SizedBox(width: ScreenSize.screenWidth(context) * 0.03),
-
-                      DownloadButton(),
-                      SizedBox(width: ScreenSize.screenWidth(context) * 0.03),
-
-                      SaveButton(),
-                      SizedBox(width: ScreenSize.screenWidth(context) * 0.03),
-
-                      ReportButton(),
-                    ],
-                  ),
-                ),
-                SizedBox(height: ScreenSize.screenHeight(context) * 0.02,),
-
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: ScreenSize.screenWidth(context) * 0.03,
-                    right: ScreenSize.screenWidth(context) * 0.03
-                  ),
-                  child: InkWell(
-                    onTap: (){
-                      videoCommentSheet(context);
-                    },
-                    child: Container(
-                      // height: ScreenSize.screenHeight(context) * 0.,
-                      width: ScreenSize.screenWidth(context) * 0.95,
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(10)
-                      ),
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Comments',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold
-                                )
-                              ),
-                              SizedBox(width: ScreenSize.screenWidth(context) * 0.02,),
-                              Text(
-                                '5.6k',
-                                style: TextStyle(
-                                  color: Colors.grey.shade500
-                                ),
-                              )
-                            ],
+                        SizedBox(height: ScreenSize.screenHeight(context) *
+                            0.01),
+            
+                        // Channel Photo, Channel Name, Subscriber, Subscribe Button
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: ScreenSize.screenWidth(context) * 0.03,
+                            right: ScreenSize.screenWidth(context) * 0.03,
                           ),
-                          SizedBox(height: ScreenSize.screenHeight(context) * 0.01,),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
                               CircleAvatar(
-                                radius: 10,
-                                backgroundImage: AssetImage('assets/images/tmkocteam.jpg'),
+                                radius: 18,
+                                backgroundImage: NetworkImage('${state.playVideo[0].data!.channel!.logo}'),
+                                // child: Icon(Remix.user_3_line),
                               ),
-                              SizedBox(width: ScreenSize.screenWidth(context) * 0.02,),
-
+                              SizedBox(
+                                  width: ScreenSize.screenWidth(context) *
+                                      0.02),
+            
                               Expanded(
-                                child: Text(
-                                  '2035 mein kaun kaun Tarak Mehta dekhna pasand karega :)',
-                                  style: TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: 12,
-                                    overflow: TextOverflow.ellipsis
-                                  ),
-                                  maxLines: 4,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Divider(thickness: 0.5, color: Colors.grey.shade300,),
-
-                Container(
-                  child: ListView.builder(
-                    padding: EdgeInsets.only(
-                      top: ScreenSize.screenHeight(context) * 0.02
-                    ),
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: videoList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (_isLoading) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ShimmerWidget.rectangular(height: 200, isBorder: false),
-                              SizedBox(height: 16),
-
-                              Row(
-                                children: [
-                                  ShimmerWidget.circular(width: 50, height: 50, isBorder: true),
-                                  SizedBox(width: 8),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    GoRouter.of(context).pushNamed(
+                                        'channelProfilePage');
+                                  },
+                                  child: Row(
                                     children: [
-                                      ShimmerWidget.rectangular(height: 20, width: 120, isBorder: true),
-                                      SizedBox(height: 8),
-                                      ShimmerWidget.rectangular(height: 20, width: 200, isBorder: true),
+                                      Flexible(
+                                        child: Text(
+                                          '${state.playVideo[0].data!.channel!.name}',
+                                          style: TextStyle(
+                                            fontFamily: fontFamily,
+                                            fontSize: 14,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                          width: ScreenSize.screenWidth(
+                                              context) *
+                                              0.03),
+                                      Text(
+                                        '75k',
+                                        style: TextStyle(
+                                          fontFamily: fontFamily,
+                                          fontSize: 12,
+                                          color: Colors.grey[700],
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ],
                                   ),
-                                ],
+                                ),
+                              ),
+            
+                              SizedBox(
+                                  width: ScreenSize.screenWidth(context) *
+                                      0.02),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _isSubscribed = !_isSubscribed;
+                                  });
+                                },
+                                child: Container(
+                                  height: ScreenSize.screenHeight(context) *
+                                      0.045,
+                                  width: _isSubscribed ? ScreenSize.screenWidth(
+                                      context) * 0.28 : ScreenSize.screenWidth(
+                                      context) * 0.25,
+                                  decoration: BoxDecoration(
+                                    color: _isSubscribed
+                                        ? Colors.grey.shade200
+                                        : Colors.red,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      _isSubscribed
+                                          ? 'Unsubscribe'
+                                          : 'Subscribe',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: _isSubscribed
+                                            ? Colors.black
+                                            : Colors.white,
+                                        fontFamily: fontFamily,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        );
-                      } else {
-                        return VideoListItem(
-                          thumbnailUrl: videoList[index]['thumbnailUrl'],
-                          duration: videoList[index]['duration'],
-                          title: videoList[index]['title'],
-                          author: videoList[index]['author'],
-                          views: videoList[index]['views'],
-                          uploadTime: videoList[index]['uploadTime'],
-                          onMorePressed: () {
-                            // Add your onMorePressed logic here
-                          },
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ],
+                        ),
+                        SizedBox(height: ScreenSize.screenHeight(context) *
+                            0.02),
+            
+                        // Like, DisLike, Save, Download, Share, Report Buttons
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          padding: EdgeInsets.only(
+                            left: ScreenSize.screenWidth(context) * 0.03,
+                            right: ScreenSize.screenWidth(context) * 0.03,
+                          ),
+                          child: Row(
+                            children: [
+                              LikeDislikeButton(
+                                initialLikeCount: 5824,
+                              ),
+                              SizedBox(
+                                  width: ScreenSize.screenWidth(context) *
+                                      0.03),
+            
+                              ShareButton(),
+                              SizedBox(
+                                  width: ScreenSize.screenWidth(context) *
+                                      0.03),
+            
+                              DownloadButton(),
+                              SizedBox(
+                                  width: ScreenSize.screenWidth(context) *
+                                      0.03),
+            
+                              SaveButton(),
+                              SizedBox(
+                                  width: ScreenSize.screenWidth(context) *
+                                      0.03),
+            
+                              ReportButton(),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenSize.screenHeight(context) * 0.02,),
+            
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: ScreenSize.screenWidth(context) * 0.03,
+                              right: ScreenSize.screenWidth(context) * 0.03
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              videoCommentSheet(context);
+                            },
+                            child: Container(
+                              // height: ScreenSize.screenHeight(context) * 0.,
+                              width: ScreenSize.screenWidth(context) * 0.95,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surfaceDim,
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                          'Comments',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold
+                                          )
+                                      ),
+                                      SizedBox(
+                                        width: ScreenSize.screenWidth(context) *
+                                            0.02,),
+                                      Text(
+                                        '5.6k',
+                                        style: TextStyle(
+                                            color: Colors.grey.shade500
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: ScreenSize.screenHeight(context) *
+                                        0.01,),
+            
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 10,
+                                        backgroundImage: AssetImage(
+                                            'assets/images/tmkocteam.jpg'),
+                                      ),
+                                      SizedBox(
+                                        width: ScreenSize.screenWidth(context) *
+                                            0.02,),
+            
+                                      Expanded(
+                                        child: Text(
+                                          '2035 mein kaun kaun Tarak Mehta dekhna pasand karega :)',
+                                          style: TextStyle(
+                                              fontFamily: fontFamily,
+                                              fontSize: 12,
+                                              overflow: TextOverflow.ellipsis
+                                          ),
+                                          maxLines: 4,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+            
+                        // Divider(thickness: 0.5, color: Colors.grey.shade300,),
+            
+                        Container(
+                          child: ListView.builder(
+                            padding: EdgeInsets.only(
+                                top: ScreenSize.screenHeight(context) * 0.02
+                            ),
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: videoList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (_isLoading) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
+                                    children: [
+                                      ShimmerWidget.rectangular(
+                                          height: 200, isBorder: false),
+                                      SizedBox(height: 16),
+            
+                                      Row(
+                                        children: [
+                                          ShimmerWidget.circular(width: 50,
+                                              height: 50,
+                                              isBorder: true),
+                                          SizedBox(width: 8),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment
+                                                .start,
+                                            children: [
+                                              ShimmerWidget.rectangular(
+                                                  height: 20,
+                                                  width: 120,
+                                                  isBorder: true),
+                                              SizedBox(height: 8),
+                                              ShimmerWidget.rectangular(
+                                                  height: 20,
+                                                  width: 200,
+                                                  isBorder: true),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return VideoListItem(
+                                  thumbnailUrl: videoList[index]['thumbnailUrl'],
+                                  duration: videoList[index]['duration'],
+                                  title: videoList[index]['title'],
+                                  author: videoList[index]['author'],
+                                  views: videoList[index]['views'],
+                                  uploadTime: videoList[index]['uploadTime'],
+                                  onMorePressed: () {
+                                    // Add your onMorePressed logic here
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return Container();
+              }
             ),
-          ),
+            
+            // Video
+            BlocBuilder<PlayVideoBloc, PlayVideoState>(
+              builder: (BuildContext context, PlayVideoState state) {
+                // if(state is PlayVideoLoading){
+                //   return Center(child: CircularProgressIndicator(),);
+                // }
+                // else
+                  if(state is PlayVideoLoaded){
+                  // String? videoUrl = state.playVideo[0].data!.video;
+                  //   final videoUrl = 'https://youtu.be/Idh8n5XuYIA?si=dNERYqyAAqJTyOew';
+                  //
+                  //   final video = YoutubePlayer.convertUrlToId(videoUrl);
 
-          // Video
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: flickManager.flickVideoManager?.videoPlayerController?.value.isInitialized ?? false
-                ? FlickVideoPlayer(
-              flickManager: flickManager,
-              wakelockEnabledFullscreen: true,
-              wakelockEnabled: true,
-              flickVideoWithControls: FlickVideoWithControls(
-                videoFit: BoxFit.contain,
-                controls: FlickPortraitControls(
-                  progressBarSettings: FlickProgressBarSettings(
-                    playedColor: Colors.red,
-                    bufferedColor: yellow,
-                    handleColor: red,
-                  ),
-                ),
-              ),
-            )
-                : ShimmerWidget.rectangular(height: ScreenSize.screenHeight(context) * 0.335, width: double.infinity, isBorder: false),
-          ),
-        ],
+
+
+                  return Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child:  AspectRatio(
+                          aspectRatio: 16/9,
+                      child: _podController == null
+                          ? Center(child: CircularProgressIndicator()) // Show a loading indicator until the controller is ready
+                          : PodVideoPlayer(
+                        controller: _podController!,
+                      ),
+                    )
+                  );
+
+
+                          // YoutubePlayer(
+                          // controller: YoutubePlayerController(
+                          //   initialVideoId: video!,
+                          //
+                          //     flags: YoutubePlayerFlags(
+                          //       autoPlay: false,
+                          //       hideControls: false,
+                          //       hideThumbnail: true
+                          //     ),
+                          // ),
+                          //   showVideoProgressIndicator: true,
+                          //   onReady: () => debugPrint('Ready'),
+                          //   bottomActions: [
+                          //     CurrentPosition(),
+                          //     ProgressBar(
+                          //       isExpanded: true,
+                          //       colors: const ProgressBarColors(
+                          //         playedColor: Colors.red,
+                          //         handleColor: Colors.red
+                          //       )
+                          //     )
+                          //   ],
+                          //
+                          // ),
+
+                }
+                return Container();
+              },
+            
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -522,7 +685,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
       isScrollControlled: true,
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: 0.662,
+          heightFactor: 0.605.h,
           child: SingleChildScrollView(
             padding: EdgeInsets.only(
               top: ScreenSize.screenHeight(context) * 0.01,
@@ -675,7 +838,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                   // height: ScreenSize.screenHeight(context) * 0.5,
                   width: ScreenSize.screenWidth(context) * 0.9,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                    color: Theme.of(context).colorScheme.surfaceDim,
                     borderRadius: BorderRadius.circular(10)
                   ),
                   padding: EdgeInsets.all(10),
@@ -684,7 +847,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     trimLength: 400,
                     moreStyle: TextStyle(
                       fontFamily: fontFamily,
-                      color: Colors.grey.shade600,
+                      color: Theme.of(context).colorScheme.secondaryFixedDim,
                       fontSize: 12
                     ),
 
@@ -724,7 +887,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
       isScrollControlled: true,
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: 0.662,
+          heightFactor: 0.605.h,
           child: Column(
             children: [
               // Top fixed container with comments text and close button
@@ -972,7 +1135,7 @@ class VideoHastag extends StatelessWidget {
           right: ScreenSize.screenWidth(context) * 0.025
       ),
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
+        color: Theme.of(context).colorScheme.surfaceDim,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Text(

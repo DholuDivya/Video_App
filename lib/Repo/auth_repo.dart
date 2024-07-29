@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -124,23 +125,31 @@ class AuthRepository{
 
 
   // VERIFY TOKEN FROM FIREBASE
-  Future<String?> verifyToken(String firebaseUserToken) async {
+  Future<String?> loginWithGoogle(String firebaseUserToken) async {
     try{
-      final response = await apiHelper.firebaseLoginPostAPICall(firebaseLoginUrl, firebaseUserToken);
+      final response = await apiHelper.firebaseLoginPostAPICall(loginWithGoogleUrl, {}, firebaseUserToken);
 
       if(response.statusCode == 200 ){
         // STORING THE TOKEN IN HIVE
+
         final box = await Hive.openBox('UserData');
-        await box.put('userToken', response.data['token']);
-        print('```````````````  ${box.values}  ```````````');
-        // Global.token = response.data['token'];
+
+        // Update Global variables
         Global.setToken(response.data['token']);
+        Global.setUserName(response.data['user']['name']);
+        // Global.setUserProfile(response.data['user']['profile']);
+        Global.setUserEmail(response.data['user']['email']);
+        // Global.setUserNumber(response.data['user']['number']);
+
+        print('|||||||   ${Global.token}');
+
+        print('```````````````  ${box.values}  ```````````');
         // await box.close();
 
         // RETURN TOKEN
         String userToken = response.data['token'];
         print('Token Verified Successfully');
-        print(':::::::::::::::::::  ${userToken}   :::::::::::::::::::');
+        print(':::::::::::::::::::  $userToken   :::::::::::::::::::');
         return userToken;
       }else {
         throw ApiException('Failed to verify token : ${response.data}');
@@ -151,8 +160,48 @@ class AuthRepository{
   }
 
 
+
+  Future<String?> loginWithPhone(String firebaseUserToken) async {
+    try{
+      final response = await apiHelper.firebaseLoginPostAPICall(loginWithPhoneUrl, {},firebaseUserToken);
+
+      if(response.statusCode == 200 ){
+        // STORING THE TOKEN IN HIVE
+
+        final box = await Hive.openBox('UserData');
+
+        // Update Global variables
+        Global.setToken(response.data['token']);
+        Global.setUserName(response.data['user']['name']);
+        // Global.setUserProfile(response.data['user']['profile']);
+        Global.setUserEmail(response.data['user']['email']);
+        // Global.setUserNumber(response.data['user']['number']);
+
+        print('|||||||   ${Global.token}');
+
+        print('```````````````  ${box.values}  ```````````');
+        // await box.close();
+
+        // RETURN TOKEN
+        String userToken = response.data['token'];
+        print('Token Verified Successfully');
+        print(':::::::::::::::::::  $userToken   :::::::::::::::::::');
+        return userToken;
+      }else {
+        throw ApiException('Failed to verify token : ${response.data}');
+      }
+    }catch(e){
+      throw ApiException('Failed to verify token: $e');
+    }
+  }
+
+
+
+
+
+
   // REGISTER USER
-  Future<dynamic?> registerUser(String name, String email, String password) async {
+  Future<dynamic> registerUser(String name, String email, String password) async {
     try{
       final response = await apiHelper.registerUserPostAPICall(registerUserUrl, {'name': name, 'email': email, 'password': password} );
 
@@ -160,10 +209,14 @@ class AuthRepository{
 
         // STORING THE ACCESS TOKEN IN THE HIVE -----
         final box = await Hive.openBox('UserData');
-        await box.put('userToken', response.data['access_token']);
-        print('```````````````  ${box.values}  ```````````');
+        // await box.put('userToken', response.data['access_token']);
         // Global.token = response.data['access_token'];
         Global.setToken(response.data['access_token']);
+        Global.setUserName(response.data['user']['name']);
+        Global.setUserEmail(response.data['user']['email']);
+        // Global.setUserNumber(response.data['user']['number']);
+        // Global.setUserProfile(response.data['user']['profile']);
+        print('```````````````  ${box.values}  ```````````');
         // await box.close();
 
         // RETURN ACCESS TOKEN
@@ -183,21 +236,23 @@ class AuthRepository{
 
 
   // LOGIN USER
-  Future<dynamic?> loginUser(String email, String password) async {
+  Future<dynamic> loginUser(String email, String password) async {
     try{
       final response = await apiHelper.postAPICall(loginUserUrl, {'email': email, 'password': password});
-
-
-
+      
       if(response.statusCode == 200){
 
         // STORING THE TOKEN IN HIVE ------
-
+        
         final box = await Hive.openBox('UserData');
-        await box.put('userToken', response.data['data']['token']);
+        // await box.put('userToken', response.data['data']['token']);
         print(' -.-.-.-.-.-.- ${box.values} -.-.-.-.-.-.-.- ');
         // Global.token = response.data['data']['token'];
         Global.setToken(response.data['data']['token']);
+        Global.setUserName(response.data['data']['user']['name']);
+        Global.setUserEmail(response.data['data']['user']['email']);
+        // Global.setUserNumber(response.data['data']['user']['number']);
+        // Global.setUserProfile(response.data['data']['user']['profile']);
         // await box.close();
 
         // RETURN TOKEN
@@ -211,6 +266,32 @@ class AuthRepository{
 
     }catch(e){
       throw ApiException('Failed to Login User --- $e');
+    }
+  }
+  
+  
+  Future logOutUser() async {
+    print('api call --------');
+    try{
+      final response = await apiHelper.postAPICall(userLogOutUrl, {});
+      print(response.data);
+      if(response.statusCode == 200){
+        await FirebaseAuth.instance.signOut();
+        final box = await Hive.openBox('UserData');
+        // await box.clear();
+        print('Hive Box ************ ${box.values} ************');
+        await Global.clearUserData();
+        // print('Token ---- ${Global.token}');
+        print('Token ---- ${Global.userName}');
+
+
+        print('User Logged Out Successfully');
+      }
+      else{
+        print('Failed to log out user');
+      }
+    }catch(e){
+      throw ApiException('Failed to Log out user ----- $e');
     }
   }
 }

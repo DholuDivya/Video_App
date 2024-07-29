@@ -148,6 +148,7 @@ class _SettingPageState extends State<SettingPage> {
         body: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if(state is AuthLogOut){
+              // print('Logged Out ---- ${headers} \n Token${Global.userName}');
               print('Logged Out ---- ${headers} \n Token${Global.token}');
               GoRouter.of(context).pushReplacementNamed('signupPage');
             }
@@ -340,6 +341,7 @@ class _SettingPageState extends State<SettingPage> {
                   CustomLogOutWidget(
                       btnName: 'Log Out',
                       onTap: () {
+                        print('log out');
                         context.read<AuthBloc>().add(OnLogOutRequestEvent());
                       }
                   ),

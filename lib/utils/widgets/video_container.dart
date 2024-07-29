@@ -4,22 +4,26 @@ import 'package:vimeo_clone/Config/constants.dart';
 import 'package:vimeo_clone/config/colors.dart';
 
 class VideoListItem extends StatelessWidget {
+  final String? channelPhoto;
   final String thumbnailUrl;
   final String duration;
   final String title;
   final String author;
   final String views;
   final String uploadTime;
+  final Function()? onTap;
   final Function()? onMorePressed;
 
-  const VideoListItem(
-      {super.key,
+  const VideoListItem({
+    super.key,
+    this.channelPhoto,
     required this.thumbnailUrl,
     required this.duration,
     required this.title,
     required this.author,
     required this.views,
     required this.uploadTime,
+    this.onTap,
     this.onMorePressed,
   });
 
@@ -30,10 +34,8 @@ class VideoListItem extends StatelessWidget {
       decoration: BoxDecoration(
         // color: Theme.of(context).colorScheme.surface,
       ),
-      child: GestureDetector(
-        onTap: (){
-          GoRouter.of(context).pushNamed('videoPage');
-        },
+      child: InkWell(
+        onTap: onTap,
         child: Column(
           children: [
             Stack(
@@ -42,12 +44,15 @@ class VideoListItem extends StatelessWidget {
                 // VIDEO THUMBNAIL --------------------------------------------------------------------------
                 ClipRRect(
                   // borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    thumbnailUrl,
-                    height: ScreenSize.screenHeight(context) * 0.25,
-                    width: double.infinity,
-                    // width: ScreenSize.screenWidth(context) * 0.97,
-                    fit: BoxFit.cover,
+                  child: AspectRatio(
+                    aspectRatio: 16/9,
+                    child: Image.network(
+                      thumbnailUrl,
+                      // height: ScreenSize.screenHeight(context) * 0.25,
+                      // width: double.infinity,
+                      // width: ScreenSize.screenWidth(context) * 0.97,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
 
@@ -90,8 +95,9 @@ class VideoListItem extends StatelessWidget {
                     },
                     child: CircleAvatar(
                       radius: 20,
-                      backgroundColor: Theme.of(context).colorScheme.secondary,
-                      child: Icon(Icons.person, color: Theme.of(context).colorScheme.surface),
+                      backgroundImage: NetworkImage('$channelPhoto')
+                      // backgroundColor: Theme.of(context).colorScheme.secondary,
+                      // child: Icon(Icons.person, color: Theme.of(context).colorScheme.surface),
                     ),
                   ),
                   SizedBox(width: ScreenSize.screenWidth(context) * 0.028),
@@ -104,7 +110,7 @@ class VideoListItem extends StatelessWidget {
                           style: TextStyle(
                             fontFamily: fontFamily,
                             fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w400,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -113,7 +119,7 @@ class VideoListItem extends StatelessWidget {
                           '$author - $views views - $uploadTime',
                           style: TextStyle(
                             fontFamily: fontFamily,
-                            fontSize: 12,
+                            fontSize: 11,
                             color: Colors.grey[600],
                           ),
                           maxLines: 1,

@@ -13,13 +13,15 @@ import 'package:vimeo_clone/screens/auth/registration_page.dart';
 import 'package:vimeo_clone/screens/auth/numebr_signup.dart';
 import 'package:vimeo_clone/screens/auth/reset_password.dart';
 import 'package:vimeo_clone/screens/auth/verification_page.dart';
+import 'package:vimeo_clone/screens/upload_video/upload_video_page.dart';
+import 'package:vimeo_clone/screens/upload_video_from_url/upload_video_from_url_page.dart';
 import 'package:vimeo_clone/screens/user_page/user_page.dart';
 import '../Screens/HomePage/homepage.dart';
 import '../screens/channel_profile_page/channel_profile_page.dart';
 
 // class MyAppRoute {
   final GoRouter router = GoRouter(
-    // initialLocation: '/SignupPage',
+    // initialLocation: '/uploadVideoPage',
       routes: [
         GoRoute(
           name: 'splashScreen',
@@ -156,6 +158,23 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
           path: '/videoPage',
           pageBuilder: (context, state) => const MaterialPage (
             child: VideoPage(),
+          ),
+        ),
+
+        GoRoute(
+          name: 'uploadVideoPage',
+          path: '/uploadVideoPage',
+          pageBuilder: (context, state) => const MaterialPage (
+            child: UploadVideoPage(),
+          ),
+        ),
+
+
+        GoRoute(
+          name: 'uploadVideoFromUrl',
+          path: '/uploadVideoFromUrl',
+          pageBuilder: (context, state) => const MaterialPage (
+            child: UploadVideoFromUrlPage(),
           ),
         ),
 

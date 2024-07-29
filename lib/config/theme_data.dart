@@ -12,7 +12,15 @@ ThemeData lightTheme = ThemeData(
       surface: Colors.white,
       secondary: Colors.grey.shade300,
       tertiary: Colors.grey.shade900,
-      primaryFixedDim: textFieldLabelLight
+
+      primaryFixedDim: textFieldLabelLight,
+      surfaceDim: greyShade100,
+      secondaryFixedDim: greyShade500,
+      tertiaryFixedDim: greyShade200,
+
+
+      primaryContainer: greyShade200,
+
     ),
 
     floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -63,11 +71,21 @@ ThemeData lightTheme = ThemeData(
 ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     colorScheme: ColorScheme.dark(
+
+
       primary: Colors.grey.shade500,
       surface: Colors.grey.shade900,
       secondary: Colors.grey.shade800,
       tertiary: Colors.white,
-      primaryFixedDim: textFieldLabelDark
+
+
+      primaryFixedDim: textFieldLabelDark,
+      surfaceDim : white12,
+      secondaryFixedDim: white54,
+      tertiaryFixedDim: white24,
+
+
+      onPrimaryContainer: white24
     ),
 
   floatingActionButtonTheme: FloatingActionButtonThemeData(

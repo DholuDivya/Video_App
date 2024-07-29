@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -216,7 +215,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       if(state is AuthProgress){
                         return Center(child: const CircularProgressIndicator(),);
                       }else if(state is AuthSuccess){
-                        GoRouter.of(context).pushReplacementNamed('homePage');
+                        GoRouter.of(context).pushReplacementNamed('signupPage');
                         print('success');
                         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Registered Successfully')));
                       }else if(state is AuthFailure){

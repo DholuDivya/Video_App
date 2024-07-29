@@ -16,7 +16,7 @@ class DownloadButton extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
-              color: Theme.of(context).colorScheme.primary
+              color: Theme.of(context).colorScheme.surfaceDim
             ),
             padding: EdgeInsets.only(
               left: ScreenSize.screenWidth(context) * 0.03,

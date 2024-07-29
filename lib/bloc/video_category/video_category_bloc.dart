@@ -10,29 +10,18 @@ class VideoCategoriesBloc extends Bloc<VideoCategoryEvent, VideoCategoryState>{
   VideoCategoriesBloc(this.videoCategoriesRepo) : super(VideoCategoriesInitial()){
     on<GetCategoryEvent>(_onFetchVideoCategories);
     on<SelectCategory>(_onSelectCategory);
-
-
-    // on<GetCategoryEvent>((event, emit) async {
-    //   emit(VideoCategoriesLoading());
-    //   print('vvvvvvvvvvvvvvvvvvvvv');
-    //   try{
-    //     print('[[[[[[[[[[[[[[[[[[[[[[');
-    //     final List<VideoCategoriesModel>? categories = await videoCategoriesRepo.getVideoCategories();
-    //     print('|||||||||  ${categories?[2].name}  |||||||||||||');
-    //     emit(VideoCategoriesLoaded(categories: categories!));
-    //   }catch(e){
-    //     emit(VideoCategoriesFailure(error: e.toString()));
-    //   }
-    // });
   }
 
   Future<void> _onFetchVideoCategories(GetCategoryEvent event, Emitter<VideoCategoryState> emit) async {
     emit(VideoCategoriesLoading());
     try {
       final List<VideoCategoriesModel>? categories = await videoCategoriesRepo.getVideoCategories();
-      emit(VideoCategoriesLoaded(categories: categories!, selectedCategory: 0));
+      print('${categories}');
+      emit(VideoCategoriesLoaded(categories: categories!, selectedCategory: -1));
+
     } catch (e) {
       emit(VideoCategoriesFailure(error: e.toString()));
+      print(e);
     }
   }
 

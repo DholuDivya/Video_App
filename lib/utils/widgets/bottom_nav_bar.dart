@@ -5,15 +5,19 @@ import 'package:vimeo_clone/Config/constants.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
+
   final int currentIndex;
   final ValueChanged<int> onTabTapped;
   final VoidCallback onAddButtonPressed;
   final double screenHeight;
   final double screenWidth;
+  final Color backgroundColor;
 
 
 
   const CustomBottomNavigationBar({
+    super.key,
+    required this.backgroundColor,
     required this.currentIndex,
     required this.onTabTapped,
     required this.onAddButtonPressed,
@@ -26,7 +30,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return Container(
 
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: backgroundColor,
+        // color: Theme.of(context).colorScheme.surface,
         border: Border(
           top: BorderSide(width: 0.2,),
         ),
@@ -38,12 +43,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
           BottomBarIconButton(
 
             icon: currentIndex == 0 ? HeroiconsSolid.home : HeroiconsOutline.home,
-            color: currentIndex == 0 ? primaryColor : null,
+            color: currentIndex == 0 ? primaryColor : greyShade600,
             onPressed: () { onTabTapped(0); },
           ),
           BottomBarIconButton(
             icon: currentIndex == 1 ? HeroiconsSolid.fire : HeroiconsOutline.fire,
-              color: currentIndex == 1 ? primaryColor : null,
+              color: currentIndex == 1 ? primaryColor : greyShade600,
             onPressed: () { onTabTapped(1); }
           ),
 
@@ -75,12 +80,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
           BottomBarIconButton(
             icon: currentIndex == 2 ? HeroiconsSolid.playCircle : HeroiconsOutline.playCircle,
-            color: currentIndex == 2 ? primaryColor : null,
+            color: currentIndex == 2 ? primaryColor : greyShade600,
             onPressed: () { onTabTapped(2); }
           ),
           BottomBarIconButton(
             icon: currentIndex == 3 ? HeroiconsSolid.user : HeroiconsOutline.user,
-            color: currentIndex == 3 ? primaryColor : null,
+            color: currentIndex == 3 ? primaryColor : greyShade600,
             onPressed: () { onTabTapped(3); }
           ),
         ],

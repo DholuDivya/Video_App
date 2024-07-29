@@ -22,6 +22,7 @@ class LoginWithGoogleSubmitted extends AuthEvent {
 // NUMBER SUBMITTED ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class SendOtpToPhoneEvent extends AuthEvent{
   final String number;
+  // final String name;
 
   SendOtpToPhoneEvent({required this.number});
 
@@ -42,6 +43,7 @@ class OnPhoneOtpSend extends AuthEvent{
 class VerifySentOtp extends AuthEvent{
   final String otpCode;
   final String verificationId;
+  // final String name;
 
   VerifySentOtp({required this.otpCode, required this.verificationId});
   @override
@@ -61,6 +63,7 @@ class OnPhoneAuthErrorEvent extends AuthEvent{
 
 class OnPhoneAuthVerificationCompleted extends AuthEvent{
   final AuthCredential credential;
+  // final String name;
 
   OnPhoneAuthVerificationCompleted({required this.credential});
 

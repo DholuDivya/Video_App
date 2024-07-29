@@ -55,6 +55,10 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(Duration(seconds: 2), () {});
 
     print('${Global.token}');
+    print('${Global.userName}');
+    print('${Global.userEmail}');
+    print('${Global.userNumber}');
+
     if(Global.token == null){
       print('Token: --- NULLLLLLLl');
         // GoRouter.of(context).pushReplacementNamed('signupPage');
