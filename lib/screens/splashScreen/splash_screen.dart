@@ -29,9 +29,13 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
+import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
+import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/config/security.dart';
 
@@ -54,19 +58,23 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigateToNextScreen() async {
     await Future.delayed(Duration(seconds: 2), () {});
 
-    print('${Global.token}');
-    print('${Global.userName}');
-    print('${Global.userEmail}');
-    print('${Global.userNumber}');
+    print('${Global.userData}');
 
-    if(Global.token == null){
-      print('Token: --- NULLLLLLLl');
-        // GoRouter.of(context).pushReplacementNamed('signupPage');
-      router.go('/signupPage');
-    }else{
+    String? token;
+
+    if (Global.userData != null && Global.userData!.userToken != null) {
+      token = Global.userData!.userToken;
+    }
+
+    if (token != null) {
+
       print('-----------------------------');
       GoRouter.of(context).pushReplacementNamed('homePage');
+    } else {
+      print('Token: --- NULLLLLLLl');
+      GoRouter.of(context).pushReplacementNamed('signupPage');  // Make sure this route is correctly defined
     }
+
 
   }
 
@@ -75,11 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
-        child: LottieBuilder.asset(
-          'assets/animation/demo.json',
-          width: 200,
-          height: 200,
-        ),
+        child: Image.asset('assets/images/splash_logo.png', height: 240.h, width: 240.w,)
       ),
     );
   }

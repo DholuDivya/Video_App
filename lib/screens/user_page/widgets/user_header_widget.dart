@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
@@ -23,13 +26,9 @@ class UserHeaderWidget extends StatelessWidget {
               left: ScreenSize.screenWidth(context) * 0.04,
               right: ScreenSize.screenWidth(context) * 0.04,
             ),
-            child: ClipOval(
-              child: Image.asset(
-                'assets/images/sonysab.jpg',
-                fit: BoxFit.cover,
-                height: ScreenSize.screenHeight(context) * 0.08,
-                width: ScreenSize.screenHeight(context) * 0.08,
-              ),
+            child: CircleAvatar(
+              radius: 25,
+              backgroundImage: NetworkImage('${Global.userData!.userProfilePhoto}'),
             ),
           ),
 
@@ -37,9 +36,8 @@ class UserHeaderWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Text(
-                '${Global.userName}',
+                '${Global.userData!.userName}',
                 style: TextStyle(
                   fontFamily: fontFamily,
                   fontSize: 22
@@ -48,12 +46,14 @@ class UserHeaderWidget extends StatelessWidget {
 
                 GestureDetector(
                   onTap: (){
+                    final String? channelId = Global.userData!.userChannelId;
+                    context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId!));
                     GoRouter.of(context).pushNamed('channelProfilePage');
                   },
                   child: Row(
                     children: [
                       Text(
-                        '${Global.userEmail} ',
+                        'view channel',
                         style: TextStyle(
                           fontSize: 11,
                           fontFamily: fontFamily,

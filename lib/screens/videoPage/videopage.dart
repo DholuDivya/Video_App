@@ -9,7 +9,10 @@ import 'package:pod_player/pod_player.dart';
 import 'package:readmore/readmore.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:video_player/video_player.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
+import 'package:vimeo_clone/bloc/play_video/play_video_event.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_state.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
@@ -25,13 +28,19 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 
 class VideoPage extends StatefulWidget {
-  const VideoPage({super.key});
+  final String slug;
+  const VideoPage({super.key, required this.slug});
 
   @override
   State<VideoPage> createState() => _VideoPageState();
 }
 
+
 class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMixin {
+
+
+
+
 
   List<Map<String, dynamic>> videoList = [
     {
@@ -146,6 +155,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
+    context.read<PlayVideoBloc>().add(GetVideoSlugEvent(slug: widget.slug));
 
     // Access the Bloc
     final videoBloc = context.read<PlayVideoBloc>();
@@ -343,8 +353,11 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
+                                    final String channelId = state.playVideo[0].data!.channel!.id.toString();
+                                    context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId));
                                     GoRouter.of(context).pushNamed(
                                         'channelProfilePage');
+                                    _podController?.pause();
                                   },
                                   child: Row(
                                     children: [
@@ -602,7 +615,136 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     ),
                   );
                 }
-                return Container();
+
+                // VIDEO PAGE SHIMMER---------------------------------
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 16/9,
+                        child: ShimmerWidget.rectangular(isBorder: false),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 10.h,
+                            left: 5.w, right: 5.w),
+                        // ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ShimmerWidget.rectangular(height: 20.h, isBorder: true),
+                            SizedBox(height: 2.h,),
+                            ShimmerWidget.rectangular(height: 20.h, isBorder: true),
+                            SizedBox(height: 2.h,),
+
+                            ShimmerWidget.rectangular(height: 10.h, width: 150.w,isBorder: true),
+                            SizedBox(height: 10.h,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    SizedBox(width: 2.w,),
+                                    ShimmerWidget.circular(height: 40.h, width: 40.w, isBorder: true),
+                                    SizedBox(width: 5.w,),
+                                    ShimmerWidget.rectangular(height: 15.h, width: 150.w, isBorder: true),
+                                  ],
+                                ),
+
+                                ShimmerWidget.rectangular(height: 30.h, width: 85.w, isBorder: true),
+                              ],
+                            ),
+                            SizedBox(height: 10.h,),
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        height: ScreenSize.screenHeight(context) * 0.04,
+                        child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.only(
+                              left: 10.h,
+                            ),
+                            // physics: NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: 6,
+                            itemBuilder: (context, index){
+                              return Row(
+                                children: [
+                                  ShimmerWidget.rectangular(
+                                      width: 100,
+                                      height: 40.h,
+                                      isBorder: true
+                                  ),
+                                  SizedBox(width: 10,)
+                                ],
+                              );
+                            }
+                        ),
+                      ),
+                      SizedBox(height: 10.h,),
+
+                      Container(
+                        padding: EdgeInsets.only(
+                          left: 5.w,
+                          right: 5.w
+                        ),
+                        child: ShimmerWidget.rectangular(
+                          height: 70.h,
+                            isBorder: true),
+                      ),
+                      SizedBox(height: 10.h,),
+
+                      Container(
+                        child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: 8,
+                            itemBuilder: (context, index){
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ShimmerWidget.rectangular(
+                                        height: 200, isBorder: false),
+                                    SizedBox(height: 16),
+
+                                    Row(
+                                      children: [
+                                        ShimmerWidget.circular(width: 50,
+                                            height: 50,
+                                            isBorder: true),
+                                        SizedBox(width: 8),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment
+                                              .start,
+                                          children: [
+                                            ShimmerWidget.rectangular(
+                                                height: 20,
+                                                width: 120,
+                                                isBorder: true),
+                                            SizedBox(height: 8),
+                                            ShimmerWidget.rectangular(
+                                                height: 20,
+                                                width: 200,
+                                                isBorder: true),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                        ),
+                      )
+                    ],
+                  ),
+                );
               }
             ),
             

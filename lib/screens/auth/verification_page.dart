@@ -118,7 +118,7 @@ class _VerificationPageState extends State<VerificationPage> {
             BlocConsumer<AuthBloc, AuthState>(
               listener: (BuildContext context, state) {
                 if(state is AuthSuccess){
-                  log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${Global.token}');
+                  log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${Global.userData}');
                   // log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${Global.userName}');
                   // GoRouter.of(context).pushReplacementNamed('homePage');
                   router.goNamed('homePage');

@@ -18,29 +18,17 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -60,4 +48,45 @@ class DefaultFirebaseOptions {
     projectId: 'video-app-228cf',
     storageBucket: 'video-app-228cf.appspot.com',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDSXfqukyYf6A3kXX7dRvtzkSLuk9YM3Fo',
+    appId: '1:888231558500:web:68dc47251d2b68dffd4e71',
+    messagingSenderId: '888231558500',
+    projectId: 'video-app-228cf',
+    authDomain: 'video-app-228cf.firebaseapp.com',
+    storageBucket: 'video-app-228cf.appspot.com',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAJSiIVmBcp3h3SzNzDG_b5cEUhEMG5q6g',
+    appId: '1:888231558500:ios:9998acfc7439c3b5fd4e71',
+    messagingSenderId: '888231558500',
+    projectId: 'video-app-228cf',
+    storageBucket: 'video-app-228cf.appspot.com',
+    androidClientId: '888231558500-hhfg665l1fmcqslbbvu2dnv3qkmp26c9.apps.googleusercontent.com',
+    iosClientId: '888231558500-d8h0vl7ids4c5fd2oibi8t1pc10o8f8a.apps.googleusercontent.com',
+    iosBundleId: 'com.example.vimeoClone',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAJSiIVmBcp3h3SzNzDG_b5cEUhEMG5q6g',
+    appId: '1:888231558500:ios:9998acfc7439c3b5fd4e71',
+    messagingSenderId: '888231558500',
+    projectId: 'video-app-228cf',
+    storageBucket: 'video-app-228cf.appspot.com',
+    androidClientId: '888231558500-hhfg665l1fmcqslbbvu2dnv3qkmp26c9.apps.googleusercontent.com',
+    iosClientId: '888231558500-d8h0vl7ids4c5fd2oibi8t1pc10o8f8a.apps.googleusercontent.com',
+    iosBundleId: 'com.example.vimeoClone',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDSXfqukyYf6A3kXX7dRvtzkSLuk9YM3Fo',
+    appId: '1:888231558500:web:62b365418a808a42fd4e71',
+    messagingSenderId: '888231558500',
+    projectId: 'video-app-228cf',
+    authDomain: 'video-app-228cf.firebaseapp.com',
+    storageBucket: 'video-app-228cf.appspot.com',
+  );
+
 }

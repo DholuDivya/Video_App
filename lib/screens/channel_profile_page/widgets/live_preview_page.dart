@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/model/get_your_videos_model.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
 import '../../../utils/widgets/custom_channal_video_preview.dart';
 
 class LivePreviewPage extends StatefulWidget {
-  const LivePreviewPage({super.key});
+  final GetYourVideosModel channelData;
+  const LivePreviewPage({super.key, required this.channelData});
 
   @override
   State<LivePreviewPage> createState() => _LivePreviewPageState();
@@ -98,13 +100,16 @@ class _LivePreviewPageState extends State<LivePreviewPage> {
                 top: 0,
                 bottom: ScreenSize.screenHeight(context) * 0.01,
               ),
-              itemCount: videoList.length,
+              itemCount: widget.channelData.videoCount,
               itemBuilder: (BuildContext context, int index){
+                final videoData = widget.channelData.channel!.videos?[index];
+                final totalSeconds = videoData!.duration;
+                final formattedDuration = formatDuration(totalSeconds!);
                 return CustomVideoPreview(
-                    imageUrl: sortedVideoList[index]['thumbnail'],
+                    imageUrl: '${videoData.thumbnails}',
                     videoTitle: 'Tarak Mehta ka Ooltah Chashma Episode - 220',
                     videoViews: sortedVideoList[index]['views'],
-                    uploadTime: 5,
+                    uploadTime: '5',
                     videoDuration: '1:32:19'
                 );
               }

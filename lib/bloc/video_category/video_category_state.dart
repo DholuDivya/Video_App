@@ -15,7 +15,7 @@ class VideoCategoriesLoading extends VideoCategoryState{
 }
 
 class VideoCategoriesLoaded extends VideoCategoryState{
-  final List<VideoCategoriesModel> categories;
+  final List<Category> categories;
   final int selectedCategory;
 
   VideoCategoriesLoaded({required this.categories, required this.selectedCategory});

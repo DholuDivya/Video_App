@@ -26,7 +26,7 @@ class AllVideoListModel {
 
 class Data {
   int? currentPage;
-  List<VideoData>? videoData;  // Changed variable name from videoList to videoData
+  List<VideoData>? videos;  // Changed variable name to match JSON response
   String? firstPageUrl;
   int? from;
   int? lastPage;
@@ -41,7 +41,7 @@ class Data {
 
   Data({
     this.currentPage,
-    this.videoData,  // Changed variable name from videoList to videoData
+    this.videos,  // Changed variable name to match JSON response
     this.firstPageUrl,
     this.from,
     this.lastPage,
@@ -58,8 +58,8 @@ class Data {
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
       currentPage: json['current_page'],
-      videoData: json['videoData'] != null  // Changed key from videoList to videoData
-          ? (json['videoData'] as List).map((i) => VideoData.fromJson(i)).toList()
+      videos: json['videos'] != null  // Changed key to match JSON response
+          ? (json['videos'] as List).map((i) => VideoData.fromJson(i)).toList()
           : null,
       firstPageUrl: json['first_page_url'],
       from: json['from'],
@@ -80,8 +80,8 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
     data['current_page'] = this.currentPage;
-    if (this.videoData != null) {
-      data['videoData'] = this.videoData!.map((v) => v.toJson()).toList();  // Changed key from videoList to videoData
+    if (this.videos != null) {
+      data['videos'] = this.videos!.map((v) => v.toJson()).toList();  // Changed key to match JSON response
     }
     data['first_page_url'] = this.firstPageUrl;
     data['from'] = this.from;
@@ -106,6 +106,9 @@ class VideoData {
   String? title;
   String? description;
   String? hashtag;
+  int? views;
+  int? likes;
+  String? type;
   Channel? channel;
   String? status;
   String? visibility;
@@ -121,6 +124,9 @@ class VideoData {
     this.title,
     this.description,
     this.hashtag,
+    this.views,
+    this.likes,
+    this.type,
     this.channel,
     this.status,
     this.visibility,
@@ -138,10 +144,13 @@ class VideoData {
       title: json['title'],
       description: json['description'],
       hashtag: json['hashtag'],
+      views: json['views'],
+      likes: json['likes'],
+      type: json['type'],
       channel: json['channel'] != null ? Channel.fromJson(json['channel']) : null,
       status: json['status'],
       visibility: json['visibility'],
-      duration: json['duration'] ?? '',
+      duration: json['duration'],
       video: json['video'],
       thumbnail: json['thumbnail'],
       categories: json['categories'] != null
@@ -158,6 +167,9 @@ class VideoData {
     data['title'] = this.title;
     data['description'] = this.description;
     data['hashtag'] = this.hashtag;
+    data['views'] = this.views;
+    data['likes'] = this.likes;
+    data['type'] = this.type;
     if (this.channel != null) {
       data['channel'] = this.channel!.toJson();
     }
@@ -204,7 +216,7 @@ class Channel {
 class Categories {
   int? id;
   String? name;
-  String? parentId;
+  int? parentId;  // Changed type from String to int
   String? description;
   String? image;
   String? type;
@@ -215,7 +227,7 @@ class Categories {
   Categories({
     this.id,
     this.name,
-    this.parentId,
+    this.parentId,  // Changed type from String to int
     this.description,
     this.image,
     this.type,
@@ -228,7 +240,7 @@ class Categories {
     return Categories(
       id: json['id'],
       name: json['name'],
-      parentId: json['parent_id'],
+      parentId: json['parent_id'],  // Changed type from String to int
       description: json['description'],
       image: json['image'],
       type: json['type'],
@@ -242,7 +254,7 @@ class Categories {
     final Map<String, dynamic> data = {};
     data['id'] = this.id;
     data['name'] = this.name;
-    data['parent_id'] = this.parentId;
+    data['parent_id'] = this.parentId;  // Changed type from String to int
     data['description'] = this.description;
     data['image'] = this.image;
     data['type'] = this.type;

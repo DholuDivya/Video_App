@@ -1,9 +1,14 @@
 import 'dart:developer';
 
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
+import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
+import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/config/security.dart';
@@ -20,6 +25,9 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +52,7 @@ class _UserPageState extends State<UserPage> {
             icon: Icon(HeroiconsOutline.cog8Tooth),
             onPressed: () {
               print('Next Setting Page ${headers}');
-              log('***********************${Global.token}*********************');
+              log('***********************${Global.userData}*********************');
               // log('***********************${Global.userName}*********************');
               GoRouter.of(context).pushNamed('settingPage');
             },
@@ -61,11 +69,23 @@ class _UserPageState extends State<UserPage> {
 
             UserHistoryWidget(),
 
-            UserPageButton(
-                buttonName: 'Your Videos',
-                buttonIcon: HeroiconsOutline.play,
-              onTap: (){
-                  GoRouter.of(context).pushNamed('uploadVideoPage');
+            BlocBuilder<YourVideosBloc, YourVideosState>(
+              builder: (BuildContext context, YourVideosState state) {
+                var totalVideos;
+                if(state is YourVideosLoaded){
+                  totalVideos = state.videoData.first.channel!.videos!.length;
+                  print('&&&&&&&&&&&&&&&&&&   ${totalVideos}');
+                }
+                return UserPageButton(
+                  buttonName: 'Your Videos',
+                  subTitle: '${totalVideos} videos',
+                  buttonIcon: HeroiconsOutline.play,
+                  onTap: (){
+                    Future.delayed(Duration(milliseconds: 220),(){
+                      GoRouter.of(context).pushNamed('yourVideoPage');
+                    });
+                  },
+                );
               },
             ),
 

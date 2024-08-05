@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vimeo_clone/Screens/NotificationPage/notification_page.dart';
@@ -13,9 +14,12 @@ import 'package:vimeo_clone/screens/auth/registration_page.dart';
 import 'package:vimeo_clone/screens/auth/numebr_signup.dart';
 import 'package:vimeo_clone/screens/auth/reset_password.dart';
 import 'package:vimeo_clone/screens/auth/verification_page.dart';
+import 'package:vimeo_clone/screens/upload_shorts/get_shorts_thumbnail.dart';
+import 'package:vimeo_clone/screens/upload_shorts/upload_shorts_page.dart';
 import 'package:vimeo_clone/screens/upload_video/upload_video_page.dart';
 import 'package:vimeo_clone/screens/upload_video_from_url/upload_video_from_url_page.dart';
 import 'package:vimeo_clone/screens/user_page/user_page.dart';
+import 'package:vimeo_clone/screens/your_videos/your_video_page.dart';
 import '../Screens/HomePage/homepage.dart';
 import '../screens/channel_profile_page/channel_profile_page.dart';
 
@@ -26,7 +30,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'splashScreen',
           path: '/',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: SplashScreen(),
           ),
         ),
@@ -34,7 +38,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'signupPage',
           path: '/signupPage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: SignupPage(),
           ),
         ),
@@ -42,7 +46,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'emailSignup',
           path: '/emailSignup',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: RegistrationPage(),
           ),
         ),
@@ -59,7 +63,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'forgotPasswordPage',
           path: '/forgotPasswordPage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: ForgotPasswordPage(),
           ),
         ),
@@ -67,7 +71,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'resetPasswordPage',
           path: '/resetPasswordPage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: ResetPasswordPage(),
           ),
         ),
@@ -75,7 +79,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'numberSignup',
           path: '/numberSignup',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: SignupWithPhoneNumber(),
             // child: SignupScreen(),
           ),
@@ -84,7 +88,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'homePage',
           path: '/homePage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: HomePage(),
           ),
         ),
@@ -92,7 +96,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'libraryPage',
           path: '/libraryPage',
-          pageBuilder: (context, state) => MaterialPage (
+          pageBuilder: (context, state) => CupertinoPage (
             child: ShortsPage(),
           ),
         ),
@@ -100,7 +104,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'analyticsPage',
           path: '/analyticsPage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: SubscriptionsPage(),
           ),
         ),
@@ -108,7 +112,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'userPage',
           path: '/userPage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: UserPage(),
           ),
         ),
@@ -116,7 +120,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'notificationPage',
           path: '/notificationPage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: NotificationPage(),
           ),
         ),
@@ -124,7 +128,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'searchPage',
           path: '/searchPage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: SearchScreen(),
           ),
         ),
@@ -132,7 +136,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'settingPage',
           path: '/settingPage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: SettingPage(),
           ),
         ),
@@ -148,23 +152,30 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'channelProfilePage',
           path: '/channelProfilePage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: ChannelProfilePage(),
           ),
         ),
 
+        // GoRoute(
+        //   name: 'videoPage',
+        //   path: '/videoPage',
+        //   pageBuilder: (context, state) => const MaterialPage (
+        //     child: VideoPage(),
+        //   ),
+        // ),
         GoRoute(
           name: 'videoPage',
-          path: '/videoPage',
-          pageBuilder: (context, state) => const MaterialPage (
-            child: VideoPage(),
+          path: '/videoPage/:slug',  // 👈 Defination of params in the path is important
+          builder: (context, state) => VideoPage(
+              slug: state.pathParameters['slug']!
           ),
         ),
 
         GoRoute(
           name: 'uploadVideoPage',
           path: '/uploadVideoPage',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: UploadVideoPage(),
           ),
         ),
@@ -173,11 +184,32 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
           name: 'uploadVideoFromUrl',
           path: '/uploadVideoFromUrl',
-          pageBuilder: (context, state) => const MaterialPage (
+          pageBuilder: (context, state) => const CupertinoPage (
             child: UploadVideoFromUrlPage(),
           ),
         ),
 
+        GoRoute(
+          name: 'yourVideoPage',
+          path: '/yourVideoPage',
+          builder: (context, state) => YourVideoPage()
+        ),
+
+        GoRoute(
+          name: 'getShortsThumbnailPage',
+          path: '/getShortsThumbnailPage',
+          pageBuilder: (context, state) => const CupertinoPage (
+            child: GetShortsThumbnail(),
+          ),
+        ),
+
+        GoRoute(
+          name: 'uploadShortsPage',
+          path: '/uploadShortsPage',
+          pageBuilder: (context, state) => const CupertinoPage (
+            child: UploadShortsPage(),
+          ),
+        ),
 
       ]
   );

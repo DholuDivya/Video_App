@@ -14,7 +14,7 @@ class GetVideoBloc extends Bloc<GetVideoEvent, GetVideoState>{
     on<OpenFilesToGetVideo>(_openFilesToGetVideo);
   }
 
-  void _openFilesToGetVideo(OpenFilesToGetVideo event, Emitter<GetVideoState> state) async {
+  void _openFilesToGetVideo(OpenFilesToGetVideo event, Emitter<GetVideoState> emit) async {
     emit(GetVideoLoading());
     try{
       FilePickerResult? result = await FilePicker.platform.pickFiles(

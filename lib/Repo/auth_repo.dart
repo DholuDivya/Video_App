@@ -8,6 +8,7 @@ import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/api_routes.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/config/security.dart';
+import 'package:vimeo_clone/model/user_data_model.dart';
 
 class AuthRepository{
   final ApiBaseHelper apiHelper;
@@ -129,34 +130,52 @@ class AuthRepository{
     try{
       final response = await apiHelper.firebaseLoginPostAPICall(loginWithGoogleUrl, {}, firebaseUserToken);
 
-      if(response.statusCode == 200 ){
+      if (response.statusCode == 200) {
         // STORING THE TOKEN IN HIVE
 
-        final box = await Hive.openBox('UserData');
+        if(response.data != null){
+          final String userToken = response.data['token'] ?? '';
+          final String userId = response.data['user']['id'].toString() ?? '';
+          final String userName = response.data['user']['name'] ?? '';
+          final String userNumber = response.data['user']['phone_number'] ?? '';
+          final String userEmail = response.data['user']['email'] ?? '';
+          final String userProfilePhoto = response.data['user']['profile'] ?? '';
+          final String userChannelId = response.data['channel']['id'].toString() ?? '';
+          print('++++++++    ${userToken}'
+              '++++++++    ${userId}'
+              '++++++++    ${userName}'
+              '++++++++    ${userNumber}'
+              '++++++++    ${userEmail}'
+              '++++++++    ${userProfilePhoto}'
+              '++++++++    ${userChannelId}');
 
-        // Update Global variables
-        Global.setToken(response.data['token']);
-        Global.setUserName(response.data['user']['name']);
-        // Global.setUserProfile(response.data['user']['profile']);
-        Global.setUserEmail(response.data['user']['email']);
-        // Global.setUserNumber(response.data['user']['number']);
+          print('88888888888888888888888');
+          await Global.setUserData(
+            userToken,
+            userId,
+            userName,
+            userNumber,
+            userEmail,
+            userProfilePhoto,
+            userChannelId,
+          );
+          print('iiiiiiiiiiiiiiiiiiiiiiiiiiiii');
+          log('${Global.userData}');
+          // RETURN TOKEN
+          print('Token Verified Successfully');
+          print(':::::::::::::::::::  $userToken   :::::::::::::::::::');
+          return userToken;
+        }else{
+          print('Data Not Found');
+        }
 
-        print('|||||||   ${Global.token}');
-
-        print('```````````````  ${box.values}  ```````````');
-        // await box.close();
-
-        // RETURN TOKEN
-        String userToken = response.data['token'];
-        print('Token Verified Successfully');
-        print(':::::::::::::::::::  $userToken   :::::::::::::::::::');
-        return userToken;
-      }else {
+      } else {
         throw ApiException('Failed to verify token : ${response.data}');
       }
     }catch(e){
        throw ApiException('Failed to verify token: $e');
     }
+    return null;
   }
 
 
@@ -164,30 +183,42 @@ class AuthRepository{
   Future<String?> loginWithPhone(String firebaseUserToken) async {
     try{
       final response = await apiHelper.firebaseLoginPostAPICall(loginWithPhoneUrl, {},firebaseUserToken);
-
-      if(response.statusCode == 200 ){
+      print('ifgWRHNGOIERGOIRBNIORBIODIDDirdigjirdj');
+      if (response.statusCode == 200) {
         // STORING THE TOKEN IN HIVE
+        print('uiaejifasEionsiodvisfififibdf');
+        final String userToken = response.data['token'] ?? '';
+        final String userId = response.data['user']['id'].toString() ?? '';
+        final String userName = response.data['user']['name'] ?? '';
+        final String userNumber = response.data['user']['phone_number'] ?? '';
+        final String userEmail = response.data['user']['email'] ?? '';
+        final String userProfilePhoto = response.data['user']['profile'] ?? '';
+        final String userChannelId = response.data['channel']['id'].toString() ?? '';
+        print('++++++++    ${userToken}'
+            '++++++++    ${userId}'
+            '++++++++    ${userName}'
+            '++++++++    ${userNumber}'
+            '++++++++    ${userEmail}'
+            '++++++++    ${userProfilePhoto}'
+            '++++++++    ${userChannelId}');
 
-        final box = await Hive.openBox('UserData');
+        print('88888888888888888888888');
+        await Global.setUserData(
+          userToken,
+          userId,
+          userName,
+          userNumber,
+          userEmail,
+          userProfilePhoto,
+          userChannelId,
+        );
 
-        // Update Global variables
-        Global.setToken(response.data['token']);
-        Global.setUserName(response.data['user']['name']);
-        // Global.setUserProfile(response.data['user']['profile']);
-        Global.setUserEmail(response.data['user']['email']);
-        // Global.setUserNumber(response.data['user']['number']);
-
-        print('|||||||   ${Global.token}');
-
-        print('```````````````  ${box.values}  ```````````');
-        // await box.close();
-
+        print('${Global.userData}');
         // RETURN TOKEN
-        String userToken = response.data['token'];
         print('Token Verified Successfully');
         print(':::::::::::::::::::  $userToken   :::::::::::::::::::');
         return userToken;
-      }else {
+      } else {
         throw ApiException('Failed to verify token : ${response.data}');
       }
     }catch(e){
@@ -208,16 +239,7 @@ class AuthRepository{
       if(response.statusCode == 201){
 
         // STORING THE ACCESS TOKEN IN THE HIVE -----
-        final box = await Hive.openBox('UserData');
-        // await box.put('userToken', response.data['access_token']);
-        // Global.token = response.data['access_token'];
-        Global.setToken(response.data['access_token']);
-        Global.setUserName(response.data['user']['name']);
-        Global.setUserEmail(response.data['user']['email']);
-        // Global.setUserNumber(response.data['user']['number']);
-        // Global.setUserProfile(response.data['user']['profile']);
-        print('```````````````  ${box.values}  ```````````');
-        // await box.close();
+
 
         // RETURN ACCESS TOKEN
         String userToken = response.data['access_token'];
@@ -244,16 +266,7 @@ class AuthRepository{
 
         // STORING THE TOKEN IN HIVE ------
         
-        final box = await Hive.openBox('UserData');
-        // await box.put('userToken', response.data['data']['token']);
-        print(' -.-.-.-.-.-.- ${box.values} -.-.-.-.-.-.-.- ');
-        // Global.token = response.data['data']['token'];
-        Global.setToken(response.data['data']['token']);
-        Global.setUserName(response.data['data']['user']['name']);
-        Global.setUserEmail(response.data['data']['user']['email']);
-        // Global.setUserNumber(response.data['data']['user']['number']);
-        // Global.setUserProfile(response.data['data']['user']['profile']);
-        // await box.close();
+
 
         // RETURN TOKEN
         String userToken = response.data['data']['token'];
@@ -282,7 +295,7 @@ class AuthRepository{
         print('Hive Box ************ ${box.values} ************');
         await Global.clearUserData();
         // print('Token ---- ${Global.token}');
-        print('Token ---- ${Global.userName}');
+        // print('Token ---- ${Global.userName}');
 
 
         print('User Logged Out Successfully');

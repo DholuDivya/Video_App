@@ -15,7 +15,7 @@ class VideoCategoriesBloc extends Bloc<VideoCategoryEvent, VideoCategoryState>{
   Future<void> _onFetchVideoCategories(GetCategoryEvent event, Emitter<VideoCategoryState> emit) async {
     emit(VideoCategoriesLoading());
     try {
-      final List<VideoCategoriesModel>? categories = await videoCategoriesRepo.getVideoCategories();
+      final List<Category>? categories = await videoCategoriesRepo.getVideoCategories();
       print('${categories}');
       emit(VideoCategoriesLoaded(categories: categories!, selectedCategory: -1));
 

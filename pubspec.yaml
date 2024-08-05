@@ -73,6 +73,12 @@ dependencies:
   video_thumbnail: ^0.5.3
   path_provider: ^2.1.3
   pod_player: ^0.2.2
+  image: ^4.2.0
+  app_links: ^6.1.4
+  image_cropper: ^7.1.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.11
+  gradient_icon: ^2.0.9
 
 
 

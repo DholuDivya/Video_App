@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 abstract class GetThumbnailState extends Equatable{}
 
@@ -18,8 +19,7 @@ class GetThumbnailLoading extends GetThumbnailState{
 }
 
 class GetThumbnailSuccess extends GetThumbnailState{
-  final PlatformFile? videoThumbnail;
-
+  final CroppedFile? videoThumbnail;
 
   GetThumbnailSuccess({this.videoThumbnail});
 

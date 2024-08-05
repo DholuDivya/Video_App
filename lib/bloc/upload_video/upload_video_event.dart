@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vimeo_clone/model/video_categories_model.dart';
 
@@ -7,7 +8,7 @@ abstract class UploadVideoEvent extends Equatable{}
 
 class UploadVideoRequestEvent extends UploadVideoEvent{
   final PlatformFile video;
-  final PlatformFile videoThumbnail;
+  final CroppedFile videoThumbnail;
   final String videoTitle;
   final String videoDescription;
   final List<int> videoCategory;
@@ -25,5 +26,5 @@ class UploadVideoRequestEvent extends UploadVideoEvent{
   });
 
   @override
-  List<Object?> get props => [videoTitle, videoDescription, videoCategory, videoHashtag, videoVisibility];
+  List<Object?> get props => [video, videoThumbnail, videoTitle, videoDescription, videoCategory, videoHashtag, videoVisibility];
 }

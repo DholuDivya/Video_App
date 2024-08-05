@@ -100,9 +100,9 @@ class ApiBaseHelper {
         ),
       );
       // .timeout(Duration(seconds: timeOut));
-      log('+++ HEADERS  ${headers}');
+
       if (kDebugMode) {
-        print(
+        log(
             'response api****$url***************${response.statusCode}*********${response.data}');
       }
 

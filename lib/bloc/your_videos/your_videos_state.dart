@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../model/get_your_videos_model.dart';
+
 abstract class YourVideosState extends Equatable{}
 
 class YourVideosInitial extends YourVideosState{
@@ -13,8 +15,12 @@ class YourVideosLoading extends YourVideosState{
 }
 
 class YourVideosLoaded extends YourVideosState{
+  final List<GetYourVideosModel> videoData;
+
+  YourVideosLoaded({required this.videoData});
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [videoData];
 }
 
 class YourVideosFailure extends YourVideosState{

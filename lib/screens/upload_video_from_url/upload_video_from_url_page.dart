@@ -7,9 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:vimeo_clone/bloc/get_thumbnail_from_user/get_thumbnail_bloc.dart';
 import 'package:vimeo_clone/bloc/get_thumbnail_from_user/get_thumbnail_event.dart';
 import 'package:vimeo_clone/bloc/get_thumbnail_from_user/get_thumbnail_state.dart';
+import 'package:vimeo_clone/bloc/upload_video_external/upload_video_external_bloc.dart';
+import 'package:vimeo_clone/bloc/upload_video_external/upload_video_external_event.dart';
+import 'package:vimeo_clone/bloc/upload_video_external/upload_video_external_state.dart';
 import 'package:vimeo_clone/config/colors.dart';
 
 import '../../bloc/select_cat_for_video_detail/category_selection_bloc.dart';
@@ -82,8 +86,8 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
   String selectedVisibility = '';
 
   final List visibility = [
-    {"type": "Public"},
-    {"type": "Private"}
+    {"type": "public"},
+    {"type": "private"}
   ];
 
 
@@ -126,7 +130,7 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
     return null;
   }
 
-  late PlatformFile finalThumbnail;
+  late CroppedFile finalThumbnail;
   List<int> selectedCategoryIds = [];
 
 
@@ -856,33 +860,36 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
 
                 // Submit Button
                 Center(
-                  child: BlocBuilder<UploadVideoBloc, UploadVideoState>(
+                  child: BlocBuilder<UploadVideoExternalBloc, UploadVideoExternalState>(
                       builder: (context, state){
-                        if(state is UploadVideoSuccess){
-                          GoRouter.of(context).pushReplacementNamed('homePage');
-                        }else if(state is UploadVideoLoading){
+                        if(state is UploadVideoExternalSuccess){
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            GoRouter.of(context).pushReplacementNamed('homePage');
+                          });
+                        }else if(state is UploadVideoExternalLoading){
                           return Center(child: CircularProgressIndicator(),);
                         }
-                                                    return ElevatedButton(
+                        return ElevatedButton(
                               onPressed: () {
                                 if (_formkey.currentState!.validate()) {
 
                                   final videoTitle = _titleController.text;
                                   final videoDescription = _descriptionController.text;
-                                  final PlatformFile video = _videoUrlController as PlatformFile;
+                                  final videoExternalUrl = _videoUrlController.text;
+
 
                                   print("Form is Valid");
                                   // print('Video::::::::     ${selectedVideo}');
                                   print('Thumbnail::::::    ${finalThumbnail}');
                                   print('Title::::::     ${_titleController.text}');
                                   print('Description::::::     ${_descriptionController.text}');
-                                  print('Categories::::::   ${selectedCategoryIds}');
+                                  print('Categories::::::   ${selectedCategoryIds.single}');
                                   print("Hashtags:::::::     $_hashtags");
                                   print("Selected Visibility::::::::      $selectedVisibility");
                                   print("Comments Enabled:::::::::      $isCommentOn");
 
-                                  context.read<UploadVideoBloc>().add(UploadVideoRequestEvent(
-                                      video: video,
+                                  context.read<UploadVideoExternalBloc>().add(UploadVideoExternalRequest(
+                                    videoExternalUrl: videoExternalUrl,
                                       videoThumbnail: finalThumbnail,
                                       videoTitle: videoTitle,
                                       videoDescription: videoDescription,

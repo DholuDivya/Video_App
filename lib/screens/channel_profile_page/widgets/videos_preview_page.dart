@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/model/get_your_videos_model.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channal_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
 class VideosPreviewPage extends StatefulWidget {
-  const VideosPreviewPage({super.key});
+  final GetYourVideosModel channelData;
+  const VideosPreviewPage({super.key, required this.channelData});
 
   @override
   State<VideosPreviewPage> createState() => _VideosPreviewPageState();
@@ -40,37 +42,34 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
     sortedVideoList = List.from(videoList);
   }
 
-  void sortVideos(int index) {
-    setState(() {
-      selectedIndex = index;
-      switch (sortList[index]['type']) {
-        case 'Latest':
-          sortedVideoList = List.from(videoList);
-          break;
-        case 'Popular':
-          sortedVideoList.sort((a, b) {
-            return _parseViews(b['views']).compareTo(_parseViews(a['views']));
-          });
-          break;
-        case 'Oldest':
-          sortedVideoList = List.from(videoList.reversed);
-          break;
-      }
-    });
+  List<Videos> sortVideos(List<Videos> videos, String sortType) {
+    switch (sortType) {
+      case "Latest":
+        videos.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+        break;
+      case "Popular":
+        videos.sort((a, b) => b.views!.compareTo(a.views!));
+        break;
+      case "Oldest":
+        videos.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+        break;
+    }
+    return videos;
   }
 
-  int _parseViews(String views) {
-    if (views.endsWith('M')) {
-      return (double.parse(views.replaceAll('M', '')) * 1000000).toInt();
-    } else if (views.endsWith('K')) {
-      return (double.parse(views.replaceAll('K', '')) * 1000).toInt();
-    } else {
-      return int.parse(views);
-    }
+  void _onSortTypeChanged(int index) {
+    setState(() {
+      selectedIndex = index;
+      sortList.forEach((item) => item['isSelected'] = false);
+      sortList[selectedIndex]['isSelected'] = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    String selectedSortType = sortList[selectedIndex]['type'];
+    List<Videos> sortedVideos = sortVideos(widget.channelData.channel!.videos!, selectedSortType);
+
     return SingleChildScrollView(
       physics: NeverScrollableScrollPhysics(),
       child: Column(
@@ -84,7 +83,6 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
                 sortCategoryList: sortList,
                 selectedIndex: selectedIndex,
                 onCategorySelected: (index){
-                  sortVideos(index);
                 }
             ),
           ),
@@ -96,14 +94,17 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
               top: 0,
               bottom: ScreenSize.screenHeight(context) * 0.01,
             ),
-            itemCount: videoList.length,
+            itemCount: widget.channelData.videoCount,
               itemBuilder: (BuildContext context, int index){
+              final videoData = widget.channelData.channel!.videos?[index];
+              final totalSeconds = videoData!.duration;
+              final formattedDuration = formatDuration(totalSeconds!);
                 return CustomVideoPreview(
-                    imageUrl: sortedVideoList[index]['thumbnail'],
-                    videoTitle: 'Tarak Mehta ka Ooltah Chashma Episode - 220',
-                    videoViews: sortedVideoList[index]['views'],
-                    uploadTime: 5,
-                    videoDuration: '29:33'
+                    imageUrl: '${videoData.thumbnails}',
+                    videoTitle: '${videoData.title}',
+                    videoViews: '${videoData.views}',
+                    uploadTime: '${videoData.createdAtHuman}',
+                    videoDuration: formattedDuration
                 );
               }
           )

@@ -9,22 +9,23 @@ import '../model/video_categories_model.dart';
 
 class VideoCategoriesRepo{
   
-  Future<List<VideoCategoriesModel>?> getVideoCategories() async {
+  Future<List<Category>?> getVideoCategories() async {
     print(getCategoriesUrl);
     print(headers);
     try{
       final response = await ApiBaseHelper().getAPICall(getCategoriesUrl, {});
-      print(response.data);
-
-      List<VideoCategoriesModel> videoCategory = [];
+      print(response.data['categories']);
+      var responseData = response.data['categories'];
+      List<Category> videoCategory = [];
       if(response.statusCode == 200 ){
 
-        var categories = response.data as List<dynamic>;
+        var categories = responseData as List<dynamic>;
         for(var i = 0; i<categories.length; i++){
           var row = categories[i] as Map<String, dynamic>;
-          videoCategory.add(VideoCategoriesModel.fromJson(row));
+          videoCategory.add(Category.fromJson(row));
         }
         print('Categories successfully added');
+        print('-------------------------------    ${videoCategory}');
         return videoCategory;
       }else{
         print('Failed to add categories');

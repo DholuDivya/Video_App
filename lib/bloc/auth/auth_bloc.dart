@@ -1,11 +1,13 @@
 import 'dart:developer';
-
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
+import 'package:vimeo_clone/Config/constants.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_state.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
+import 'package:vimeo_clone/config/api_routes.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/config/security.dart';
 
@@ -19,7 +21,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginWithGoogleSubmitted>((event, emit) async {
       emit(AuthProgress());
       try {
+        print('%%%%%%%%%     ${Global.userData}');
         String firebaseUserToken = await authRepository.signInWithGoogle();
+        // final response = await Dio().post(
+        //     '${loginWithGoogleUrl}',
+        //     options: Options(
+        //       headers: headers
+        //     )
+        // );
         String? userToken = await authRepository.loginWithGoogle(firebaseUserToken);
         print('Firebase Token ::: ${firebaseUserToken}');
         print('User Token ::: ${userToken}');

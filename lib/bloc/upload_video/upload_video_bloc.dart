@@ -22,7 +22,7 @@ class UploadVideoBloc extends Bloc<UploadVideoEvent, UploadVideoState>{
 
       print('88888888888888888888888888888888');
       print('lllllllllllllll     ${event.video.path}');
-      print('lllllllllllllll     ${event.videoThumbnail.name}');
+      print('lllllllllllllll     ${event.videoThumbnail}');
       print('lllllllllllllll     ${event.videoCategory.single}');
 
 
@@ -30,24 +30,26 @@ class UploadVideoBloc extends Bloc<UploadVideoEvent, UploadVideoState>{
       String fileName = event.video.path!.split('/').last;
       FormData formData = FormData.fromMap({
         'video': await MultipartFile.fromFile(event.video.path!, filename: fileName),
-        'thumbnail': await MultipartFile.fromFile(event.videoThumbnail.path!),
+        'thumbnail': await MultipartFile.fromFile(event.videoThumbnail.path),
         'title': event.videoTitle,
         'description': event.videoDescription,
         'categories[]': event.videoCategory,
         'visibility': event.videoVisibility,
       });
-      final String? token = Global.token;
+      // final String? token = Global.token;
       // print('************   ${formData}');
-      final response = await UploadVideoRepo().uploadVideo(formData);
-      // final response = await Dio().post('https://videoapp.taskhub.company/api/video',
-      //   data: formData,
-      //   options: Options(
-      //     headers: headers
-      //   )
-      // );
+      // final response = await UploadVideoRepo().uploadVideo(formData);
+      final response = await Dio().post('https://videoapp.taskhub.company/api/video',
+        data: formData,
+        options: Options(
+          headers: headers
+        )
+      );
 
       print('99999999999999999999999       ${response} 99999999999999999999999       ${response.statusCode}');
-      if(response != null){
+      if(response.data != null){
+        print('Video Uploaded Successfully');
+
         emit(UploadVideoSuccess());
       }else{
         print('Fail to Success');

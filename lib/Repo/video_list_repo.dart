@@ -1,65 +1,3 @@
-// import 'dart:convert';
-// import 'dart:developer';
-//
-// import 'package:vimeo_clone/config/ApiBaseHelper.dart';
-// import 'package:vimeo_clone/config/api_routes.dart';
-//
-// import '../model/all_video_list_model.dart';
-// import '../model/video_list_model.dart';
-//
-// class VideoListRepo{
-//
-//   Future<List<Videos>?> getVideoList(int categoryId) async {
-//     try{
-//       final response = await ApiBaseHelper().getAPICall(getVideoListAsCategoryUrl, {'category_id': categoryId});
-//
-//       print(response.data);
-//
-//       if (response.statusCode == 200) {
-//         var jsonResponse;
-//         if (response.data is String) {
-//           jsonResponse = json.decode(response.data);
-//         } else {
-//           jsonResponse = response.data;
-//         }
-//
-//         // Log the entire jsonResponse to understand its structure
-//         print('JSON Response: $jsonResponse');
-//
-//         // Ensure jsonResponse contains the expected structure
-//         if (jsonResponse['videos'] != null && jsonResponse['videos'] is List) {
-//           final List<Videos> videoList = [];
-//           var video = jsonResponse['videos'] as List<dynamic>;
-//
-//           // Convert each video item to a Data object
-//           for (var row in video) {
-//             print('[]][]]]][[][]][][][]]');
-//             videoList.add(Videos.fromJson(row as Map<String, dynamic>));
-//             print('898998989989989898989898');
-//           }
-//
-//           print('Video List: $videoList');
-//           print('Video List retrieved successfully');
-//           return videoList;
-//         } else {
-//           print('Unexpected JSON structure: $jsonResponse');
-//           throw ApiException('Unexpected JSON structure');
-//         }
-//       }else{
-//         print('Failed Get the list of Videos');
-//       }
-//
-//     }catch(e){
-//       throw ApiException('Failed To Call Api');
-//     }
-//     return null;
-//   }
-//
-// }
-
-
-
-
 
 
 import 'dart:convert';
@@ -83,28 +21,33 @@ class VideoListRepo {
         if (response.data is String) {
           jsonResponse = json.decode(response.data);
         } else {
-          jsonResponse = response.data;
+          jsonResponse = response.data['category'];
         }
 
         // Log the entire jsonResponse to understand its structure
         log('JSON Response: $jsonResponse');
 
         // Ensure jsonResponse contains the expected structure
-        if (jsonResponse['videos'] != null && jsonResponse['videos'] is List) {
-          final List<Videos> videoList = [];
-          var video = jsonResponse['videos'] as List<dynamic>;
+        if (jsonResponse != null) {
+          if (jsonResponse is Map && jsonResponse.containsKey('videos') && jsonResponse['videos'] is List) {
+            final List<Videos> videoList = [];
+            var video = jsonResponse['videos'] as List<dynamic>;
 
-          // Convert each video item to a Videos object
-          for (var row in video) {
-            log('Processing video item: $row');
-            videoList.add(Videos.fromJson(row as Map<String, dynamic>));
+            // Convert each video item to a Videos object
+            for (var row in video) {
+              log('Processing video item: $row');
+              videoList.add(Videos.fromJson(row as Map<String, dynamic>));
+            }
+
+            log('Video List: $videoList');
+            log('Video List retrieved successfully');
+            return videoList;
+          } else {
+            log('JSON structure does not contain expected "videos" key or it is not a List: $jsonResponse');
+            throw ApiException('Unexpected JSON structure');
           }
-
-          log('Video List: $videoList');
-          log('Video List retrieved successfully');
-          return videoList;
         } else {
-          log('Unexpected JSON structure: $jsonResponse');
+          log('JSON response is null');
           throw ApiException('Unexpected JSON structure');
         }
       } else {

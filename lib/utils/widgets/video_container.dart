@@ -43,15 +43,19 @@ class VideoListItem extends StatelessWidget {
 
                 // VIDEO THUMBNAIL --------------------------------------------------------------------------
                 ClipRRect(
+
                   // borderRadius: BorderRadius.circular(10),
                   child: AspectRatio(
                     aspectRatio: 16/9,
-                    child: Image.network(
-                      thumbnailUrl,
-                      // height: ScreenSize.screenHeight(context) * 0.25,
-                      // width: double.infinity,
-                      // width: ScreenSize.screenWidth(context) * 0.97,
-                      fit: BoxFit.cover,
+                    child: Container(
+                      color: greyShade300,
+                      child: Image.network(
+                        thumbnailUrl,
+                        // height: ScreenSize.screenHeight(context) * 0.25,
+                        // width: double.infinity,
+                        // width: ScreenSize.screenWidth(context) * 0.97,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),

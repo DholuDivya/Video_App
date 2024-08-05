@@ -11,8 +11,12 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
+import 'package:vimeo_clone/appLinks.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_state.dart';
+import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
+import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_event.dart';
+import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_state.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_bloc.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_event.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_state.dart';
@@ -71,8 +75,12 @@ class _HomePageState extends State<HomePage> {
     const UserPage(),
   ];
 
+
   @override
   Widget build(BuildContext context) {
+
+
+
     return Scaffold(
         body: SafeArea(
           child: screens[_currentIndex],
@@ -108,10 +116,27 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  BottomSheetButton(
-                    onTap: () {},
-                    buttonName: 'Create short',
-                    buttonIcon: HeroiconsOutline.camera,
+                  BlocBuilder<GetShortsBloc, GetShortsState>(
+                    builder: (BuildContext context, GetShortsState state) {
+                      if(state is GetShortsLoading){
+                        return Center(child: CircularProgressIndicator(),);
+                      }else if(state is GetShortsSuccess){
+                        if (Navigator.canPop(context)) {
+                          Navigator.pop(context);
+                        }
+                        WidgetsBinding.instance.addPostFrameCallback((_){
+                          GoRouter.of(context).pushNamed('getShortsThumbnailPage');
+                        });
+
+                      }
+                      return BottomSheetButton(
+                      onTap: () {
+                        context.read<GetShortsBloc>().add(GetShortsFromCamera());
+                      },
+                      buttonName: 'Create short',
+                      buttonIcon: HeroiconsOutline.camera,
+                      );
+                    },
                   ),
                   BottomSheetButton(
                     onTap: uploadVideoBottomSheet,
@@ -133,66 +158,69 @@ class _HomePageState extends State<HomePage> {
   }
 
   void uploadVideoBottomSheet() {
-    if (Navigator.canPop(context)) {
-      Navigator.pop(context);
-    }
 
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return SizedBox(
-          height: 200.h,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  BlocConsumer<GetVideoBloc, GetVideoState>(
-                      builder: (BuildContext context, state){
-                        if(state is GetVideoLoading){
-                          return Center(child: CircularProgressIndicator(),);
-                        }
-                        return BottomSheetButton(
-                          onTap: () {
-                            // if (Navigator.canPop(context)) {
-                            //   Navigator.pop(context);
-                            // }
-                            context.read<GetVideoBloc>().add(OpenFilesToGetVideo());
-                            },
-                          buttonName: 'From Files',
-                          buttonIcon: HeroiconsOutline.folder,
-                        );
-                      },
-                      listener: (context , state){
-                        if(state is GetVideoSuccess){
-                          if (Navigator.canPop(context)) {
-                            Navigator.pop(context);
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return SizedBox(
+            height: 200.h,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    BlocConsumer<GetVideoBloc, GetVideoState>(
+                        builder: (BuildContext context, state){
+                          if(state is GetVideoLoading){
+                            return Center(child: CircularProgressIndicator(),);
                           }
-                          log('Video Fetch Successfully from user');
-                          GoRouter.of(context).pushNamed('uploadVideoPage');
+                          return BottomSheetButton(
+                            onTap: () {
+                              // if (Navigator.canPop(context)) {
+                              //   Navigator.pop(context);
+                              // }
+                              context.read<GetVideoBloc>().add(OpenFilesToGetVideo());
+                            },
+                            buttonName: 'From Files',
+                            buttonIcon: HeroiconsOutline.folder,
+                          );
+                        },
+                        listener: (context , state){
+                          if(state is GetVideoSuccess){
+                            if (Navigator.canPop(context)) {
+                              Navigator.pop(context);
+                            }
+                            log('Video Fetch Successfully from user');
+                            GoRouter.of(context).pushNamed('uploadVideoPage');
+                          }
                         }
-                      }
-                  ),
+                    ),
 
-                  BottomSheetButton(
-                    onTap: (){
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                      }
-                      GoRouter.of(context).pushNamed('uploadVideoFromUrl');
-                    },
-                    buttonName: 'From Youtube',
-                    buttonIcon: HeroiconsOutline.link,
-                  ),
-                ],
+                    BottomSheetButton(
+                      onTap: (){
+                        if (Navigator.canPop(context)) {
+                          Navigator.pop(context);
+                        }
+                        GoRouter.of(context).pushNamed('uploadVideoFromUrl');
+                      },
+                      buttonName: 'From Youtube',
+                      buttonIcon: HeroiconsOutline.link,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      },
-    );
-  }
+          );
+        },
+      );
+    }
+
+
 }
 
 
@@ -212,6 +240,31 @@ class _HomePageContentState extends State<HomePageContent> {
 
   bool isAllCategorySelected = true;
 
+  // final ScrollController _scrollController = ScrollController();
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _scrollController.addListener(_onScroll);
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   _scrollController.dispose();
+  //   super.dispose();
+  // }
+  //
+  // Future<void> _onRefresh() async {
+  //   _postBloc.add(PostRefresh());
+  // }
+  //
+  // void _onScroll() {
+  //   double maxScroll = _scrollController.position.maxScrollExtent;
+  //   double currentScroll = _scrollController.position.pixels;
+  //   if (currentScroll == maxScroll) _postBloc.add(PostFetched());
+  // }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -221,6 +274,7 @@ class _HomePageContentState extends State<HomePageContent> {
           slivers: [
             SliverAppBar(
               backgroundColor: Theme.of(context).colorScheme.surface,
+              // backgroundColor: red,
               title: const Text(
                 appName,
                 style: TextStyle(
@@ -231,8 +285,20 @@ class _HomePageContentState extends State<HomePageContent> {
               floating: true,
               pinned: false,
               snap: false,
+              // expandedHeight: 120,
               // backgroundColor: Theme.of(context).colorScheme.surface,
-              leading: const Icon(Remix.youtube_fill, size: 35, color: Colors.red,),
+              // leading: Icon(Remix.youtube_fill, color: red, size: 35,),
+              // leadingWidth: 70,
+              leading: Container(
+                // color: red,
+                // width: 150,
+                  // height: 150,
+                  child: Image.asset(
+                    'assets/images/homepage_logo.png',
+                   fit: BoxFit.fill,
+                   // scale: 2,
+                  )
+              ),
               actions: [
                 IconButton(
                   onPressed: () {
@@ -260,6 +326,20 @@ class _HomePageContentState extends State<HomePageContent> {
                   )
               ),
             ),
+
+            // SliverAppBar(
+            //
+            //   bottom: PreferredSize(
+            //       preferredSize: Size.fromHeight(ScreenSize.screenHeight(context) * 0.0),
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           categoryListView(),
+            //           // SizedBox(height: ScreenSize.screenHeight(context) * 0.006,)
+            //         ],
+            //       )
+            //   ),
+            // ),
 
             SliverToBoxAdapter(
               // child: AllCategory(category: categoryList[isCategory]['type']),
@@ -328,8 +408,7 @@ class _HomePageContentState extends State<HomePageContent> {
                             return VideoListItem(
                               onTap: (){
                                 Future.delayed(const Duration(milliseconds: 200), () {
-                                  context.read<PlayVideoBloc>().add(GetVideoSlugEvent(slug: state.videoList[index].slug!));
-                                  GoRouter.of(context).pushNamed('videoPage');
+                                  GoRouter.of(context).pushNamed('videoPage', pathParameters: {"slug":  state.videoList[index].slug!});
                                 });
                               },
                               channelPhoto: '${state.videoList[index].channel ?? 'assets/images/sonysab.jpg'}',
@@ -414,12 +493,10 @@ class _HomePageContentState extends State<HomePageContent> {
 
                           return VideoListItem(
                             onTap: (){
+                              print('***************    ${state.videoList[index].slug}');
                               Future.delayed(const Duration(milliseconds: 200), () {
-                                context.read<PlayVideoBloc>().add(GetVideoSlugEvent(slug: state.videoList[index].slug!));
-                                GoRouter.of(context).pushNamed('videoPage');
+                                GoRouter.of(context).pushNamed('videoPage', pathParameters: {"slug":  state.videoList[index].slug!});
                               });
-
-
                             },
                             channelPhoto: '${state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg'}',
                             thumbnailUrl: '${state.videoList[index].thumbnails}',
@@ -458,6 +535,7 @@ class _HomePageContentState extends State<HomePageContent> {
       builder: (BuildContext context, state) {
         if(state is VideoCategoriesLoading){
           return Container(
+            // color: red,
             height: ScreenSize.screenHeight(context) * 0.04,
             child: ListView.builder(
               padding: EdgeInsets.only(

@@ -1,47 +1,71 @@
-import 'dart:ui';
-
 class VideoCategoriesModel {
+  String? message;
+  List<Category>? categories;
+
+  VideoCategoriesModel({this.message, this.categories});
+
+  VideoCategoriesModel.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    if (json['categories'] != null) {
+      categories = <Category>[];
+      json['categories'].forEach((v) {
+        categories!.add(Category.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    if (categories != null) {
+      data['categories'] = categories!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Category {
   int? id;
   String? name;
   int? parentId;
   String? description;
-  // Image? image;
-  // Null? type;
-  // String? createdAt;
-  // String? updatedAt;
+  String? image;
+  String? type;
+  String? createdAt;
+  String? updatedAt;
 
-  VideoCategoriesModel(
-      {this.id,
-        this.name,
-        this.parentId,
-        this.description,
-        // this.image,
-        // this.type,
-        // this.createdAt,
-        // this.updatedAt
-      });
+  Category({
+    this.id,
+    this.name,
+    this.parentId,
+    this.description,
+    this.image,
+    this.type,
+    this.createdAt,
+    this.updatedAt,
+  });
 
-  VideoCategoriesModel.fromJson(Map<String, dynamic> json) {
+  Category.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     parentId = json['parent_id'];
     description = json['description'];
-    // image = json['image'];
-    // type = json['type'];
-    // createdAt = json['created_at'];
-    // updatedAt = json['updated_at'];
+    image = json['image'];
+    type = json['type'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['parent_id'] = this.parentId;
-    data['description'] = this.description;
-    // data['image'] = this.image;
-    // data['type'] = this.type;
-    // data['created_at'] = this.createdAt;
-    // data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['parent_id'] = parentId;
+    data['description'] = description;
+    data['image'] = image;
+    data['type'] = type;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

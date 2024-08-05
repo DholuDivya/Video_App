@@ -12,7 +12,20 @@
           "package_name": "com.example.vimeo_clone"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "888231558500-hhfg665l1fmcqslbbvu2dnv3qkmp26c9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vimeo_clone",
+            "certificate_hash": "5f10ca292c6482687a56e15e8deb49b7cba09a64"
+          }
+        },
+        {
+          "client_id": "888231558500-1o7loafo09c00gooc6hnhgrr16mr41s8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBGRJzIcFD3KjEenxSkvkGfwM-t0ybY-hk"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888231558500-1o7loafo09c00gooc6hnhgrr16mr41s8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

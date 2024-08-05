@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gradient_icon/gradient_icon.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/Config/colors.dart';
 import 'package:vimeo_clone/Config/constants.dart';
@@ -41,7 +42,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           BottomBarIconButton(
-
             icon: currentIndex == 0 ? HeroiconsSolid.home : HeroiconsOutline.home,
             color: currentIndex == 0 ? primaryColor : greyShade600,
             onPressed: () { onTabTapped(0); },
@@ -113,4 +113,5 @@ class BottomBarIconButton extends StatelessWidget {
     );
   }
 }
+
 
