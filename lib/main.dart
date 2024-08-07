@@ -15,8 +15,9 @@ import 'model/user_data_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final appDocumentDirectory = await getApplicationDocumentsDirectory();
-  await Hive.initFlutter(appDocumentDirectory.path);
+  // final appDocumentDirectory = await getApplicationDocumentsDirectory();
+  // await Hive.initFlutter(appDocumentDirectory.path);
+  await Hive.initFlutter();
   Hive.registerAdapter(UserDataModelAdapter());
 
   await Hive.openBox('themebox');
@@ -28,43 +29,11 @@ void main() async {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   }else{
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
   }
-
-
-
-
-
 
   runApp(MyApp());
 
 }
 
-// class GlobalVariable{
-//   static String? token;
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//
-//     return const MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       localizationsDelegates: [
-//         GlobalMaterialLocalizations.delegate,
-//         GlobalWidgetsLocalizations.delegate,
-//         GlobalCupertinoLocalizations.delegate,
-//       ],
-//       supportedLocales: [
-//         Locale('en'), // English
-//         Locale('hi'), // Hindi
-//       ],
-//       home: HomePage(),
-//       // routerConfig: MyAppRoute().router,
-//     );
-//   }
-// }
 

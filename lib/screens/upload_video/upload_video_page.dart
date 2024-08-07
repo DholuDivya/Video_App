@@ -21,6 +21,7 @@ import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/custom_alert_dialog.dart';
+import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
 import '../../bloc/get_video_from_user/get_video_bloc.dart';
 import '../../bloc/get_video_from_user/get_video_state.dart';
@@ -208,7 +209,6 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                 // color: Colors.black,
               ),
             ),
-            
 
           ],
         ),
@@ -338,43 +338,48 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
 
                 SizedBox(height: 40.h),
 
-                TextFormField(
-                  controller: _titleController,
-                  // validator: _validateTitle,
-                  maxLength: 50,
-
-                  keyboardType: TextInputType.multiline,
-                  decoration: InputDecoration(
-                    // hintText: ' Title... ',
-                    labelText: 'Title...',
-                    labelStyle: TextStyle(
-                        fontSize: 15,
-                        color: Theme.of(context).colorScheme.secondaryFixedDim),
-
-                    // floatingLabelStyle: TextStyle(
-                    //
-                    // ),
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.surfaceDim,
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: blue, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                        // color: Colors.grey.shade900,
-                        color: Theme.of(context).colorScheme.secondaryFixedDim,
-                        width: 1.0,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.red, width: 2.0),
-                    ),
-                    counterText: ''
-                  ),
+                CustomTextFieldUpload(
+                    controller: _titleController,
+                    fieldLabel: 'title'
                 ),
+
+                // TextFormField(
+                //   controller: _titleController,
+                //   // validator: _validateTitle,
+                //   maxLength: 50,
+                //
+                //   keyboardType: TextInputType.multiline,
+                //   decoration: InputDecoration(
+                //     // hintText: ' Title... ',
+                //     labelText: 'Title...',
+                //     labelStyle: TextStyle(
+                //         fontSize: 15,
+                //         color: Theme.of(context).colorScheme.secondaryFixedDim),
+                //
+                //     // floatingLabelStyle: TextStyle(
+                //     //
+                //     // ),
+                //     filled: true,
+                //     fillColor: Theme.of(context).colorScheme.surfaceDim,
+                //     focusedBorder: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(10),
+                //       borderSide: BorderSide(color: blue, width: 2.0),
+                //     ),
+                //     enabledBorder: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(10),
+                //       borderSide: BorderSide(
+                //         // color: Colors.grey.shade900,
+                //         color: Theme.of(context).colorScheme.secondaryFixedDim,
+                //         width: 1.0,
+                //       ),
+                //     ),
+                //     border: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(10),
+                //       borderSide: const BorderSide(color: Colors.red, width: 2.0),
+                //     ),
+                //     counterText: ''
+                //   ),
+                // ),
 
                 SizedBox(height: 15.h),
                 Material(

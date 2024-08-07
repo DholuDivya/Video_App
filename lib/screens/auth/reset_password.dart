@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 
 import '../../config/constants.dart';
-import '../../utils/widgets/custom_text_field.dart';
+import '../../utils/widgets/custom_text_field_auth.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});

@@ -48,8 +48,10 @@ class ApiBaseHelper {
     var responseJson;
     // var timeOut = 10;
     final dio_.Dio dio = dio_.Dio();
-    // print('#@###########   ${params}');
+    print('#@###########   ${params}');
+    print('%%%%%%%%%%%%%%      ${headers}');
     try {
+
       final response =
       await dio.post(
           url,

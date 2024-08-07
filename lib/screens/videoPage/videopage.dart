@@ -157,10 +157,8 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
     super.initState();
     context.read<PlayVideoBloc>().add(GetVideoSlugEvent(slug: widget.slug));
 
-    // Access the Bloc
     final videoBloc = context.read<PlayVideoBloc>();
 
-    // Handle state changes
     videoBloc.stream.listen((state) {
       if (state is PlayVideoLoaded) {
         final videoData = state.playVideo[0].data!;
@@ -169,11 +167,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
             playVideoFrom: videoData.uploadSourceType == "external"
                 ? PlayVideoFrom.youtube(videoData.video!)
                 : PlayVideoFrom.network(videoData.video!),
-            // podPlayerConfig: const PodPlayerConfig(
-            //     autoPlay: true,
-            //     isLooping: false,
-            //     videoQualityPriority: [1080, 720, 360]
-            // )
           )..initialise();
         });
       }

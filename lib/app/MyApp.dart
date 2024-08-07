@@ -15,7 +15,10 @@ import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
+import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_bloc.dart';
+import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_event.dart';
 import 'package:vimeo_clone/bloc/get_thumbnail_from_user/get_thumbnail_bloc.dart';
+import 'package:vimeo_clone/bloc/get_thumbnail_of_shorts/get_shorts_thumbnail_bloc.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';
@@ -70,7 +73,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => UploadVideoBloc()),
         BlocProvider(create: (context) => UploadVideoExternalBloc()),
         BlocProvider(create: (context) => ChannelProfileBloc()),
-        BlocProvider(create: (context) => GetShortsBloc())
+        BlocProvider(create: (context) => GetShortsBloc()),
+        BlocProvider(create: (context) => GetShortsThumbnailBloc()),
+        BlocProvider(create: (context) => GetShortsListBloc()..add(GetShortsListRequest())),
 
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(

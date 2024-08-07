@@ -14,7 +14,8 @@ import 'package:vimeo_clone/screens/auth/registration_page.dart';
 import 'package:vimeo_clone/screens/auth/numebr_signup.dart';
 import 'package:vimeo_clone/screens/auth/reset_password.dart';
 import 'package:vimeo_clone/screens/auth/verification_page.dart';
-import 'package:vimeo_clone/screens/upload_shorts/get_shorts_thumbnail.dart';
+import 'package:vimeo_clone/screens/upload_shorts/crop_shorts_page.dart';
+import 'package:vimeo_clone/screens/upload_shorts/get_shorts_thumbnail_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/upload_shorts_page.dart';
 import 'package:vimeo_clone/screens/upload_video/upload_video_page.dart';
 import 'package:vimeo_clone/screens/upload_video_from_url/upload_video_from_url_page.dart';
@@ -25,7 +26,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
 
 // class MyAppRoute {
   final GoRouter router = GoRouter(
-    // initialLocation: '/uploadVideoPage',
+    // initialLocation: '/cropShortsPage',
       routes: [
         GoRoute(
           name: 'splashScreen',
@@ -199,7 +200,7 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
           name: 'getShortsThumbnailPage',
           path: '/getShortsThumbnailPage',
           pageBuilder: (context, state) => const CupertinoPage (
-            child: GetShortsThumbnail(),
+            child: GetShortsThumbnailPage(),
           ),
         ),
 
@@ -210,6 +211,12 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
             child: UploadShortsPage(),
           ),
         ),
+
+        GoRoute(
+          name: 'cropShortsPage',
+            path: '/cropShortsPage',
+          pageBuilder: (context, state) => const CupertinoPage(child: CropShortsPage())
+        )
 
       ]
   );

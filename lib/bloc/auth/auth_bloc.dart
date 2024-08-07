@@ -29,6 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         //       headers: headers
         //     )
         // );
+        print('7777777777777777777777       ${firebaseUserToken}');
         String? userToken = await authRepository.loginWithGoogle(firebaseUserToken);
         print('Firebase Token ::: ${firebaseUserToken}');
         print('User Token ::: ${userToken}');
@@ -57,6 +58,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           },
         );
       } catch (e) {
+        print('send otp failed');
         emit(AuthFailure(error: e.toString()));
       }
     });
@@ -76,6 +78,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             add(OnPhoneAuthVerificationCompleted(credential: credential));
             print('<<<<<<<<<<<<<-------------${credential.token}------access  ${credential.accessToken}');
           } catch (e) {
+            print('verify otp failed');
             emit(AuthFailure(error: e.toString()));
           }
         });
@@ -96,6 +99,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         emit(AuthSuccess(userToken!));
       } catch (e) {
+        print('verify user failed');
         emit(AuthFailure(error: e.toString()));
       }
     });
@@ -151,7 +155,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthProgress());
       try {
         await authRepository.logOutUser();
-        print('${headers}');
+        print('Log out function');
         emit(AuthLogOut());
       } catch (e) {
         emit(AuthFailure(error: e.toString()));

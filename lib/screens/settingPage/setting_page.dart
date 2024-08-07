@@ -149,7 +149,7 @@ class _SettingPageState extends State<SettingPage> {
           listener: (context, state) {
             if(state is AuthLogOut){
               // print('Logged Out ---- ${headers} \n Token${Global.userName}');
-              print('Logged Out ---- ${headers} \n Token${Global.userData}');
+              print('Log Out API Successfully Called');
               GoRouter.of(context).pushReplacementNamed('signupPage');
             }
           },

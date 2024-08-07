@@ -12,7 +12,7 @@ import 'package:vimeo_clone/Screens/HomePage/homepage.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/utils/widgets/custom_text_field.dart';
+import 'package:vimeo_clone/utils/widgets/custom_text_field_auth.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../config/colors.dart';
 
@@ -78,7 +78,7 @@ class _SignupPageState extends State<SignupPage> {
             child: Material(
               borderRadius: BorderRadius.circular(500),
               elevation: 10,
-                // shadowColor: Colors.white12,
+                shadowColor: Colors.grey,
               child: Container(
                   height: 160,
                   width: 160,
@@ -99,7 +99,7 @@ class _SignupPageState extends State<SignupPage> {
             child: Material(
               borderRadius: BorderRadius.circular(500),
               elevation: 10,
-                // shadowColor: Colors.white12,
+                shadowColor: Colors.grey,
               child: Container(
                   height: 140.h,
                   width: 160.w,
@@ -118,7 +118,7 @@ class _SignupPageState extends State<SignupPage> {
             child: Material(
               borderRadius: BorderRadius.circular(500),
               elevation: 10,
-                // shadowColor: Colors.white12,
+                shadowColor: Colors.grey,
               child: Container(
                 height: 120,
                 width: 120,
@@ -137,7 +137,7 @@ class _SignupPageState extends State<SignupPage> {
             child: Material(
               borderRadius: BorderRadius.circular(500),
               elevation: 10,
-                shadowColor: Colors.white12,
+                shadowColor: Colors.grey,
               child: Container(
                   height: 100.h,
                   width: 100.w,
@@ -156,7 +156,7 @@ class _SignupPageState extends State<SignupPage> {
             child: Material(
               borderRadius: BorderRadius.circular(500),
               elevation: 10,
-              shadowColor: Colors.white12,
+              shadowColor: Colors.grey,
               child: Container(
                 height: 160.h,
                 width: 180.w,
@@ -174,8 +174,6 @@ class _SignupPageState extends State<SignupPage> {
             height: double.infinity,
             width: double.infinity,
           ),
-
-
 
 
 
@@ -281,7 +279,7 @@ class _SignupPageState extends State<SignupPage> {
                             GoRouter.of(context).pushNamed(
                                 'forgotPasswordPage');
                           },
-                          child: Text(
+                          child: const Text(
                             'Forgot Password',
                             style: TextStyle(
                                 fontFamily: fontFamily,
@@ -313,12 +311,12 @@ class _SignupPageState extends State<SignupPage> {
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
-                                    padding: EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       'Continue',
                                       style: TextStyle(

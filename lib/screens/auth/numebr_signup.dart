@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/utils/widgets/custom_text_field.dart';
+import 'package:vimeo_clone/utils/widgets/custom_text_field_auth.dart';
 import '../../Repo/auth_repo.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';

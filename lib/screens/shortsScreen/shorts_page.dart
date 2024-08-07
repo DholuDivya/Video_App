@@ -86,6 +86,10 @@
 
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_bloc.dart';
+import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_event.dart';
+import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 
 import 'content_screen.dart';
@@ -266,6 +270,11 @@ class _ShortsPageState extends State<ShortsPage> {
     },
   ];
 
+  @override
+  void initState() {
+    // context.read<GetShortsListBloc>().add(GetShortsListRequest());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -275,14 +284,22 @@ class _ShortsPageState extends State<ShortsPage> {
         child: Container(
           child: Stack(
             children: [
-              Swiper(
-                itemBuilder: (BuildContext context, int index) {
-                  return ContentScreen(
-                    videoData: videos[index],
+              BlocBuilder<GetShortsListBloc, GetShortsListState>(
+              builder: (BuildContext context, state) {
+                if(state is GetShortsListLoaded){
+                  final shortsData = state.shortsData.first.data;
+                  return Swiper(
+                    scrollDirection: Axis.vertical,
+                    itemCount: shortsData!.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ContentScreen(
+                        shortsData: shortsData.data![index],
+                      );
+                    },
                   );
+                }
+                  return Container();
                 },
-                itemCount: videos.length,
-                scrollDirection: Axis.vertical,
               ),
               Padding(
                 padding: EdgeInsets.only(
@@ -301,7 +318,7 @@ class _ShortsPageState extends State<ShortsPage> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Icon(Icons.camera_alt, color: Colors.white),
+                    // Icon(Icons.camera_alt, color: Colors.white),
                   ],
                 ),
               ),

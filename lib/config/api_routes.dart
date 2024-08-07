@@ -10,4 +10,5 @@ const String getVideoListAsCategoryUrl = "${apiUrl}category";
 const String getAllVideoListUrl = "${apiUrl}videos";
 const String getVideoUrl = "${apiUrl}video";
 const String uploadVideoUrl = "${apiUrl}video";
+const String getShortsListUrl = "${apiUrl}shorts";
 // const String getYourVideosUrl = "${apiUrl}channels";

@@ -1,16 +1,19 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:pod_player/pod_player.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:video_player/video_player.dart';
+import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/model/get_shorts_list_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class ContentScreen extends StatefulWidget {
-  final Map<String, dynamic> videoData;
+  final Data shortsData;
 
-
-  const ContentScreen({Key? key, required this.videoData}) : super(key: key);
+  const ContentScreen({super.key, required this.shortsData});
 
   @override
   _ContentScreenState createState() => _ContentScreenState();
@@ -18,137 +21,96 @@ class ContentScreen extends StatefulWidget {
 
 class _ContentScreenState extends State<ContentScreen> {
   bool _isSubscribed = false;
-  late VideoPlayerController _videoPlayerController;
-  ChewieController? _chewieController;
+  PodPlayerController? _podPlayerController;
   late ValueNotifier<double> _sliderValueNotifier;
+  bool isPause = false;
+
 
   @override
   void initState() {
     super.initState();
     _sliderValueNotifier = ValueNotifier(0.0);
     initializePlayer();
+    _podPlayerController?.hideOverlay();
+    enterImmersiveMode();
+  }
+
+  void toggle(){
+    setState(() {
+      isPause = !isPause;
+    });
   }
 
   Future initializePlayer() async {
-    _videoPlayerController = VideoPlayerController.network(widget.videoData['url']);
-    // _videoPlayerController.setVolume(1.0);
-    await Future.wait([_videoPlayerController.initialize()]);
-    final video = YoutubePlayer.convertUrlToId(widget.videoData['url']);
-    YoutubePlayer(
-      controller: YoutubePlayerController(
-        initialVideoId: video!,
-
-        flags: YoutubePlayerFlags(
-            autoPlay: false,
-            hideControls: false,
-            hideThumbnail: true
-        ),
-
-        // initialVideoId: YoutubePlayer.convertUrlToId(videoUrl!) ?? '',
-        //     flags: YoutubePlayerFlags(
-        //       autoPlay: true,
-        //       hideThumbnail: true,
-        //       controlsVisibleAtStart: true,
-        //       hideControls: false
-        //     ),
-        //
-        //   ),
-        // showVideoProgressIndicator: true,
-        // progressIndicatorColor: Colors.amber,
-        // progressColors: const ProgressBarColors(
-        //   playedColor: Colors.amber,
-        //   handleColor: Colors.amberAccent,
-      ),
-      showVideoProgressIndicator: true,
-      onReady: () => debugPrint('Ready'),
-      bottomActions: [
-        CurrentPosition(),
-        ProgressBar(
-            isExpanded: true,
-            colors: const ProgressBarColors(
-                playedColor: Colors.red,
-                handleColor: Colors.red
-            )
+    setState(() {
+      _podPlayerController = PodPlayerController(
+        playVideoFrom: widget.shortsData.uploadedBy == "external"
+            ? PlayVideoFrom.youtube(widget.shortsData.video!,)
+            : PlayVideoFrom.network(widget.shortsData.video!,),
+        podPlayerConfig: const PodPlayerConfig(
+          isLooping: true,
+          autoPlay: true,
         )
-      ],
-
-    );
-
-    
-    
-    // _chewieController = ChewieController(
-      // videoPlayerController: _videoPlayerController,
-      // autoInitialize: true,
-      // autoPlay: true,
-      // showControls: false,
-      // looping: true,
-      // draggableProgressBar: true,
-    // );
-    
-    // _videoPlayerController.addListener(() {
-    //   if (_videoPlayerController.value.isInitialized) {
-    //     final duration = _videoPlayerController.value.duration;
-    //     final position = _videoPlayerController.value.position;
-    //     final progress = duration.inMilliseconds > 0
-    //         ? position.inMilliseconds / duration.inMilliseconds
-    //         : 0.0;
-    //     _sliderValueNotifier.value = progress;
-    //   }
-    // });
-
-  //   setState(() {});
+      )..initialise();
+    });
   }
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController?.dispose();
     _sliderValueNotifier.dispose();
+    _podPlayerController?.dispose();
     super.dispose();
+    exitImmersiveMode();
   }
 
+
+  void enterImmersiveMode() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  }
+
+// Call this method when you want to exit immersive mode
+  void exitImmersiveMode() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       fit: StackFit.expand,
       children: [
-        _chewieController != null &&
-            _chewieController!.videoPlayerController.value.isInitialized
-            ? GestureDetector(
-          onDoubleTap: () {
-            setState(() {
-              widget.videoData['liked'] = !widget.videoData['liked'];
-            });
-          },
-          child: Chewie(
-            controller: _chewieController!,
+
+        _podPlayerController != null ? GestureDetector(
+          onTap: (){
+
+              toggle();
+              isPause ? _podPlayerController?.pause() : _podPlayerController?.play();
+            },
+          child: AspectRatio(
+            aspectRatio: 9/16,
+            child: PodVideoPlayer(
+                controller: _podPlayerController!,
+              alwaysShowProgressBar: false,
+              overlayBuilder: (options) {
+                return const SizedBox.shrink();
+              },
+                matchVideoAspectRatioToFrame: true,
+                matchFrameAspectRatioToVideo: true,
+            ),
           ),
-        )
-            : Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 10),
-            Text(
-              'Loading...',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: fontFamily,
-              ),
+        ) : const Center(child:  CircularProgressIndicator(),),
+        GestureDetector(
+          onTap: (){
+            toggle();
+            isPause ? _podPlayerController?.pause() : _podPlayerController?.play();
+          },
+            child: Icon(
+              isPause ? (Icons.play_arrow) : null, color: Colors.white70, size: 40,
             )
-          ],
         ),
         Padding(
           padding: EdgeInsets.only(
-            left: MediaQuery
-                .of(context)
-                .size
-                .width * 0.02,
-            right: MediaQuery
-                .of(context)
-                .size
-                .width * 0.03,
+            left: MediaQuery.of(context).size.width * 0.02,
+            right: MediaQuery.of(context).size.width * 0.03,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,7 +120,6 @@ class _ContentScreenState extends State<ContentScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-
                     width: ScreenSize.screenWidth(context) * 0.8,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,22 +131,22 @@ class _ContentScreenState extends State<ContentScreen> {
                               CircleAvatar(
                                 radius: 16,
                                 backgroundImage: NetworkImage(
-                                    widget.videoData['profilePhoto']),
+                                    widget.shortsData.channel!.logo!),
                               ),
                               SizedBox(width: 6),
                               Expanded(
                                 child: Text(
-                                  widget.videoData['name'],
+                                  widget.shortsData.channel!.name!,
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: fontFamily,
-                                    fontSize: 16,
-                                    overflow: TextOverflow.ellipsis
-                                  ),
+                                      color: Colors.white,
+                                      fontFamily: fontFamily,
+                                      fontSize: 16,
+                                      overflow: TextOverflow.ellipsis),
                                 ),
                               ),
                               SizedBox(width: 2),
-                              Icon(Icons.verified, size: 15, color: Colors.white),
+                              Icon(Icons.verified,
+                                  size: 15, color: Colors.white),
                               SizedBox(width: 6),
                               GestureDetector(
                                 onTap: () {
@@ -194,18 +155,27 @@ class _ContentScreenState extends State<ContentScreen> {
                                   });
                                 },
                                 child: Container(
-                                  height: ScreenSize.screenHeight(context) * 0.045,
-                                  width: _isSubscribed ? ScreenSize.screenWidth(context) * 0.28 : ScreenSize.screenWidth(context) * 0.25,
+                                  height:
+                                      ScreenSize.screenHeight(context) * 0.045,
+                                  width: _isSubscribed
+                                      ? ScreenSize.screenWidth(context) * 0.28
+                                      : ScreenSize.screenWidth(context) * 0.25,
                                   decoration: BoxDecoration(
-                                    color: _isSubscribed ? Colors.grey.shade200 : Colors.red,
+                                    color: _isSubscribed
+                                        ? Colors.grey.shade200
+                                        : Colors.red,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Center(
                                     child: Text(
-                                      _isSubscribed ? 'Unsubscribe' : 'Subscribe',
+                                      _isSubscribed
+                                          ? 'Unsubscribe'
+                                          : 'Subscribe',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: _isSubscribed ? Colors.black : Colors.white,
+                                        color: _isSubscribed
+                                            ? Colors.black
+                                            : Colors.white,
                                         fontFamily: fontFamily,
                                       ),
                                     ),
@@ -217,7 +187,7 @@ class _ContentScreenState extends State<ContentScreen> {
                         ),
                         SizedBox(height: 6),
                         Text(
-                          widget.videoData['description'],
+                          widget.shortsData.description!,
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: fontFamily,
@@ -234,12 +204,11 @@ class _ContentScreenState extends State<ContentScreen> {
                             SizedBox(width: 6),
                             Expanded(
                               child: Text(
-                                widget.videoData['originalAudio'],
+                                'originalAudio',
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: fontFamily,
-                                  overflow: TextOverflow.ellipsis
-                                ),
+                                    color: Colors.white,
+                                    fontFamily: fontFamily,
+                                    overflow: TextOverflow.ellipsis),
                               ),
                             ),
                           ],
@@ -253,23 +222,26 @@ class _ContentScreenState extends State<ContentScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            setState(() {
-                              widget.videoData['liked'] =
-                              !widget.videoData['liked'];
-                            });
+                            // setState(() {
+                            //   widget.videoData['liked'] =
+                            //       !widget.videoData['liked'];
+                            // });
                           },
                           child: Icon(
-                            widget.videoData['liked']
-                                ? HeroiconsSolid.handThumbUp
-                                : HeroiconsOutline.handThumbUp,
-                            color: widget.videoData['liked']
-                                ? Colors.blue
-                                : Colors.white,
+                            // widget.videoData['liked']
+                            //     ? HeroiconsSolid.handThumbUp
+                            //     :handThumbUp
+                            HeroiconsOutline.handThumbUp,
+                            color:
+                            // widget.videoData['liked']
+                            //     ? Colors.blue
+                            //     :
+                            Colors.white,
                           ),
                         ),
                         SizedBox(height: 8),
                         Text(
-                          widget.videoData['likes'],
+                          widget.shortsData.likes!.toString(),
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: fontFamily,
@@ -295,7 +267,7 @@ class _ContentScreenState extends State<ContentScreen> {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          widget.videoData['comments'].toString(),
+                          widget.shortsData.comments.toString(),
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: fontFamily,
