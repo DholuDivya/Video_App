@@ -73,7 +73,7 @@ class _UserPageState extends State<UserPage> {
               builder: (BuildContext context, YourVideosState state) {
                 var totalVideos;
                 if(state is YourVideosLoaded){
-                  totalVideos = state.videoData.first.channel!.videos!.length;
+                  totalVideos = state.videoData.first.videoCount;
                   print('&&&&&&&&&&&&&&&&&&   ${totalVideos}');
                 }
                 return UserPageButton(

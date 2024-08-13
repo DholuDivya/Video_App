@@ -1,18 +1,18 @@
 import '../config/ApiBaseHelper.dart';
 import '../config/constants.dart';
 import '../config/global_variable.dart';
-import '../model/get_your_videos_model.dart';
+import '../model/get_channel_detail_model.dart';
 
 class ChannelProfileRepo{
-  Future<List<GetYourVideosModel>?> getChannelProfile(String channelId)async{
+  Future<List<GetChannelDetailModel>?> getChannelProfile(String channelId)async{
     try{
       final response = await ApiBaseHelper().getAPICall('${apiUrl}channels/${channelId}', {});
 
       print('${response.data}');
 
       if(response.statusCode == 200){
-        List<GetYourVideosModel> yourVideoData = [];
-        yourVideoData.add(GetYourVideosModel.fromJson(response.data));
+        List<GetChannelDetailModel> yourVideoData = [];
+        yourVideoData.add(GetChannelDetailModel.fromJson(response.data));
         print('Channel Profile Successfully Fetched');
         return yourVideoData;
       }else{

@@ -12,6 +12,7 @@ import 'package:vimeo_clone/Screens/HomePage/homepage.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/routes/myapproute.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_auth.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../config/colors.dart';
@@ -291,20 +292,21 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                             BlocBuilder<AuthBloc, AuthState>(
                               builder: (BuildContext context, state) {
-                                 if(state is AuthSuccess) {
+                                 if(state is LoginAuthSuccess) {
                                   print('Login success with email and password');
 
-                                  Future.delayed(Duration(seconds: 1),(){
-                                    GoRouter.of(context).pushReplacementNamed('homePage');
+                                  Future.delayed(const Duration(seconds: 1),(){
+                                    router.goNamed('homePage');
                                   });
 
-                                }else if(state is AuthFailure){
+                                }else if(state is LoginAuthFailure){
                                   print('Login Fail');
-                                }
+                                }else if(state is LoginAuthLoading){
+                                   return const Center(child: CircularProgressIndicator());
+                                 }
 
                                 return ElevatedButton(
                                   onPressed: () {
-                                    // SignInUser();
                                     final String email = _emailController.text;
                                     final String password = _passwordController.text;
                                     context.read<AuthBloc>().add(OnUserLoginRequestEvent(email: email, password: password));
@@ -329,10 +331,10 @@ class _SignupPageState extends State<SignupPage> {
                                 );
                               }
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
 
-                            SizedBox(height: 24),
-                            Center(
+                            const SizedBox(height: 24),
+                            const Center(
                               child: Row(
                                 children: [
                                   Expanded(child: Divider(thickness: 0.5,)),
@@ -357,22 +359,22 @@ class _SignupPageState extends State<SignupPage> {
                                   listener: (BuildContext context, state) {
                                     if(state is AuthSuccess){
                                       ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Login Successful')),
+                                        const SnackBar(content: Text('Login Successful')),
                                       );
 
-                                      Future.delayed(Duration(seconds: 1),(){
-                                        GoRouter.of(context).pushReplacementNamed('homePage');
+                                      Future.delayed(const Duration(seconds: 1),(){
+                                        router.goNamed('homePage');
                                       });
                                     } else if (state is AuthFailure) {
                                       ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Login Failed')),
+                                        const SnackBar(content: Text('Login Failed')),
                                       );
                                     }
                                   },
 
                                   builder: (BuildContext context, Object? state) {
                                     if(state is AuthProgress){
-                                      return Center(child: CircularProgressIndicator(),);
+                                      return const Center(child: CircularProgressIndicator(),);
                                     }
                                     return Container(
                                       height: 42.h,
@@ -403,7 +405,7 @@ class _SignupPageState extends State<SignupPage> {
                                   }
                                 ),
 
-                                SizedBox(width: 16),
+                                const SizedBox(width: 16),
                                 Container(
                                   height: 42.h,
                                   width: 80.w,
@@ -480,33 +482,33 @@ class _SignupPageState extends State<SignupPage> {
 
 
           // Skip button
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: EdgeInsets.only(top: 50.h, right: 20.w),
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: darkOpacityColor,
-                  ),
-                  height: 30.h,
-                  width: 55.w,
-                  child: TextButton(
-                      onPressed: (){
-                        GoRouter.of(context).pushReplacementNamed('homePage');
-                      },
-                      child: Text(
-                        'skip',
-                        style: TextStyle(
-                            fontFamily: fontFamily,
-                            fontSize: 10,
-                            color: Theme.of(context).colorScheme.tertiary
-                        ),
-                      )
-                  )
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.topRight,
+          //   child: Padding(
+          //     padding: EdgeInsets.only(top: 50.h, right: 20.w),
+          //     child: Container(
+          //         decoration: BoxDecoration(
+          //           borderRadius: BorderRadius.circular(10),
+          //           color: darkOpacityColor,
+          //         ),
+          //         height: 30.h,
+          //         width: 55.w,
+          //         child: TextButton(
+          //             onPressed: (){
+          //               GoRouter.of(context).pushReplacementNamed('homePage');
+          //             },
+          //             child: Text(
+          //               'skip',
+          //               style: TextStyle(
+          //                   fontFamily: fontFamily,
+          //                   fontSize: 10,
+          //                   color: Theme.of(context).colorScheme.tertiary
+          //               ),
+          //             )
+          //         )
+          //     ),
+          //   ),
+          // ),
 
         ],
       ),

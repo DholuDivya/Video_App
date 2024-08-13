@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:vimeo_clone/model/get_your_videos_model.dart';
+import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 
 abstract class ChannelProfileState extends Equatable{}
 
@@ -14,7 +14,7 @@ class ChannelProfileLoading extends ChannelProfileState{
 }
 
 class ChannelProfileLoaded extends ChannelProfileState{
-  final List<GetYourVideosModel> channelData;
+  final List<GetChannelDetailModel> channelData;
 
   ChannelProfileLoaded({required this.channelData});
 

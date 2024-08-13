@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/model/get_your_videos_model.dart';
+import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
 import '../../../utils/widgets/custom_channal_video_preview.dart';
 
 class LivePreviewPage extends StatefulWidget {
-  final GetYourVideosModel channelData;
+  final GetChannelDetailModel channelData;
   const LivePreviewPage({super.key, required this.channelData});
 
   @override

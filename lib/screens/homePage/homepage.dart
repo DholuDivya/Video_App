@@ -261,30 +261,11 @@ class _HomePageContentState extends State<HomePageContent> {
         slivers: [
           SliverAppBar(
             backgroundColor: Theme.of(context).colorScheme.surface,
-            // backgroundColor: red,
-            title: const Text(
-              appName,
-              style: TextStyle(
-                fontFamily: fontFamily,
-                // fontWeight: FontWeight
-              ),
-            ),
+            title: Image.asset('assets/images/homepage_logo.png', height: 100.0, width: 180.0,),
+            titleSpacing: 1.0,
             floating: true,
             pinned: false,
             snap: false,
-            // expandedHeight: 120,
-            // backgroundColor: Theme.of(context).colorScheme.surface,
-            // leading: Icon(Remix.youtube_fill, color: red, size: 35,),
-            // leadingWidth: 70,
-            leading: Container(
-                // color: red,
-                // width: 150,
-                // height: 150,
-                child: Image.asset(
-              'assets/images/homepage_logo.png',
-              fit: BoxFit.fill,
-              // scale: 2,
-            )),
             actions: [
               IconButton(
                 onPressed: () {
@@ -320,20 +301,6 @@ class _HomePageContentState extends State<HomePageContent> {
                   ],
                 )),
           ),
-
-          // SliverAppBar(
-          //
-          //   bottom: PreferredSize(
-          //       preferredSize: Size.fromHeight(ScreenSize.screenHeight(context) * 0.0),
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           categoryListView(),
-          //           // SizedBox(height: ScreenSize.screenHeight(context) * 0.006,)
-          //         ],
-          //       )
-          //   ),
-          // ),
 
           SliverToBoxAdapter(
             // child: AllCategory(category: categoryList[isCategory]['type']),
@@ -394,6 +361,7 @@ class _HomePageContentState extends State<HomePageContent> {
                           });
                       // return Center(child: CircularProgressIndicator(),);
                     } else if (state is AllVideoListLoaded) {
+
                       return ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -401,13 +369,12 @@ class _HomePageContentState extends State<HomePageContent> {
                               top: ScreenSize.screenHeight(context) * 0.02),
                           itemCount: state.videoList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            print(
-                                '!!!!!!!!!!!!!!!!!!!!      ${state.videoList[index].duration}');
-                            int totalSeconds = state
-                                .videoList[index].duration!; // Example seconds
+                            final type = state.videoList[index].type;
+                            print('!!!!!!!!!!!!!!!!!!!!      ${state.videoList[index].duration}');
+                            int totalSeconds = state.videoList[index].duration!;
                             String formattedTime = formatDuration(totalSeconds);
-                            // print('##########     ${formattedTime}');
-                            return VideoListItem(
+
+                            return type == "video" ? VideoListItem(
                               onTap: () {
                                 Future.delayed(
                                     const Duration(milliseconds: 200), () {
@@ -417,21 +384,19 @@ class _HomePageContentState extends State<HomePageContent> {
                                       });
                                 });
                               },
-                              channelPhoto:
-                                  '${state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg'}',
-                              thumbnailUrl:
-                                  '${state.videoList[index].thumbnail}',
+                              channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
+                              thumbnailUrl: '${state.videoList[index].thumbnail}',
                               // duration: '${state.videoList[index].duration}',
                               duration: formattedTime,
                               title: '${state.videoList[index].title}',
                               author: '${state.videoList[index].channel?.name}',
-                              views: '${state.videoList[index].id}',
+                              views: '${state.videoList[index].views}',
                               uploadTime:
                                   '${state.videoList[index].createdAtHuman}',
                               onMorePressed: () {
                                 // Add your onMorePressed logic here
                               },
-                            );
+                            ) : null;
                           });
                     }
                     return Container();
@@ -445,6 +410,7 @@ class _HomePageContentState extends State<HomePageContent> {
                             shrinkWrap: true,
                             itemCount: 8,
                             itemBuilder: (context, index) {
+
                               return Padding(
                                 padding: EdgeInsets.only(top: 20.h),
                                 child: Column(
@@ -461,12 +427,12 @@ class _HomePageContentState extends State<HomePageContent> {
                                     SizedBox(height: 4),
                                     Row(
                                       children: [
-                                        SizedBox(width: 8),
-                                        ShimmerWidget.circular(
+                                        const SizedBox(width: 8),
+                                        const ShimmerWidget.circular(
                                             width: 40,
                                             height: 40,
                                             isBorder: true),
-                                        SizedBox(width: 8),
+                                        const SizedBox(width: 8),
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -476,7 +442,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                               width: 120,
                                               isBorder: true,
                                             ),
-                                            SizedBox(height: 8),
+                                            const SizedBox(height: 8),
                                             ShimmerWidget.rectangular(
                                               height: 16,
                                               width: 200,
@@ -501,28 +467,30 @@ class _HomePageContentState extends State<HomePageContent> {
                                         0.02),
                                 itemCount: state.videoList.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  int totalSeconds =
+                                  final type = state.videoList[index].type;
+                                      int totalSeconds =
                                       state.videoList[index].duration!;
                                   String formattedTime =
                                       formatDuration(totalSeconds);
 
-                                  return VideoListItem(
+                                  return type == "video" ? VideoListItem(
                                     onTap: () {
                                       print(
                                           '***************    ${state.videoList[index].slug}');
                                       Future.delayed(
                                           const Duration(milliseconds: 200),
                                           () {
-                                        GoRouter.of(context).pushNamed(
-                                            'videoPage',
+                                            print('Video clicked>>>>>>>>>>>>>.');
+                                        GoRouter.of(context).pushNamed('videoPage',
                                             pathParameters: {
                                               "slug":
                                                   state.videoList[index].slug!
                                             });
+
                                       });
                                     },
                                     channelPhoto:
-                                        '${state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg'}',
+                                        state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
                                     thumbnailUrl:
                                         '${state.videoList[index].thumbnails}',
                                     duration: formattedTime,
@@ -535,7 +503,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                     onMorePressed: () {
                                       // Add your onMorePressed logic here
                                     },
-                                  );
+                                  ) : null;
                                 })
                             : Padding(
                                 padding: EdgeInsets.only(top: 150.h),

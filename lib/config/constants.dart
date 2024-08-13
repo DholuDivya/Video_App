@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 const String appName = "Cineplex";
 const String apiUrl = "https://videoapp.taskhub.company/api/";
@@ -36,3 +37,26 @@ String formatDuration(int seconds) {
     return "$minutesStr:$secondsStr";
   }
 }
+
+
+String formatDate(String videoCreatedDate){
+  String date = videoCreatedDate;
+  DateTime dateTime = DateTime.parse(date);
+  DateFormat formatter = DateFormat('MMMM dd, yyyy');
+  String formattedDate = formatter.format(dateTime);
+  return formattedDate;
+}
+
+
+String formatLastDuration(Duration duration) {
+  final hours = duration.inHours;
+  final minutes = duration.inMinutes.remainder(60);
+  final seconds = duration.inSeconds.remainder(60);
+
+  if (hours >= 0) {
+    return '${hours}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  } else {
+    return '${minutes}:${seconds.toString().padLeft(2, '0')}';
+  }
+}
+

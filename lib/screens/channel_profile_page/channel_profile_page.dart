@@ -50,9 +50,9 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                             Container(
                               height: 350,
                               width: double.infinity,
-                              child: Image.asset(
-                                "assets/images/travel.jpg",
-                                fit: BoxFit.cover,
+                              child: Image.network(
+                                channelData.channel?.bannerImage ?? "assets/images/travel.jpg",
+                                fit: BoxFit.fill,
                               ),
                             ),
                             Container(
@@ -135,7 +135,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                             style: TextStyle(
                                               fontFamily: fontFamily,
                                               fontSize: 12,
-                                              color: Colors.grey[600],
+                                              color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
                                               // color: Theme.of(context)
                                               //     .colorScheme
                                               //     .tertiary,

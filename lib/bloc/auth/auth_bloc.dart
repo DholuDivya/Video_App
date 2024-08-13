@@ -108,44 +108,37 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     // REGISTER USER
     on<OnUserRegisterRequestEvent>((event, emit) async {
-      emit(AuthProgress());
+      emit(RegisterAuthLoading());
       try{
-        final userToken = await authRepository.registerUser(
+        final accessToken = await authRepository.registerUser(
             event.name,
             event.email,
             event.password
         );
-
-        print('User Token after Creating User ::: ${userToken}');
-
-        if (userToken != null) {
-          emit(AuthSuccess(userToken));
-        } else {
-          emit(AuthFailure(error: 'Failed to retrieve token'));
+        if(accessToken != null){
+          emit(RegisterAuthSuccess());
         }
-
       }catch(e){
-        emit(AuthFailure(error: e.toString()));
+        emit(RegisterAuthFailure(error: e.toString()));
       }
     });
 
 
     // USER LOGIN
     on<OnUserLoginRequestEvent>((event, emit) async {
-      emit(AuthProgress());
+      emit(LoginAuthLoading());
       try{
         print('${event.email}');
         print('${event.password}');
 
         final userToken = await authRepository.loginUser(event.email, event.password);
         if(userToken != null){
-          emit(AuthSuccess(userToken));
+          emit(LoginAuthSuccess(userToken: userToken));
         }else{
-          emit(AuthFailure(error: 'Failed to get token'));
+          emit(LoginAuthFailure(error: 'Failed to get token'));
         }
-
       }catch(e){
-        emit(AuthFailure(error: e.toString()));
+        emit(LoginAuthFailure(error: e.toString()));
       }
     });
 

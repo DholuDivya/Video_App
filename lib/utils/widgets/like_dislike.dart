@@ -6,13 +6,17 @@ class LikeDislikeButton extends StatefulWidget {
   final int initialLikeCount;
   final bool initialIsLiked;
   final bool initialIsDisliked;
+  final void toggleLike;
+  final void toggleDislike;
 
   const LikeDislikeButton({
-    Key? key,
+    super.key,
     this.initialLikeCount = 0,
     this.initialIsLiked = false,
     this.initialIsDisliked = false,
-  }) : super(key: key);
+    this.toggleLike,
+    this.toggleDislike,
+  });
 
   @override
   _LikeDislikeButtonState createState() => _LikeDislikeButtonState();

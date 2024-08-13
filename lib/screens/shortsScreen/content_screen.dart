@@ -32,7 +32,7 @@ class _ContentScreenState extends State<ContentScreen> {
     _sliderValueNotifier = ValueNotifier(0.0);
     initializePlayer();
     _podPlayerController?.hideOverlay();
-    enterImmersiveMode();
+    // enterImmersiveMode();
   }
 
   void toggle(){
@@ -43,6 +43,16 @@ class _ContentScreenState extends State<ContentScreen> {
 
   Future initializePlayer() async {
     setState(() {
+      // _podPlayerController = PodPlayerController(
+      //     playVideoFrom: PlayVideoFrom.youtube('https://www.youtube.com/watch?v=nfl1rW7CWog'),
+      //         podPlayerConfig: const PodPlayerConfig(
+      //     isLooping: true,
+      //           autoPlay: true,
+      //           videoQualityPriority: [720, 360]
+      // )
+
+      // )..initialise();
+
       _podPlayerController = PodPlayerController(
         playVideoFrom: widget.shortsData.uploadedBy == "external"
             ? PlayVideoFrom.youtube(widget.shortsData.video!,)
@@ -60,7 +70,7 @@ class _ContentScreenState extends State<ContentScreen> {
     _sliderValueNotifier.dispose();
     _podPlayerController?.dispose();
     super.dispose();
-    exitImmersiveMode();
+    // exitImmersiveMode();
   }
 
 

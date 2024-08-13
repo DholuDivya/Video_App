@@ -116,12 +116,12 @@ import 'package:vimeo_clone/Config/colors.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/model/get_your_videos_model.dart';
+import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channal_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_for_you_preview.dart';
 
 class HomePreviewPage extends StatefulWidget {
-  final GetYourVideosModel channelData;
+  final GetChannelDetailModel channelData;
   const HomePreviewPage({super.key, required this.channelData});
 
   @override
@@ -148,12 +148,13 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
       builder: (BuildContext context, ChannelProfileState state) {
         if(state is ChannelProfileLoaded){
           final videoDataLength = widget.channelData.videoCount;
+          final isAssociated = widget.channelData.isAssociated;
           return CustomScrollView(
             slivers: [
               SliverList(
                 delegate: SliverChildListDelegate(
                   [
-                    Padding(
+                    isAssociated == false ? Padding(
                       padding: EdgeInsets.only(
                         top: ScreenSize.screenHeight(context) * 0.015,
                         left: ScreenSize.screenWidth(context) * 0.044,
@@ -167,12 +168,27 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                           fontWeight: FontWeight.w500
                         ),
                       ),
-                    ),
-                    ForYouPreview(
-                      videoTitle: 'Tarak Mehta ka Ooltah Chashma - Episode 2384',
-                      channelName: 'Sony Sab',
-                      uploadTime: '4 days ago',
-                    ),
+                    ) : Container(),
+                    isAssociated == false ? Container(
+                      height: ScreenSize.screenHeight(context) * 0.285,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                          padding: EdgeInsets.only(
+                              left: ScreenSize.screenWidth(context) * 0.04
+                          ),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: widget.channelData.suggestedVideos!.length,
+                          itemBuilder: (context, index){
+                          final suggestedVideo = widget.channelData.suggestedVideos![index];
+                            return  ForYouPreview(
+                              videoThumbnail: suggestedVideo.thumbnails!,
+                              videoTitle: '${suggestedVideo.title}',
+                              channelName: '${widget.channelData.channel!.name}',
+                              uploadTime: '${suggestedVideo.createdAtHuman}',
+                            );
+                      }),
+                    ) : Container(),
+
                     Padding(
                       padding: EdgeInsets.only(
                         top: ScreenSize.screenHeight(context) * 0.015,
@@ -213,7 +229,6 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                         }
 
                         final videoData = widget.channelData.channel!.videos?[index];
-
                         final totalSeconds = videoData!.duration;
                         final formattedTime = formatDuration(totalSeconds!);
                     return CustomVideoPreview(

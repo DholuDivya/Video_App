@@ -60,6 +60,8 @@ class GetThumbnailBloc extends Bloc<GetThumbnailEvent, GetThumbnailState> {
         ),
         IOSUiSettings(
           title: 'Cropper',
+          aspectRatioLockEnabled: true,
+          minimumAspectRatio: 16/9,
           aspectRatioPresets: [
             CropAspectRatioPreset.ratio16x9,
             // CropAspectRatioPreset.square,

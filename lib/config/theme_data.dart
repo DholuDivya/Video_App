@@ -21,6 +21,9 @@ ThemeData lightTheme = ThemeData(
 
       primaryContainer: greyShade200,
 
+        // TEXT
+        onPrimaryFixedVariant: greyShade800
+
     ),
 
     floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -85,7 +88,11 @@ ThemeData darkTheme = ThemeData(
       tertiaryFixedDim: white24,
 
 
-      onPrimaryContainer: white24
+      onPrimaryContainer: white24,
+
+      // TEXT
+      onPrimaryFixedVariant: white70
+
     ),
 
   floatingActionButtonTheme: FloatingActionButtonThemeData(

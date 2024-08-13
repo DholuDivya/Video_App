@@ -9,6 +9,7 @@ import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_state.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/routes/myapproute.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_auth.dart';
 
 import '../../bloc/auth/auth_bloc.dart';
@@ -213,14 +214,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state){
                       if(state is AuthProgress){
-                        return Center(child: const CircularProgressIndicator(),);
-                      }else if(state is AuthSuccess){
-                        GoRouter.of(context).pushReplacementNamed('signupPage');
+                        return const Center(child: CircularProgressIndicator(),);
+                      }else if(state is RegisterAuthSuccess){
                         print('success');
-                        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Registered Successfully')));
-                      }else if(state is AuthFailure){
+                        WidgetsBinding.instance.addPostFrameCallback((_){
+                          GoRouter.of(context).pushReplacementNamed('signupPage');
+                        });
+                      }else if(state is RegisterAuthFailure){
                         print('failure');
-                        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Registration Failed')));
                       }
                       return joinButton();
                     }
@@ -234,53 +235,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  // App Name/ Label
-  Widget CustomAppName(){
-    return const AutoSizeText(
-        appName,
-      style: TextStyle(
-        fontSize: 35,
-        fontFamily: fontFamily
-      ),
-    );
-  }
-
-
-
-
-  // Widget passwordTextField(){
-  //   return TextFormField(
-  //     controller: _passwordController,
-  //     obscureText: true && !isPasswordVisible,
-  //     cursorColor: Theme.of(context).colorScheme.tertiary,
-  //     validator: _validatePassword,
-  //     decoration: InputDecoration(
-  //         // focusedBorder: OutlineInputBorder(
-  //         //   borderRadius: BorderRadius.circular(5.0),
-  //         //   borderSide: BorderSide(color: primaryColor,  width: 2.0),
-  //         // ),
-  //         border: OutlineInputBorder(
-  //           borderRadius: BorderRadius.circular(5.0),
-  //           borderSide: const BorderSide(),
-  //         ),
-  //       suffixIcon: IconButton(
-  //           onPressed: (){
-  //             setState(() {
-  //               isPasswordVisible = !isPasswordVisible;
-  //             });
-  //           },
-  //           icon: Icon(
-  //             isPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash
-  //           )
-  //       ),
-  //         labelText: "Password",
-  //         labelStyle: TextStyle(
-  //             color: Theme.of(context).colorScheme.tertiary
-  //         ),
-  //         // helperText: ''
-  //     ),
-  //   );
-  // }
 
   Widget confirmPasswordTextField(){
     return SizedBox(
@@ -361,7 +315,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -372,7 +326,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               final String name = _nameController.text;
               final String email = _emailController.text;
               final String password = _passwordController.text;
-
+              print('${name}     ${email}   ${password}');
               context.read<AuthBloc>().add(OnUserRegisterRequestEvent(name: name, email: email, password: password));
 
             }

@@ -245,54 +245,8 @@ class AuthRepository{
   Future<dynamic> registerUser(String name, String email, String password) async {
     try{
       final response = await apiHelper.registerUserPostAPICall(registerUserUrl, {'name': name, 'email': email, 'password': password} );
-
-      if(response.statusCode == 201){
-
-        // STORING THE ACCESS TOKEN IN THE HIVE -----
-        if(response.data != null){
-          final String userToken = response.data['token'] ?? '';
-          final String userId = response.data['user']['id'].toString() ?? '';
-          final String userName = response.data['user']['name'] ?? '';
-          final String userNumber = response.data['user']['phone_number'] ?? '';
-          final String userEmail = response.data['user']['email'] ?? '';
-          final String userProfilePhoto = response.data['user']['profile'] ?? '';
-          final String userChannelId = response.data['channel']['id'].toString() ?? '';
-          print('++++++++    ${userToken}'
-              '++++++++    ${userId}'
-              '++++++++    ${userName}'
-              '++++++++    ${userNumber}'
-              '++++++++    ${userEmail}'
-              '++++++++    ${userProfilePhoto}'
-              '++++++++    ${userChannelId}');
-
-          print('88888888888888888888888');
-          await Global.setUserData(
-            userToken,
-            userId,
-            userName,
-            userNumber,
-            userEmail,
-            userProfilePhoto,
-            userChannelId,
-          );
-          print('iiiiiiiiiiiiiiiiiiiiiiiiiiiii');
-          log('${Global.userData}');
-          // RETURN TOKEN
-          print('Token Verified Successfully');
-          print(':::::::::::::::::::  $userToken   :::::::::::::::::::');
-          return userToken;
-        }else{
-          print('Data Not Found');
-        }
-
-        // RETURN ACCESS TOKEN
-        //String userToken = response.data['access_token'];
-        // print('User added successfully ${response.data}');
-        // print(':::::::::::::::::::  ${userToken}   :::::::::::::::::::');
-        // return userToken;
-      }else{
-        throw ApiException('Failed to add new user');
-      }
+      print('&&&&&&&&&&   ${response.data}');
+      return response.data['access_token'];
     }catch(e){
       throw ApiException('Failed to Add new User--- $e');
     }
@@ -305,8 +259,9 @@ class AuthRepository{
   Future<dynamic> loginUser(String email, String password) async {
     try{
       print('2000000000000000000');
-      final response = await apiHelper.postAPICall(loginUserUrl, {'email': email, 'password': password});
-
+      final response = await apiHelper.loginUserEmail(loginUserUrl, {'email': email, 'password': password});
+      print('srbgirswugbhuswgbhusrhsbhvjuvjubhvujjuhvujhbd');
+      print('${response.data}');
       if(response.statusCode == 200){
 
         // STORING THE TOKEN IN HIVE ------
@@ -317,7 +272,7 @@ class AuthRepository{
           final String userNumber = response.data['data']['user']['phone_number'] ?? '';
           final String userEmail = response.data['data']['user']['email'] ?? '';
           final String userProfilePhoto = response.data['data']['user']['profile'] ?? '';
-          final String userChannelId = response.data['data']['channel']['id'].toString() ?? '';
+          final String userChannelId = response.data['data']['channel'][0]['id'].toString();
           print('++++++++    ${userToken}'
               '++++++++    ${userId}'
               '++++++++    ${userName}'

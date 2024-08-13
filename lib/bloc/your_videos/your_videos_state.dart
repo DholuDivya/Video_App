@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../model/get_your_videos_model.dart';
+import '../../model/get_channel_detail_model.dart';
 
 abstract class YourVideosState extends Equatable{}
 
@@ -15,7 +15,7 @@ class YourVideosLoading extends YourVideosState{
 }
 
 class YourVideosLoaded extends YourVideosState{
-  final List<GetYourVideosModel> videoData;
+  final List<GetChannelDetailModel> videoData;
 
   YourVideosLoaded({required this.videoData});
 

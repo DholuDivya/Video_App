@@ -132,6 +132,8 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
 
   late CroppedFile finalThumbnail;
   List<int> selectedCategoryIds = [];
+  late String selectedCategoryNames;
+
 
 
   @override
@@ -422,7 +424,7 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
                           }
 
                           // Get the names of the selected categories
-                          String selectedCategoryNames = state.categories
+                          selectedCategoryNames = state.categories
                               .where((category) => selectedCategoryIds.contains(category.id))
                               .map((category) => category.name)
                               .join(', ');
@@ -433,7 +435,7 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    title: Center(
+                                    title: const Center(
                                       child: Text(
                                         'Select a category',
                                         style: TextStyle(
@@ -445,7 +447,7 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
                                     content: SizedBox(
                                       width: double.infinity,
                                       child: ListView.builder(
-                                        shrinkWrap: true,
+                                        shrinkWrap: false,
                                         itemCount: state.categories.length,
                                         itemBuilder: (context, index) {
                                           final category = state.categories[index];
@@ -490,38 +492,42 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
                               );
                             },
                             child: AbsorbPointer(
-                              child: TextFormField(
-                                validator: _validateCategory,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Theme.of(context).colorScheme.surfaceDim,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: blue, width: 2.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
+                              child: Material(
+                                borderRadius: BorderRadius.circular(10),
+                                elevation: 2,
+                                child: TextFormField(
+                                  // validator: _validateCategory,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Theme.of(context).colorScheme.surfaceDim,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(color: blue, width: 2.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                        color: Colors.grey.shade500,
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    labelText: 'Select a category',
+                                    labelStyle: TextStyle(
+                                      fontSize: 15,
                                       color: Colors.grey.shade500,
-                                      width: 1.0,
                                     ),
+                                    suffixIcon: Icon(Icons.arrow_drop_down),
                                   ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
-                                      width: 0.5,
-                                    ),
+                                  controller: TextEditingController(
+                                    text: selectedCategoryNames,
                                   ),
-                                  labelText: 'Select a category',
-                                  labelStyle: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey.shade500,
-                                  ),
-                                  suffixIcon: Icon(Icons.arrow_drop_down),
-                                ),
-                                controller: TextEditingController(
-                                  text: selectedCategoryNames,
                                 ),
                               ),
                             ),

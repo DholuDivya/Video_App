@@ -7,7 +7,7 @@ class GetShortsListRepo{
     try{
       final response = await ApiBaseHelper().getAPICall(getShortsListUrl, {});
       print('&&&&&&&&&&&&&&&       ${response.data}');
-      print('nfsdngvsngvsnnssfnsnbnfbnd');
+
       if(response.statusCode == 200){
         if(response.data != null){
           List<GetShortsListModel> shortsData = [];

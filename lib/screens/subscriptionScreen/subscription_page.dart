@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/bloc/get_all_channels/get_all_channels_bloc.dart';
+import 'package:vimeo_clone/bloc/get_all_channels/get_all_channels_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 
 class SubscriptionsPage extends StatefulWidget {
@@ -63,57 +66,67 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
             ],
           ),
 
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                return SizedBox(
-                  height: 60,
-                  child: InkWell(
-                    onTap: (){
-                      GoRouter.of(context).pushNamed('channelProfilePage');
-                    },
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 22,
-                        backgroundImage: AssetImage('assets/images/sonysab.jpg'),
-                      ),
-                      // leading: ClipRRect(
-                      //   borderRadius: BorderRadius.circular(100),
-                      //   child: Image.asset(
-                      //       'assets/images/sonysab.jpg',
-                      //       fit: BoxFit.cover,
-                      //     height: ScreenSize.screenHeight(context) * 0.05,
-                      //     width: ScreenSize.screenWidth(context) * 0.12,
-                      //   ),
-                      // ),
-                      title: Text('Sony Sab'),
-                      trailing: Container(
-                          width: 55,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Theme.of(context).colorScheme.secondary
-                          ),
+          SliverToBoxAdapter(
+            child: BlocBuilder<GetAllChannelsBloc, GetAllChannelsState>(
+              builder: (BuildContext context, GetAllChannelsState state) {
+                if(state is GetAllChannelsLoaded){
+                  return ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: state.channelList.first.channels!.length,
+                      itemBuilder: (context, index){
+                        final channelsList = state.channelList.first.channels![index];
+                        return SizedBox(
+                          height: 60,
                           child: InkWell(
-                            onTap: _showNotificationDialog,
-                            child: const Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              // mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Icon(HeroiconsOutline.bell, size: 16,)  ,
-                                Icon(HeroiconsOutline.chevronDown, size: 16,)
-                              ],
+                            onTap: (){
+                              GoRouter.of(context).pushNamed('channelProfilePage');
+                            },
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                radius: 22,
+                                backgroundImage: NetworkImage(channelsList.logo!),
+                              ),
+                              // leading: ClipRRect(
+                              //   borderRadius: BorderRadius.circular(100),
+                              //   child: Image.asset(
+                              //       'assets/images/sonysab.jpg',
+                              //       fit: BoxFit.cover,
+                              //     height: ScreenSize.screenHeight(context) * 0.05,
+                              //     width: ScreenSize.screenWidth(context) * 0.12,
+                              //   ),
+                              // ),
+                              title: Text('${channelsList.name}'),
+                              trailing: Container(
+                                width: 55,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Theme.of(context).colorScheme.secondary
+                                ),
+                                child: InkWell(
+                                  onTap: _showNotificationDialog,
+                                  child: const Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    // mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Icon(HeroiconsOutline.bell, size: 16,)  ,
+                                      Icon(HeroiconsOutline.chevronDown, size: 16,)
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                  ),
-                  );
+                        );
+                  });
+                }
+                return Container();
               },
-              childCount: 15, // Specify the number of items in the list
             ),
-          ),
+          )
+
         ],
       ),
     );

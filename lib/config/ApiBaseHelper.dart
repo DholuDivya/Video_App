@@ -50,8 +50,8 @@ class ApiBaseHelper {
     final dio_.Dio dio = dio_.Dio();
     print('#@###########   ${params}');
     print('%%%%%%%%%%%%%%      ${headers}');
+    print('faihfiahihihif    ${url}');
     try {
-
       final response =
       await dio.post(
           url,
@@ -64,8 +64,8 @@ class ApiBaseHelper {
       // .timeout(Duration(seconds: timeOut));
       log('+++ HEADERS  ${headers}');
       if (kDebugMode) {
-        print(
-            'response api****$url***************${response.statusCode}*********${response.data['token']}');
+        log(
+            'response api****$url***************${response.statusCode}*********${response.data}');
       }
 
       // responseJson = _response(response);
@@ -81,6 +81,43 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+
+  Future<dynamic> loginUserEmail(String url, dynamic params) async {
+    var responseJson;
+    // var timeOut = 10;
+    final dio_.Dio dio = dio_.Dio();
+    print('#@###########   ${params}');
+    // print('%%%%%%%%%%%%%%      ${headers}');
+    try {
+
+      final response =
+      await dio.post(
+        url,
+        // queryParameters: params,
+        data: params.isNotEmpty ? params : [],
+        // options: dio_.Options(
+        //   headers: headers,
+        // ),
+      );
+      // .timeout(Duration(seconds: timeOut));
+      // log('+++ HEADERS  ${headers}');
+      if (kDebugMode) {
+        log(
+            'response api****$url***************${response.statusCode}*********${response.data['token']}');
+      }
+
+      // responseJson = _response(response);
+      responseJson = response;
+    } on SocketException {
+      throw ApiException('No Internet connection');
+    } on TimeoutException {
+      throw ApiException('Something went wrong, Server not Responding');
+    } on Exception catch (e) {
+      // print('------Error  ${e}');
+      throw ApiException('Something Went wrong with ${e.toString()}');
+    }
+    return responseJson;
+  }
 
   // FIREBASE LOGIN [*  Access token will be allocated to user when the user is logged in successfully *]
 
@@ -131,20 +168,23 @@ class ApiBaseHelper {
     var responseJson;
     // var timeOut = 10;
     final dio_.Dio dio = dio_.Dio();
+    print('----------------------------------');
+    print('&&&&&&&7     ${params}');
     try {
       final response =
       await dio.post(
         url,
-        queryParameters: params,
+        data: params,
         options: dio_.Options(
-          headers: headers,
-
-        ),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          }
+        )
       );
-      // .timeout(Duration(seconds: timeOut));
-      log('+++ HEADERS  ${headers}');
+
       if (kDebugMode) {
-        print(
+        log(
             'response api****$url***************${response.statusCode}*********${response.data['access_token']}');
       }
 
@@ -174,7 +214,7 @@ class ApiBaseHelper {
           options: dio_.Options(headers: headers)
       );
       if (kDebugMode) {
-        print(
+        log(
             'response api****$url*****************${response.statusCode}*********${response.data}');
       }
 
@@ -189,6 +229,45 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+
+  Future<dynamic> deleteAPICall(String url, dynamic params) async {
+    var responseJson;
+    // var timeOut = 10;
+    final dio_.Dio dio = dio_.Dio();
+    print('#@###########   ${params}');
+    print('%%%%%%%%%%%%%%      ${headers}');
+    print('faihfiahihihif    ${url}');
+    try {
+      final response =
+      await dio.delete(
+        url,
+        // queryParameters: params,
+        data: params.isNotEmpty ? params : [],
+        options: dio_.Options(
+          headers: headers,
+        ),
+      );
+      // .timeout(Duration(seconds: timeOut));
+      log('+++ HEADERS  ${headers}');
+      if (kDebugMode) {
+        log(
+            'response api****$url***************${response.statusCode}*********${response.data}');
+      }
+
+      // responseJson = _response(response);
+      responseJson = response;
+    } on SocketException {
+      throw ApiException('No Internet connection');
+    } on TimeoutException {
+      throw ApiException('Something went wrong, Server not Responding');
+    } on Exception catch (e) {
+      // print('------Error  ${e}');
+      throw ApiException('Something Went wrong with ${e.toString()}');
+    }
+    return responseJson;
+  }
+
 
   dynamic _response(Response response) {
     switch (response.statusCode) {

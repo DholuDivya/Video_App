@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +14,19 @@ import 'package:remixicon/remixicon.dart';
 import 'package:video_player/video_player.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
+import 'package:vimeo_clone/bloc/like_dislike/like_dislike_bloc.dart';
+import 'package:vimeo_clone/bloc/like_dislike/like_dislike_event.dart';
+import 'package:vimeo_clone/bloc/like_dislike/like_dislike_state.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_event.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_state.dart';
+import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
+import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
+import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
+import 'package:vimeo_clone/bloc/add_user_history/add_user_history_bloc.dart';
+import 'package:vimeo_clone/bloc/add_user_history/add_user_history_event.dart';
+import 'package:vimeo_clone/bloc/view_increment/view_increment_bloc.dart';
+import 'package:vimeo_clone/bloc/view_increment/view_increment_event.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/Utils/Widgets/download_button.dart';
@@ -24,6 +37,7 @@ import 'package:vimeo_clone/Utils/Widgets/save_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/share_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/Utils/Widgets/video_container.dart';
+import 'package:vimeo_clone/model/play_video_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 
@@ -38,119 +52,16 @@ class VideoPage extends StatefulWidget {
 
 class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMixin {
 
-
-
-
-
-  List<Map<String, dynamic>> videoList = [
-    {
-      "id": "1",
-      "title": "Big Buck Bunny",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Big_Buck_Bunny_thumbnail_vlc.png/1200px-Big_Buck_Bunny_thumbnail_vlc.png",
-      "duration": "8:18",
-      "uploadTime": "May 9, 2011",
-      "views": "24,969,123",
-      "author": "Vlc Media Player",
-      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      "description": "Big Buck Bunny tells the story of a giant rabbit with a heart bigger than himself. When one sunny day three rodents rudely harass him, something snaps... and the rabbit ain't no bunny anymore! In the typical cartoon tradition he prepares the nasty rodents a comical revenge.\n\nLicensed under the Creative Commons Attribution license\nhttp://www.bigbuckbunny.org",
-      "subscriber": "25254545 Subscribers",
-      "isLive": true
-    },
-    {
-      "id": "2",
-      "title": "The first Blender Open Movie from 2006",
-      "thumbnailUrl": "https://i.ytimg.com/vi_webp/gWw23EYM9VM/maxresdefault.webp",
-      "duration": "12:18",
-      "uploadTime": "May 9, 2011",
-      "views": "24,969,123",
-      "author": "Blender Inc.",
-      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-      "description": "Song : Raja Raja Kareja Mein Samaja\nAlbum : Raja Kareja Mein Samaja\nArtist : Radhe Shyam Rasia\nSinger : Radhe Shyam Rasia\nMusic Director : Sohan Lal, Dinesh Kumar\nLyricist : Vinay Bihari, Shailesh Sagar, Parmeshwar Premi\nMusic Label : T-Series",
-      "subscriber": "25254545 Subscribers",
-      "isLive": true
-    },
-    {
-      "id": "3",
-      "title": "For Bigger Blazes",
-      "thumbnailUrl": "https://i.ytimg.com/vi/Dr9C2oswZfA/maxresdefault.jpg",
-      "duration": "8:18",
-      "uploadTime": "May 9, 2011",
-      "views": "24,969,123",
-      "author": "T-Series Regional",
-      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-      "description": "Song : Raja Raja Kareja Mein Samaja\nAlbum : Raja Kareja Mein Samaja\nArtist : Radhe Shyam Rasia\nSinger : Radhe Shyam Rasia\nMusic Director : Sohan Lal, Dinesh Kumar\nLyricist : Vinay Bihari, Shailesh Sagar, Parmeshwar Premi\nMusic Label : T-Series",
-      "subscriber": "25254545 Subscribers",
-      "isLive": true
-    },
-    {
-      "id": "4",
-      "title": "For Bigger Escape",
-      "thumbnailUrl": "https://img.jakpost.net/c/2019/09/03/2019_09_03_78912_1567484272._large.jpg",
-      "duration": "8:18",
-      "uploadTime": "May 9, 2011",
-      "views": "24,969,123",
-      "author": "T-Series Regional",
-      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-      "description": " Introducing Chromecast. The easiest way to enjoy online video and music on your TV—for when Batman's escapes aren't quite big enough. For \$35. Learn how to use Chromecast with Google Play Movies and more at google.com/chromecast.",
-      "subscriber": "25254545 Subscribers",
-      "isLive": false
-    },
-    {
-      "id": "5",
-      "title": "Big Buck Bunny",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Big_Buck_Bunny_thumbnail_vlc.png/1200px-Big_Buck_Bunny_thumbnail_vlc.png",
-      "duration": "8:18",
-      "uploadTime": "May 9, 2011",
-      "views": "24,969,123",
-      "author": "Vlc Media Player",
-      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      "description": "Big Buck Bunny tells the story of a giant rabbit with a heart bigger than himself. When one sunny day three rodents rudely harass him, something snaps... and the rabbit ain't no bunny anymore! In the typical cartoon tradition he prepares the nasty rodents a comical revenge.\n\nLicensed under the Creative Commons Attribution license\nhttp://www.bigbuckbunny.org",
-      "subscriber": "25254545 Subscribers",
-      "isLive": true
-    },
-    {
-      "id": "6",
-      "title": "For Bigger Blazes",
-      "thumbnailUrl": "https://i.ytimg.com/vi/Dr9C2oswZfA/maxresdefault.jpg",
-      "duration": "8:18",
-      "uploadTime": "May 9, 2011",
-      "views": "24,969,123",
-      "author": "T-Series Regional",
-      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-      "description": "Song : Raja Raja Kareja Mein Samaja\nAlbum : Raja Kareja Mein Samaja\nArtist : Radhe Shyam Rasia\nSinger : Radhe Shyam Rasia\nMusic Director : Sohan Lal, Dinesh Kumar\nLyricist : Vinay Bihari, Shailesh Sagar, Parmeshwar Premi\nMusic Label : T-Series",
-      "subscriber": "25254545 Subscribers",
-      "isLive": false
-    },
-    {
-      "id": "7",
-      "title": "For Bigger Escape",
-      "thumbnailUrl": "https://img.jakpost.net/c/2019/09/03/2019_09_03_78912_1567484272._large.jpg",
-      "duration": "8:18",
-      "uploadTime": "May 9, 2011",
-      "views": "24,969,123",
-      "author": "T-Series Regional",
-      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-      "description": " Introducing Chromecast. The easiest way to enjoy online video and music on your TV—for when Batman's escapes aren't quite big enough. For \$35. Learn how to use Chromecast with Google Play Movies and more at google.com/chromecast.",
-      "subscriber": "25254545 Subscribers",
-      "isLive": true
-    },
-    {
-      "id": "8",
-      "title": "The first Blender Open Movie from 2006",
-      "thumbnailUrl": "https://i.ytimg.com/vi_webp/gWw23EYM9VM/maxresdefault.webp",
-      "duration": "12:18",
-      "uploadTime": "May 9, 2011",
-      "views": "24,969,123",
-      "author": "Blender Inc.",
-      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-      "description": "Song : Raja Raja Kareja Mein Samaja\nAlbum : Raja Kareja Mein Samaja\nArtist : Radhe Shyam Rasia\nSinger : Radhe Shyam Rasia\nMusic Director : Sohan Lal, Dinesh Kumar\nLyricist : Vinay Bihari, Shailesh Sagar, Parmeshwar Premi\nMusic Label : T-Series",
-      "subscriber": "25254545 Subscribers",
-      "isLive": false
-    }
-  ];
-
-
   PodPlayerController? _podController;
+  late bool _isSubscribed = false;
+  // late String _subscribeCount;
+  late int _channelId;
+  // late bool _isLiked = false;
+  // late bool _isDisLiked = false;
+  // late int _likeCount;
+  Duration? _lastReachedDuration;
+  String? _lastReachedDurationString;
+  StreamSubscription? _videoBlocSubscription;
 
   @override
   void initState() {
@@ -162,112 +73,64 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
     videoBloc.stream.listen((state) {
       if (state is PlayVideoLoaded) {
         final videoData = state.playVideo[0].data!;
-        setState(() {
-          _podController = PodPlayerController(
-            playVideoFrom: videoData.uploadSourceType == "external"
-                ? PlayVideoFrom.youtube(videoData.video!)
-                : PlayVideoFrom.network(videoData.video!),
-          )..initialise();
-        });
+        if (mounted) {
+          setState(() {
+            _podController = PodPlayerController(
+              playVideoFrom: videoData.uploadSourceType == "external"
+                  ? PlayVideoFrom.youtube(videoData.video!)
+                  : PlayVideoFrom.network(videoData.video!),
+            )..initialise().then((_) {
+              context.read<ViewIncrementBloc>().add(ViewIncrementRequest(videoSlug: widget.slug));
+              print('Video has been initialized successfully!');
+            });
+
+            _podController?.addListener(() {
+              if (_podController?.isInitialised ?? false) {
+                // Update the last reached duration periodically
+                final currentPosition = _podController?.currentVideoPosition;
+                if (currentPosition != null) {
+                  setState(() {
+                    _lastReachedDuration = currentPosition;
+                    _lastReachedDurationString = formatLastDuration(currentPosition);
+                    context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
+                  });
+
+                }
+              }
+            });
+          });
+        }
       }
     });
+
+    print('&&&&&&&&&&&&&&&&&    $_isSubscribed');
+
+    // _isLiked = false;
+    // _isDisLiked = false;
+    // _isSubscribed = true;
+    // _subscribeCount = '';
+
   }
+
 
   @override
   void dispose() {
-    _podController?.dispose(); // Ensure to check if _podController is not null
+
+    if (_lastReachedDuration != null) {
+      print('Last reached video duration: $_lastReachedDurationString');
+    }
+
+    _podController?.dispose();
+    _videoBlocSubscription?.cancel();
     super.dispose();
   }
 
 
-  // late final PodPlayerController youtubeController;
-  // late final PodPlayerController networkController;
-  //
-  // @override
-  // void initState() {
-  //   youtubeController = PodPlayerController(
-  //     playVideoFrom: PlayVideoFrom.youtube('https://youtu.be/A3ltMaM6noM'),
-  //   )..initialise();
-  //
-  //   networkController = PodPlayerController(
-  //     playVideoFrom: PlayVideoFrom.network(),
-  //   )..initialise();
-  //
-  //
-  //   super.initState();
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   controller.dispose();
-  //   super.dispose();
-  // }
 
-
-
-
-  // late AnimationController _controller;
-  // late Animation _animation;
-
-  // FocusNode _focusNode = FocusNode();
-
-  bool _isLoading = true;
-
-
-  // late FlickManager flickManager;
-  bool _isSubscribed = false;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-    // _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    // _animation = Tween(begin: 300.0, end: 50.0).animate(_controller)
-    //   ..addListener(() {
-    //     setState(() {});
-    // });
-
-    // _focusNode.addListener(() {
-    //   if (_focusNode.hasFocus) {
-    //     _controller.forward();
-    //   } else {
-    //     _controller.reverse();
-    //   }
-    // });
-
-
-  // }
-
-    // flickManager = FlickManager(
-    //   videoPlayerController: VideoPlayerController.network(
-    //     'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
-    //   ),
-    //   autoPlay: true,
-    //
-    // );
-    //
-    //
-    // flickManager.flickVideoManager?.videoPlayerController?.addListener(() {
-    //   setState(() {}); // Update the UI when the video player state changes
-    // });
-    //
-    // // Initialize the video player
-    // flickManager.flickVideoManager?.videoPlayerController?.initialize().then((_) {
-    //   setState(() {}); // Ensure the UI is updated once the initialization is complete
-    //   flickManager.flickVideoManager?.videoPlayerController?.play();
-    // });
-  // }
-
-  // @override
-  // void dispose() {
-  //   flickManager.dispose();
-  //   _controller.dispose();
-  //   _focusNode.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -275,18 +138,25 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
             BlocBuilder<PlayVideoBloc, PlayVideoState>(
               builder: (BuildContext context, state) {
                 if(state is PlayVideoLoaded) {
+                  final data = state.playVideo[0].data!;
+                  _channelId = data.channel!.id!;
+                  _isSubscribed = data.channel!.isSubscribed!;
+                  var _subscribeCount = data.channel!.subscriberCount;
+                  var _likeCount = data.likes!;
+                  bool _isLiked = data.isLiked!;
+                  bool _isDisLiked = data.isDisliked!;
                   return SingleChildScrollView(
-                    padding: EdgeInsets.only(
-                        top: 180.h),
+                    padding: EdgeInsets.only(top: 180.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Title of the video, Views and Upload time
                         InkWell(
                           onTap: () {
-                            videoDescriptionSheet(context);
+                            final desData = state.playVideo[0];
+                            videoDescriptionSheet(context, desData);
                           },
-                          child: Container(
+                          child: SizedBox(
                             width: double.infinity,
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -300,7 +170,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                 children: [
                                   Text(
                                     '${state.playVideo[0].data!.title}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: fontFamily,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -309,7 +179,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   AutoSizeText(
-                                    '10M Views - ${state.playVideo[0].data!.createdAtHuman}',
+                                    '${state.playVideo[0].data!.views} Views - ${state.playVideo[0].data!.createdAtHuman}',
                                     style: TextStyle(
                                       fontFamily: fontFamily,
                                       fontSize: 12,
@@ -323,9 +193,8 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                             ),
                           ),
                         ),
-                        SizedBox(height: ScreenSize.screenHeight(context) *
-                            0.01),
-            
+                        SizedBox(height: ScreenSize.screenHeight(context) * 0.01),
+
                         // Channel Photo, Channel Name, Subscriber, Subscribe Button
                         Padding(
                           padding: EdgeInsets.only(
@@ -339,17 +208,14 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                 backgroundImage: NetworkImage('${state.playVideo[0].data!.channel!.logo}'),
                                 // child: Icon(Remix.user_3_line),
                               ),
-                              SizedBox(
-                                  width: ScreenSize.screenWidth(context) *
-                                      0.02),
+                              SizedBox(width: ScreenSize.screenWidth(context) * 0.02),
             
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
                                     final String channelId = state.playVideo[0].data!.channel!.id.toString();
                                     context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId));
-                                    GoRouter.of(context).pushNamed(
-                                        'channelProfilePage');
+                                    GoRouter.of(context).pushNamed('channelProfilePage');
                                     _podController?.pause();
                                   },
                                   child: Row(
@@ -357,7 +223,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                       Flexible(
                                         child: Text(
                                           '${state.playVideo[0].data!.channel!.name}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontFamily: fontFamily,
                                             fontSize: 14,
                                           ),
@@ -366,67 +232,74 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                         ),
                                       ),
                                       SizedBox(
-                                          width: ScreenSize.screenWidth(
-                                              context) *
-                                              0.03),
-                                      Text(
-                                        '75k',
-                                        style: TextStyle(
-                                          fontFamily: fontFamily,
-                                          fontSize: 12,
-                                          color: Colors.grey[700],
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                          width: ScreenSize.screenWidth(context) * 0.03),
+                                              Text(
+                                                  _subscribeCount.toString(),
+                                                  style: TextStyle(
+                                                  fontFamily: fontFamily,
+                                                  fontSize: 12,
+                                                  color: Colors.grey[700],
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                              ),
                                     ],
                                   ),
                                 ),
                               ),
-            
-                              SizedBox(
-                                  width: ScreenSize.screenWidth(context) *
-                                      0.02),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _isSubscribed = !_isSubscribed;
-                                  });
-                                },
-                                child: Container(
-                                  height: ScreenSize.screenHeight(context) *
-                                      0.045,
-                                  width: _isSubscribed ? ScreenSize.screenWidth(
-                                      context) * 0.28 : ScreenSize.screenWidth(
-                                      context) * 0.25,
-                                  decoration: BoxDecoration(
-                                    color: _isSubscribed
-                                        ? Colors.grey.shade200
-                                        : Colors.red,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      _isSubscribed
-                                          ? 'Unsubscribe'
-                                          : 'Subscribe',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: _isSubscribed
-                                            ? Colors.black
-                                            : Colors.white,
-                                        fontFamily: fontFamily,
+                              SizedBox(width: ScreenSize.screenWidth(context) * 0.02),
+
+                              BlocBuilder<SubscribeChannelBloc, SubscribeChannelState>(
+                                builder: (BuildContext context, SubscribeChannelState state) {
+                                  bool isSubscribed = _isSubscribed;
+
+                                  if (state is SubscribeChannelSuccess) {
+                                    isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed! ?? false;
+                                  } else if (state is UnsubscribeChannelSuccess) {
+                                    isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed! ?? false;
+                                  }
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      if (isSubscribed) {
+                                        context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
+                                      } else {
+                                        context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
+                                      }
+
+                                      // Update local state based on the new subscription status
+                                      setState(() {
+                                        _isSubscribed = !isSubscribed;
+                                        print('subscribe ::::::::     ${isSubscribed}');
+                                      });
+                                    },
+                                    child: Container(
+                                      height: ScreenSize.screenHeight(context) * 0.045,
+                                      width: _isSubscribed == true
+                                          ? ScreenSize.screenWidth(context) * 0.28
+                                          : ScreenSize.screenWidth(context) * 0.25,
+                                      decoration: BoxDecoration(
+                                        color: _isSubscribed == true ? Colors.grey.shade200 : Colors.red,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          _isSubscribed == true ? 'Unsubscribe' : 'Subscribe',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: _isSubscribed == true ? Colors.black : Colors.white,
+                                            fontFamily: fontFamily,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
+                                  );
+                                },
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(height: ScreenSize.screenHeight(context) *
-                            0.02),
-            
+                        SizedBox(height: ScreenSize.screenHeight(context) * 0.02),
                         // Like, DisLike, Save, Download, Share, Report Buttons
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -436,29 +309,114 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                           ),
                           child: Row(
                             children: [
-                              LikeDislikeButton(
-                                initialLikeCount: 5824,
-                              ),
+                              BlocBuilder<LikeDislikeVideoBloc, LikeDislikeVideoState>(
+                                  builder: (BuildContext context, LikeDislikeVideoState state){
+                                    if(state is LikeVideoSuccess){
+                                      _isLiked = state.likeVideo[0].data!.isLiked!;
+                                      _isDisLiked = state.likeVideo[0].data!.isDisliked!;
+                                      _likeCount = state.likeVideo[0].data!.likesCount!;
+                                      print('>>>>>>>>>>>>>>>>>>      ${_isLiked}');
+                                      print('>>>>>>>>>>>>>>>>>>      ${_isDisLiked}');
+                                      print('>>>>>>>>>>>>>>>>>>      ${_likeCount}');
+                                    }else if(state is DislikeVideoSuccess){
+                                      _isLiked = state.dislikeVideo[0].data!.isLiked!;
+                                      _isDisLiked = state.dislikeVideo[0].data!.isDisliked!;
+                                      _likeCount = state.dislikeVideo[0].data!.likesCount!;
+                                      print('^^^^^^^^^^^^^^^^^^      ${_isLiked}');
+                                      print('^^^^^^^^^^^^^^^^^^      ${_isDisLiked}');
+                                      print('^^^^^^^^^^^^^^^^^^      ${_likeCount}');
+                                    }
+                                    return IntrinsicWidth(
+                                      child: IntrinsicHeight(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context).colorScheme.surfaceDim,
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          padding: EdgeInsets.only(
+                                            left: ScreenSize.screenWidth(context) * 0.03,
+                                            right: ScreenSize.screenWidth(context) * 0.03,
+                                            top: ScreenSize.screenHeight(context) * 0.009,
+                                            bottom: ScreenSize.screenHeight(context) * 0.009,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              InkWell(
+                                                onTap: (){
+                                                  context.read<LikeDislikeVideoBloc>().add(LikeVideoRequest(videoSlug: widget.slug));
+                                                  setState(() {
+                                                    _isLiked = _isLiked;
+                                                    _likeCount = _likeCount;
+                                                    print('***********     $_isLiked');
+                                                  });
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    _isLiked
+                                                        ? const Icon(Remix.thumb_up_fill, size: 17)
+                                                        : const Icon(Remix.thumb_up_line, size: 17),
+                                                    SizedBox(
+                                                      width: MediaQuery.of(context).size.width * 0.02,
+                                                    ),
+                                                    Text(
+                                                      '$_likeCount',
+                                                      style: const TextStyle(
+                                                        fontFamily: fontFamily,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.01,
+                                              ),
+                                              const VerticalDivider(thickness: 0.5),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.01,
+                                              ),
+                                              InkWell(
+                                                onTap: (){
+                                                  context.read<LikeDislikeVideoBloc>().add(DislikeVideoRequest(videoSlug: widget.slug));
+                                                  setState(() {
+                                                    _isDisLiked = _isDisLiked;
+                                                    print('***********     $_isDisLiked');
+                                                  });
+                                                },
+                                                child: _isDisLiked
+                                                    ? const Icon(Remix.thumb_down_fill, size: 17)
+                                                    : const Icon(Remix.thumb_down_line, size: 17),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  ),
+                              // const LikeDislikeButton(
+                              //   initialLikeCount: 5824,
+                              // ),
                               SizedBox(
                                   width: ScreenSize.screenWidth(context) *
                                       0.03),
             
-                              ShareButton(),
+                              const ShareButton(),
                               SizedBox(
                                   width: ScreenSize.screenWidth(context) *
                                       0.03),
             
-                              DownloadButton(),
+                              const DownloadButton(),
                               SizedBox(
                                   width: ScreenSize.screenWidth(context) *
                                       0.03),
             
-                              SaveButton(),
+                              const SaveButton(),
                               SizedBox(
                                   width: ScreenSize.screenWidth(context) *
                                       0.03),
             
-                              ReportButton(),
+                              const ReportButton(),
                             ],
                           ),
                         ),
@@ -496,7 +454,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                         width: ScreenSize.screenWidth(context) *
                                             0.02,),
                                       Text(
-                                        '5.6k',
+                                        state.playVideo[0].data!.comments.toString(),
                                         style: TextStyle(
                                             color: Colors.grey.shade500
                                         ),
@@ -549,9 +507,9 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                             ),
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: videoList.length,
+                            itemCount: state.playVideo[0].data!.recommended!.length,
                             itemBuilder: (BuildContext context, int index) {
-                              if (_isLoading) {
+                              if (state.playVideo[0].data!.recommended == null) {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
@@ -589,17 +547,21 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                   ),
                                 );
                               } else {
-                                return VideoListItem(
-                                  thumbnailUrl: videoList[index]['thumbnailUrl'],
-                                  duration: videoList[index]['duration'],
-                                  title: videoList[index]['title'],
-                                  author: videoList[index]['author'],
-                                  views: videoList[index]['views'],
-                                  uploadTime: videoList[index]['uploadTime'],
-                                  onMorePressed: () {
-                                    // Add your onMorePressed logic here
-                                  },
-                                );
+                                final recommendedVideos = state.playVideo[0].data!.recommended![index];
+                                final videoDuration = recommendedVideos.duration;
+                                final formattedDuration = formatDuration(videoDuration!);
+                                return recommendedVideos.type == "video" ? VideoListItem(
+                                        channelPhoto: '${recommendedVideos.channel!.logo}',
+                                        thumbnailUrl: '${recommendedVideos.thumbnail}',
+                                        duration: formattedDuration,
+                                        title: '${recommendedVideos.title}',
+                                        author: '${recommendedVideos.channel!.name}',
+                                        views: '${recommendedVideos.views}',
+                                        uploadTime: '${recommendedVideos.createdAtHuman}',
+                                        onMorePressed: () {
+                                          // Add your onMorePressed logic here
+                                        },
+                                    ) : null;
                               }
                             },
                           ),
@@ -744,59 +706,21 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
             // Video
             BlocBuilder<PlayVideoBloc, PlayVideoState>(
               builder: (BuildContext context, PlayVideoState state) {
-                // if(state is PlayVideoLoading){
-                //   return Center(child: CircularProgressIndicator(),);
-                // }
-                // else
                   if(state is PlayVideoLoaded){
-                  // String? videoUrl = state.playVideo[0].data!.video;
-                  //   final videoUrl = 'https://youtu.be/Idh8n5XuYIA?si=dNERYqyAAqJTyOew';
-                  //
-                  //   final video = YoutubePlayer.convertUrlToId(videoUrl);
-
-
-
-                  return Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child:  AspectRatio(
-                          aspectRatio: 16/9,
-                      child: _podController == null
-                          ? Center(child: CircularProgressIndicator()) // Show a loading indicator until the controller is ready
-                          : PodVideoPlayer(
-                        controller: _podController!,
-                      ),
-                    )
-                  );
-
-
-                          // YoutubePlayer(
-                          // controller: YoutubePlayerController(
-                          //   initialVideoId: video!,
-                          //
-                          //     flags: YoutubePlayerFlags(
-                          //       autoPlay: false,
-                          //       hideControls: false,
-                          //       hideThumbnail: true
-                          //     ),
-                          // ),
-                          //   showVideoProgressIndicator: true,
-                          //   onReady: () => debugPrint('Ready'),
-                          //   bottomActions: [
-                          //     CurrentPosition(),
-                          //     ProgressBar(
-                          //       isExpanded: true,
-                          //       colors: const ProgressBarColors(
-                          //         playedColor: Colors.red,
-                          //         handleColor: Colors.red
-                          //       )
-                          //     )
-                          //   ],
-                          //
-                          // ),
-
-                }
+                    return Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child:  AspectRatio(
+                            aspectRatio: 16/9,
+                        child: _podController == null
+                            ? const Center(child: CircularProgressIndicator())
+                            : PodVideoPlayer(
+                          controller: _podController!,
+                        ),
+                      )
+                    );
+                  }
                 return Container();
               },
             
@@ -811,7 +735,12 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
 
   // DESCRIPTION DIALOG BOX **********************************************************************
-  void videoDescriptionSheet(BuildContext context) {
+  void videoDescriptionSheet(BuildContext context, PlayVideoModel descriptionData ) {
+
+    final videoCreatedDate = descriptionData.data!.categories?[0].createdAt;
+
+    final String formattedDate = formatDate(videoCreatedDate!);
+
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10)
@@ -859,7 +788,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
                 // VIDEO TITLE -------------------------------------------------
                 Text(
-                    'Tarak Mehta ka Ooltah Chashma - Episode 1280 || तारक मेहता का उल्टा चश्मा',
+                    '${descriptionData.data!.description}',
                   style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 18,
@@ -879,13 +808,13 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     height: ScreenSize.screenHeight(context) * 0.055,
                     width: ScreenSize.screenWidth(context) * 0.9,
                     // color: yellow,
-                    child: const Row(
+                    child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Column(
                             children: [
                               Text(
-                                '52144',
+                                descriptionData.data!.likes.toString(),
                                 style: TextStyle(
                                   fontFamily: fontFamily,
                                   fontSize: 15
@@ -903,7 +832,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                           Column(
                             children: [
                               Text(
-                                '22548563',
+                                descriptionData.data!.views.toString(),
                                 style: TextStyle(
                                     fontFamily: fontFamily,
                                     fontSize: 15
@@ -921,14 +850,14 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                           Column(
                             children: [
                               Text(
-                                  'Aug 22',
+                                  formattedDate,
                                 style: TextStyle(
                                     fontFamily: fontFamily,
                                     fontSize: 15
                                 ),
                               ),
                               Text(
-                                  '2023',
+                                  'date',
                                 style: TextStyle(
                                   fontFamily: fontFamily,
                                 ),
@@ -948,23 +877,24 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     height: ScreenSize.screenHeight(context) * 0.03,
                     width: ScreenSize.screenWidth(context) * 0.9,
                     // color: red,
-                    child: Row(
-                      children: [
-                        VideoHastag(
-                            hastag: 'tarakmehta'
-                        ),
-                        SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
 
-                        VideoHastag(
-                            hastag: 'tmkocsmileofindia'
-                        ),
-                        SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
-
-                        VideoHastag(
-                            hastag: 'tmkoc'
-                        ),
-                      ],
-                    ),
+                    // child: Row(
+                    //   children: [
+                    //     VideoHastag(
+                    //         hastag: 'tarakmehta'
+                    //     ),
+                    //     SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
+                    //
+                    //     VideoHastag(
+                    //         hastag: 'tmkocsmileofindia'
+                    //     ),
+                    //     SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
+                    //
+                    //     VideoHastag(
+                    //         hastag: 'tmkoc'
+                    //     ),
+                    //   ],
+                    // ),
                   ),
                 ),
                 SizedBox(height: ScreenSize.screenHeight(context) * 0.015,),
@@ -978,7 +908,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                   ),
                   padding: EdgeInsets.all(10),
                   child: ReadMoreText(
-                    description,
+                    descriptionData.data!.description!,
                     trimLength: 400,
                     moreStyle: TextStyle(
                       fontFamily: fontFamily,
@@ -1285,3 +1215,85 @@ class VideoHastag extends StatelessWidget {
 }
 
 
+
+
+
+
+
+// GestureDetector(
+//   onTap: () {
+//     if(_isSubscribed == true) {
+//       context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
+//       final subscribeBloc = context.read<SubscribeChannelBloc>();
+//       subscribeBloc.stream.listen((state){
+//         if(state is SubscribeChannelSuccess){
+//           _isSubscribed = state.subscribeChannel.first.isSubscribed!;
+//           print('SUBSCRIBE   STATE ::::::::::       $_isSubscribed');
+//         }
+//       });
+//     }
+//     if(_isSubscribed == false){
+//       context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
+//       final subscribeBloc = context.read<SubscribeChannelBloc>();
+//       subscribeBloc.stream.listen((state){
+//         if(state is UnsubscribeChannelSuccess){
+//           _isSubscribed = state.subscribeChannel.first.isSubscribed!;
+//           print('SUBSCRIBE   STATE ::::::::::       $_isSubscribed');
+//         }
+//       });
+//     }
+//     setState(() {
+//       _isSubscribed = _isSubscribed;
+//       print('SUBSCRIBE   STATE ::::::::::       $_isSubscribed');
+//     });
+//   },
+//   child: Container(
+//     height: ScreenSize.screenHeight(context) * 0.045,
+//     width: _isSubscribed
+//         ? ScreenSize.screenWidth(context) * 0.28
+//         : ScreenSize.screenWidth(context) * 0.25,
+//     decoration: BoxDecoration(
+//       color: _isSubscribed ? Colors.grey.shade200 : Colors.red,
+//       borderRadius: BorderRadius.circular(20),
+//     ),
+//     child: Center(
+//       child: Text(
+//         _isSubscribed ? 'Unsubscribe' : 'Subscribe',
+//         style: TextStyle(
+//           fontSize: 12,
+//           color: _isSubscribed ? Colors.black : Colors.white,
+//           fontFamily: fontFamily,
+//         ),
+//       ),
+//     ),
+//   ),
+// ),
+
+
+
+
+
+
+
+
+
+
+
+
+// BlocBuilder<SubscribeChannelBloc, SubscribeChannelState>(
+//   builder: (BuildContext context, SubscribeChannelState state) {
+//     print(' *******************    ${state}');
+//     if (state is SubscribeChannelSuccess) {
+//       // _subscribeCount = state.subscribeChannel[0].subscriberCount;
+//       _isSubscribed = state.subscribeChannel.first.isSubscribed!;
+//       print('IS SUBSCRIBED ::::::   $_isSubscribed  ');
+//     }
+//     if(state is UnsubscribeChannelSuccess){
+//       _isSubscribed = state.subscribeChannel.first.isSubscribed;
+//       print('IS SUBSCRIBED ::::::   $_isSubscribed  ');
+//       // _subscribeCount = state.subscribeChannel[0].subscriberCount;
+//     }
+//
+//     return
+//   },
+// ),

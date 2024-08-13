@@ -13,22 +13,22 @@ class Global {
   }
 
   static Future<void> setUserData(
-      String userToken,
-      String userId,
-      String userName,
-      String userNumber,
-      String userEmail,
-      String userProfilePhoto,
-      String userChannelId) async {
+      String? userToken,
+      String? userId,
+      String? userName,
+      String? userNumber,
+      String? userEmail,
+      String? userProfilePhoto,
+      String? userChannelId) async {
     var box = await Hive.openBox<UserDataModel>('UserDataBox');
     var userData = UserDataModel(
-      userToken: userToken,
-      userId: userId,
-      userName: userName,
-      userNumber: userNumber,
-      userEmail: userEmail,
-      userProfilePhoto: userProfilePhoto,
-      userChannelId: userChannelId,
+      userToken: userToken ?? '',
+      userId: userId ?? '',
+      userName: userName ?? '',
+      userNumber: userNumber ?? '',
+      userEmail: userEmail ?? '',
+      userProfilePhoto: userProfilePhoto ?? '',
+      userChannelId: userChannelId ?? '',
     );
     await box.put('UserData', userData);
     _userData = userData;
