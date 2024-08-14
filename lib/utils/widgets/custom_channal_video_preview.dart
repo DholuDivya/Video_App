@@ -28,7 +28,7 @@ class CustomVideoPreview extends StatelessWidget {
       // width: double.infinity,
       // color: Colors.yellow,
       padding: EdgeInsets.only(
-        top: ScreenSize.screenHeight(context) * 0.015,
+        top: ScreenSize.screenHeight(context) * 0.0,
         left: ScreenSize.screenWidth(context) * 0.03,
         // right: ScreenSize.screenWidth(context) * 0.02,
         // bottom: ScreenSize.screenHeight(context) * 0.01

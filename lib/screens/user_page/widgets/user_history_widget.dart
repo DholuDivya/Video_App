@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:remixicon/remixicon.dart';
-import 'package:vimeo_clone/Config/colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/screens/user_page/widgets/custom_user_page_button.dart';
 import 'package:vimeo_clone/utils/widgets/custom_history_video_preview.dart';
+import 'package:vimeo_clone/utils/widgets/shimmer.dart';
 
 class UserHistoryWidget extends StatelessWidget {
   const UserHistoryWidget({super.key});
@@ -40,7 +39,9 @@ class UserHistoryWidget extends StatelessWidget {
                   ),
                   minWidth: 15,
                   // color: Colors.red,
-                    onPressed: (){},
+                    onPressed: (){
+                      GoRouter.of(context).pushNamed('allHistoryPage');
+                    },
                   child: const Text(
                       'View all',
                     style: TextStyle(
@@ -68,22 +69,64 @@ class UserHistoryWidget extends StatelessWidget {
                     itemCount: state.userHistory.first.data!.length,
                       itemBuilder: (context, index){
                       final userHistory = state.userHistory.first.data![index];
-                        return HistoryVideoPreview(
-                            imageUrl: '${userHistory.thumbnail}',
-                            videoTitle: '${userHistory.title}',
-                            channelName: '${userHistory.channel!.name}',
-                            videoDuration: userHistory.duration.toString()
+                      final totalSeconds = userHistory.duration;
+                      final formattedDuration = formatDuration(totalSeconds!);
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            // left: ScreenSize.screenWidth(context) * 0.022,
+                            right: ScreenSize.screenWidth(context) * 0.04,
+                          ),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
+                            onTap: (){
+                              Future.delayed(const Duration(milliseconds: 100), (){
+                                GoRouter.of(context).pushNamed('videoPage',
+                                    pathParameters: {
+                                      "slug": userHistory.slug!
+                                    });
+                              });
+                            },
+                            child: HistoryVideoPreview(
+                                imageUrl: '${userHistory.thumbnail}',
+                                videoTitle: '${userHistory.title}',
+                                channelName: '${userHistory.channel!.name}',
+                                videoDuration: formattedDuration
+                            ),
+                          ),
                         );
                   }),
                 );
 
               }
-              return HistoryVideoPreview(
-                  imageUrl: 'assets/images/jethalal.jpg',
-                  videoTitle: 'Tarak Mehta ka Ooltah Chashma - Episode 732',
-                  channelName: 'Sony Sab',
-                  videoDuration: '25:49'
+              // return Container();
+              return Container(
+                height: 80.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.only(
+                      left: ScreenSize.screenWidth(context) * 0.04
+                  ),
+                  itemCount: 5,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        left: 5.w,
+                        right: 5.w
+                      ),
+                      child: ShimmerWidget.rectangular(
+                        isBorder: true,
+                        height: 80.h,
+                        width: 180.w,
+                      ),
+                    );
+                  },
+                ),
               );
+
             },
           ),
 

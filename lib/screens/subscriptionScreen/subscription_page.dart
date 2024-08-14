@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
-import 'package:vimeo_clone/bloc/get_all_channels/get_all_channels_bloc.dart';
-import 'package:vimeo_clone/bloc/get_all_channels/get_all_channels_state.dart';
+import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
+import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_event.dart';
+import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/utils/widgets/shimmer.dart';
 
 class SubscriptionsPage extends StatefulWidget {
   const SubscriptionsPage({super.key});
@@ -19,7 +22,14 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
   bool isSelectedPersonalized = false;
   bool isSelectedNone = false;
   bool isSubscribed = false;
-  
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
+    super.initState();
+  }
+
  @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,15 +77,18 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
           ),
 
           SliverToBoxAdapter(
-            child: BlocBuilder<GetAllChannelsBloc, GetAllChannelsState>(
-              builder: (BuildContext context, GetAllChannelsState state) {
-                if(state is GetAllChannelsLoaded){
+            child: BlocBuilder<GetSubscribedChannelListBloc, GetSubscribedChannelListState>(
+              builder: (BuildContext context, GetSubscribedChannelListState state) {
+                var channelLength = 0;
+                if(state is GetSubscribedChannelListLoaded){
+                  print(''''''''''''''''''''''object'''''''''''''''''''''' ');
                   return ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: state.channelList.first.channels!.length,
+                    itemCount: state.channelList.first.data!.length,
                       itemBuilder: (context, index){
-                        final channelsList = state.channelList.first.channels![index];
+                        final channelsList = state.channelList.first.data![index];
+                        channelLength = state.channelList.first.data!.length;
                         return SizedBox(
                           height: 60,
                           child: InkWell(
@@ -85,7 +98,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                             child: ListTile(
                               leading: CircleAvatar(
                                 radius: 22,
-                                backgroundImage: NetworkImage(channelsList.logo!),
+                                backgroundImage: NetworkImage(channelsList.channelLogo!),
                               ),
                               // leading: ClipRRect(
                               //   borderRadius: BorderRadius.circular(100),
@@ -96,7 +109,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                               //     width: ScreenSize.screenWidth(context) * 0.12,
                               //   ),
                               // ),
-                              title: Text('${channelsList.name}'),
+                              title: Text('${channelsList.channelName}'),
                               trailing: Container(
                                 width: 55,
                                 height: 30,
@@ -122,7 +135,23 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                         );
                   });
                 }
-                return Container();
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: 15,
+                    itemBuilder: (context, index){
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          top: 5.h,
+                          bottom: 5.h
+                        ),
+                        child: ShimmerWidget.rectangular(
+                          height: 30.h,
+                            width: 100.w,
+                            isBorder: true
+                        ),
+                      );
+                    }
+                );
               },
             ),
           )

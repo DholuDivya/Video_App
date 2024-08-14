@@ -386,7 +386,6 @@ class _HomePageContentState extends State<HomePageContent> {
                               },
                               channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
                               thumbnailUrl: '${state.videoList[index].thumbnail}',
-                              // duration: '${state.videoList[index].duration}',
                               duration: formattedTime,
                               title: '${state.videoList[index].title}',
                               author: '${state.videoList[index].channel?.name}',
@@ -468,8 +467,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                 itemCount: state.videoList.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   final type = state.videoList[index].type;
-                                      int totalSeconds =
-                                      state.videoList[index].duration!;
+                                      int totalSeconds = state.videoList[index].duration!;
                                   String formattedTime =
                                       formatDuration(totalSeconds);
 
@@ -489,17 +487,13 @@ class _HomePageContentState extends State<HomePageContent> {
 
                                       });
                                     },
-                                    channelPhoto:
-                                        state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
-                                    thumbnailUrl:
-                                        '${state.videoList[index].thumbnails}',
+                                    channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
+                                    thumbnailUrl: '${state.videoList[index].thumbnails}',
                                     duration: formattedTime,
                                     title: '${state.videoList[index].title}',
-                                    author:
-                                        '${state.videoList[index].channel?.name}',
+                                    author: '${state.videoList[index].channel?.name}',
                                     views: '${state.videoList[index].views}',
-                                    uploadTime:
-                                        '${state.videoList[index].createdAtHuman}',
+                                    uploadTime: '${state.videoList[index].createdAtHuman}',
                                     onMorePressed: () {
                                       // Add your onMorePressed logic here
                                     },

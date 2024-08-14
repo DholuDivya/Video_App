@@ -14,6 +14,7 @@ import 'package:vimeo_clone/screens/auth/registration_page.dart';
 import 'package:vimeo_clone/screens/auth/numebr_signup.dart';
 import 'package:vimeo_clone/screens/auth/reset_password.dart';
 import 'package:vimeo_clone/screens/auth/verification_page.dart';
+import 'package:vimeo_clone/screens/history_page/all_history_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/crop_shorts_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/get_shorts_thumbnail_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/upload_shorts_page.dart';
@@ -216,8 +217,13 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
           name: 'cropShortsPage',
             path: '/cropShortsPage',
           pageBuilder: (context, state) => const CupertinoPage(child: CropShortsPage())
-        )
+        ),
 
+        GoRoute(
+          name: 'allHistoryPage',
+          path: '/allHistoryPage',
+          pageBuilder: (context, state) => const CupertinoPage(child: AllHistoryPage())
+        )
       ]
   );
 // }

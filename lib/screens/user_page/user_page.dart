@@ -90,14 +90,14 @@ class _UserPageState extends State<UserPage> {
             ),
 
 
-            UserPageButton(
+            const UserPageButton(
                 buttonName: 'Downloads',
                 buttonIcon: HeroiconsOutline.arrowDownTray
             ),
 
             Divider(thickness: 0.2, color: Colors.grey,),
 
-            UserPageButton(
+            const UserPageButton(
                 buttonName: 'Your Movies',
                 buttonIcon: HeroiconsOutline.film
             ),

@@ -30,15 +30,13 @@ import 'package:vimeo_clone/bloc/view_increment/view_increment_event.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/Utils/Widgets/download_button.dart';
-
-import 'package:vimeo_clone/Utils/Widgets/like_dislike.dart';
 import 'package:vimeo_clone/Utils/Widgets/report_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/save_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/share_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/Utils/Widgets/video_container.dart';
 import 'package:vimeo_clone/model/play_video_model.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
 
 
 class VideoPage extends StatefulWidget {
@@ -54,11 +52,12 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
   PodPlayerController? _podController;
   late bool _isSubscribed = false;
-  // late String _subscribeCount;
+  // late bool local = false;
+  late int _subscribeCount = 0;
   late int _channelId;
-  // late bool _isLiked = false;
-  // late bool _isDisLiked = false;
-  // late int _likeCount;
+  late bool _isLiked = false;
+  late bool _isDisLiked = false;
+  late int _likeCount;
   Duration? _lastReachedDuration;
   String? _lastReachedDurationString;
   StreamSubscription? _videoBlocSubscription;
@@ -69,9 +68,14 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
     context.read<PlayVideoBloc>().add(GetVideoSlugEvent(slug: widget.slug));
 
     final videoBloc = context.read<PlayVideoBloc>();
-
     videoBloc.stream.listen((state) {
       if (state is PlayVideoLoaded) {
+        _isSubscribed = state.playVideo[0].data!.channel!.isSubscribed!;
+        _subscribeCount = state.playVideo[0].data!.channel!.subscriberCount!;
+        _isLiked = state.playVideo[0].data!.isLiked!;
+        _isDisLiked = state.playVideo[0].data!.isDisliked!;
+        _likeCount = state.playVideo[0].data!.likes!;
+        print('++++++++++++++++       $_isSubscribed');
         final videoData = state.playVideo[0].data!;
         if (mounted) {
           setState(() {
@@ -86,7 +90,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
             _podController?.addListener(() {
               if (_podController?.isInitialised ?? false) {
-                // Update the last reached duration periodically
                 final currentPosition = _podController?.currentVideoPosition;
                 if (currentPosition != null) {
                   setState(() {
@@ -94,7 +97,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     _lastReachedDurationString = formatLastDuration(currentPosition);
                     context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
                   });
-
                 }
               }
             });
@@ -102,14 +104,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
         }
       }
     });
-
-    print('&&&&&&&&&&&&&&&&&    $_isSubscribed');
-
-    // _isLiked = false;
-    // _isDisLiked = false;
-    // _isSubscribed = true;
-    // _subscribeCount = '';
-
   }
 
 
@@ -127,7 +121,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
 
 
-
   @override
   Widget build(BuildContext context) {
 
@@ -140,11 +133,10 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                 if(state is PlayVideoLoaded) {
                   final data = state.playVideo[0].data!;
                   _channelId = data.channel!.id!;
-                  _isSubscribed = data.channel!.isSubscribed!;
-                  var _subscribeCount = data.channel!.subscriberCount;
-                  var _likeCount = data.likes!;
-                  bool _isLiked = data.isLiked!;
-                  bool _isDisLiked = data.isDisliked!;
+                  // var _subscribeCount = data.channel!.subscriberCount;
+                  // _likeCount = data.likes!;
+                  // _isLiked = data.isLiked!;
+                  // _isDisLiked = data.isDisliked!;
                   return SingleChildScrollView(
                     padding: EdgeInsets.only(top: 180.h),
                     child: Column(
@@ -249,45 +241,48 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                               ),
                               SizedBox(width: ScreenSize.screenWidth(context) * 0.02),
 
+
                               BlocBuilder<SubscribeChannelBloc, SubscribeChannelState>(
                                 builder: (BuildContext context, SubscribeChannelState state) {
-                                  bool isSubscribed = _isSubscribed;
-
                                   if (state is SubscribeChannelSuccess) {
-                                    isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed! ?? false;
+                                    // _isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed!;
                                   } else if (state is UnsubscribeChannelSuccess) {
-                                    isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed! ?? false;
+                                    // _isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed!;
                                   }
-
                                   return GestureDetector(
                                     onTap: () {
-                                      if (isSubscribed) {
+                                      if (_isSubscribed) {
                                         context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
                                       } else {
                                         context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
                                       }
 
-                                      // Update local state based on the new subscription status
                                       setState(() {
-                                        _isSubscribed = !isSubscribed;
-                                        print('subscribe ::::::::     ${isSubscribed}');
+                                        print('  BEFORE    $_isSubscribed  ');
+                                        _isSubscribed = !_isSubscribed;
+                                        if(_isSubscribed){
+                                          _subscribeCount++;
+                                        }else{
+                                          _subscribeCount--;
+                                        }
+                                        print('  AFTER    $_isSubscribed  ');
                                       });
                                     },
                                     child: Container(
                                       height: ScreenSize.screenHeight(context) * 0.045,
-                                      width: _isSubscribed == true
+                                      width: _isSubscribed
                                           ? ScreenSize.screenWidth(context) * 0.28
                                           : ScreenSize.screenWidth(context) * 0.25,
                                       decoration: BoxDecoration(
-                                        color: _isSubscribed == true ? Colors.grey.shade200 : Colors.red,
+                                        color: _isSubscribed ? Colors.grey.shade200 : Colors.red,
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Center(
                                         child: Text(
-                                          _isSubscribed == true ? 'Unsubscribe' : 'Subscribe',
+                                          _isSubscribed ? 'Unsubscribe' : 'Subscribe',
                                           style: TextStyle(
                                             fontSize: 12,
-                                            color: _isSubscribed == true ? Colors.black : Colors.white,
+                                            color: _isSubscribed ? Colors.black : Colors.white,
                                             fontFamily: fontFamily,
                                           ),
                                         ),
@@ -300,6 +295,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                           ),
                         ),
                         SizedBox(height: ScreenSize.screenHeight(context) * 0.02),
+
                         // Like, DisLike, Save, Download, Share, Report Buttons
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -312,19 +308,19 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                               BlocBuilder<LikeDislikeVideoBloc, LikeDislikeVideoState>(
                                   builder: (BuildContext context, LikeDislikeVideoState state){
                                     if(state is LikeVideoSuccess){
-                                      _isLiked = state.likeVideo[0].data!.isLiked!;
-                                      _isDisLiked = state.likeVideo[0].data!.isDisliked!;
-                                      _likeCount = state.likeVideo[0].data!.likesCount!;
-                                      print('>>>>>>>>>>>>>>>>>>      ${_isLiked}');
-                                      print('>>>>>>>>>>>>>>>>>>      ${_isDisLiked}');
-                                      print('>>>>>>>>>>>>>>>>>>      ${_likeCount}');
+                                      // _isLiked = state.likeVideo[0].data!.isLiked!;
+                                      // _isDisLiked = state.likeVideo[0].data!.isDisliked!;
+                                      // _likeCount = state.likeVideo[0].data!.likesCount!;
+                                      // print('>>>>>>>>>>>>>>>>>>      ${_isLiked}');
+                                      // print('>>>>>>>>>>>>>>>>>>      ${_isDisLiked}');
+                                      // print('>>>>>>>>>>>>>>>>>>      ${_likeCount}');
                                     }else if(state is DislikeVideoSuccess){
-                                      _isLiked = state.dislikeVideo[0].data!.isLiked!;
-                                      _isDisLiked = state.dislikeVideo[0].data!.isDisliked!;
-                                      _likeCount = state.dislikeVideo[0].data!.likesCount!;
-                                      print('^^^^^^^^^^^^^^^^^^      ${_isLiked}');
-                                      print('^^^^^^^^^^^^^^^^^^      ${_isDisLiked}');
-                                      print('^^^^^^^^^^^^^^^^^^      ${_likeCount}');
+                                      // _isLiked = state.dislikeVideo[0].data!.isLiked!;
+                                      // _isDisLiked = state.dislikeVideo[0].data!.isDisliked!;
+                                      // _likeCount = state.dislikeVideo[0].data!.likesCount!;
+                                      // print('^^^^^^^^^^^^^^^^^^      ${_isLiked}');
+                                      // print('^^^^^^^^^^^^^^^^^^      ${_isDisLiked}');
+                                      // print('^^^^^^^^^^^^^^^^^^      ${_likeCount}');
                                     }
                                     return IntrinsicWidth(
                                       child: IntrinsicHeight(
@@ -345,14 +341,28 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                 onTap: (){
                                                   context.read<LikeDislikeVideoBloc>().add(LikeVideoRequest(videoSlug: widget.slug));
                                                   setState(() {
-                                                    _isLiked = _isLiked;
-                                                    _likeCount = _likeCount;
+                                                    print('((((  $_isDisLiked   )))) ');
+                                                    print('((((  $_isLiked  ))))');
+                                                    if (_isLiked) {
+                                                      _isLiked = false;
+                                                      _likeCount--;
+                                                    } else {
+                                                      _isLiked = true;
+                                                      _likeCount++;
+                                                      if (_isDisLiked) {
+                                                        _isDisLiked = false;
+                                                      }
+                                                    }
+                                                    // _isLiked = !_isLiked;
+                                                    // _isDisLiked = !_isDisLiked;
+                                                    // _likeCount++;
                                                     print('***********     $_isLiked');
+                                                    print('***********     $_isDisLiked');
                                                   });
                                                 },
                                                 child: Row(
                                                   children: [
-                                                    _isLiked
+                                                    _isLiked == true
                                                         ? const Icon(Remix.thumb_up_fill, size: 17)
                                                         : const Icon(Remix.thumb_up_line, size: 17),
                                                     SizedBox(
@@ -379,11 +389,23 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                 onTap: (){
                                                   context.read<LikeDislikeVideoBloc>().add(DislikeVideoRequest(videoSlug: widget.slug));
                                                   setState(() {
-                                                    _isDisLiked = _isDisLiked;
+                                                    if (_isDisLiked) {
+                                                      _isDisLiked = false;
+                                                    } else {
+                                                      _isDisLiked = true;
+                                                      if (_isLiked) {
+                                                        _isLiked = false;
+                                                        _likeCount--;
+                                                      }
+                                                    }
+                                                    // _isDisLiked = !_isDisLiked;
+                                                    // _isLiked = !_isLiked;
+                                                    // _likeCount--;
                                                     print('***********     $_isDisLiked');
+                                                    print('***********     $_isLiked');
                                                   });
                                                 },
-                                                child: _isDisLiked
+                                                child: _isDisLiked == true
                                                     ? const Icon(Remix.thumb_down_fill, size: 17)
                                                     : const Icon(Remix.thumb_down_line, size: 17),
                                               ),
@@ -410,8 +432,14 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                               SizedBox(
                                   width: ScreenSize.screenWidth(context) *
                                       0.03),
-            
-                              const SaveButton(),
+
+                              InkWell(
+                                borderRadius: BorderRadius.circular(20),
+                                onTap: (){
+                                  showPlaylistBottomSheet();
+                                },
+                                  child: const SaveButton()
+                              ),
                               SizedBox(
                                   width: ScreenSize.screenWidth(context) *
                                       0.03),
@@ -937,6 +965,150 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
       'About The Show:\n '
   '----------------------------\n'
   'Taarak Mehta Ka Ooltah Chashmah is a comedy show inspired by the famous humorous column \'Duniya Ne Undha Chashmah\' written by the eminent Gujarati writer Mr. Tarak Mehta. This show revolves around the Gada Family which consists of uneducated businessmen Jethalal Champaklal Gada, Jethalal’s Wife Daya & their naughty Son Tipendra Gada living in \'Gokuldham Co-operative Society\' and covers topical issues which are socially relevant. In case of a problem and emergency, Jethalal Gada often rushes to Taarak Mehta to seek his help and guidance as he finds a philosopher in him. The residents of the housing society, help each other find solutions when they face common, real-life challenges and get involved in sticky situations.';
+
+
+
+
+
+  void showPlaylistBottomSheet(){
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+        context: context,
+        builder: (context){
+          return SizedBox(
+            height: 200.h,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  height: 25.h,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        width: 1.0,
+                        color: greyShade300
+                      )
+                    )
+                  ),
+                  padding: EdgeInsets.only(
+                    top: 5.h,
+                    left: 10.w,
+                    right: 10.w,
+                    // bottom: 5.h
+                  ),
+                  // color: Colors.red,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                          'Save to...',
+                        style: TextStyle(
+                          fontFamily: fontFamily,
+                          fontSize: 16
+                        ),
+                      ),
+
+                      MaterialButton(
+                          onPressed: (){},
+                        child: Text(
+                          '+ Create playlist',
+                          style: TextStyle(
+                              fontFamily: fontFamily,
+                            color: primaryColor
+                          ),
+                        ),
+                        // Container(
+                        //   // color: red,
+                        //   width: 100.w,
+                        //   child: const Row(
+                        //     children: [
+                        //       Icon(HeroiconsOutline.plus, size: 14,),
+                        //
+                        //     ],
+                        //   ),
+                        // ),
+                      )
+                    ],
+                  ),
+                ),
+
+
+                Container(
+                  height: 120.h,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      bool isSelected = true;
+                      int? selectedRadioIndex;
+                      return Container(
+                        padding: EdgeInsets.only(
+                          // top: 2.h,
+                          left: 10.w,
+                          right: 10.w,
+                          bottom: 4.h
+                        ),
+                        width: double.infinity,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(15),
+                          onTap: () {},
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 30.h,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: isSelected
+                                  ? Theme.of(context).colorScheme.tertiaryFixedDim
+                                  : null,
+                            ),
+                            child: Text(
+                              'Playlist 1',
+                              style: TextStyle(
+                                fontFamily: fontFamily,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+
+                InkWell(
+                  onTap: (){},
+                  child: Container(
+                    height: 40.h,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                          width: 1.0,
+                          color: greyShade300
+                        )
+                      )
+                    ),
+                    child: Center(
+                      child: Text(
+                          'Done',
+                        style: TextStyle(
+                          fontFamily: fontFamily,
+                          fontSize: 15
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+
+              ],
+            ),
+          );
+        }
+    );
+  }
 
 
 

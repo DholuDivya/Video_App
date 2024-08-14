@@ -27,9 +27,9 @@ class Category {
   String? parentId;
   String? description;
   String? image;
-  String? type;
   String? createdAt;
   String? updatedAt;
+  int? status;
   List<Videos>? videos;
 
   Category(
@@ -38,9 +38,9 @@ class Category {
         this.parentId,
         this.description,
         this.image,
-        this.type,
         this.createdAt,
         this.updatedAt,
+        this.status,
         this.videos});
 
   Category.fromJson(Map<String, dynamic> json) {
@@ -49,9 +49,9 @@ class Category {
     parentId = json['parent_id'];
     description = json['description'];
     image = json['image'];
-    type = json['type'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    status = json['status'];
     if (json['videos'] != null) {
       videos = <Videos>[];
       json['videos'].forEach((v) {
@@ -67,9 +67,9 @@ class Category {
     data['parent_id'] = this.parentId;
     data['description'] = this.description;
     data['image'] = this.image;
-    data['type'] = this.type;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['status'] = this.status;
     if (this.videos != null) {
       data['videos'] = this.videos!.map((v) => v.toJson()).toList();
     }
@@ -84,7 +84,7 @@ class Videos {
   String? slug;
   String? description;
   String? hashtag;
-  int? watchHours;
+  String? watchHours;
   int? videoType;
   String? geoRegion;
   String? metaKeywords;
@@ -106,6 +106,7 @@ class Videos {
   int? comments;
   String? createdAt;
   String? updatedAt;
+  String? contentType;
   String? createdAtHuman;
   Pivot? pivot;
   Channel? channel;
@@ -139,6 +140,7 @@ class Videos {
         this.comments,
         this.createdAt,
         this.updatedAt,
+        this.contentType,
         this.createdAtHuman,
         this.pivot,
         this.channel});
@@ -172,6 +174,7 @@ class Videos {
     comments = json['comments'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    contentType = json['content_type'];
     createdAtHuman = json['created_at_human'];
     pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
     channel =
@@ -208,6 +211,7 @@ class Videos {
     data['comments'] = this.comments;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['content_type'] = this.contentType;
     data['created_at_human'] = this.createdAtHuman;
     if (this.pivot != null) {
       data['pivot'] = this.pivot!.toJson();
