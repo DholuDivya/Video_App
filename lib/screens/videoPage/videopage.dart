@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,15 +10,24 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:readmore/readmore.dart';
 import 'package:remixicon/remixicon.dart';
-import 'package:video_player/video_player.dart';
+import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_event.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
+import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/create_playlist/create_playlist_event.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_event.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_state.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_event.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_state.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_event.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_state.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
@@ -36,6 +44,7 @@ import 'package:vimeo_clone/Utils/Widgets/share_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/Utils/Widgets/video_container.dart';
 import 'package:vimeo_clone/model/play_video_model.dart';
+import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 
 
 
@@ -61,6 +70,8 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   Duration? _lastReachedDuration;
   String? _lastReachedDurationString;
   StreamSubscription? _videoBlocSubscription;
+  List<int> selectedPlaylistIds = [];
+  late int selectedPlaylist;
 
   @override
   void initState() {
@@ -436,7 +447,8 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                               InkWell(
                                 borderRadius: BorderRadius.circular(20),
                                 onTap: (){
-                                  showPlaylistBottomSheet();
+                                  context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                                  showPlaylistBottomSheet(state.playVideo);
                                 },
                                   child: const SaveButton()
                               ),
@@ -934,7 +946,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     color: Theme.of(context).colorScheme.surfaceDim,
                     borderRadius: BorderRadius.circular(10)
                   ),
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: ReadMoreText(
                     descriptionData.data!.description!,
                     trimLength: 400,
@@ -970,7 +982,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
 
 
-  void showPlaylistBottomSheet(){
+  void showPlaylistBottomSheet(List<PlayVideoModel> videoData){
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -996,13 +1008,13 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     top: 5.h,
                     left: 10.w,
                     right: 10.w,
-                    // bottom: 5.h
+                    bottom: 2.h
                   ),
                   // color: Colors.red,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                           'Save to...',
                         style: TextStyle(
                           fontFamily: fontFamily,
@@ -1011,7 +1023,9 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                       ),
 
                       MaterialButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            createPlaylistAlertDialog();
+                          },
                         child: Text(
                           '+ Create playlist',
                           style: TextStyle(
@@ -1019,67 +1033,104 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                             color: primaryColor
                           ),
                         ),
-                        // Container(
-                        //   // color: red,
-                        //   width: 100.w,
-                        //   child: const Row(
-                        //     children: [
-                        //       Icon(HeroiconsOutline.plus, size: 14,),
-                        //
-                        //     ],
-                        //   ),
-                        // ),
                       )
                     ],
                   ),
                 ),
 
 
-                Container(
-                  height: 120.h,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      bool isSelected = true;
-                      int? selectedRadioIndex;
-                      return Container(
-                        padding: EdgeInsets.only(
-                          // top: 2.h,
-                          left: 10.w,
-                          right: 10.w,
-                          bottom: 4.h
-                        ),
-                        width: double.infinity,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(15),
-                          onTap: () {},
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 30.h,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: isSelected
-                                  ? Theme.of(context).colorScheme.tertiaryFixedDim
-                                  : null,
+                BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
+                  builder: (BuildContext context, GetUserPlaylistState state) {
+                    if(state is GetUserPlaylistSuccess){
+                      final playlistLength = state.userPlaylist.first.playlists!.length;
+                      final playlist = state.userPlaylist.first.playlists;
+                      return BlocBuilder<PlaylistSelectionBloc, PlaylistSelectionState>(
+                        builder: (BuildContext context, PlaylistSelectionState state) {
+                          if(state is PlaylistSelected){
+                            selectedPlaylistIds = state.selectedPlaylistIds;
+                            selectedPlaylist = selectedPlaylistIds.first;
+                          }
+                          return Container(
+                            height: 120.h,
+                            child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              itemCount: playlistLength,
+                              itemBuilder: (context, index) {
+                                final userPlaylist = playlist![index];
+                                final isSelected =  selectedPlaylistIds.contains(userPlaylist.id);
+                                return Container(
+                                  padding: EdgeInsets.only(
+                                    // top: 2.h,
+                                      left: 10.w,
+                                      right: 10.w,
+                                      bottom: 4.h
+                                  ),
+                                  width: double.infinity,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(15),
+                                    onTap: () {
+                                      if(isSelected){
+
+                                        context.read<PlaylistSelectionBloc>().add(DeselectPlaylistRequest(playlistId: userPlaylist.id!));
+                                      } else {
+                                        context.read<PlaylistSelectionBloc>().add(SelectPlaylistRequest(playlistId: userPlaylist.id!));
+                                      }
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 30.h,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: isSelected
+                                            ? blue
+                                            : Theme.of(context).colorScheme.tertiaryFixedDim,
+                                      ),
+                                      padding: EdgeInsets.only(left: 20.w, right: 20.w),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '${userPlaylist.title}',
+                                            style: TextStyle(
+                                              fontFamily: fontFamily,
+                                              color: isSelected ? Colors.white : Colors.black
+                                            ),
+                                          ),
+
+                                          Text(
+                                            '${userPlaylist.videos!.length}',
+                                            style: TextStyle(
+                                              fontFamily: fontFamily,
+                                                color: isSelected ? Colors.white : Colors.black
+                                            ),
+                                          ),
+
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                            child: Text(
-                              'Playlist 1',
-                              style: TextStyle(
-                                fontFamily: fontFamily,
-                              ),
-                            ),
-                          ),
-                        ),
+                          );
+                        },
                       );
-                    },
-                  ),
+                    }
+                    return const Center(child: CircularProgressIndicator(),);
+                  },
                 ),
 
 
                 InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    context.read<AddVideoToPlaylistBloc>().add(AddVideoToPlaylistRequest(
+                        videoId: videoData.first.data!.id!,
+                        playlistId: selectedPlaylist
+                    ));
+                    Navigator.pop(context);
+                  },
                   child: Container(
                     height: 40.h,
                     width: double.infinity,
@@ -1109,6 +1160,98 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
         }
     );
   }
+
+  final TextEditingController playlistTitleController = TextEditingController();
+  final TextEditingController playlistDescriptionController = TextEditingController();
+  final TextEditingController playlistStatusController = TextEditingController();
+
+  void createPlaylistAlertDialog(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+              title: Center(
+                  child: Text(
+                      'Create a playlist',
+                    style: TextStyle(
+                      fontFamily: fontFamily,
+                      fontSize: 17.sp
+                    ),
+                  )
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 8.h,),
+                  CustomTextFieldUpload(
+                    maxLines: 1,
+                    controller: playlistTitleController,
+                    fieldLabel: 'title',
+                  ),
+                  SizedBox(height: 10.h,),
+
+                  CustomTextFieldUpload(
+                    maxLines: 3,
+                    minLines: 1,
+                    controller: playlistDescriptionController,
+                    fieldLabel: 'description',
+                  ),
+                  SizedBox(height: 10.h,),
+
+                  CustomTextFieldUpload(
+                    maxLines: 1,
+                    controller: playlistStatusController,
+                    fieldLabel: 'status',
+                  ),
+                  SizedBox(height: 10.h,),
+
+                  InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: (){
+                      final playlistTitle = playlistTitleController.text;
+                      final playlistDescription = playlistDescriptionController.text;
+                      final playlistStatus = playlistStatusController.text;
+
+                      context.read<CreatePlaylistBloc>().add(CreatePlaylistRequest(
+                          playlistTitle: playlistTitle,
+                          playlistDescription: playlistDescription,
+                          playlistStatus: playlistStatus
+                      ));
+
+                      context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 40.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        color: primaryColor
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Create',
+                          style: TextStyle(
+                              fontFamily: fontFamily,
+                              fontSize: 15,
+                            color: Colors.white
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+
+                ],
+              ),
+
+          );
+        }
+    );
+
+  }
+
+
+
 
 
 

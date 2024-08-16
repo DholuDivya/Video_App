@@ -51,7 +51,7 @@ class CustomTextFieldUpload extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
               // color: Colors.grey.shade900,
-              color: Theme.of(context).colorScheme.secondaryFixedDim,
+              color: Theme.of(context).colorScheme.secondary,
               width: 1.0,
             ),
           ),

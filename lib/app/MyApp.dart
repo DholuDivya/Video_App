@@ -8,10 +8,12 @@ import 'package:vimeo_clone/Repo/auth_repo.dart';
 import 'package:vimeo_clone/Repo/video_category_repo.dart';
 import 'package:vimeo_clone/Repo/video_list_repo.dart';
 import 'package:vimeo_clone/appLinks.dart';
+import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_event.dart';
@@ -20,9 +22,13 @@ import 'package:vimeo_clone/bloc/get_thumbnail_from_user/get_thumbnail_bloc.dart
 import 'package:vimeo_clone/bloc/get_thumbnail_of_shorts/get_shorts_thumbnail_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_state.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
@@ -87,6 +93,10 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => LikeDislikeVideoBloc()),
         BlocProvider(create: (context) => UserHistoryBloc()),
         BlocProvider(create: (context) => GetUserHistoryBloc()..add(GetUserHistoryRequest())),
+        BlocProvider(create: (context) => GetUserPlaylistBloc()),
+        BlocProvider(create: (context) => PlaylistSelectionBloc()),
+        BlocProvider(create: (context) => CreatePlaylistBloc()),
+        BlocProvider(create: (context) => AddVideoToPlaylistBloc()),
 
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(

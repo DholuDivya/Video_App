@@ -6,6 +6,7 @@ class GetChannelDetailModel {
   int? videoCount;
   int? subscriberCount;
   List<SuggestedVideos>? suggestedVideos;
+  List<Playlist>? playlists;
 
   GetChannelDetailModel(
       {this.channel,
@@ -14,11 +15,12 @@ class GetChannelDetailModel {
         this.isSubscribed,
         this.videoCount,
         this.subscriberCount,
-        this.suggestedVideos});
+        this.suggestedVideos,
+        this.playlists});
 
   GetChannelDetailModel.fromJson(Map<String, dynamic> json) {
     channel =
-    json['channel'] != null ? new Channel.fromJson(json['channel']) : null;
+    json['channel'] != null ? Channel.fromJson(json['channel']) : null;
     createdAtHumanChannels = json['created_at_human_channels'];
     isAssociated = json['is_associated'];
     isSubscribed = json['is_subscribed'];
@@ -27,24 +29,33 @@ class GetChannelDetailModel {
     if (json['suggested_videos'] != null) {
       suggestedVideos = <SuggestedVideos>[];
       json['suggested_videos'].forEach((v) {
-        suggestedVideos!.add(new SuggestedVideos.fromJson(v));
+        suggestedVideos!.add(SuggestedVideos.fromJson(v));
+      });
+    }
+    if (json['playlists'] != null) {
+      playlists = <Playlist>[];
+      json['playlists'].forEach((v) {
+        playlists!.add(Playlist.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.channel != null) {
-      data['channel'] = this.channel!.toJson();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    if (channel != null) {
+      data['channel'] = channel!.toJson();
     }
-    data['created_at_human_channels'] = this.createdAtHumanChannels;
-    data['is_associated'] = this.isAssociated;
-    data['is_subscribed'] = this.isSubscribed;
-    data['video_count'] = this.videoCount;
-    data['subscriber_count'] = this.subscriberCount;
-    if (this.suggestedVideos != null) {
+    data['created_at_human_channels'] = createdAtHumanChannels;
+    data['is_associated'] = isAssociated;
+    data['is_subscribed'] = isSubscribed;
+    data['video_count'] = videoCount;
+    data['subscriber_count'] = subscriberCount;
+    if (suggestedVideos != null) {
       data['suggested_videos'] =
-          this.suggestedVideos!.map((v) => v.toJson()).toList();
+          suggestedVideos!.map((v) => v.toJson()).toList();
+    }
+    if (playlists != null) {
+      data['playlists'] = playlists!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -58,8 +69,6 @@ class Channel {
   String? logo;
   String? bannerImage;
   String? status;
-  Null? deletedAt;
-  Null? region;
   String? createdAt;
   String? updatedAt;
   List<Videos>? videos;
@@ -72,8 +81,6 @@ class Channel {
         this.logo,
         this.bannerImage,
         this.status,
-        this.deletedAt,
-        this.region,
         this.createdAt,
         this.updatedAt,
         this.videos});
@@ -86,33 +93,29 @@ class Channel {
     logo = json['logo'];
     bannerImage = json['banner_image'];
     status = json['status'];
-    deletedAt = json['deleted_at'];
-    region = json['region'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     if (json['videos'] != null) {
       videos = <Videos>[];
       json['videos'].forEach((v) {
-        videos!.add(new Videos.fromJson(v));
+        videos!.add(Videos.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['slug'] = this.slug;
-    data['description'] = this.description;
-    data['logo'] = this.logo;
-    data['banner_image'] = this.bannerImage;
-    data['status'] = this.status;
-    data['deleted_at'] = this.deletedAt;
-    data['region'] = this.region;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    if (this.videos != null) {
-      data['videos'] = this.videos!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['slug'] = slug;
+    data['description'] = description;
+    data['logo'] = logo;
+    data['banner_image'] = bannerImage;
+    data['status'] = status;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    if (videos != null) {
+      data['videos'] = videos!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -127,27 +130,21 @@ class Videos {
   String? hashtag;
   String? watchHours;
   int? videoType;
-  Null? geoRegion;
-  Null? metaKeywords;
-  Null? metaDescription;
   String? source;
   String? sourceType;
   int? duration;
   String? thumbnails;
   int? nSFW;
-  Null? scheduling;
   int? scheduled;
   int? commentsOnOff;
   int? channelId;
   String? status;
-  Null? deletedAt;
   int? views;
   int? likes;
   String? visibility;
   int? comments;
   String? createdAt;
   String? updatedAt;
-  String? contentType;
   String? createdAtHuman;
   List<Categories>? categories;
 
@@ -160,27 +157,21 @@ class Videos {
         this.hashtag,
         this.watchHours,
         this.videoType,
-        this.geoRegion,
-        this.metaKeywords,
-        this.metaDescription,
         this.source,
         this.sourceType,
         this.duration,
         this.thumbnails,
         this.nSFW,
-        this.scheduling,
         this.scheduled,
         this.commentsOnOff,
         this.channelId,
         this.status,
-        this.deletedAt,
         this.views,
         this.likes,
         this.visibility,
         this.comments,
         this.createdAt,
         this.updatedAt,
-        this.contentType,
         this.createdAtHuman,
         this.categories});
 
@@ -193,70 +184,58 @@ class Videos {
     hashtag = json['hashtag'];
     watchHours = json['watch_hours'];
     videoType = json['video_type'];
-    geoRegion = json['geo_region'];
-    metaKeywords = json['meta_keywords'];
-    metaDescription = json['meta_description'];
     source = json['source'];
     sourceType = json['source_type'];
     duration = json['duration'];
     thumbnails = json['thumbnails'];
     nSFW = json['NSFW'];
-    scheduling = json['scheduling'];
     scheduled = json['scheduled'];
     commentsOnOff = json['comments_on_off'];
     channelId = json['channel_id'];
     status = json['status'];
-    deletedAt = json['deleted_at'];
     views = json['views'];
     likes = json['likes'];
     visibility = json['visibility'];
     comments = json['comments'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    contentType = json['content_type'];
     createdAtHuman = json['created_at_human'];
     if (json['categories'] != null) {
       categories = <Categories>[];
       json['categories'].forEach((v) {
-        categories!.add(new Categories.fromJson(v));
+        categories!.add(Categories.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['slug'] = this.slug;
-    data['description'] = this.description;
-    data['hashtag'] = this.hashtag;
-    data['watch_hours'] = this.watchHours;
-    data['video_type'] = this.videoType;
-    data['geo_region'] = this.geoRegion;
-    data['meta_keywords'] = this.metaKeywords;
-    data['meta_description'] = this.metaDescription;
-    data['source'] = this.source;
-    data['source_type'] = this.sourceType;
-    data['duration'] = this.duration;
-    data['thumbnails'] = this.thumbnails;
-    data['NSFW'] = this.nSFW;
-    data['scheduling'] = this.scheduling;
-    data['scheduled'] = this.scheduled;
-    data['comments_on_off'] = this.commentsOnOff;
-    data['channel_id'] = this.channelId;
-    data['status'] = this.status;
-    data['deleted_at'] = this.deletedAt;
-    data['views'] = this.views;
-    data['likes'] = this.likes;
-    data['visibility'] = this.visibility;
-    data['comments'] = this.comments;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['content_type'] = this.contentType;
-    data['created_at_human'] = this.createdAtHuman;
-    if (this.categories != null) {
-      data['categories'] = this.categories!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['type'] = type;
+    data['title'] = title;
+    data['slug'] = slug;
+    data['description'] = description;
+    data['hashtag'] = hashtag;
+    data['watch_hours'] = watchHours;
+    data['video_type'] = videoType;
+    data['source'] = source;
+    data['source_type'] = sourceType;
+    data['duration'] = duration;
+    data['thumbnails'] = thumbnails;
+    data['NSFW'] = nSFW;
+    data['scheduled'] = scheduled;
+    data['comments_on_off'] = commentsOnOff;
+    data['channel_id'] = channelId;
+    data['status'] = status;
+    data['views'] = views;
+    data['likes'] = likes;
+    data['visibility'] = visibility;
+    data['comments'] = comments;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['created_at_human'] = createdAtHuman;
+    if (categories != null) {
+      data['categories'] = categories!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -265,9 +244,9 @@ class Videos {
 class Categories {
   int? id;
   String? name;
-  Null? parentId;
-  Null? description;
-  Null? image;
+  int? parentId;
+  String? description;
+  String? image;
   String? createdAt;
   String? updatedAt;
   int? status;
@@ -293,21 +272,21 @@ class Categories {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     status = json['status'];
-    pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
+    pivot = json['pivot'] != null ? Pivot.fromJson(json['pivot']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['parent_id'] = this.parentId;
-    data['description'] = this.description;
-    data['image'] = this.image;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['status'] = this.status;
-    if (this.pivot != null) {
-      data['pivot'] = this.pivot!.toJson();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    data['parent_id'] = parentId;
+    data['description'] = description;
+    data['image'] = image;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['status'] = status;
+    if (pivot != null) {
+      data['pivot'] = pivot!.toJson();
     }
     return data;
   }
@@ -325,9 +304,9 @@ class Pivot {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['video_id'] = this.videoId;
-    data['category_id'] = this.categoryId;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['video_id'] = videoId;
+    data['category_id'] = categoryId;
     return data;
   }
 }
@@ -341,20 +320,20 @@ class SuggestedVideos {
   String? hashtag;
   String? watchHours;
   int? videoType;
-  Null? geoRegion;
-  Null? metaKeywords;
-  Null? metaDescription;
+  String? geoRegion;
+  String? metaKeywords;
+  String? metaDescription;
   String? source;
   String? sourceType;
   int? duration;
   String? thumbnails;
-  int? nSFW;
-  Null? scheduling;
+  int? nsfw;
+  String? scheduling;
   int? scheduled;
   int? commentsOnOff;
   int? channelId;
   String? status;
-  Null? deletedAt;
+  String? deletedAt;
   int? views;
   int? likes;
   String? visibility;
@@ -364,37 +343,38 @@ class SuggestedVideos {
   String? contentType;
   String? createdAtHuman;
 
-  SuggestedVideos(
-      {this.id,
-        this.type,
-        this.title,
-        this.slug,
-        this.description,
-        this.hashtag,
-        this.watchHours,
-        this.videoType,
-        this.geoRegion,
-        this.metaKeywords,
-        this.metaDescription,
-        this.source,
-        this.sourceType,
-        this.duration,
-        this.thumbnails,
-        this.nSFW,
-        this.scheduling,
-        this.scheduled,
-        this.commentsOnOff,
-        this.channelId,
-        this.status,
-        this.deletedAt,
-        this.views,
-        this.likes,
-        this.visibility,
-        this.comments,
-        this.createdAt,
-        this.updatedAt,
-        this.contentType,
-        this.createdAtHuman});
+  SuggestedVideos({
+    this.id,
+    this.type,
+    this.title,
+    this.slug,
+    this.description,
+    this.hashtag,
+    this.watchHours,
+    this.videoType,
+    this.geoRegion,
+    this.metaKeywords,
+    this.metaDescription,
+    this.source,
+    this.sourceType,
+    this.duration,
+    this.thumbnails,
+    this.nsfw,
+    this.scheduling,
+    this.scheduled,
+    this.commentsOnOff,
+    this.channelId,
+    this.status,
+    this.deletedAt,
+    this.views,
+    this.likes,
+    this.visibility,
+    this.comments,
+    this.createdAt,
+    this.updatedAt,
+    this.contentType,
+    this.createdAtHuman,
+  });
 
   SuggestedVideos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -412,7 +392,7 @@ class SuggestedVideos {
     sourceType = json['source_type'];
     duration = json['duration'];
     thumbnails = json['thumbnails'];
-    nSFW = json['NSFW'];
+    nsfw = json['NSFW'];
     scheduling = json['scheduling'];
     scheduled = json['scheduled'];
     commentsOnOff = json['comments_on_off'];
@@ -430,37 +410,81 @@ class SuggestedVideos {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['slug'] = this.slug;
-    data['description'] = this.description;
-    data['hashtag'] = this.hashtag;
-    data['watch_hours'] = this.watchHours;
-    data['video_type'] = this.videoType;
-    data['geo_region'] = this.geoRegion;
-    data['meta_keywords'] = this.metaKeywords;
-    data['meta_description'] = this.metaDescription;
-    data['source'] = this.source;
-    data['source_type'] = this.sourceType;
-    data['duration'] = this.duration;
-    data['thumbnails'] = this.thumbnails;
-    data['NSFW'] = this.nSFW;
-    data['scheduling'] = this.scheduling;
-    data['scheduled'] = this.scheduled;
-    data['comments_on_off'] = this.commentsOnOff;
-    data['channel_id'] = this.channelId;
-    data['status'] = this.status;
-    data['deleted_at'] = this.deletedAt;
-    data['views'] = this.views;
-    data['likes'] = this.likes;
-    data['visibility'] = this.visibility;
-    data['comments'] = this.comments;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['content_type'] = this.contentType;
-    data['created_at_human'] = this.createdAtHuman;
+    final Map<String, dynamic> data = {};
+    data['id'] = id;
+    data['type'] = type;
+    data['title'] = title;
+    data['slug'] = slug;
+    data['description'] = description;
+    data['hashtag'] = hashtag;
+    data['watch_hours'] = watchHours;
+    data['video_type'] = videoType;
+    data['geo_region'] = geoRegion;
+    data['meta_keywords'] = metaKeywords;
+    data['meta_description'] = metaDescription;
+    data['source'] = source;
+    data['source_type'] = sourceType;
+    data['duration'] = duration;
+    data['thumbnails'] = thumbnails;
+    data['NSFW'] = nsfw;
+    data['scheduling'] = scheduling;
+    data['scheduled'] = scheduled;
+    data['comments_on_off'] = commentsOnOff;
+    data['channel_id'] = channelId;
+    data['status'] = status;
+    data['deleted_at'] = deletedAt;
+    data['views'] = views;
+    data['likes'] = likes;
+    data['visibility'] = visibility;
+    data['comments'] = comments;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['content_type'] = contentType;
+    data['created_at_human'] = createdAtHuman;
+    return data;
+  }
+}
+
+
+
+class Playlist {
+  int? id;
+  String? title;
+  String? description;
+  int? userId;
+  String? visibility;
+  String? createdAt;
+  String? updatedAt;
+
+  Playlist({
+    this.id,
+    this.title,
+    this.description,
+    this.userId,
+    this.visibility,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  Playlist.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    title = json['title'];
+    description = json['description'];
+    userId = json['user_id'];
+    visibility = json['visibility'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['id'] = id;
+    data['title'] = title;
+    data['description'] = description;
+    data['user_id'] = userId;
+    data['visibility'] = visibility;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

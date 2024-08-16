@@ -8,10 +8,10 @@ ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     colorScheme: ColorScheme.light(
 
-      primary: Colors.grey.shade200,
+      primary: greyShade200,
       surface: Colors.white,
-      secondary: Colors.grey.shade300,
-      tertiary: Colors.grey.shade900,
+      secondary: greyShade300,
+      tertiary: greyShade900,
 
       primaryFixedDim: textFieldLabelLight,
       surfaceDim: greyShade100,

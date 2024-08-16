@@ -16,3 +16,4 @@ const String subscribeChannelUrl = "${apiUrl}subscribe/";
 const String unsubscribeChannelUrl = "${apiUrl}unsubscribe/";
 const String getUserHistoryUrl = "${apiUrl}watched-videos";
 const String getUserPlaylistUrl = "${apiUrl}playlists";
+const String createPlaylistUrl = "${apiUrl}playlists";

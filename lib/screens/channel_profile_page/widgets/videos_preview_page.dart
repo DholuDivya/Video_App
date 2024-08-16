@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channal_video_preview.dart';
@@ -91,7 +92,7 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             padding: EdgeInsets.only(
-              top: 0,
+              top: 5.h,
               bottom: ScreenSize.screenHeight(context) * 0.01,
             ),
             itemCount: widget.channelData.videoCount,
@@ -99,12 +100,15 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
               final videoData = widget.channelData.channel!.videos?[index];
               final totalSeconds = videoData!.duration;
               final formattedDuration = formatDuration(totalSeconds!);
-                return CustomVideoPreview(
-                    imageUrl: '${videoData.thumbnails}',
-                    videoTitle: '${videoData.title}',
-                    videoViews: '${videoData.views}',
-                    uploadTime: '${videoData.createdAtHuman}',
-                    videoDuration: formattedDuration
+                return Padding(
+                  padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                  child: CustomVideoPreview(
+                      imageUrl: '${videoData.thumbnails}',
+                      videoTitle: '${videoData.title}',
+                      videoViews: '${videoData.views}',
+                      uploadTime: '${videoData.createdAtHuman}',
+                      videoDuration: formattedDuration
+                  ),
                 );
               }
           )

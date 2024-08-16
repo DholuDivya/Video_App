@@ -21,6 +21,7 @@ import 'package:vimeo_clone/screens/upload_shorts/upload_shorts_page.dart';
 import 'package:vimeo_clone/screens/upload_video/upload_video_page.dart';
 import 'package:vimeo_clone/screens/upload_video_from_url/upload_video_from_url_page.dart';
 import 'package:vimeo_clone/screens/user_page/user_page.dart';
+import 'package:vimeo_clone/screens/user_playlist_page/user_playlist_page.dart';
 import 'package:vimeo_clone/screens/your_videos/your_video_page.dart';
 import '../Screens/HomePage/homepage.dart';
 import '../screens/channel_profile_page/channel_profile_page.dart';
@@ -223,6 +224,12 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
           name: 'allHistoryPage',
           path: '/allHistoryPage',
           pageBuilder: (context, state) => const CupertinoPage(child: AllHistoryPage())
+        ),
+
+        GoRoute(
+            name: 'userPlaylistPage',
+            path: '/userPlaylistPage',
+            pageBuilder: (context, state) => const CupertinoPage(child: UserPlaylistPage())
         )
       ]
   );

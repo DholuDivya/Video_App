@@ -64,7 +64,7 @@ class ApiBaseHelper {
       // .timeout(Duration(seconds: timeOut));
       log('+++ HEADERS  ${headers}');
       if (kDebugMode) {
-        log(
+        print(
             'response api****$url***************${response.statusCode}*********${response.data}');
       }
 
@@ -214,7 +214,7 @@ class ApiBaseHelper {
           options: dio_.Options(headers: headers)
       );
       if (kDebugMode) {
-        log(
+        print(
             'response api****$url*****************${response.statusCode}*********${response.data}');
       }
 

@@ -286,7 +286,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
 
 
                     // PLAYLIST
-                    PlaylistPreviewPage(),
+                    PlaylistPreviewPage(channelData: channelData,),
                   ],
                 ),
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
@@ -105,12 +106,15 @@ class _LivePreviewPageState extends State<LivePreviewPage> {
                 final videoData = widget.channelData.channel!.videos?[index];
                 final totalSeconds = videoData!.duration;
                 final formattedDuration = formatDuration(totalSeconds!);
-                return CustomVideoPreview(
-                    imageUrl: '${videoData.thumbnails}',
-                    videoTitle: 'Tarak Mehta ka Ooltah Chashma Episode - 220',
-                    videoViews: sortedVideoList[index]['views'],
-                    uploadTime: '5',
-                    videoDuration: '1:32:19'
+                return Padding(
+                  padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                  child: CustomVideoPreview(
+                      imageUrl: '${videoData.thumbnails}',
+                      videoTitle: 'Tarak Mehta ka Ooltah Chashma Episode - 220',
+                      videoViews: sortedVideoList[index]['views'],
+                      uploadTime: '5',
+                      videoDuration: '1:32:19'
+                  ),
                 );
               }
           )

@@ -452,7 +452,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Center(
+                                  title: const Center(
                                     child: Text(
                                       'Select a category',
                                       style: TextStyle(

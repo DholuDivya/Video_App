@@ -12,6 +12,7 @@ class GetUserPlaylistBloc extends Bloc<GetUserPlaylistEvent, GetUserPlaylistStat
   Future<void> _onGetUserPlaylistRequest(GetUserPlaylistEvent event, Emitter<GetUserPlaylistState> emit) async {
     try{
       final List<GetUserPlaylistModel>? userPlaylist = await GetUserPlaylistRepo().getUserPlaylist();
+      print('Fetched successfully ::::::::::::       $userPlaylist');
       emit(GetUserPlaylistSuccess(userPlaylist: userPlaylist!));
     }catch(e){
       emit(GetUserPlaylistFailure(error: e.toString()));

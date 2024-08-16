@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/config/colors.dart';
 
 import '../../config/constants.dart';
 
@@ -25,7 +27,7 @@ class CustomPlaylistPreview extends StatelessWidget {
       // width: double.infinity,
       // color: Colors.yellow,
       padding: EdgeInsets.only(
-        top: ScreenSize.screenHeight(context) * 0.015,
+        top: ScreenSize.screenHeight(context) * 0.00,
         left: ScreenSize.screenWidth(context) * 0.03,
         // right: ScreenSize.screenWidth(context) * 0.02,
         // bottom: ScreenSize.screenHeight(context) * 0.01
@@ -39,58 +41,67 @@ class CustomPlaylistPreview extends StatelessWidget {
               Stack(
                 children: [
                   Container(
-                    height: ScreenSize.screenHeight(context) * 0.15,
-                    width: ScreenSize.screenWidth(context) * 0.45,
+                    height: 91.h,
+                    width: ScreenSize.screenWidth(context) * 0.5,
                     // color: Colors.red,
                   ),
 
+                  // BACK SIDE CONTAINER 1 ----------------------------
+
                   Padding(
                     padding: EdgeInsets.only(
-                        left: ScreenSize.screenWidth(context) * 0.05
-                    ),
+                        left: ScreenSize.screenWidth(context) * 0.05),
                     child: Container(
                       height: ScreenSize.screenHeight(context) * 0.1,
-                      width: ScreenSize.screenWidth(context) * 0.35,
+                      width: ScreenSize.screenWidth(context) * 0.4,
                       decoration: BoxDecoration(
                           color: Colors.grey,
-                          borderRadius: BorderRadius.circular(10)
-                      ),
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
 
-
-                  // BACK SIDE CONTAINER 1 ----------------------------
+                  // BACK SIDE CONTAINER 2 ----------------------------
                   Positioned(
-                    top: ScreenSize.screenHeight(context) * 0.006,
+                    top: ScreenSize.screenHeight(context) * 0.005,
                     child: Padding(
                       padding: EdgeInsets.only(
-                        left: ScreenSize.screenWidth(context) * 0.025
-                      ),
+                          left: ScreenSize.screenWidth(context) * 0.025),
                       child: Container(
                         height: ScreenSize.screenHeight(context) * 0.1,
-                        width: ScreenSize.screenWidth(context) * 0.4,
+                        width: ScreenSize.screenWidth(context) * 0.45,
                         decoration: BoxDecoration(
-                          color: Colors.blueGrey,
-                          borderRadius: BorderRadius.circular(10)
-                        ),
+                            color: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                   ),
-                  
-                  // BACK SIDE CONTAINER 2 ----------------------
+
+                  // BACK SIDE CONTAINER 3 ----------------------
                   Positioned(
-                    top: ScreenSize.screenHeight(context) * 0.012,
+                    top: ScreenSize.screenHeight(context) * 0.011,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                          imageUrl,
-                          height: ScreenSize.screenHeight(context) * 0.12,
-                          width: ScreenSize.screenWidth(context) * 0.45,
-                          fit: BoxFit.cover),
+                      child: imageUrl.isNotEmpty
+                          ? Container(
+                        height: ScreenSize.screenHeight(context) * 0.12,
+                        width: ScreenSize.screenWidth(context) * 0.5,
+                        color: greyShade500,
+                        child: Image.network(imageUrl,
+                            fit: BoxFit.fill),
+                      )
+                          : Container(
+                        height: ScreenSize.screenHeight(context) * 0.12,
+                        width: ScreenSize.screenWidth(context) * 0.5,
+                        decoration: BoxDecoration(
+                            color: greyShade600,
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Center(
+                          child: Icon(HeroiconsOutline.folderOpen, size: 28, color: greyShade400,),
+                        ),),
                     ),
                   ),
-                  
-                  
+
                   // NUMBER OF VIDEOS IN THE PLAYLIST ------------------
                   Positioned(
                     top: ScreenSize.screenHeight(context) * 0.1,
@@ -106,8 +117,14 @@ class CustomPlaylistPreview extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Icon(Remix.play_list_line, color: Colors.white, size: 13,),
-                          SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
+                          Icon(
+                            Remix.play_list_line,
+                            color: Colors.white,
+                            size: 13,
+                          ),
+                          SizedBox(
+                            width: ScreenSize.screenWidth(context) * 0.01,
+                          ),
                           Text(
                             numberOfVideos.toString(),
                             style: TextStyle(
@@ -119,7 +136,6 @@ class CustomPlaylistPreview extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
               SizedBox(width: ScreenSize.screenWidth(context) * 0.03,),

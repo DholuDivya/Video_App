@@ -119,12 +119,15 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                         final videoData = widget.channelData.channel!.videos?[index];
                         final totalSeconds = videoData!.duration;
                         final formattedTime = formatDuration(totalSeconds!);
-                    return CustomVideoPreview(
-                      imageUrl: '${videoData.thumbnails}',
-                      videoTitle: '${videoData.title}',
-                      videoViews: videoData.views.toString(),
-                      uploadTime: '${videoData.createdAtHuman}',
-                      videoDuration: formattedTime,
+                    return Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: CustomVideoPreview(
+                        imageUrl: '${videoData.thumbnails}',
+                        videoTitle: '${videoData.title}',
+                        videoViews: videoData.views.toString(),
+                        uploadTime: '${videoData.createdAtHuman}',
+                        videoDuration: formattedTime,
+                      ),
                     );
                   },
                 ),

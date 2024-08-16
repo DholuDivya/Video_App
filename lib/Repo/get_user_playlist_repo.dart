@@ -7,7 +7,10 @@ class GetUserPlaylistRepo{
     try{
       final response = await ApiBaseHelper().getAPICall(getUserPlaylistUrl, {});
       if(response.statusCode == 200){
+        List<GetUserPlaylistModel> userPlaylist = [];
+        userPlaylist.add(GetUserPlaylistModel.fromJson(response.data));
         print('Successfully fetched user playlist');
+        return userPlaylist;
       }
     }catch(e){
       throw ApiException('Fail to call get user playlist API');
