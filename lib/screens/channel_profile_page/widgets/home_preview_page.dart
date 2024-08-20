@@ -68,12 +68,13 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                         itemCount: widget.channelData.suggestedVideos!.length,
                           itemBuilder: (context, index){
                           final suggestedVideo = widget.channelData.suggestedVideos![index];
-                            return  ForYouPreview(
+                          final type = suggestedVideo.type;
+                            return  type == "video" ? ForYouPreview(
                               videoThumbnail: suggestedVideo.thumbnails!,
                               videoTitle: '${suggestedVideo.title}',
                               channelName: '${widget.channelData.channel!.name}',
                               uploadTime: '${suggestedVideo.createdAtHuman}',
-                            );
+                            ) : null;
                       }),
                     ) : Container(),
 
@@ -117,9 +118,10 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                         }
 
                         final videoData = widget.channelData.channel!.videos?[index];
-                        final totalSeconds = videoData!.duration;
+                        final type = videoData!.type;
+                        final totalSeconds = videoData.duration;
                         final formattedTime = formatDuration(totalSeconds!);
-                    return Padding(
+                    return type != "short" ? Padding(
                       padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                       child: CustomVideoPreview(
                         imageUrl: '${videoData.thumbnails}',
@@ -128,7 +130,7 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                         uploadTime: '${videoData.createdAtHuman}',
                         videoDuration: formattedTime,
                       ),
-                    );
+                    ) : null;
                   },
                 ),
               ),

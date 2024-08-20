@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
+import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
+import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
@@ -23,7 +26,9 @@ class ChannelProfilePage extends StatefulWidget {
 }
 
 class _ChannelProfilePageState extends State<ChannelProfilePage> {
-  bool _isSubscribed = false;
+  late bool _isSubscribed = false;
+  late int _subscribeCount = 0;
+  late int _channelId;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +40,9 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
 
             if(state is ChannelProfileLoaded){
               final channelData = state.channelData.first;
+              _isSubscribed = channelData.isSubscribed!;
+              _channelId = channelData.channel!.id!;
+              _subscribeCount = channelData.subscriberCount!;
               return NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
                   SliverAppBar(
@@ -131,7 +139,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                                 0.005,
                                           ),
                                           Text(
-                                            '${channelData.subscriberCount} subscribers - ${channelData.videoCount} videos',
+                                            '$_subscribeCount subscribers - ${channelData.videoCount} videos',
                                             style: TextStyle(
                                               fontFamily: fontFamily,
                                               fontSize: 12,
@@ -146,39 +154,64 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                     ],
                                   ),
                                 ),
-                                state.channelData.first.isAssociated == false ? InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _isSubscribed = !_isSubscribed;
-                                    });
-                                  },
-                                  child: Material(
-                                    elevation: 5,
-                                    shadowColor: Colors.grey,
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Container(
-                                      height:
-                                      ScreenSize.screenHeight(context) * 0.045,
-                                      // width: _isSubscribed ? ScreenSize.screenWidth(context) * 0.10 : ScreenSize.screenWidth(context) * 0.35,
-                                      width: ScreenSize.screenWidth(context) * 0.95,
-                                      decoration: BoxDecoration(
-                                        color: _isSubscribed
-                                            ? Colors.grey.shade200
-                                            : primaryColor,
+                                state.channelData.first.isAssociated == false
+                                    ? BlocBuilder<SubscribeChannelBloc, SubscribeChannelState>(
+
+                                  builder: (BuildContext context, SubscribeChannelState state) {
+
+                                    if (state is SubscribeChannelSuccess) {
+                                      // _isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed!;
+                                    } else if (state is UnsubscribeChannelSuccess) {
+                                      // _isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed!;
+                                    }
+                                    return InkWell(
+                                      onTap: () {
+                                        if (_isSubscribed) {
+                                          context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
+                                        } else {
+                                          context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
+                                        }
+
+                                        setState(() {
+                                          print('  BEFORE    $_isSubscribed  ');
+                                          _isSubscribed = !_isSubscribed;
+                                          if(_isSubscribed){
+                                            _subscribeCount++;
+                                          }else{
+                                            _subscribeCount--;
+                                          }
+                                          print('  AFTER    $_isSubscribed  ');
+                                        });
+                                      },
+                                      child: Material(
+                                        elevation: 5,
+                                        shadowColor: Colors.grey,
                                         borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          _isSubscribed ? 'Unsubscribe' : 'Subscribe',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: _isSubscribed ? Colors.black : Colors.white,
-                                            fontFamily: fontFamily,
+                                        child: Container(
+                                          height:
+                                          ScreenSize.screenHeight(context) * 0.045,
+                                          // width: _isSubscribed ? ScreenSize.screenWidth(context) * 0.10 : ScreenSize.screenWidth(context) * 0.35,
+                                          width: ScreenSize.screenWidth(context) * 0.95,
+                                          decoration: BoxDecoration(
+                                            color: _isSubscribed
+                                                ? Colors.grey.shade200
+                                                : primaryColor,
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              _isSubscribed? 'Unsubscribe' : 'Subscribe',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: _isSubscribed? Colors.black : Colors.white,
+                                                fontFamily: fontFamily,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 )
                                     : InkWell(
                                   onTap: () {
@@ -278,7 +311,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
 
 
                     // SHORTS
-                    ShortsPreviewPage(),
+                    ShortsPreviewPage(channelData: channelData,),
 
 
                     // LIVE

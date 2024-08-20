@@ -22,9 +22,10 @@ class CustomShortsPreview extends StatelessWidget {
       child: Stack(
         children: [
           Container(
+            color: greyShade500,
             height: ScreenSize.screenHeight(context) * 0.25,
             width: ScreenSize.screenWidth(context) * 0.35,
-            child: Image.asset(thumbNailPath, fit: BoxFit.cover),
+            child: Image.network(thumbNailPath, fit: BoxFit.cover),
           ),
 
           Positioned(

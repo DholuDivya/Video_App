@@ -10,7 +10,7 @@ class DownloadButton extends StatelessWidget {
     return IntrinsicWidth(
       child: IntrinsicHeight(
         child: InkWell(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(25),
 
           onTap: (){},
           child: Container(

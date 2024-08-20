@@ -112,8 +112,8 @@ class _LivePreviewPageState extends State<LivePreviewPage> {
                       imageUrl: '${videoData.thumbnails}',
                       videoTitle: 'Tarak Mehta ka Ooltah Chashma Episode - 220',
                       videoViews: sortedVideoList[index]['views'],
-                      uploadTime: '5',
-                      videoDuration: '1:32:19'
+                      uploadTime: videoData.createdAtHuman!,
+                      videoDuration: formattedDuration
                   ),
                 );
               }

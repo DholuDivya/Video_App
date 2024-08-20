@@ -14,6 +14,8 @@ import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/appLinks.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_state.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_state.dart';
@@ -383,6 +385,11 @@ class _HomePageContentState extends State<HomePageContent> {
                                         "slug": state.videoList[index].slug!
                                       });
                                 });
+                              },
+                              onTapChannel: (){
+                                final String channelId = state.videoList[index].channel!.id.toString();
+                                context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId));
+                                GoRouter.of(context).pushNamed('channelProfilePage');
                               },
                               channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
                               thumbnailUrl: '${state.videoList[index].thumbnail}',

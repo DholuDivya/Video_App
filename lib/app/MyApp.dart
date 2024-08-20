@@ -29,6 +29,7 @@ import 'package:vimeo_clone/bloc/like_dislike/like_dislike_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
 import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_state.dart';
+import 'package:vimeo_clone/bloc/search_data/search_data_bloc.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
@@ -97,6 +98,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => PlaylistSelectionBloc()),
         BlocProvider(create: (context) => CreatePlaylistBloc()),
         BlocProvider(create: (context) => AddVideoToPlaylistBloc()),
+        BlocProvider(create: (context) => SearchDataBloc()),
 
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(

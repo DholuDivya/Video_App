@@ -5,19 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_event.dart';
-import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
-import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/custom_playlist_widget_userpage.dart';
-import 'package:vimeo_clone/utils/widgets/custom_history_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 import 'package:vimeo_clone/utils/widgets/shimmer.dart';
-
+import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
 import '../../../bloc/get_user_playlist/get_user_playlist_event.dart';
 import '../../../config/colors.dart';
-import '../../../utils/widgets/custom_playlist_preview.dart';
 
 class UserPlaylistWidget extends StatefulWidget {
   UserPlaylistWidget({super.key});
@@ -133,7 +129,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(10),
                         onTap: () {
-                          // Navigation logic goes here
+                          GoRouter.of(context).pushNamed('singlePlaylistPage');
                         },
                         child: CustomPlaylistWidgetUserPage(
                           numberOfVideos: userPlaylist.videos!.length,
@@ -189,6 +185,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
   final TextEditingController playlistDescriptionController = TextEditingController();
 
   final TextEditingController playlistStatusController = TextEditingController();
+  late bool isPublic = true;
 
   void createPlaylistAlertDialog(){
     showDialog(
@@ -223,11 +220,42 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                 ),
                 SizedBox(height: 10.h,),
 
-                CustomTextFieldUpload(
-                  maxLines: 1,
-                  controller: playlistStatusController,
-                  fieldLabel: 'status',
+                // CustomTextFieldUpload(
+                //   maxLines: 1,
+                //   controller: playlistStatusController,
+                //   fieldLabel: 'status',
+                // ),
+                // SizedBox(height: 10.h,),
+
+                Material(
+                  // borderRadius: BorderRadius.circular(15),
+                  // elevation: 2,
+                  child: Container(
+                    height: 70,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Theme.of(context).colorScheme.tertiaryFixedDim,
+                    ),
+                    // padding: EdgeInsets.all(0),
+                    child: CustomToggleButton(
+                        borderRadius: 15.0,
+                        onTap: () {
+                          setState(() {
+                            isPublic = !isPublic;
+                          });
+                        },
+                        toggleName: 'Status',
+                        toggleValue: isPublic,
+                        onChanged: (bool value) {
+                          setState(() {
+                            isPublic = value;
+                          });
+                        },
+                        toggleState: isPublic ? 'Public' : 'Private'),
+                  ),
                 ),
+
                 SizedBox(height: 10.h,),
 
                 InkWell(
@@ -253,7 +281,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                         borderRadius: BorderRadius.circular(10),
                         color: primaryColor
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         'Create',
                         style: TextStyle(

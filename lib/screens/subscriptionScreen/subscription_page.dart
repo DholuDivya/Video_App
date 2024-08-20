@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_event.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_state.dart';
@@ -93,6 +95,8 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                           height: 60,
                           child: InkWell(
                             onTap: (){
+                              final String channelId = state.channelList.first.data![index].channelId.toString();
+                              context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId));
                               GoRouter.of(context).pushNamed('channelProfilePage');
                             },
                             child: ListTile(

@@ -81,13 +81,15 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
 import '../../../config/constants.dart';
 import '../../../utils/widgets/custom_shorts_preview.dart';
 
 class ShortsPreviewPage extends StatefulWidget {
-  const ShortsPreviewPage({super.key});
+  final GetChannelDetailModel channelData;
+  const ShortsPreviewPage({super.key, required this.channelData});
 
   @override
   State<ShortsPreviewPage> createState() => _ShortsPreviewPageState();
@@ -179,7 +181,7 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
               top: 0,
               bottom: ScreenSize.screenHeight(context) * 0.01,
             ),
-            itemCount: sortedShortsThumbNail.length,
+            itemCount: 1,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               crossAxisSpacing: 0.4,
@@ -187,10 +189,12 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
               mainAxisExtent: 200,
             ),
             itemBuilder: (context, index) {
-              return CustomShortsPreview(
-                thumbNailPath: sortedShortsThumbNail[index]['thumbnail'],
-                views: '${sortedShortsThumbNail[index]['views']} views',
-              );
+              final shortsData = widget.channelData.channel!.videos![index];
+              final type = shortsData.type;
+              return type == "short" ? CustomShortsPreview(
+                thumbNailPath: shortsData.thumbnails!,
+                views: shortsData.views.toString(),
+              ) : null;
             },
           ),
         ],

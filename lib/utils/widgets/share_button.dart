@@ -16,6 +16,7 @@ class _ShareButtonState extends State<ShareButton> {
     return IntrinsicWidth(
       child: IntrinsicHeight(
         child: InkWell(
+          borderRadius: BorderRadius.circular(25),
           onTap: (){
             // final RenderBox box = context.findRenderObject() as RenderBox;
             // Share.share(
@@ -37,11 +38,11 @@ class _ShareButtonState extends State<ShareButton> {
             ),
             child: Row(
               children: [
-                Icon(Remix.share_forward_line, size: 15,),
+                const Icon(Remix.share_forward_line, size: 15,),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                Text(
+                const Text(
                   'Share',
                   style: TextStyle(
                     fontFamily: fontFamily,

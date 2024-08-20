@@ -98,9 +98,10 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
             itemCount: widget.channelData.videoCount,
               itemBuilder: (BuildContext context, int index){
               final videoData = widget.channelData.channel!.videos?[index];
-              final totalSeconds = videoData!.duration;
+              final type = videoData!.type;
+              final totalSeconds = videoData.duration;
               final formattedDuration = formatDuration(totalSeconds!);
-                return Padding(
+                return type == "video" ? Padding(
                   padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                   child: CustomVideoPreview(
                       imageUrl: '${videoData.thumbnails}',
@@ -109,7 +110,7 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
                       uploadTime: '${videoData.createdAtHuman}',
                       videoDuration: formattedDuration
                   ),
-                );
+                ) : null;
               }
           )
         ],

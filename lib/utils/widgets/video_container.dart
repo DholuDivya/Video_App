@@ -12,6 +12,7 @@ class VideoListItem extends StatelessWidget {
   final String views;
   final String uploadTime;
   final Function()? onTap;
+  final Function()? onTapChannel;
   final Function()? onMorePressed;
 
   const VideoListItem({
@@ -25,6 +26,7 @@ class VideoListItem extends StatelessWidget {
     required this.uploadTime,
     this.onTap,
     this.onMorePressed,
+    this.onTapChannel,
   });
 
   @override
@@ -94,9 +96,7 @@ class VideoListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InkWell(
-                    onTap: (){
-                      GoRouter.of(context).pushNamed('channelProfilePage');
-                    },
+                    onTap: onTapChannel,
                     child: CircleAvatar(
                       radius: 20,
                       backgroundImage: NetworkImage('$channelPhoto')

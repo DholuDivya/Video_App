@@ -7,8 +7,6 @@ import 'package:hive/hive.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/api_routes.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
-import 'package:vimeo_clone/config/security.dart';
-import 'package:vimeo_clone/model/user_data_model.dart';
 
 class AuthRepository{
   final ApiBaseHelper apiHelper;
@@ -134,6 +132,14 @@ class AuthRepository{
       if (response.statusCode == 200) {
         // STORING THE TOKEN IN HIVE
 
+        print('user token ::::    ${response.data['token']}');
+        print('user id ::::    ${response.data['user']['id']}');
+        print('user name ::::    ${response.data['user']['name']}');
+        print('user phone number ::::    ${response.data['user']['phone_number'] ?? ''}');
+        print('user email ::::    ${response.data['user']['email']}');
+        print('user profile ::::    ${response.data['user']['profile']}');
+        print('channel id ::::    ${response.data['channels'][0]['id']}');
+
         if(response.data != null){
           final String userToken = response.data['token'] ?? '';
           final String userId = response.data['user']['id'].toString() ?? '';
@@ -141,7 +147,7 @@ class AuthRepository{
           final String userNumber = response.data['user']['phone_number'] ?? '';
           final String userEmail = response.data['user']['email'] ?? '';
           final String userProfilePhoto = response.data['user']['profile'] ?? '';
-          final String userChannelId = response.data['channel']['id'].toString() ?? '';
+          final String userChannelId = response.data['channels'][0]['id'].toString() ?? '';
           print('++++++++    ${userToken}'
               '++++++++    ${userId}'
               '++++++++    ${userName}'

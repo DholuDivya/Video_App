@@ -87,7 +87,7 @@ class CustomPlaylistPreview extends StatelessWidget {
                         width: ScreenSize.screenWidth(context) * 0.5,
                         color: greyShade500,
                         child: Image.network(imageUrl,
-                            fit: BoxFit.fill),
+                            fit: BoxFit.cover),
                       )
                           : Container(
                         height: ScreenSize.screenHeight(context) * 0.12,

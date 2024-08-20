@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
@@ -28,6 +30,7 @@ class _UserPageState extends State<UserPage> {
   @override
   void initState() {
     print('88888888888888888888888   ');
+    context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
     super.initState();
   }
