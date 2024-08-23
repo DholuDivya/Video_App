@@ -51,7 +51,7 @@ class CustomToggleButton extends StatelessWidget {
                     fontFamily: fontFamily
                   ),
                 ),
-                Text(toggleState, style: TextStyle(fontFamily: fontFamily, fontSize: 15, color: Colors.grey.shade600),)
+                Text(toggleState, style: TextStyle(fontFamily: fontFamily, fontSize: 12, color: Colors.grey.shade600),)
               ],
             ),
             Container(

@@ -23,16 +23,36 @@
 	<string>????</string>
     <key>CFBundleURLTypes</key>
     <array>
+        <!-- Existing URL schemes -->
         <dict>
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>CFBundleURLSchemes</key>
             <array>
-
+                <!-- This should match your reversed client ID from GoogleService-Info.plist -->
+                <string>com.googleusercontent.apps.888231558500-sbba3r7mg1ab06ks5jj7hd5615a9afb7</string>
+            </array>
+        </dict>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>app-1-888231558500-ios-353bc24762b7444cfd4e71</string>
+            </array>
+        </dict>
+        <!-- Add the missing custom URL scheme here -->
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
                 <string>app-1-888231558500-ios-9998acfc7439c3b5fd4e71</string>
             </array>
         </dict>
     </array>
+    <key>GIDClientID</key>
+    <string>888231558500-sbba3r7mg1ab06ks5jj7hd5615a9afb7.apps.googleusercontent.com</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>

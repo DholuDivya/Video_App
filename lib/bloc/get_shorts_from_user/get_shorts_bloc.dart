@@ -48,7 +48,7 @@ class GetShortsBloc extends Bloc<GetShortsEvent, GetShortsState>{
       XFile? _videoFile;
 
       final result = await _picker.pickVideo(
-        source: ImageSource.camera,
+        source: ImageSource.gallery,
       );
 
       if (result != null) {

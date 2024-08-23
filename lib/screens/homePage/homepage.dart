@@ -119,9 +119,10 @@ class _HomePageState extends State<HomePage> {
                       if (Navigator.canPop(context)) {
                         Navigator.pop(context);
                       }
+
                       // WidgetsBinding.instance.addPostFrameCallback((_){
-                      // GoRouter.of(context).pushNamed('getShortsThumbnailPage');
-                      // });getShortsThumbnailPage
+                      //     GoRouter.of(context).pushNamed('getShortsThumbnailPage');
+                      // });
                       Navigator.push(
                         context,
                         CupertinoPageRoute(builder: (context) => CropShortsPage())
@@ -134,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         context
                             .read<GetShortsBloc>()
-                            .add(GetShortsFromCamera());
+                            .add(GetShortsFromFile());
                       },
                       buttonName: 'Create short',
                       buttonIcon: HeroiconsOutline.camera,
@@ -146,7 +147,12 @@ class _HomePageState extends State<HomePage> {
                     buttonIcon: HeroiconsOutline.arrowUpOnSquare,
                   ),
                   BottomSheetButton(
-                    onTap: () {},
+                    onTap: () {
+                      // Navigator.push(
+                      //     context,
+                      //     CupertinoPageRoute(builder: (context) => CropShortsPage())
+                      // );
+                    },
                     buttonName: 'Go Live',
                     buttonIcon: HeroiconsOutline.tv,
                   ),
@@ -271,7 +277,7 @@ class _HomePageContentState extends State<HomePageContent> {
             actions: [
               IconButton(
                 onPressed: () {
-                  GoRouter.of(context).pushNamed('searchPage');
+                  GoRouter.of(context).pushNamed('searchSuggestionPage');
                 },
                 icon: const Icon(
                   HeroiconsOutline.magnifyingGlass,
@@ -388,8 +394,12 @@ class _HomePageContentState extends State<HomePageContent> {
                               },
                               onTapChannel: (){
                                 final String channelId = state.videoList[index].channel!.id.toString();
-                                context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId));
-                                GoRouter.of(context).pushNamed('channelProfilePage');
+                                GoRouter.of(context).pushNamed(
+                                  'channelProfilePage',
+                                  pathParameters: {
+                                    'channelId': channelId
+                                  }
+                                );
                               },
                               channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
                               thumbnailUrl: '${state.videoList[index].thumbnail}',
@@ -400,7 +410,10 @@ class _HomePageContentState extends State<HomePageContent> {
                               uploadTime:
                                   '${state.videoList[index].createdAtHuman}',
                               onMorePressed: () {
-                                // Add your onMorePressed logic here
+                                // final RenderBox renderBox = context.findRenderObject() as RenderBox;
+                                // final Offset offset = renderBox.localToGlobal(Offset.zero);
+                                // showPopupMenu(context, offset);
+                                showPopupMenu(context);
                               },
                             ) : null;
                           });
@@ -412,7 +425,7 @@ class _HomePageContentState extends State<HomePageContent> {
                       if (state is VideoListLoading) {
                         return ListView.builder(
                             padding: EdgeInsets.zero,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: 8,
                             itemBuilder: (context, index) {
@@ -502,7 +515,10 @@ class _HomePageContentState extends State<HomePageContent> {
                                     views: '${state.videoList[index].views}',
                                     uploadTime: '${state.videoList[index].createdAtHuman}',
                                     onMorePressed: () {
-                                      // Add your onMorePressed logic here
+                                      // final RenderBox renderBox = context.findRenderObject() as RenderBox;
+                                      // final Offset offset = renderBox.localToGlobal(Offset.zero);
+                                      // showPopupMenu(context, offset);
+                                      showPopupMenu(context);
                                     },
                                   ) : null;
                                 })
@@ -525,6 +541,81 @@ class _HomePageContentState extends State<HomePageContent> {
       ),
     );
   }
+
+  void showPopupMenu(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: MenuAnchor(
+            builder: (BuildContext context, MenuController controller, Widget? child) {
+              return IconButton(
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+                icon: const Icon(Icons.more_horiz),
+                tooltip: 'Show menu',
+              );
+            },
+            menuChildren: List<MenuItemButton>.generate(3, (int index) {
+              return MenuItemButton(
+                onPressed: () {
+                  // Add your action here
+                  Navigator.of(context).pop(); // Close the menu after selection
+                },
+                child: Text('Item ${index + 1}'),
+              );
+            }),
+          ),
+        );
+      },
+    );
+  }
+
+
+
+
+
+
+  // void showPopupMenu(BuildContext context, Offset offset) async {
+  //   final RenderBox renderBox = context.findRenderObject() as RenderBox;
+  //   final Offset buttonOffset = renderBox.localToGlobal(Offset.zero);
+  //
+  //   await showMenu<int>(
+  //     context: context,
+  //     position: RelativeRect.fromLTRB(
+  //       buttonOffset.dx,
+  //       buttonOffset.dy,
+  //       MediaQuery.of(context).size.width - buttonOffset.dx,
+  //       MediaQuery.of(context).size.height - buttonOffset.dy,
+  //     ),
+  //     items: [
+  //       PopupMenuItem<int>(
+  //         value: 0,
+  //         child: Text('Item 1'),
+  //       ),
+  //       PopupMenuItem<int>(
+  //         value: 1,
+  //         child: Text('Item 2'),
+  //       ),
+  //       PopupMenuItem<int>(
+  //         value: 2,
+  //         child: Text('Item 3'),
+  //       ),
+  //     ],
+  //   ).then((int? result) {
+  //     if (result != null) {
+  //       // Handle menu item selection
+  //       print("Item $result clicked");
+  //     }
+  //   });
+  // }
+
+
 
   Widget categoryListView() {
     return BlocBuilder<VideoCategoriesBloc, VideoCategoryState>(

@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:pod_player/pod_player.dart';
@@ -14,6 +15,9 @@ import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_event.dart';
+import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
+import 'package:vimeo_clone/bloc/get_comments/get_comments_event.dart';
+import 'package:vimeo_clone/bloc/get_comments/get_comments_state.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart';
@@ -43,6 +47,7 @@ import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/Utils/Widgets/video_container.dart';
 import 'package:vimeo_clone/model/play_video_model.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
+import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
 
 
 
@@ -64,17 +69,34 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   late int _channelId;
   late bool _isLiked = false;
   late bool _isDisLiked = false;
-  late int _likeCount;
+  int _likeCount = 0;
   Duration? _lastReachedDuration;
   String? _lastReachedDurationString;
   StreamSubscription? _videoBlocSubscription;
   List<int> selectedPlaylistIds = [];
   late int selectedPlaylist;
 
+  late String channelLogo = '';
+  late String commentLength = '';
+  late String userComment = '';
+  var commentData;
+
   @override
   void initState() {
     super.initState();
     context.read<PlayVideoBloc>().add(GetVideoSlugEvent(slug: widget.slug));
+    context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
+
+    final commentBloc = context.read<GetCommentsBloc>();
+    commentBloc.stream.listen((state){
+      if(state is GetCommentsLoaded){
+        commentLength = state.getCommentsList.first.data!.length.toString();
+        userComment = state.getCommentsList.first.data!.first.comment!;
+        commentData = state.getCommentsList.first.data;
+      }
+    });
+
+
 
     final videoBloc = context.read<PlayVideoBloc>();
     videoBloc.stream.listen((state) {
@@ -142,6 +164,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                 if(state is PlayVideoLoaded) {
                   final data = state.playVideo[0].data!;
                   _channelId = data.channel!.id!;
+                  channelLogo = state.playVideo[0].data!.channel!.logo!;
                   // var _subscribeCount = data.channel!.subscriberCount;
                   // _likeCount = data.likes!;
                   // _isLiked = data.isLiked!;
@@ -207,6 +230,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                               CircleAvatar(
                                 radius: 18,
                                 backgroundImage: NetworkImage('${state.playVideo[0].data!.channel!.logo}'),
+                                // backgroundImage: NetworkImage('${state.playVideo[0].data!.channel!.logo}'),
                                 // child: Icon(Remix.user_3_line),
                               ),
                               SizedBox(width: ScreenSize.screenWidth(context) * 0.02),
@@ -214,9 +238,13 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    final String channelId = state.playVideo[0].data!.channel!.id.toString();
-                                    context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId));
-                                    GoRouter.of(context).pushNamed('channelProfilePage');
+                                    final String channelId = state.playVideo.first.data!.channel!.id.toString();
+                                    GoRouter.of(context).pushNamed(
+                                        'channelProfilePage',
+                                        pathParameters: {
+                                          'channelId': channelId
+                                        }
+                                    );
                                     _podController?.pause();
                                   },
                                   child: Row(
@@ -261,8 +289,16 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                   return GestureDetector(
                                     onTap: () {
                                       if (_isSubscribed) {
+                                        ToastManager().showToast(
+                                            context: context,
+                                            message: 'Unsubscribed successfully'
+                                        );
                                         context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
                                       } else {
+                                        ToastManager().showToast(
+                                            context: context,
+                                            message: 'Subscribed successfully'
+                                        );
                                         context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
                                       }
 
@@ -317,6 +353,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                               BlocBuilder<LikeDislikeVideoBloc, LikeDislikeVideoState>(
                                   builder: (BuildContext context, LikeDislikeVideoState state){
                                     if(state is LikeVideoSuccess){
+
                                       // _isLiked = state.likeVideo[0].data!.isLiked!;
                                       // _isDisLiked = state.likeVideo[0].data!.isDisliked!;
                                       // _likeCount = state.likeVideo[0].data!.likesCount!;
@@ -324,6 +361,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                       // print('>>>>>>>>>>>>>>>>>>      ${_isDisLiked}');
                                       // print('>>>>>>>>>>>>>>>>>>      ${_likeCount}');
                                     }else if(state is DislikeVideoSuccess){
+
                                       // _isLiked = state.dislikeVideo[0].data!.isLiked!;
                                       // _isDisLiked = state.dislikeVideo[0].data!.isDisliked!;
                                       // _likeCount = state.dislikeVideo[0].data!.likesCount!;
@@ -353,9 +391,17 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                     print('((((  $_isDisLiked   )))) ');
                                                     print('((((  $_isLiked  ))))');
                                                     if (_isLiked) {
+                                                      // ToastManager().showToast(
+                                                      //     context: context,
+                                                      //     message: 'Video unliked'
+                                                      // );
                                                       _isLiked = false;
                                                       _likeCount--;
                                                     } else {
+                                                      ToastManager().showToast(
+                                                          context: context,
+                                                          message: 'Video liked!'
+                                                      );
                                                       _isLiked = true;
                                                       _likeCount++;
                                                       if (_isDisLiked) {
@@ -401,6 +447,10 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                     if (_isDisLiked) {
                                                       _isDisLiked = false;
                                                     } else {
+                                                      ToastManager().showToast(
+                                                          context: context,
+                                                          message: 'Video disliked!'
+                                                      );
                                                       _isDisLiked = true;
                                                       if (_isLiked) {
                                                         _isLiked = false;
@@ -460,78 +510,236 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                         ),
                         SizedBox(
                           height: ScreenSize.screenHeight(context) * 0.02,),
-            
-                        Padding(
+
+
+                        // Padding(
+                        //   padding: EdgeInsets.only(
+                        //       left: ScreenSize.screenWidth(context) * 0.03,
+                        //       right: ScreenSize.screenWidth(context) * 0.03
+                        //   ),
+                        //   child: InkWell(
+                        //     onTap: () {
+                        //       videoCommentSheet(context);
+                        //     },
+                        //     child: Container(
+                        //       // height: ScreenSize.screenHeight(context) * 0.,
+                        //       width: ScreenSize.screenWidth(context) * 0.95,
+                        //       decoration: BoxDecoration(
+                        //           color: Theme.of(context).colorScheme.surfaceDim,
+                        //           borderRadius: BorderRadius.circular(10)
+                        //       ),
+                        //       padding: const EdgeInsets.all(10),
+                        //       child: Column(
+                        //         children: [
+                        //           Row(
+                        //             children: [
+                        //               const Text(
+                        //                   'Comments',
+                        //                   style: TextStyle(
+                        //                       fontWeight: FontWeight.bold
+                        //                   )
+                        //               ),
+                        //               SizedBox(
+                        //                 width: ScreenSize.screenWidth(context) *
+                        //                     0.02,),
+                        //               Text(
+                        //                 commentLength,
+                        //                 style: TextStyle(
+                        //                     color: Colors.grey.shade500
+                        //                 ),
+                        //               )
+                        //             ],
+                        //           ),
+                        //           SizedBox(
+                        //             height: ScreenSize.screenHeight(context) *
+                        //                 0.01,),
+                        //
+                        //           Row(
+                        //             mainAxisAlignment: MainAxisAlignment.start,
+                        //             crossAxisAlignment: CrossAxisAlignment
+                        //                 .start,
+                        //             children: [
+                        //               CircleAvatar(
+                        //                 radius: 10,
+                        //                 backgroundImage: AssetImage(
+                        //                     'assets/images/tmkocteam.jpg'),
+                        //               ),
+                        //               SizedBox(
+                        //                 width: ScreenSize.screenWidth(context) *
+                        //                     0.02,),
+                        //
+                        //               Expanded(
+                        //                 child: Text(
+                        //                   userComment,
+                        //                   style: const TextStyle(
+                        //                       fontFamily: fontFamily,
+                        //                       fontSize: 12,
+                        //                       overflow: TextOverflow.ellipsis
+                        //                   ),
+                        //                   maxLines: 4,
+                        //                 ),
+                        //               )
+                        //             ],
+                        //           )
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        commentData != null ? BlocBuilder<GetCommentsBloc, GetCommentsState>(
+                          builder: (BuildContext context, GetCommentsState state) {
+                            if(state is GetCommentsLoaded){
+                              final getComments = state.getCommentsList.first.data;
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    left: ScreenSize.screenWidth(context) * 0.03,
+                                    right: ScreenSize.screenWidth(context) * 0.03
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    videoCommentSheet(context);
+                                  },
+                                  child: Container(
+                                    // height: ScreenSize.screenHeight(context) * 0.,
+                                    width: ScreenSize.screenWidth(context) * 0.95,
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context).colorScheme.surfaceDim,
+                                        borderRadius: BorderRadius.circular(10)
+                                    ),
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                                'Comments',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold
+                                                )
+                                            ),
+                                            SizedBox(
+                                              width: ScreenSize.screenWidth(context) *
+                                                  0.02,),
+                                            Text(
+                                              getComments!.length.toString(),
+                                              style: TextStyle(
+                                                  color: Colors.grey.shade500
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: ScreenSize.screenHeight(context) *
+                                              0.01,),
+
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment
+                                              .start,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 10,
+                                              backgroundImage: AssetImage(
+                                                  'assets/images/tmkocteam.jpg'),
+                                            ),
+                                            SizedBox(
+                                              width: ScreenSize.screenWidth(context) *
+                                                  0.02,),
+
+                                            Expanded(
+                                              child: Text(
+                                                getComments.last.comment!,
+                                                style: const TextStyle(
+                                                    fontFamily: fontFamily,
+                                                    fontSize: 12,
+                                                    overflow: TextOverflow.ellipsis
+                                                ),
+                                                maxLines: 4,
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            return Container(child: Text('NOOOO Commmmenntsss'),);
+                          },
+                        ) : Padding(
                           padding: EdgeInsets.only(
                               left: ScreenSize.screenWidth(context) * 0.03,
                               right: ScreenSize.screenWidth(context) * 0.03
                           ),
-                          child: InkWell(
-                            onTap: () {
-                              videoCommentSheet(context);
-                            },
-                            child: Container(
-                              // height: ScreenSize.screenHeight(context) * 0.,
-                              width: ScreenSize.screenWidth(context) * 0.95,
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.surfaceDim,
-                                  borderRadius: BorderRadius.circular(10)
-                              ),
-                              padding: EdgeInsets.all(10),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                          'Comments',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold
-                                          )
-                                      ),
-                                      SizedBox(
-                                        width: ScreenSize.screenWidth(context) *
-                                            0.02,),
-                                      Text(
-                                        state.playVideo[0].data!.comments.toString(),
+                          child: Container(
+                            // height: ScreenSize.screenHeight(context) * 0.,
+                            width: ScreenSize.screenWidth(context) * 0.95,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.surfaceDim,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                        'Comments',
                                         style: TextStyle(
-                                            color: Colors.grey.shade500
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: ScreenSize.screenHeight(context) *
-                                        0.01,),
-            
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
+                                            fontWeight: FontWeight.bold
+                                        )
+                                    ),
+                                    SizedBox(
+                                      width: ScreenSize.screenWidth(context) *
+                                          0.02,),
+                                    Text(
+                                      '0',
+                                      style: TextStyle(
+                                          color: Colors.grey.shade500
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: ScreenSize.screenHeight(context) *
+                                      0.01,),
+
+                                Container(
+
+                                  height: ScreenSize.screenHeight(context) * 0.05,
+                                  child: Row(
                                     children: [
                                       CircleAvatar(
-                                        radius: 10,
-                                        backgroundImage: AssetImage(
-                                            'assets/images/tmkocteam.jpg'),
+                                        radius: 15,
+                                        backgroundImage: NetworkImage(channelLogo),
                                       ),
-                                      SizedBox(
-                                        width: ScreenSize.screenWidth(context) *
-                                            0.02,),
-            
-                                      Expanded(
-                                        child: Text(
-                                          '2035 mein kaun kaun Tarak Mehta dekhna pasand karega :)',
-                                          style: TextStyle(
-                                              fontFamily: fontFamily,
-                                              fontSize: 12,
-                                              overflow: TextOverflow.ellipsis
+                                      SizedBox(width: ScreenSize.screenWidth(context) * 0.02,),
+
+                                      InkWell(
+                                        onTap: (){},
+                                        child: Container(
+                                          height: ScreenSize.screenHeight(context) * 0.5,
+                                          width: ScreenSize.screenWidth(context) * 0.8,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey.shade300,
+                                              borderRadius: BorderRadius.circular(10)
                                           ),
-                                          maxLines: 4,
+                                          padding: EdgeInsets.only(
+                                              left: ScreenSize.screenWidth(context) * 0.02
+                                          ),
+                                          child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text('Add Comment...')
+                                          ),
                                         ),
-                                      )
+                                      ),
+
+
                                     ],
-                                  )
-                                ],
-                              ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -597,7 +805,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                         views: '${recommendedVideos.views}',
                                         uploadTime: '${recommendedVideos.createdAtHuman}',
                                         onMorePressed: () {
-                                          // Add your onMorePressed logic here
+                                          showPopupMenu();
                                         },
                                     ) : null;
                               }
@@ -626,9 +834,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ShimmerWidget.rectangular(height: 20.h, isBorder: true),
-                            SizedBox(height: 2.h,),
-                            ShimmerWidget.rectangular(height: 20.h, isBorder: true),
+                            ShimmerWidget.rectangular(height: 40.h, isBorder: true),
                             SizedBox(height: 2.h,),
 
                             ShimmerWidget.rectangular(height: 10.h, width: 150.w,isBorder: true),
@@ -978,6 +1184,34 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
 
 
+  MenuAnchor showPopupMenu(){
+    return MenuAnchor(
+        builder:
+            (BuildContext context, MenuController controller, Widget? child) {
+          return IconButton(
+            onPressed: () {
+              if (controller.isOpen) {
+                controller.close();
+              } else {
+                controller.open();
+              }
+            },
+            icon: const Icon(Icons.more_horiz),
+            tooltip: 'Show menu',
+          );
+        },
+        menuChildren: List<MenuItemButton>.generate(
+            3,
+                (int index) => MenuItemButton(
+            onPressed: (){},
+                  child: Text('Item ${index + 1}'),
+    )
+    ));
+  }
+
+
+
+
 
 
   void showPlaylistBottomSheet(List<PlayVideoModel> videoData){
@@ -1140,7 +1374,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                         )
                       )
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                           'Done',
                         style: TextStyle(
@@ -1161,88 +1395,119 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
   final TextEditingController playlistTitleController = TextEditingController();
   final TextEditingController playlistDescriptionController = TextEditingController();
-  final TextEditingController playlistStatusController = TextEditingController();
+  late String playlistStatus = 'public';
+  late bool isPublic = true;
 
   void createPlaylistAlertDialog(){
     showDialog(
         context: context,
         builder: (BuildContext context){
-          return AlertDialog(
-              title: Center(
-                  child: Text(
-                      'Create a playlist',
-                    style: TextStyle(
-                      fontFamily: fontFamily,
-                      fontSize: 17.sp
-                    ),
-                  )
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 8.h,),
-                  CustomTextFieldUpload(
-                    maxLines: 1,
-                    controller: playlistTitleController,
-                    fieldLabel: 'title',
+          return StatefulBuilder(
+              builder: (BuildContext context, void Function(void Function()) setState){
+                return AlertDialog(
+                  title: Center(
+                      child: Text(
+                        'Create a playlist',
+                        style: TextStyle(
+                            fontFamily: fontFamily,
+                            fontSize: 17.sp
+                        ),
+                      )
                   ),
-                  SizedBox(height: 10.h,),
-
-                  CustomTextFieldUpload(
-                    maxLines: 3,
-                    minLines: 1,
-                    controller: playlistDescriptionController,
-                    fieldLabel: 'description',
-                  ),
-                  SizedBox(height: 10.h,),
-
-                  CustomTextFieldUpload(
-                    maxLines: 1,
-                    controller: playlistStatusController,
-                    fieldLabel: 'status',
-                  ),
-                  SizedBox(height: 10.h,),
-
-                  InkWell(
-                    borderRadius: BorderRadius.circular(10),
-                    onTap: (){
-                      final playlistTitle = playlistTitleController.text;
-                      final playlistDescription = playlistDescriptionController.text;
-                      final playlistStatus = playlistStatusController.text;
-
-                      context.read<CreatePlaylistBloc>().add(CreatePlaylistRequest(
-                          playlistTitle: playlistTitle,
-                          playlistDescription: playlistDescription,
-                          playlistStatus: playlistStatus
-                      ));
-
-                      context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      height: 40.h,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        color: primaryColor
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: 8.h,),
+                      CustomTextFieldUpload(
+                        maxLines: 1,
+                        controller: playlistTitleController,
+                        fieldLabel: 'title',
                       ),
-                      child: Center(
-                        child: Text(
-                          'Create',
-                          style: TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: 15,
-                            color: Colors.white
+                      SizedBox(height: 10.h,),
+
+                      CustomTextFieldUpload(
+                        maxLines: 3,
+                        minLines: 1,
+                        controller: playlistDescriptionController,
+                        fieldLabel: 'description',
+                      ),
+                      SizedBox(height: 10.h,),
+
+                      Material(
+                        child: Container(
+                          height: 70,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Theme.of(context).colorScheme.tertiaryFixedDim,
                           ),
+                          // padding: EdgeInsets.all(0),
+                          child: CustomToggleButton(
+                              borderRadius: 15.0,
+                              onTap: () {
+                                setState(() {
+                                  isPublic = !isPublic;
+                                  if(isPublic){
+                                    playlistStatus = 'public';
+                                  }else{
+                                    playlistStatus = 'private';
+                                  }
+                                  print('STATUSSSSSSSSS   :::::::    $playlistStatus');
+                                });
+                              },
+                              toggleName: 'Privacy',
+                              toggleValue: isPublic,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  isPublic = value;
+                                  print('STATUSSSSSSSSS   :::::::    $isPublic');
+                                });
+                              },
+                              toggleState: isPublic ? 'Public' : 'Private'),
                         ),
                       ),
-                    ),
-                  )
+                      SizedBox(height: 10.h,),
 
-                ],
-              ),
+                      InkWell(
+                        borderRadius: BorderRadius.circular(10),
+                        onTap: (){
+                          final playlistTitle = playlistTitleController.text;
+                          final playlistDescription = playlistDescriptionController.text;
 
-          );
+                          context.read<CreatePlaylistBloc>().add(CreatePlaylistRequest(
+                              playlistTitle: playlistTitle,
+                              playlistDescription: playlistDescription,
+                              playlistStatus: playlistStatus
+                          ));
+
+                          context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 40.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: primaryColor
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Create',
+                              style: TextStyle(
+                                  fontFamily: fontFamily,
+                                  fontSize: 15,
+                                  color: Colors.white
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+
+                    ],
+                  ),
+
+                );
+          });
         }
     );
 
@@ -1301,92 +1566,100 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
               // SizedBox(height: 10), // Add some spacing if needed
               // Scrollable user comments
 
-              Container(
-                height: ScreenSize.screenHeight(context) * 0.5,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                        ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                        // scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: 10,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              // color: Colors.yellow,
-                              width: double.infinity,
-                              padding: EdgeInsets.symmetric(vertical: ScreenSize.screenHeight(context) * 0.015),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: ScreenSize.screenWidth(context) * 0.03,
-                                    ),
-                                    child: CircleAvatar(
-                                      radius: 14,
-                                      backgroundImage: AssetImage('assets/images/tmkocteam.jpg'),
-                                    ),
-                                  ),
-                                  SizedBox(width: ScreenSize.screenWidth(context) * 0.015),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: double.infinity,
-                                          child: Text(
-                                            '@Babitaji01 - 2 days ago',
-                                            style: TextStyle(
-                                              fontFamily: 'YourFontFamily',
-                                              fontSize: 12,
-                                              color: Colors.grey.shade700,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            maxLines: 1,
-                                          ),
+              BlocBuilder<GetCommentsBloc, GetCommentsState>(
+                builder: (BuildContext context, GetCommentsState state) {
+                  if(state is GetCommentsLoaded){
+                    return Container(
+                      height: ScreenSize.screenHeight(context) * 0.5,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              // scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: state.getCommentsList.first.data!.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final getComments = state.getCommentsList.first.data![index];
+                                return Container(
+                                  // color: Colors.yellow,
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(vertical: ScreenSize.screenHeight(context) * 0.015),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: ScreenSize.screenWidth(context) * 0.03,
                                         ),
-                                        SizedBox(height: ScreenSize.screenHeight(context) * 0.005),
-                                        Text(
-                                          '2035 mein kaun kaun Tarak Mehta dekhna pasand karega :)',
-                                          style: TextStyle(
-                                            fontFamily: 'YourFontFamily',
-                                            fontSize: 14,
-                                            overflow: TextOverflow.visible,
-                                          ),
+                                        child: const CircleAvatar(
+                                          radius: 14,
+                                          backgroundImage: AssetImage('assets/images/tmkocteam.jpg'),
                                         ),
-
-                                        SizedBox(height: ScreenSize.screenHeight(context) * 0.025),
-                                        Row(
+                                      ),
+                                      SizedBox(width: ScreenSize.screenWidth(context) * 0.015),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            InkWell(
-                                              onTap: (){},
-                                                child: Icon(HeroiconsOutline.handThumbUp, size: 20)
+                                            Container(
+                                              width: double.infinity,
+                                              child: Text(
+                                                '${getComments.user!.name} - ${getComments.createdAt}',
+                                                style: TextStyle(
+                                                  fontFamily: fontFamily,
+                                                  fontSize: 12,
+                                                  color: Colors.grey.shade700,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                                maxLines: 1,
+                                              ),
                                             ),
-                                            SizedBox(width: ScreenSize.screenWidth(context) * 0.01),
-                                            Text('502'),
-                                            SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
-                                            Icon(HeroiconsOutline.handThumbDown, size: 20),
-                                            SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
-                                            Icon(HeroiconsOutline.chatBubbleBottomCenterText, size: 20),
+                                            SizedBox(height: ScreenSize.screenHeight(context) * 0.005),
+                                            Text(
+                                              getComments.comment!,
+                                              style: TextStyle(
+                                                fontFamily: fontFamily,
+                                                fontSize: 14,
+                                                overflow: TextOverflow.visible,
+                                              ),
+                                            ),
+
+                                            SizedBox(height: ScreenSize.screenHeight(context) * 0.025),
+                                            Row(
+                                              children: [
+                                                InkWell(
+                                                    onTap: (){},
+                                                    child: Icon(HeroiconsOutline.handThumbUp, size: 20)
+                                                ),
+                                                SizedBox(width: ScreenSize.screenWidth(context) * 0.01),
+                                                Text('${getComments.id}'),
+                                                SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
+                                                Icon(HeroiconsOutline.handThumbDown, size: 20),
+                                                SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
+                                                Icon(HeroiconsOutline.chatBubbleBottomCenterText, size: 20),
+                                              ],
+                                            ),
                                           ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(HeroiconsOutline.ellipsisVertical, size: 18),
+                                      ),
+                                    ],
                                   ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(HeroiconsOutline.ellipsisVertical, size: 18),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                  ),
-                ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
               ),
 
               Divider(thickness: 0.5, color: Colors.grey.shade300,),

@@ -4,13 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 import 'package:vimeo_clone/Config/constants.dart';
-import 'package:vimeo_clone/Utils/Widgets/video_container.dart';
 import 'package:vimeo_clone/bloc/search_data/search_data_bloc.dart';
 import 'package:vimeo_clone/bloc/search_data/search_data_event.dart';
-import 'package:vimeo_clone/bloc/search_data/search_data_state.dart';
+import 'package:vimeo_clone/bloc/search_suggestion/search_suggestion_bloc.dart';
+import 'package:vimeo_clone/bloc/search_suggestion/search_suggestion_state.dart';
+import 'package:vimeo_clone/routes/myapproute.dart';
+
+import '../../bloc/search_suggestion/search_suggestion_event.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -23,18 +24,16 @@ class _SearchScreenState extends State<SearchScreen> {
   // SpeechToText _speechToText = SpeechToText();
   // String _lastWord = '';
   // bool _speechEnabled = false;
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  bool isSearch = false;
 
   @override
   void initState() {
     super.initState();
-
-    // Add a listener to the focus node to detect when the field loses focus
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
-        // The field lost focus, so the keyboard was dismissed
-        callYourApiFunction();  // Replace with your API call
+        apiCall();
       }
     });
   }
@@ -43,15 +42,32 @@ class _SearchScreenState extends State<SearchScreen> {
   void dispose() {
     _searchController.dispose();
     _focusNode.dispose();
+    isSearch = false;
     super.dispose();
   }
 
-  void callYourApiFunction() {
+  void apiCall() {
     final searchQuery = _searchController.text;
     context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
+    GoRouter.of(context).pushNamed(
+        'searchDataPage',
+        pathParameters: {
+          'searchQuery' : searchQuery
+        }
+    );
     print("API called after dismissing keyboard.");
   }
 
+
+  // void apiCall() {
+  //   final searchQuery = _searchController.text.trim();
+  //   if (searchQuery.isNotEmpty) {
+  //     context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
+  //     print("API called with query: $searchQuery");
+  //   } else {
+  //     print("Search query is empty. No API call made.");
+  //   }
+  // }
   // void _initSpeech() async {
   //   _speechEnabled = await _speechToText.initialize();
   //   setState(() {});
@@ -83,214 +99,202 @@ class _SearchScreenState extends State<SearchScreen> {
     //     ),
     return Scaffold(
       body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 5.h,
-                    left: 10.w,
-                    right: 10.w
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          GoRouter.of(context).pop();
-                        },
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          // color: Colors.yellow,
-                          child: Center(
-                            child: Icon(Remix.arrow_left_line),
-                          ),
-                        ),
-                      ),
-            
-                      GestureDetector(
-                        onTap: (){
-                          FocusScope.of(context).unfocus();
-                          // Future.delayed(Duration(milliseconds: 100), () {
-                          //   final searchQuery = _searchController.text;
-                          //   context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
-                          // });
-            
-                        },
-                        child: Container(
-                          height: 40.h,
-                          width: 270.w,
-                          child: TextFormField(
-                            controller: _searchController,
-                            focusNode: _focusNode,
-                            // maxLines: 2,
-                            autofocus: true,
-                            style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Theme.of(context).colorScheme.secondary,
-                              hintText: 'Search...',
-                              hintStyle: TextStyle(
-                                  color: Theme.of(context).colorScheme.tertiary, fontSize: 14),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide.none,
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: ScreenSize.screenWidth(context) * 0.03,
-                                  vertical: ScreenSize.screenWidth(context) * 0.03),
-                            ),
-                          ),
-                        ),
-                      ),
-            
-            
-                          SizedBox(
-                            height: 30,
-                            width: 30,
-                            // color: Colors.red,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(100),
-                              onTap: (){
-            
-                                final searchQuery = _searchController.text;
-                                context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
-                              },
-                              child: Center(
-                                child: Icon(HeroiconsOutline.magnifyingGlass),
-                              ),
-                            ),
-                          )
-                    ],
-                  ),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 5.h,
+                  left: 5.w,
+                  right: 5.w
                 ),
-            
-                SingleChildScrollView(
+                child: Row(
+
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      borderRadius: BorderRadius.circular(100),
+                      onTap: (){
+                        router.pop();
+                      },
+                      child: Container(
+                        height: 30.h,
+                        width: 35.w,
+
+                        // color: Colors.yellow,
+                        child: const Center(
+                          child: Icon(Remix.arrow_left_line),
+                        ),
+                      ),
+                    ),
+
+                    GestureDetector(
+                      onTap: (){
+                        FocusScope.of(context).unfocus();
+                        // Future.delayed(Duration(milliseconds: 100), () {
+                        //   final searchQuery = _searchController.text;
+                        //   context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
+                        // });
+                      },
+                      child: Container(
+                        height: 40.h,
+                        width: 270.w,
+
+                        child: TextFormField(
+                          controller: _searchController,
+                          focusNode: _focusNode,
+                          // maxLines: 2,
+                          autofocus: true,
+                          style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
+                          onChanged: (value){
+                            isSearch = true;
+                            context.read<SearchSuggestionBloc>().add(SearchSuggestionRequest(searchQuery: value));
+                          },
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Theme.of(context).colorScheme.secondary,
+                            hintText: 'Search...',
+                            hintStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary, fontSize: 14),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: ScreenSize.screenWidth(context) * 0.03,
+                                vertical: ScreenSize.screenWidth(context) * 0.03),
+                          ),
+                        ),
+                      ),
+                    ),
+
+
+                        SizedBox(
+                          height: 30.h,
+                          width: 35.w,
+                          // color: Colors.red,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(100),
+                            onTap: (){
+
+                              // final searchQuery = _searchController.text;
+                              // context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
+                              // GoRouter.of(context).pushNamed(
+                              //     'searchDataPage',
+                              //     pathParameters: {
+                              //       'searchQuery' : searchQuery
+                              //     }
+                              // );
+                            },
+                            child: const Center(
+                              child: Icon(HeroiconsOutline.magnifyingGlass),
+                            ),
+                          ),
+                        )
+                  ],
+                ),
+              ),
+             // SizedBox(height: 2.h,),
+
+             Expanded(
+               child: SingleChildScrollView(
                   child: Column(
                     children: [
                       SizedBox(height: 10.h,),
-                      BlocBuilder<SearchDataBloc, SearchDataState>(
-                        builder: (BuildContext context, SearchDataState state) {
-                          if(state is SearchDataLoaded){
-                            return ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: state.searchData.first.data!.videos!.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final searchData = state.searchData.first.data!.videos![index];
-                                final totalSeconds = searchData.duration;
-                                final foramttedDuration = formatDuration(totalSeconds!);
-                                return VideoListItem(
-                                    thumbnailUrl: searchData.thumbnail!,
-                                    duration: foramttedDuration,
-                                    title: searchData.title!,
-                                    author: searchData.channel!.name!,
-                                    views: searchData.views.toString(),
-                                    uploadTime: searchData.createdAtHuman!
-                                );
-                              },
-                            );
-                          } else if(state is SearchDataLoading){
-                            return Center(child: CircularProgressIndicator(),);
+                     BlocBuilder<SearchSuggestionBloc, SearchSuggestionState>(
+                        builder: (BuildContext context, SearchSuggestionState state) {
+                          if(state is SearchSuggestionLoaded){
+                            final videoSuggestion = state.searchSuggestionData.first.data!.videoSuggestions!.length;
+                            final channelSuggestion = state.searchSuggestionData.first.data!.channelSuggestions!.length;
+                            final video = state.searchSuggestionData.first.data!.videoSuggestions;
+                            final channel = state.searchSuggestionData.first.data!.channelSuggestions;
+                            return isSearch ? Column(
+                              children: [
+                                video!.isNotEmpty ? ListView.builder(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  itemCount: videoSuggestion,
+                                    itemBuilder: (BuildContext context, index){
+                                      final videoSearchSuggestion = state.searchSuggestionData.first.data!.videoSuggestions![index];
+                                      return InkWell(
+                                        onTap: () {
+
+                                          context.read<SearchDataBloc>().add(
+                                              SearchDataRequest(
+                                                  searchQuery: videoSearchSuggestion));
+                                          GoRouter.of(context).pushNamed(
+                                            'searchDataPage',
+                                            pathParameters: {
+                                              'searchQuery' : videoSearchSuggestion
+                                            }
+                                          );
+                                        },
+
+                                        child: ListTile(
+                                          leading: const Icon(HeroiconsOutline.magnifyingGlass, size: 22,),
+                                          title: Text(
+                                            videoSearchSuggestion,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontFamily: fontFamily
+                                            ),
+                                          ),
+                                          trailing: const Icon(HeroiconsOutline.arrowUpRight, size: 20,),
+                                        ),
+                                      );
+                                    }
+                                ) : Container(),
+
+                                channel!.isNotEmpty ? ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.zero,
+                                    itemCount: channelSuggestion,
+                                    itemBuilder: (BuildContext context, index){
+
+                                      final channelSearchSuggestion = state.searchSuggestionData.first.data!.channelSuggestions![index];
+                                      return InkWell(
+                                        onTap: (){
+                                          context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: channelSearchSuggestion));
+                                          GoRouter.of(context).pushNamed(
+                                              'searchDataPage',
+                                              pathParameters: {
+                                                'searchQuery' : channelSearchSuggestion
+                                              }
+                                          );
+                                        },
+                                        child: ListTile(
+                                          leading: const Icon(HeroiconsOutline.magnifyingGlass, size: 22,),
+                                          title: Text(
+                                            channelSearchSuggestion,
+                                            style: const TextStyle(
+                                                fontFamily: fontFamily
+                                            ),
+                                          ),
+                                          trailing: const Icon(HeroiconsOutline.arrowUpRight, size: 20,),
+                                        ),
+                                      );
+                                    }
+                                ) : Container(),
+
+                              ],
+                            ) : Container();
+
+                          } else if(state is SearchSuggestionLoading){
+                            return const Center(child: CircularProgressIndicator(),);
                           }
                           return Container();
                         },
                       )
                     ],
                   ),
-                )
-            
-              ],
-            ),
+                ),
+             )
+
+            ],
           )
       ),
-
-      // body: Padding(
-      //   padding: EdgeInsets.only(
-      //     top: 40
-      //   ),
-      //   child: ListTile(
-      //     leading: InkWell(
-      //       onTap: (){
-      //         GoRouter.of(context).pop();
-      //       },
-      //       child: Container(
-      //         height: 30,
-      //         width: 30,
-      //         // color: Colors.yellow,
-      //         child: Center(
-      //           child: Icon(Remix.arrow_left_line),
-      //         ),
-      //       ),
-      //     ),
-      //
-      //     title: TextFormField(
-      //       controller: _searchText,
-      //       // maxLines: 2,
-      //       autofocus: true,
-      //       style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
-      //       decoration: InputDecoration(
-      //         filled: true,
-      //         fillColor: Theme.of(context).colorScheme.secondary,
-      //         hintText: 'Search...',
-      //         hintStyle: TextStyle(
-      //             color: Theme.of(context).colorScheme.tertiary, fontSize: 14),
-      //         border: OutlineInputBorder(
-      //           borderRadius: BorderRadius.circular(25),
-      //           borderSide: BorderSide.none,
-      //         ),
-      //         contentPadding: EdgeInsets.symmetric(
-      //             horizontal: ScreenSize.screenWidth(context) * 0.03,
-      //             vertical: ScreenSize.screenWidth(context) * 0.03),
-      //       ),
-      //     ),
-      //
-      //     trailing: Container(
-      //       height: 30,
-      //       width: 30,
-      //       // color: Colors.red,
-      //       child: Center(
-      //         child: Icon(Icons.mic,),
-      //       ),
-      //     ),
-      //   ),
-      // ),
-
     );
   }
 }
-
-/*        TextFormField(
-                controller: _searchText,
-                // maxLines: 2,
-                autofocus: true,
-                style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.secondary,
-                  hintText: 'Search...',
-                  hintStyle: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 14),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: ScreenSize.screenWidth(context) * 0.03,
-                      vertical: ScreenSize.screenWidth(context)*0.03
-                  ),
-                ),
-              ),
-            ),
-
-
-            IconButton(
-                  onPressed: _speechToText.isNotListening ? _startListening : _stopListening,
-                  icon: Icon(
-                    // _speechToText.isNotListening ? Icons.mic_off :
-                    Icons.mic, size: 20,)
-              )
-
-
-
- */

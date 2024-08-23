@@ -71,10 +71,10 @@ class _UserPageState extends State<UserPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            UserHeaderWidget(),
+            const UserHeaderWidget(),
             // SizedBox(height: ScreenSize.screenHeight(context) * 0.00,),
 
-            UserHistoryWidget(),
+            const UserHistoryWidget(),
 
             // SizedBox(height: 10.h,),
             UserPlaylistWidget(),

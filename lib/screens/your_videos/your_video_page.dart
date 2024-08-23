@@ -15,7 +15,7 @@ class YourVideoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Your Videos'),
+          title: const Text('Your Videos'),
         ),
       body: BlocBuilder<YourVideosBloc, YourVideosState>(
         builder: (BuildContext context, YourVideosState state) {
@@ -42,7 +42,7 @@ class YourVideoPage extends StatelessWidget {
               child: Column(
                 children: [
                   ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: state.videoData.first.channel!.videos!.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -51,12 +51,18 @@ class YourVideoPage extends StatelessWidget {
                       int? totalSeconds = state.videoData.first.channel!.videos?[index].duration!;
                       String formattedTime = formatDuration(totalSeconds!);
 
-                      return CustomVideoPreview(
-                          imageUrl: '${videoData?.thumbnails}',
-                          videoTitle: '${videoData?.title}',
-                          videoViews: '${videoData?.views}',
-                          uploadTime: '${videoData?.createdAtHuman}',
-                          videoDuration: formattedTime
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          top: 5.h,
+                          bottom: 5.h
+                        ),
+                        child: CustomVideoPreview(
+                            imageUrl: '${videoData?.thumbnails}',
+                            videoTitle: '${videoData?.title}',
+                            videoViews: '${videoData?.views}',
+                            uploadTime: '${videoData?.createdAtHuman}',
+                            videoDuration: formattedTime
+                        ),
                       );
                     },
                   )

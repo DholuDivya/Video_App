@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 const String appName = "Cineplex";
@@ -60,3 +63,43 @@ String formatLastDuration(Duration duration) {
   }
 }
 
+
+class ToastManager {
+  static final ToastManager _instance = ToastManager._internal();
+  factory ToastManager() => _instance;
+  ToastManager._internal();
+
+  Timer? _toastTimer;
+  bool _isToastShowing = false;
+
+  void showToast({
+    required BuildContext context,
+    required String message,
+    Color? backgroundColor,
+    Color? textColor,
+    double fontSize = 16.0,
+    Toast? toastLength,
+    ToastGravity? gravity,
+  }) {
+    if (_isToastShowing) {
+      return;
+    }
+
+    _isToastShowing = true;
+
+    Fluttertoast.showToast(
+      backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.tertiary,
+      msg: message,
+      toastLength: toastLength ?? Toast.LENGTH_SHORT,
+      gravity: gravity ?? ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      textColor: textColor ?? Theme.of(context).colorScheme.surface,
+      fontSize: fontSize,
+    );
+
+    _toastTimer?.cancel();
+    _toastTimer = Timer(Duration(seconds: 1), () {
+      _isToastShowing = false;
+    });
+  }
+}

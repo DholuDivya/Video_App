@@ -7,6 +7,8 @@ import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart';
+import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_event.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/custom_playlist_widget_userpage.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
@@ -121,7 +123,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                     // Fetch the user playlist data for the current index
                     final userPlaylist =
                         state.userPlaylist.first.playlists![index];
-
+                    final playlistId = userPlaylist.id;
                     return Padding(
                       padding: EdgeInsets.only(
                         right: ScreenSize.screenWidth(context) * 0.04,
@@ -129,7 +131,17 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(10),
                         onTap: () {
-                          GoRouter.of(context).pushNamed('singlePlaylistPage');
+                          context.read<ShowSinglePlaylistBloc>().add(ShowSinglePlaylistRequest(playlistId: playlistId!));
+
+                          Future.delayed(const Duration(milliseconds: 500),(){
+                            GoRouter.of(context).pushNamed('singlePlaylistPage',
+                                pathParameters: {
+                                  'playlistId' : '$playlistId'
+                                }
+                            );
+                          });
+
+
                         },
                         child: CustomPlaylistWidgetUserPage(
                           numberOfVideos: userPlaylist.videos!.length,
@@ -184,119 +196,132 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
 
   final TextEditingController playlistDescriptionController = TextEditingController();
 
-  final TextEditingController playlistStatusController = TextEditingController();
+  late String playlistStatus = 'public';
+  // final TextEditingController playlistStatusController = TextEditingController();
   late bool isPublic = true;
 
   void createPlaylistAlertDialog(){
     showDialog(
         context: context,
         builder: (BuildContext context){
-          return AlertDialog(
-            title: Center(
-                child: Text(
-                  'Create a playlist',
-                  style: TextStyle(
-                      fontFamily: fontFamily,
-                      fontSize: 17.sp
-                  ),
-                )
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 8.h,),
-                CustomTextFieldUpload(
-                  maxLines: 1,
-                  controller: playlistTitleController,
-                  fieldLabel: 'title',
+          return StatefulBuilder(
+            builder: (BuildContext context, void Function(void Function()) setState) {
+              return AlertDialog(
+                title: Center(
+                    child: Text(
+                      'Create a playlist',
+                      style: TextStyle(
+                          fontFamily: fontFamily,
+                          fontSize: 17.sp
+                      ),
+                    )
                 ),
-                SizedBox(height: 10.h,),
-
-                CustomTextFieldUpload(
-                  maxLines: 3,
-                  minLines: 1,
-                  controller: playlistDescriptionController,
-                  fieldLabel: 'description',
-                ),
-                SizedBox(height: 10.h,),
-
-                // CustomTextFieldUpload(
-                //   maxLines: 1,
-                //   controller: playlistStatusController,
-                //   fieldLabel: 'status',
-                // ),
-                // SizedBox(height: 10.h,),
-
-                Material(
-                  // borderRadius: BorderRadius.circular(15),
-                  // elevation: 2,
-                  child: Container(
-                    height: 70,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Theme.of(context).colorScheme.tertiaryFixedDim,
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 8.h,),
+                    CustomTextFieldUpload(
+                      maxLines: 1,
+                      controller: playlistTitleController,
+                      fieldLabel: 'title',
                     ),
-                    // padding: EdgeInsets.all(0),
-                    child: CustomToggleButton(
-                        borderRadius: 15.0,
-                        onTap: () {
-                          setState(() {
-                            isPublic = !isPublic;
-                          });
-                        },
-                        toggleName: 'Status',
-                        toggleValue: isPublic,
-                        onChanged: (bool value) {
-                          setState(() {
-                            isPublic = value;
-                          });
-                        },
-                        toggleState: isPublic ? 'Public' : 'Private'),
-                  ),
-                ),
+                    SizedBox(height: 10.h,),
 
-                SizedBox(height: 10.h,),
-
-                InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  onTap: (){
-                    final playlistTitle = playlistTitleController.text;
-                    final playlistDescription = playlistDescriptionController.text;
-                    final playlistStatus = playlistStatusController.text;
-
-                    context.read<CreatePlaylistBloc>().add(CreatePlaylistRequest(
-                        playlistTitle: playlistTitle,
-                        playlistDescription: playlistDescription,
-                        playlistStatus: playlistStatus
-                    ));
-
-                    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    height: 40.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: primaryColor
+                    CustomTextFieldUpload(
+                      maxLines: 3,
+                      minLines: 1,
+                      controller: playlistDescriptionController,
+                      fieldLabel: 'description',
                     ),
-                    child: const Center(
-                      child: Text(
-                        'Create',
-                        style: TextStyle(
-                            fontFamily: fontFamily,
-                            fontSize: 15,
-                            color: Colors.white
+                    SizedBox(height: 10.h,),
+
+                    // CustomTextFieldUpload(
+                    //   maxLines: 1,
+                    //   controller: playlistStatusController,
+                    //   fieldLabel: 'status',
+                    // ),
+                    // SizedBox(height: 10.h,),
+
+                    Material(
+                      child: Container(
+                        height: 70,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Theme.of(context).colorScheme.tertiaryFixedDim,
                         ),
+                        // padding: EdgeInsets.all(0),
+                        child: CustomToggleButton(
+                            borderRadius: 15.0,
+                            onTap: () {
+                              setState(() {
+                                isPublic = !isPublic;
+                                if(isPublic){
+                                  playlistStatus = 'public';
+                                }else{
+                                  playlistStatus = 'private';
+                                }
+                                print('STATUSSSSSSSSS   :::::::    $playlistStatus');
+                              });
+                            },
+                            toggleName: 'Privacy',
+                            toggleValue: isPublic,
+                            onChanged: (bool value) {
+                              setState(() {
+                                isPublic = value;
+                                print('STATUSSSSSSSSS   :::::::    $isPublic');
+                              });
+                            },
+                            toggleState: isPublic ? 'Public' : 'Private'),
                       ),
                     ),
-                  ),
-                )
 
-              ],
-            ),
+                    SizedBox(height: 10.h,),
 
+                    InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: (){
+                        final playlistTitle = playlistTitleController.text;
+                        final playlistDescription = playlistDescriptionController.text;
+
+                        print('-----------    $playlistTitle');
+                        print('-----------    $playlistDescription');
+                        print('-----------    $playlistStatus');
+
+                        context.read<CreatePlaylistBloc>().add(CreatePlaylistRequest(
+                            playlistTitle: playlistTitle,
+                            playlistDescription: playlistDescription,
+                            playlistStatus: playlistStatus
+                        ));
+
+                        context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 40.h,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: primaryColor
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Create',
+                            style: TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: 15,
+                                color: Colors.white
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+
+                  ],
+                ),
+
+              );
+            },
           );
         }
     );

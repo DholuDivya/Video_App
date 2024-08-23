@@ -289,6 +289,7 @@ class _ShortsPageState extends State<ShortsPage> {
                 if(state is GetShortsListLoaded){
                   final shortsData = state.shortsData.first.data;
                   return Swiper(
+                    loop: false,
                     scrollDirection: Axis.vertical,
                     itemCount: shortsData!.data!.length,
                     itemBuilder: (BuildContext context, int index) {

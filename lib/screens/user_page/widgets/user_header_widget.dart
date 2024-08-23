@@ -38,7 +38,7 @@ class UserHeaderWidget extends StatelessWidget {
             children: [
               Text(
                 '${Global.userData!.userName}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: fontFamily,
                   fontSize: 22
                 )
@@ -48,7 +48,12 @@ class UserHeaderWidget extends StatelessWidget {
                   onTap: (){
                     final String? channelId = Global.userData!.userChannelId;
                     context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId!));
-                    GoRouter.of(context).pushNamed('channelProfilePage');
+                    GoRouter.of(context).pushNamed(
+                      'channelProfilePage',
+                      pathParameters: {
+                        'channelId': channelId
+                      }
+                    );
                   },
                   child: Row(
                     children: [

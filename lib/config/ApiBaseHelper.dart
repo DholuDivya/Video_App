@@ -126,6 +126,9 @@ class ApiBaseHelper {
     // var timeOut = 10;
     final dio_.Dio dio = dio_.Dio();
     try {
+      print('#@###########   ${params}');
+      // print('%%%%%%%%%%%%%%      ${headers}');
+      print('faihfiahihihif    ${url}');
       final response =
       await dio.post(
         url,

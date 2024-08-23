@@ -13,7 +13,6 @@ class AllVideoListBloc extends Bloc<AllVideoListEvent, AllVideoListState>{
 
   Future<void> _onGetAllVideoListEvent(GetAllVideoListEvent event, Emitter<AllVideoListState> emit) async {
     emit(AllVideoListLoading());
-
     try{
       final List<VideoData>? videoList = await AllVideoListRepo().getAllVideoList();
       print('++++++++  ${videoList}');

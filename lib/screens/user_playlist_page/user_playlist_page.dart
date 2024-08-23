@@ -15,7 +15,7 @@ class UserPlaylistPage extends StatelessWidget {
     print('channellllllllll :::::::::   ${Global.userData!.userChannelId}');
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
             'Playlists',
           style: TextStyle(
             fontFamily: fontFamily
@@ -28,7 +28,7 @@ class UserPlaylistPage extends StatelessWidget {
             BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
                 builder: (BuildContext context, GetUserPlaylistState state){
                   if(state is GetUserPlaylistSuccess){
-                    return ListView.builder(
+                    return state.userPlaylist.first.playlists!.isNotEmpty ? ListView.builder(
                       shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: state.userPlaylist.first.playlists!.length,
@@ -50,7 +50,7 @@ class UserPlaylistPage extends StatelessWidget {
                             ),
                           );
                         }
-                    );
+                    ) : const Center(child: Text('Playlist not found'),);
                   }
                   return Container();
                 }

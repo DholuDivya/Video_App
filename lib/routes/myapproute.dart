@@ -15,6 +15,8 @@ import 'package:vimeo_clone/screens/auth/numebr_signup.dart';
 import 'package:vimeo_clone/screens/auth/reset_password.dart';
 import 'package:vimeo_clone/screens/auth/verification_page.dart';
 import 'package:vimeo_clone/screens/history_page/all_history_page.dart';
+import 'package:vimeo_clone/screens/searchScreen/search_data_page.dart';
+import 'package:vimeo_clone/screens/update_channel_page/update_channel_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/crop_shorts_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/get_shorts_thumbnail_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/upload_shorts_page.dart';
@@ -130,10 +132,18 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         ),
 
         GoRoute(
-          name: 'searchPage',
-          path: '/searchPage',
-          pageBuilder: (context, state) => const CupertinoPage (
+          name: 'searchSuggestionPage',
+          path: '/searchSuggestionPage',
+          pageBuilder: (context, state) => const MaterialPage (
             child: SearchScreen(),
+          ),
+        ),
+
+        GoRoute(
+          name: 'searchDataPage',
+          path: '/searchDataPage/:searchQuery',
+          builder: (context, state) => SearchDataPage(
+              searchQuery: state.pathParameters['searchQuery']!
           ),
         ),
 
@@ -155,10 +165,13 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
 
         GoRoute(
           name: 'channelProfilePage',
-          path: '/channelProfilePage',
-          pageBuilder: (context, state) => const CupertinoPage (
-            child: ChannelProfilePage(),
+          path: '/channelProfilePage/:channelId',
+          builder: (context, state) => ChannelProfilePage(
+              channelId: state.pathParameters['channelId']!
           ),
+          // pageBuilder: (context, state) => const CupertinoPage (
+          //   child: ChannelProfilePage(),
+          // ),
         ),
 
         // GoRoute(
@@ -235,9 +248,18 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
 
         GoRoute(
             name: 'singlePlaylistPage',
-            path: '/singlePlaylistPage',
-            pageBuilder: (context, state) => const CupertinoPage(child: SinglePlaylistPage())
-        )
+            path: '/singlePlaylistPage/:playlistId',
+            // pageBuilder: (context, state) => const CupertinoPage(child: SinglePlaylistPage())
+            builder: (context, state) => SinglePlaylistPage(
+                playlistId: int.parse(state.pathParameters['playlistId']!),
+          ),
+        ),
+
+        GoRoute(
+          name: 'updateChannelPage',
+          path: '/updateChannelPage',
+          pageBuilder: (context, state) => const CupertinoPage(child: UpdateChannelPage())
+        ),
       ]
   );
 // }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
@@ -19,7 +20,8 @@ import 'package:vimeo_clone/utils/widgets/custom_shorts_preview.dart';
 import '../../bloc/channel_profile/channel_profile_state.dart';
 
 class ChannelProfilePage extends StatefulWidget {
-  const ChannelProfilePage({super.key});
+  final String channelId;
+  const ChannelProfilePage({super.key, required this.channelId});
 
   @override
   State<ChannelProfilePage> createState() => _ChannelProfilePageState();
@@ -31,6 +33,19 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
   late int _channelId;
 
   @override
+  void initState() {
+    context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: widget.channelId));
+    final channelBloc = context.read<ChannelProfileBloc>();
+    channelBloc.stream.listen((state){
+      if(state is ChannelProfileLoaded){
+        _isSubscribed = state.channelData.first.isSubscribed!;
+        _subscribeCount = state.channelData.first.subscriberCount!;
+      }
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 5,
@@ -40,9 +55,9 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
 
             if(state is ChannelProfileLoaded){
               final channelData = state.channelData.first;
-              _isSubscribed = channelData.isSubscribed!;
               _channelId = channelData.channel!.id!;
-              _subscribeCount = channelData.subscriberCount!;
+
+              print('************      $_isSubscribed');
               return NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
                   SliverAppBar(
@@ -215,7 +230,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                 )
                                     : InkWell(
                                   onTap: () {
-
+                                    GoRouter.of(context).pushNamed('updateChannelPage');
                                   },
                                   child: Material(
                                     elevation: 5,

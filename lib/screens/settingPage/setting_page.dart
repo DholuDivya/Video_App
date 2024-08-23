@@ -162,7 +162,9 @@ class _SettingPageState extends State<SettingPage> {
                   CustomSettingButton(
                       icon: HeroiconsOutline.pencilSquare,
                       btnName: ('Edit My Channel'),
-                      onTap: () {}
+                      onTap: () {
+                        GoRouter.of(context).pushNamed('updateChannelPage');
+                      }
                   ),
 
                   // WITHDRAWALS

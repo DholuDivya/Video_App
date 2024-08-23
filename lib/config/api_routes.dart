@@ -18,3 +18,5 @@ const String getUserHistoryUrl = "${apiUrl}watched-videos";
 const String getUserPlaylistUrl = "${apiUrl}playlists";
 const String createPlaylistUrl = "${apiUrl}playlists";
 const String getSearchDataUrl = "${apiUrl}search";
+const String showSinglePlaylistUrl = "${apiUrl}playlists/";
+const String getSearchSuggestionUrl = "${apiUrl}search-suggestions";

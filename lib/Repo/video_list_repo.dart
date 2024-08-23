@@ -35,11 +35,11 @@ class VideoListRepo {
 
             // Convert each video item to a Videos object
             for (var row in video) {
-              log('Processing video item: $row');
+              print('Processing video item: $row');
               videoList.add(Videos.fromJson(row as Map<String, dynamic>));
             }
 
-            log('Video List: $videoList');
+            print('Video List: $videoList');
             log('Video List retrieved successfully');
             return videoList;
           } else {
