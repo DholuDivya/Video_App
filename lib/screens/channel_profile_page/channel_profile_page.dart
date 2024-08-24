@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
@@ -340,7 +341,10 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
 
               );
             }
-            return Container();
+            return Center(child: SpinKitThreeBounce(
+              size: 30,
+              color: greyShade500,
+            ),);
           },
         ),
       ),

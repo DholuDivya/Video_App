@@ -80,6 +80,7 @@ class _SettingPageState extends State<SettingPage> {
                       groupValue: _selectedTheme,
                       onChanged: (ThemeMode? value) {
                         setState(() {
+                          print('iiiiiiiiiiiii     ${_selectedTheme.runtimeType}');
                           _selectedTheme = value;
                         });
                       },

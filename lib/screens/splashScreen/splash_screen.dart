@@ -28,6 +28,8 @@
 
 
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,10 +51,21 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  int? mode;
+
+
   @override
   void initState() {
     super.initState();
+    getTheme();
     _navigateToNextScreen();
+  }
+
+  void getTheme() async {
+    final box = await Hive.openBox('themebox');
+    mode = box.get('themeMode');
+    log('ooooooooooooo    ${mode}');
   }
 
   void _navigateToNextScreen() async {
@@ -78,12 +91,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
   }
 
+
+
+
+
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
-        child: Image.asset('assets/images/splash_logo.png', height: 240.h, width: 240.w,)
+        child: mode == 1
+            ? Image.asset('assets/images/splash_logo_light.png', height: 100.h, width: 100.w,)
+            : Image.asset('assets/images/splash_logo_dark.png', height: 100.h, width: 100.w,)
       ),
     );
   }

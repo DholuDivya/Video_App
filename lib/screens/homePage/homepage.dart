@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
@@ -237,6 +238,12 @@ class HomePageContent extends StatefulWidget {
 class _HomePageContentState extends State<HomePageContent> {
   bool isAllCategorySelected = true;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    getThemeMode();
+    super.initState();
+  }
   // final ScrollController _scrollController = ScrollController();
   //
   // @override
@@ -261,6 +268,12 @@ class _HomePageContentState extends State<HomePageContent> {
   //   if (currentScroll == maxScroll) _postBloc.add(PostFetched());
   // }
 
+  int? _themeMode;
+  void getThemeMode() async {
+    final box = await Hive.openBox('themebox');
+    _themeMode = box.get('themeMode');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -269,7 +282,13 @@ class _HomePageContentState extends State<HomePageContent> {
         slivers: [
           SliverAppBar(
             backgroundColor: Theme.of(context).colorScheme.surface,
-            title: Image.asset('assets/images/homepage_logo.png', height: 100.0, width: 180.0,),
+            title: Container(
+              padding: EdgeInsets.only(left: 15.w),
+              child: _themeMode == 1
+                  ? Image.asset('assets/images/homepage_logo_light.png', height: 75.h, width: 115.w,)
+                  : Image.asset('assets/images/homepage_logo_dark.png', height: 75.h, width: 115.w,),
+            ),
+
             titleSpacing: 1.0,
             floating: true,
             pinned: false,

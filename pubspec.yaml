@@ -84,6 +84,7 @@ dependencies:
   fluttertoast: ^8.2.8
   video_trimmer: ^3.0.1
   ffmpeg_kit_flutter: ^6.0.3
+  flutter_spinkit: ^5.2.1
 
 
 

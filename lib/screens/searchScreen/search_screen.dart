@@ -47,14 +47,14 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void apiCall() {
-    final searchQuery = _searchController.text;
-    context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
-    GoRouter.of(context).pushNamed(
-        'searchDataPage',
-        pathParameters: {
-          'searchQuery' : searchQuery
-        }
-    );
+    // final searchQuery = _searchController.text;
+    // context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
+    // GoRouter.of(context).pushNamed(
+    //     'searchDataPage',
+    //     pathParameters: {
+    //       'searchQuery' : searchQuery
+    //     }
+    // );
     print("API called after dismissing keyboard.");
   }
 
@@ -176,14 +176,14 @@ class _SearchScreenState extends State<SearchScreen> {
                             borderRadius: BorderRadius.circular(100),
                             onTap: (){
 
-                              // final searchQuery = _searchController.text;
-                              // context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
-                              // GoRouter.of(context).pushNamed(
-                              //     'searchDataPage',
-                              //     pathParameters: {
-                              //       'searchQuery' : searchQuery
-                              //     }
-                              // );
+                              final searchQuery = _searchController.text;
+                              context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
+                              GoRouter.of(context).pushNamed(
+                                  'searchDataPage',
+                                  pathParameters: {
+                                    'searchQuery' : searchQuery
+                                  }
+                              );
                             },
                             child: const Center(
                               child: Icon(HeroiconsOutline.magnifyingGlass),

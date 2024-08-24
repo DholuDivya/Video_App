@@ -11,6 +11,9 @@ class CustomTextFieldUpload extends StatelessWidget {
   final int? maxLines;
   final int? minLines;
   final bool? obscure;
+  final bool? isEnabled;
+  final Widget? suffix;
+  final bool? readOnly;
 
   const CustomTextFieldUpload({
     super.key,
@@ -19,7 +22,10 @@ class CustomTextFieldUpload extends StatelessWidget {
     this.maxLength,
     this.maxLines,
     this.minLines,
-    this.obscure
+    this.obscure,
+    this.isEnabled,
+    this.suffix,
+    this.readOnly
   });
 
   @override
@@ -30,6 +36,8 @@ class CustomTextFieldUpload extends StatelessWidget {
       maxLength: maxLength,
       maxLines: maxLines,
       minLines: minLines,
+      enabled: isEnabled,
+      readOnly: readOnly!,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
         // hintText: ' Title... ',
@@ -47,6 +55,7 @@ class CustomTextFieldUpload extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: blue, width: 2.0),
           ),
+          suffix: suffix,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
