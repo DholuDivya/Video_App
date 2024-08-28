@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
@@ -7,8 +10,8 @@ import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 import '../../../utils/widgets/custom_channal_video_preview.dart';
 
 class LivePreviewPage extends StatefulWidget {
-  final GetChannelDetailModel channelData;
-  const LivePreviewPage({super.key, required this.channelData});
+  // final GetChannelDetailModel channelData;
+  const LivePreviewPage({super.key,});
 
   @override
   State<LivePreviewPage> createState() => _LivePreviewPageState();
@@ -76,50 +79,57 @@ class _LivePreviewPageState extends State<LivePreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-                top: ScreenSize.screenHeight(context) * 0.01,
-                left: ScreenSize.screenWidth(context) * 0.015
-            ),
-            child: VideoSortCategory(
-                sortCategoryList: sortList,
-                selectedIndex: selectedIndex,
-                onCategorySelected: (index){
-                  sortVideos(index);
-                }
-            ),
-          ),
-
-          ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              padding: EdgeInsets.only(
-                top: 0,
-                bottom: ScreenSize.screenHeight(context) * 0.01,
-              ),
-              itemCount: widget.channelData.videoCount,
-              itemBuilder: (BuildContext context, int index){
-                final videoData = widget.channelData.channel!.videos?[index];
-                final totalSeconds = videoData!.duration;
-                final formattedDuration = formatDuration(totalSeconds!);
-                return Padding(
-                  padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
-                  child: CustomVideoPreview(
-                      imageUrl: '${videoData.thumbnails}',
-                      videoTitle: 'Tarak Mehta ka Ooltah Chashma Episode - 220',
-                      videoViews: sortedVideoList[index]['views'],
-                      uploadTime: videoData.createdAtHuman!,
-                      videoDuration: formattedDuration
+    return BlocBuilder<ChannelProfileBloc, ChannelProfileState>(
+      builder: (BuildContext context, ChannelProfileState state) {
+        if(state is ChannelProfileLoaded){
+          return SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: ScreenSize.screenHeight(context) * 0.01,
+                      left: ScreenSize.screenWidth(context) * 0.015
                   ),
-                );
-              }
-          )
-        ],
-      ),
+                  child: VideoSortCategory(
+                      sortCategoryList: sortList,
+                      selectedIndex: selectedIndex,
+                      onCategorySelected: (index){
+                        sortVideos(index);
+                      }
+                  ),
+                ),
+
+                ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(
+                      top: 0,
+                      bottom: ScreenSize.screenHeight(context) * 0.01,
+                    ),
+                    itemCount: state.channelData.first.channel!.videos!.length,
+                    itemBuilder: (BuildContext context, int index){
+                      final videoData = state.channelData.first.channel!.videos?[index];
+                      final totalSeconds = videoData!.duration;
+                      final formattedDuration = formatDuration(totalSeconds!);
+                      return Padding(
+                        padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                        child: CustomVideoPreview(
+                            imageUrl: '${videoData.thumbnails}',
+                            videoTitle: 'Tarak Mehta ka Ooltah Chashma Episode - 220',
+                            videoViews: sortedVideoList[index]['views'],
+                            uploadTime: videoData.createdAtHuman!,
+                            videoDuration: formattedDuration
+                        ),
+                      );
+                    }
+                )
+              ],
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 }

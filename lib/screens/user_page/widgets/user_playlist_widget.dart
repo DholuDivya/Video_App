@@ -221,6 +221,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                   children: [
                     SizedBox(height: 8.h,),
                     CustomTextFieldUpload(
+                      readOnly: false,
                       maxLines: 1,
                       controller: playlistTitleController,
                       fieldLabel: 'title',
@@ -228,6 +229,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                     SizedBox(height: 10.h,),
 
                     CustomTextFieldUpload(
+                      readOnly: false,
                       maxLines: 3,
                       minLines: 1,
                       controller: playlistDescriptionController,

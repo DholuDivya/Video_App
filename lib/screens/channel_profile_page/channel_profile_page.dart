@@ -319,23 +319,23 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                 body: TabBarView(
                   children: [
                     // HOME
-                    HomePreviewPage(channelData: channelData,),
+                    HomePreviewPage(),
 
 
                     // VIDEOS
-                    VideosPreviewPage(channelData: channelData,),
+                    VideosPreviewPage(),
 
 
                     // SHORTS
-                    ShortsPreviewPage(channelData: channelData,),
+                    ShortsPreviewPage(),
 
 
                     // LIVE
-                    LivePreviewPage(channelData: channelData,),
+                    LivePreviewPage(),
 
 
                     // PLAYLIST
-                    PlaylistPreviewPage(channelData: channelData,),
+                    PlaylistPreviewPage(),
                   ],
                 ),
 

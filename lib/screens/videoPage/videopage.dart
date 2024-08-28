@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,8 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:readmore/readmore.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/bloc/add_comment/add_comment_bloc.dart';
+import 'package:vimeo_clone/bloc/add_comment/add_comment_event.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_event.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
@@ -24,6 +27,9 @@ import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart'
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_event.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_state.dart';
+import 'package:vimeo_clone/bloc/like_dislike_comment/like_dislike_comment_bloc.dart';
+import 'package:vimeo_clone/bloc/like_dislike_comment/like_dislike_comment_event.dart';
+import 'package:vimeo_clone/bloc/like_dislike_comment/like_dislike_comment_state.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_event.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_state.dart';
@@ -33,8 +39,6 @@ import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_state.dar
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
-import 'package:vimeo_clone/bloc/add_user_history/add_user_history_bloc.dart';
-import 'package:vimeo_clone/bloc/add_user_history/add_user_history_event.dart';
 import 'package:vimeo_clone/bloc/view_increment/view_increment_bloc.dart';
 import 'package:vimeo_clone/bloc/view_increment/view_increment_event.dart';
 import 'package:vimeo_clone/config/colors.dart';
@@ -45,6 +49,7 @@ import 'package:vimeo_clone/Utils/Widgets/save_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/share_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/Utils/Widgets/video_container.dart';
+import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/model/play_video_model.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
@@ -77,7 +82,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   late int selectedPlaylist;
 
   late String channelLogo = '';
-  late String commentLength = '';
+  late int commentLength = 0;
   late String userComment = '';
   var commentData;
 
@@ -87,12 +92,18 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
     context.read<PlayVideoBloc>().add(GetVideoSlugEvent(slug: widget.slug));
     context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
 
+    print('-------------------    $commentLength');
     final commentBloc = context.read<GetCommentsBloc>();
     commentBloc.stream.listen((state){
+      print('kgsrbhjodsjnbdjnboidjjdodinb');
+
       if(state is GetCommentsLoaded){
-        commentLength = state.getCommentsList.first.data!.length.toString();
+        commentLength = state.getCommentsList.first.data!.length;
         userComment = state.getCommentsList.first.data!.first.comment!;
         commentData = state.getCommentsList.first.data;
+        print('^^^^^^^^^^^^^    $commentLength');
+        print('898898989889989898989898');
+
       }
     });
 
@@ -126,7 +137,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                   setState(() {
                     _lastReachedDuration = currentPosition;
                     _lastReachedDurationString = formatLastDuration(currentPosition);
-                    context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
+                    // context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
                   });
                 }
               }
@@ -147,6 +158,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
     _podController?.dispose();
     _videoBlocSubscription?.cancel();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -586,7 +598,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                         //     ),
                         //   ),
                         // ),
-                        commentData != null ? BlocBuilder<GetCommentsBloc, GetCommentsState>(
+                        commentLength != 0 ? BlocBuilder<GetCommentsBloc, GetCommentsState>(
                           builder: (BuildContext context, GetCommentsState state) {
                             if(state is GetCommentsLoaded){
                               final getComments = state.getCommentsList.first.data;
@@ -639,8 +651,8 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                           children: [
                                             CircleAvatar(
                                               radius: 10,
-                                              backgroundImage: AssetImage(
-                                                  'assets/images/tmkocteam.jpg'),
+                                              backgroundImage: NetworkImage(
+                                                  '${getComments.last.user!.profile}'),
                                             ),
                                             SizedBox(
                                               width: ScreenSize.screenWidth(context) *
@@ -706,7 +718,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                       0.01,),
 
                                 Container(
-
                                   height: ScreenSize.screenHeight(context) * 0.05,
                                   child: Row(
                                     children: [
@@ -1522,6 +1533,9 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   // COMMENT DIALOG BOX ****************************************************************************
 
   void videoCommentSheet(BuildContext context) {
+    late int commentLikeCount = 0;
+    late bool isCommentLiked = false;
+    late bool isCommentDisliked = false;
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -1575,12 +1589,15 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                         child: Column(
                           children: [
                             ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               // scrollDirection: Axis.vertical,
                               shrinkWrap: true,
                               itemCount: state.getCommentsList.first.data!.length,
                               itemBuilder: (BuildContext context, int index) {
                                 final getComments = state.getCommentsList.first.data![index];
+                                commentLikeCount = getComments.likesCount!;
+                                // isCommentLiked = getComments.!;
+                                // isCommentDisliked = getComments.isDisliked!;
                                 return Container(
                                   // color: Colors.yellow,
                                   width: double.infinity,
@@ -1593,9 +1610,9 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                         padding: EdgeInsets.only(
                                           left: ScreenSize.screenWidth(context) * 0.03,
                                         ),
-                                        child: const CircleAvatar(
+                                        child: CircleAvatar(
                                           radius: 14,
-                                          backgroundImage: AssetImage('assets/images/tmkocteam.jpg'),
+                                          backgroundImage: NetworkImage('${getComments.user!.profile}'),
                                         ),
                                       ),
                                       SizedBox(width: ScreenSize.screenWidth(context) * 0.015),
@@ -1603,10 +1620,10 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: double.infinity,
                                               child: Text(
-                                                '${getComments.user!.name} - ${getComments.createdAt}',
+                                                '${getComments.user!.name} - ${getComments.createdAtHuman}',
                                                 style: TextStyle(
                                                   fontFamily: fontFamily,
                                                   fontSize: 12,
@@ -1629,18 +1646,71 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                             SizedBox(height: ScreenSize.screenHeight(context) * 0.025),
                                             Row(
                                               children: [
-                                                InkWell(
-                                                    onTap: (){},
-                                                    child: Icon(HeroiconsOutline.handThumbUp, size: 20)
+                                                GestureDetector(
+                                                    onTap: (){
+                                                      context.read<LikeDislikeCommentBloc>().add(LikeCommentRequest(commentId: getComments.id!));
+                                                      setState(() {
+                                                        if (isCommentLiked) {
+                                                          // ToastManager().showToast(
+                                                          //     context: context,
+                                                          //     message: 'Video unliked'
+                                                          // );
+                                                          isCommentLiked = false;
+                                                          commentLikeCount--;
+                                                        } else {
+                                                          ToastManager().showToast(
+                                                              context: context,
+                                                              message: 'Comment liked!'
+                                                          );
+                                                          isCommentLiked = true;
+                                                          commentLikeCount++;
+                                                          if (isCommentDisliked) {
+                                                            isCommentDisliked = false;
+                                                          }
+                                                        }
+                                                      });
+                                                    },
+                                                    child: isCommentLiked == true
+                                                        ? const Icon(HeroiconsSolid.handThumbUp, size: 20)
+                                                        : const Icon(HeroiconsOutline.handThumbUp, size: 20)
                                                 ),
                                                 SizedBox(width: ScreenSize.screenWidth(context) * 0.01),
-                                                Text('${getComments.id}'),
+                                                Text('$commentLikeCount'),
                                                 SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
-                                                Icon(HeroiconsOutline.handThumbDown, size: 20),
-                                                SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
-                                                Icon(HeroiconsOutline.chatBubbleBottomCenterText, size: 20),
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    context.read<LikeDislikeCommentBloc>().add(DislikeCommentRequest(commentId: getComments.id!));
+                                                    setState(() {
+                                                      if (isCommentDisliked) {
+                                                        isCommentDisliked = false;
+                                                      } else {
+                                                        ToastManager().showToast(
+                                                            context: context,
+                                                            message: 'Comment disliked!'
+                                                        );
+                                                        isCommentDisliked = true;
+                                                        if (isCommentLiked) {
+                                                          isCommentLiked = false;
+                                                          commentLikeCount--;
+                                                        }
+                                                      }
+                                                    });
+                                                  },
+                                                    child: isCommentDisliked == true
+                                                        ? const Icon(HeroiconsSolid.handThumbDown, size: 20)
+                                                        : const Icon(HeroiconsOutline.handThumbDown, size: 20)
+                                                ),
+                                                // SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
+                                                // Icon(HeroiconsOutline.chatBubbleBottomCenterText, size: 20),
                                               ],
                                             ),
+                                            // BlocBuilder<LikeDislikeCommentBloc, LikeDislikeCommentState>(
+                                            //   builder: (BuildContext context, LikeDislikeCommentState state) {
+                                            //     if(state is LikeCommentSuccess){}
+                                            //     if(state is DislikeCommentSuccess){}
+                                            //   },
+                                            //
+                                            // ),
                                           ],
                                         ),
                                       ),
@@ -1675,12 +1745,14 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                   children: [
                     CircleAvatar(
                       radius: 15,
-                      backgroundImage: AssetImage('assets/images/sonysab.jpg'),
+                      backgroundImage: NetworkImage('${Global.userData!.userProfilePhoto}'),
                     ),
                     SizedBox(width: ScreenSize.screenWidth(context) * 0.02,),
 
                     InkWell(
-                      onTap: (){},
+                      onTap: (){
+                        addCommentSheet(context);
+                      },
                       child: Container(
                         height: ScreenSize.screenHeight(context) * 0.5,
                         width: ScreenSize.screenWidth(context) * 0.8,
@@ -1691,7 +1763,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                         padding: EdgeInsets.only(
                           left: ScreenSize.screenWidth(context) * 0.02
                         ),
-                        child: Align(
+                        child: const Align(
                             alignment: Alignment.centerLeft,
                             child: Text('Add Comment...')
                         ),
@@ -1709,9 +1781,115 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
     );
   }
 
+  final TextEditingController _commentController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
+
+  void addCommentSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // This is important for adjusting to the keyboard
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom, // This ensures the padding matches the keyboard height
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Ensures the sheet is as small as possible
+            children: [
+              TextField(
+                autofocus: true,
+                controller: _commentController,
+                focusNode: _focusNode,
+                decoration: InputDecoration(
+                  hintText: 'Add Comment...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade300,
+                ),
+                onSubmitted: (text) {
+                  if (text.isNotEmpty) {
+                    context.read<AddCommentBloc>().add(AddCommentRequest(
+                      userComment: text,
+                      videoSlug: widget.slug,
+                    ));
+                    ToastManager().showToast(
+                      context: context,
+                      message: 'Comment added successfully',
+                    );
+
+                    context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
+                  }
+                  Navigator.pop(context); // Close the sheet after submitting
+                },
+              ),
+              // const SizedBox(height: 16.0),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     final userComment = _commentController.text;
+              //     if (userComment.isNotEmpty) {
+              //       context.read<AddCommentBloc>().add(AddCommentRequest(
+              //         userComment: userComment,
+              //         videoSlug: widget.slug,
+              //       ));
+              //       ToastManager().showToast(
+              //         context: context,
+              //         message: 'Comment added successfully',
+              //       );
+              //       Navigator.pop(context); // Close the sheet after submitting
+              //     }
+              //   },
+              //   child: Text('Post Comment'),
+              // ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+
+
+// void addCommentSheet(context){
+  //   showModalBottomSheet(
+  //       context: context,
+  //       builder: (context){
+  //         return TextField(
+  //           autofocus: true,
+  //           controller: _commentController,
+  //           focusNode: _focusNode,
+  //           decoration: InputDecoration(
+  //             hintText: 'Add Comment...',
+  //             border: OutlineInputBorder(
+  //               borderRadius: BorderRadius.circular(10),
+  //               borderSide: BorderSide.none,
+  //             ),
+  //             filled: true,
+  //             fillColor: Colors.grey.shade300,
+  //           ),
+  //           onTap: () {
+  //             final userComment = _commentController.text;
+  //             _focusNode.requestFocus();
+  //             context.read<AddCommentBloc>().add(AddCommentRequest(userComment: userComment, videoSlug: widget.slug));
+  //             ToastManager().showToast(
+  //                 context: context,
+  //                 message: 'Comment added successfully'
+  //             );
+  //           },
+  //         );
+  //       }
+  //   );
+  // }
 
 }
+
 
 
 

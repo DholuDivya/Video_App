@@ -1,7 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,13 +8,12 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
-import 'package:vimeo_clone/appLinks.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
+import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_state.dart';
-import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
-import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
+import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
+import 'package:vimeo_clone/bloc/get_comments/get_comments_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_state.dart';
@@ -72,7 +69,7 @@ class _HomePageState extends State<HomePage> {
 
   List screens = [
     const HomePageContent(),
-    ShortsPage(),
+    const ShortsPage(),
     const SubscriptionsPage(),
     const UserPage(),
   ];
@@ -117,18 +114,10 @@ class _HomePageState extends State<HomePage> {
                     if (state is GetShortsLoading) {
                       // return Center(child: CircularProgressIndicator(),);child
                     } else if (state is GetShortsSuccess) {
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                      }
-
-                      // WidgetsBinding.instance.addPostFrameCallback((_){
-                      //     GoRouter.of(context).pushNamed('getShortsThumbnailPage');
-                      // });
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(builder: (context) => CropShortsPage())
-                      );
-
+                      // if (Navigator.canPop(context)) {
+                      //   Navigator.pop(context);
+                      // }
+                      // GoRouter.of(context).pushNamed('cropShortsPage');
                     }
                   }, child: BlocBuilder<GetShortsBloc, GetShortsState>(
                           builder: (BuildContext context, GetShortsState state) {
@@ -185,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                   BlocConsumer<GetVideoBloc, GetVideoState>(
                       builder: (BuildContext context, state) {
                     if (state is GetVideoLoading) {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
@@ -274,6 +263,16 @@ class _HomePageContentState extends State<HomePageContent> {
     _themeMode = box.get('themeMode');
   }
 
+  Future<void> _refreshVideosList() async {
+    if (isAllCategorySelected) {
+      // Trigger refresh for "All" category
+      context.read<AllVideoListBloc>().add(GetAllVideoListEvent());
+    } else {
+      // Trigger refresh for selected category
+      // context.read<VideoListBloc>().add(GetVideoListEvent(categoryId: categoryId));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -331,124 +330,18 @@ class _HomePageContentState extends State<HomePageContent> {
 
           SliverToBoxAdapter(
             // child: AllCategory(category: categoryList[isCategory]['type']),
-            child: isAllCategorySelected
-                ? BlocBuilder<AllVideoListBloc, AllVideoListState>(
-                    builder: (BuildContext context, state) {
-                    if (state is VideoListLoading) {
-                      return ListView.builder(
-                          padding: EdgeInsets.zero,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: 8,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(top: 20.h),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AspectRatio(
-                                      aspectRatio: 16 / 9,
-                                      child: ShimmerWidget.rectangular(
-                                        // width: double.infinity,
-                                        // height: 200,
-                                        isBorder: false,
-                                        height: 50,
-                                      )),
-                                  SizedBox(height: 4),
-                                  Row(
-                                    children: [
-                                      SizedBox(width: 8),
-                                      ShimmerWidget.circular(
-                                          width: 40,
-                                          height: 40,
-                                          isBorder: true),
-                                      SizedBox(width: 8),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          ShimmerWidget.rectangular(
-                                            height: 16,
-                                            width: 120,
-                                            isBorder: true,
-                                          ),
-                                          SizedBox(height: 8),
-                                          ShimmerWidget.rectangular(
-                                            height: 16,
-                                            width: 200,
-                                            isBorder: true,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          });
-                      // return Center(child: CircularProgressIndicator(),);
-                    } else if (state is AllVideoListLoaded) {
-
-                      return ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.only(
-                              top: ScreenSize.screenHeight(context) * 0.02),
-                          itemCount: state.videoList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final type = state.videoList[index].type;
-                            print('!!!!!!!!!!!!!!!!!!!!      ${state.videoList[index].duration}');
-                            int totalSeconds = state.videoList[index].duration!;
-                            String formattedTime = formatDuration(totalSeconds);
-
-                            return type == "video" ? VideoListItem(
-                              onTap: () {
-                                Future.delayed(
-                                    const Duration(milliseconds: 200), () {
-                                  GoRouter.of(context).pushNamed('videoPage',
-                                      pathParameters: {
-                                        "slug": state.videoList[index].slug!
-                                      });
-                                });
-                              },
-                              onTapChannel: (){
-                                final String channelId = state.videoList[index].channel!.id.toString();
-                                GoRouter.of(context).pushNamed(
-                                  'channelProfilePage',
-                                  pathParameters: {
-                                    'channelId': channelId
-                                  }
-                                );
-                              },
-                              channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
-                              thumbnailUrl: '${state.videoList[index].thumbnail}',
-                              duration: formattedTime,
-                              title: '${state.videoList[index].title}',
-                              author: '${state.videoList[index].channel?.name}',
-                              views: '${state.videoList[index].views}',
-                              uploadTime:
-                                  '${state.videoList[index].createdAtHuman}',
-                              onMorePressed: () {
-                                // final RenderBox renderBox = context.findRenderObject() as RenderBox;
-                                // final Offset offset = renderBox.localToGlobal(Offset.zero);
-                                // showPopupMenu(context, offset);
-                                showPopupMenu(context);
-                              },
-                            ) : null;
-                          });
-                    }
-                    return Container();
-                  })
-                : BlocBuilder<VideoListBloc, VideoListState>(
-                    builder: (BuildContext context, state) {
-                      if (state is VideoListLoading) {
+            child: RefreshIndicator(
+              onRefresh: _refreshVideosList,
+              child: isAllCategorySelected
+                  ? BlocBuilder<AllVideoListBloc, AllVideoListState>(
+                      builder: (BuildContext context, state) {
+                      if (state is AllVideoListLoading) {
                         return ListView.builder(
                             padding: EdgeInsets.zero,
-                            physics: const NeverScrollableScrollPhysics(),
+                            physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: 8,
                             itemBuilder: (context, index) {
-
                               return Padding(
                                 padding: EdgeInsets.only(top: 20.h),
                                 child: Column(
@@ -465,12 +358,12 @@ class _HomePageContentState extends State<HomePageContent> {
                                     SizedBox(height: 4),
                                     Row(
                                       children: [
-                                        const SizedBox(width: 8),
-                                        const ShimmerWidget.circular(
+                                        SizedBox(width: 8),
+                                        ShimmerWidget.circular(
                                             width: 40,
                                             height: 40,
                                             isBorder: true),
-                                        const SizedBox(width: 8),
+                                        SizedBox(width: 8),
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -480,7 +373,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                               width: 120,
                                               isBorder: true,
                                             ),
-                                            const SizedBox(height: 8),
+                                            SizedBox(height: 8),
                                             ShimmerWidget.rectangular(
                                               height: 16,
                                               width: 200,
@@ -495,66 +388,177 @@ class _HomePageContentState extends State<HomePageContent> {
                               );
                             });
                         // return Center(child: CircularProgressIndicator(),);
-                      } else if (state is VideoListLoaded) {
-                        return state.videoList.isNotEmpty
-                            ? ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: EdgeInsets.only(
-                                    top: ScreenSize.screenHeight(context) *
-                                        0.02),
-                                itemCount: state.videoList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final type = state.videoList[index].type;
-                                      int totalSeconds = state.videoList[index].duration!;
-                                  String formattedTime =
-                                      formatDuration(totalSeconds);
+                      } else if (state is AllVideoListLoaded) {
 
-                                  return type == "video" ? VideoListItem(
-                                    onTap: () {
-                                      print(
-                                          '***************    ${state.videoList[index].slug}');
-                                      Future.delayed(
-                                          const Duration(milliseconds: 200),
-                                          () {
-                                            print('Video clicked>>>>>>>>>>>>>.');
-                                        GoRouter.of(context).pushNamed('videoPage',
-                                            pathParameters: {
-                                              "slug":
-                                                  state.videoList[index].slug!
-                                            });
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.only(
+                                top: ScreenSize.screenHeight(context) * 0.02),
+                            itemCount: state.videoList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final type = state.videoList[index].type;
+                              print('!!!!!!!!!!!!!!!!!!!!      ${state.videoList[index].duration}');
+                              int totalSeconds = state.videoList[index].duration!;
+                              String formattedTime = formatDuration(totalSeconds);
 
-                                      });
-                                    },
-                                    channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
-                                    thumbnailUrl: '${state.videoList[index].thumbnails}',
-                                    duration: formattedTime,
-                                    title: '${state.videoList[index].title}',
-                                    author: '${state.videoList[index].channel?.name}',
-                                    views: '${state.videoList[index].views}',
-                                    uploadTime: '${state.videoList[index].createdAtHuman}',
-                                    onMorePressed: () {
-                                      // final RenderBox renderBox = context.findRenderObject() as RenderBox;
-                                      // final Offset offset = renderBox.localToGlobal(Offset.zero);
-                                      // showPopupMenu(context, offset);
-                                      showPopupMenu(context);
-                                    },
-                                  ) : null;
-                                })
-                            : Padding(
-                                padding: EdgeInsets.only(top: 150.h),
-                                child: Center(
-                                    child: Image.asset(
-                                  'assets/images/no_data.jpg',
-                                  width: 200,
-                                  height: 200,
-                                )),
-                              );
+                              return type == "video" ? VideoListItem(
+                                onTap: () {
+                                  Future.delayed(
+                                      const Duration(milliseconds: 200), () {
+                                    GoRouter.of(context).pushNamed('videoPage',
+                                        pathParameters: {
+                                          "slug": state.videoList[index].slug!
+                                        });
+                                  });
+                                },
+                                onTapChannel: (){
+                                  final String channelId = state.videoList[index].channel!.id.toString();
+                                  GoRouter.of(context).pushNamed(
+                                    'channelProfilePage',
+                                    pathParameters: {
+                                      'channelId': channelId
+                                    }
+                                  );
+                                },
+                                channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
+                                thumbnailUrl: '${state.videoList[index].thumbnail}',
+                                duration: formattedTime,
+                                title: '${state.videoList[index].title}',
+                                author: '${state.videoList[index].channel?.name}',
+                                views: '${state.videoList[index].views}',
+                                uploadTime:
+                                    '${state.videoList[index].createdAtHuman}',
+                                onMorePressed: () {
+                                  // final RenderBox renderBox = context.findRenderObject() as RenderBox;
+                                  // final Offset offset = renderBox.localToGlobal(Offset.zero);
+                                  // showPopupMenu(context, offset);
+                                  showPopupMenu(context);
+                                },
+                              ) : null;
+                            });
                       }
-
                       return Container();
-                    },
-                  ),
+                    })
+                  : BlocBuilder<VideoListBloc, VideoListState>(
+                      builder: (BuildContext context, state) {
+                        if (state is VideoListLoading) {
+                          return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: 8,
+                              itemBuilder: (context, index) {
+
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 20.h),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      AspectRatio(
+                                          aspectRatio: 16 / 9,
+                                          child: ShimmerWidget.rectangular(
+                                            // width: double.infinity,
+                                            // height: 200,
+                                            isBorder: false,
+                                            height: 50,
+                                          )),
+                                      SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          const SizedBox(width: 8),
+                                          const ShimmerWidget.circular(
+                                              width: 40,
+                                              height: 40,
+                                              isBorder: true),
+                                          const SizedBox(width: 8),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ShimmerWidget.rectangular(
+                                                height: 16,
+                                                width: 120,
+                                                isBorder: true,
+                                              ),
+                                              const SizedBox(height: 8),
+                                              ShimmerWidget.rectangular(
+                                                height: 16,
+                                                width: 200,
+                                                isBorder: true,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                          // return Center(child: CircularProgressIndicator(),);
+                        } else if (state is VideoListLoaded) {
+                          return state.videoList.isNotEmpty
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.only(
+                                      top: ScreenSize.screenHeight(context) *
+                                          0.02),
+                                  itemCount: state.videoList.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    final type = state.videoList[index].type;
+                                        int totalSeconds = state.videoList[index].duration!;
+                                    String formattedTime =
+                                        formatDuration(totalSeconds);
+
+                                    return type == "video" ? VideoListItem(
+                                      onTap: () {
+                                        print(
+                                            '***************    ${state.videoList[index].slug}');
+                                        Future.delayed(
+                                            const Duration(milliseconds: 200),
+                                            () {
+                                              print('Video clicked>>>>>>>>>>>>>.');
+                                          GoRouter.of(context).pushNamed('videoPage',
+                                              pathParameters: {
+                                                "slug":
+                                                    state.videoList[index].slug!
+                                              });
+
+
+
+                                        });
+                                      },
+                                      channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
+                                      thumbnailUrl: '${state.videoList[index].thumbnails}',
+                                      duration: formattedTime,
+                                      title: '${state.videoList[index].title}',
+                                      author: '${state.videoList[index].channel?.name}',
+                                      views: '${state.videoList[index].views}',
+                                      uploadTime: '${state.videoList[index].createdAtHuman}',
+                                      onMorePressed: () {
+                                        // final RenderBox renderBox = context.findRenderObject() as RenderBox;
+                                        // final Offset offset = renderBox.localToGlobal(Offset.zero);
+                                        // showPopupMenu(context, offset);
+                                        showPopupMenu(context);
+                                      },
+                                    ) : null;
+                                  })
+                              : Padding(
+                                  padding: EdgeInsets.only(top: 150.h),
+                                  child: Center(
+                                      child: Image.asset(
+                                    'assets/images/no_data.jpg',
+                                    width: 200,
+                                    height: 200,
+                                  )),
+                                );
+                        }
+
+                        return Container();
+                      },
+                    ),
+            ),
           ),
         ],
       ),
@@ -706,7 +710,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                 : Colors.black87,
                             fontSize: 11,
                             fontFamily: fontFamily,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: isAllCategorySelected ? FontWeight.bold : FontWeight.w400,
                           ),
                         ),
                       ),
@@ -761,7 +765,11 @@ class _HomePageContentState extends State<HomePageContent> {
                                           : Colors.black87,
                                   fontSize: 11,
                                   fontFamily: fontFamily,
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: isAllCategorySelected
+                                      ? FontWeight.w400
+                                      : index == state.selectedCategory
+                                          ? FontWeight.bold
+                                          : FontWeight.w400,
                                 ),
                               ),
                             ),

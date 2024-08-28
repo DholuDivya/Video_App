@@ -36,6 +36,10 @@ class Data {
   int? pinned;
   String? createdAt;
   String? updatedAt;
+  int? likesCount;
+  bool? isLiked;
+  bool? isDisliked;
+  String? createdAtHuman;
   User? user;
 
   Data(
@@ -47,6 +51,10 @@ class Data {
         this.pinned,
         this.createdAt,
         this.updatedAt,
+        this.likesCount,
+        this.isLiked,
+        this.isDisliked,
+        this.createdAtHuman,
         this.user});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -58,6 +66,10 @@ class Data {
     pinned = json['pinned'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    likesCount = json['likes_count'];
+    isLiked = json['is_liked'];
+    isDisliked = json['is_disliked'];
+    createdAtHuman = json['created_at_human'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 
@@ -71,6 +83,10 @@ class Data {
     data['pinned'] = this.pinned;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['likes_count'] = this.likesCount;
+    data['is_liked'] = this.isLiked;
+    data['is_disliked'] = this.isDisliked;
+    data['created_at_human'] = this.createdAtHuman;
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }
@@ -83,18 +99,18 @@ class User {
   String? name;
   String? email;
   int? status;
-  Null? phoneNumber;
-  Null? emailVerifiedAt;
-  Null? profile;
+  String? phoneNumber;
+  String? emailVerifiedAt;
+  String? profile;
   String? type;
   String? fcmId;
   int? notification;
-  Null? firebaseId;
+  String? firebaseId;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
-  Null? countryCode;
-  Null? firebaseUid;
+  String? deletedAt;
+  String? countryCode;
+  String? firebaseUid;
 
   User(
       {this.id,

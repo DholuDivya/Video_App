@@ -8,12 +8,14 @@ class ChannelProfileRepo{
     try{
       final response = await ApiBaseHelper().getAPICall('${apiUrl}channels/${channelId}', {});
 
+      print('uuuuuuuuuuuuuuuuuuuuu');
       print('${response.data}');
 
       if(response.statusCode == 200){
         List<GetChannelDetailModel> yourVideoData = [];
         yourVideoData.add(GetChannelDetailModel.fromJson(response.data));
-        print('Channel Profile Successfully Fetched');
+        print('vvvvvvvvvvvvvvvvvvvv');
+        print('Channel Profile Successfully Fetched  $yourVideoData');
         return yourVideoData;
       }else{
         return throw ApiException('Fail to Get Channel Profile ${response.statusCode}');

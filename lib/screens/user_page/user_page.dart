@@ -88,7 +88,7 @@ class _UserPageState extends State<UserPage> {
                 }
                 return UserPageButton(
                   buttonName: 'Your Videos',
-                  subTitle: '${totalVideos} videos',
+                  subTitle: '$totalVideos videos',
                   buttonIcon: HeroiconsOutline.play,
                   onTap: (){
                     Future.delayed(const Duration(milliseconds: 220),(){

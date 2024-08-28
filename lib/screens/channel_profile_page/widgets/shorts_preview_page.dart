@@ -81,6 +81,9 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
@@ -88,8 +91,8 @@ import '../../../config/constants.dart';
 import '../../../utils/widgets/custom_shorts_preview.dart';
 
 class ShortsPreviewPage extends StatefulWidget {
-  final GetChannelDetailModel channelData;
-  const ShortsPreviewPage({super.key, required this.channelData});
+  // final GetChannelDetailModel channelData;
+  const ShortsPreviewPage({super.key});
 
   @override
   State<ShortsPreviewPage> createState() => _ShortsPreviewPageState();
@@ -156,49 +159,56 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
-      child: Column(
-        children: [
+    return BlocBuilder<ChannelProfileBloc, ChannelProfileState>(
+      builder: (BuildContext context, ChannelProfileState state) {
+        if(state is ChannelProfileLoaded){
+          return SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            child: Column(
+              children: [
 
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 10.0,
-              bottom: 10.0
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 10.0,
+                      bottom: 10.0
+                  ),
+                  child: VideoSortCategory(
+                    sortCategoryList: sortList,
+                    selectedIndex: selectedIndex,
+                    onCategorySelected: (index) {
+                      sortShorts(index);
+                    },
+                  ),
+                ),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.only(
+                    top: 0,
+                    bottom: ScreenSize.screenHeight(context) * 0.01,
+                  ),
+                  itemCount: state.channelData.first.channelShorts.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 0.4,
+                    mainAxisSpacing: 0.4,
+                    mainAxisExtent: 200,
+                  ),
+                  itemBuilder: (context, index) {
+                    final shortsData = state.channelData.first.channelShorts[index];
+                    // final type = shortsData.type;
+                    return CustomShortsPreview(
+                      thumbNailPath: shortsData.thumbnails,
+                      views: shortsData.views.toString(),
+                    );
+                  },
+                ),
+              ],
             ),
-            child: VideoSortCategory(
-              sortCategoryList: sortList,
-              selectedIndex: selectedIndex,
-              onCategorySelected: (index) {
-                sortShorts(index);
-              },
-            ),
-          ),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.only(
-              top: 0,
-              bottom: ScreenSize.screenHeight(context) * 0.01,
-            ),
-            itemCount: 1,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 0.4,
-              mainAxisSpacing: 0.4,
-              mainAxisExtent: 200,
-            ),
-            itemBuilder: (context, index) {
-              final shortsData = widget.channelData.channel!.videos![index];
-              final type = shortsData.type;
-              return type == "short" ? CustomShortsPreview(
-                thumbNailPath: shortsData.thumbnails!,
-                views: shortsData.views.toString(),
-              ) : null;
-            },
-          ),
-        ],
-      ),
+          );
+        }
+        return Container();
+      },
     );
   }
 }

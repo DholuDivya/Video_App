@@ -357,10 +357,9 @@ class CropShortsPage extends StatefulWidget {
 }
 
 class _CropShortsPageState extends State<CropShortsPage> {
-  late Trimmer _trimmer = Trimmer();
-  double _startValue = 0.0;
-  double _endValue = 0.0;
-  bool _isPlaying = false;
+  late final Trimmer _trimmer = Trimmer();
+  final double _startValue = 0.0;
+  final double _endValue = 0.0;
   bool _progressVisibility = false;
   String? croppedVideoPath;
 

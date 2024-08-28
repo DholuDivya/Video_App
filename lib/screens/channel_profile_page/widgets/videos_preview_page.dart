@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channal_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
+import '../../../bloc/channel_profile/channel_profile_bloc.dart';
+import '../../../bloc/channel_profile/channel_profile_state.dart';
+
 class VideosPreviewPage extends StatefulWidget {
-  final GetChannelDetailModel channelData;
-  const VideosPreviewPage({super.key, required this.channelData});
+  // final GetChannelDetailModel channelData;
+  const VideosPreviewPage({super.key});
 
   @override
   State<VideosPreviewPage> createState() => _VideosPreviewPageState();
@@ -68,53 +72,58 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    String selectedSortType = sortList[selectedIndex]['type'];
-    List<Videos> sortedVideos = sortVideos(widget.channelData.channel!.videos!, selectedSortType);
+    // String selectedSortType = sortList[selectedIndex]['type'];
+    // List<Videos> sortedVideos = sortVideos(widget.channelData.channel!.videos!, selectedSortType);
 
-    return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-                top: ScreenSize.screenHeight(context) * 0.01,
-              left: ScreenSize.screenWidth(context) * 0.015
-            ),
-            child: VideoSortCategory(
-                sortCategoryList: sortList,
-                selectedIndex: selectedIndex,
-                onCategorySelected: (index){
-                }
-            ),
-          ),
-
-          ListView.builder(
+    return BlocBuilder<ChannelProfileBloc, ChannelProfileState>(
+      builder: (BuildContext context, ChannelProfileState state) {
+        if(state is ChannelProfileLoaded) {
+          return SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            padding: EdgeInsets.only(
-              top: 5.h,
-              bottom: ScreenSize.screenHeight(context) * 0.01,
-            ),
-            itemCount: widget.channelData.videoCount,
-              itemBuilder: (BuildContext context, int index){
-              final videoData = widget.channelData.channel!.videos?[index];
-              final type = videoData!.type;
-              final totalSeconds = videoData.duration;
-              final formattedDuration = formatDuration(totalSeconds!);
-                return type == "video" ? Padding(
-                  padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
-                  child: CustomVideoPreview(
-                      imageUrl: '${videoData.thumbnails}',
-                      videoTitle: '${videoData.title}',
-                      videoViews: '${videoData.views}',
-                      uploadTime: '${videoData.createdAtHuman}',
-                      videoDuration: formattedDuration
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: ScreenSize.screenHeight(context) * 0.01,
+                      left: ScreenSize.screenWidth(context) * 0.015
                   ),
-                ) : null;
-              }
-          )
-        ],
-      ),
+                  child: VideoSortCategory(
+                      sortCategoryList: sortList,
+                      selectedIndex: selectedIndex,
+                      onCategorySelected: (index) {}
+                  ),
+                ),
+
+                ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(
+                      top: 5.h,
+                      bottom: ScreenSize.screenHeight(context) * 0.01,
+                    ),
+                    itemCount: state.channelData.first.channelVideos.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final videoData = state.channelData.first.channelVideos[index];
+                      final totalSeconds = videoData.duration;
+                      final formattedDuration = formatDuration(totalSeconds);
+                      return Padding(
+                        padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                        child: CustomVideoPreview(
+                            imageUrl: videoData.thumbnails,
+                            videoTitle: videoData.title,
+                            videoViews: '${videoData.views}',
+                            uploadTime: videoData.createdAtHuman,
+                            videoDuration: formattedDuration
+                        ),
+                      );
+                    }
+                )
+              ],
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 }

@@ -7,9 +7,9 @@ class GetCommentsRepo{
     try{
       final response = await ApiBaseHelper().getAPICall('${apiUrl}videos/$videoSlug/comments', {});
       if(response.statusCode == 200){
-        print(' tytytyttytyytytytytytytytytytytytytyttytyttyty');
         final List<GetCommentsModel> getCommentsList = [];
         getCommentsList.add(GetCommentsModel.fromJson(response.data));
+        print(' tytytyttytyytytytytytytytytytytytytyttytyttyty');
         print('{{{{{{{{{{{{{{{[      $getCommentsList');
         return getCommentsList;
       }

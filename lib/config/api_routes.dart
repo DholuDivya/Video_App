@@ -20,3 +20,4 @@ const String createPlaylistUrl = "${apiUrl}playlists";
 const String getSearchDataUrl = "${apiUrl}search";
 const String showSinglePlaylistUrl = "${apiUrl}playlists/";
 const String getSearchSuggestionUrl = "${apiUrl}search-suggestions";
+const String likeCommentUrl = "${apiUrl}comments/";

@@ -9,8 +9,8 @@ import 'package:vimeo_clone/utils/widgets/custom_channal_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_for_you_preview.dart';
 
 class HomePreviewPage extends StatefulWidget {
-  final GetChannelDetailModel channelData;
-  const HomePreviewPage({super.key, required this.channelData});
+  // final GetChannelDetailModel channelData;
+  const HomePreviewPage({super.key,});
 
   @override
   State<HomePreviewPage> createState() => _HomePreviewPageState();
@@ -35,8 +35,10 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
     return BlocBuilder<ChannelProfileBloc, ChannelProfileState>(
       builder: (BuildContext context, ChannelProfileState state) {
         if(state is ChannelProfileLoaded){
-          final videoDataLength = widget.channelData.videoCount;
-          final isAssociated = widget.channelData.isAssociated;
+          // final videoDataLength = widget.channelData.videoCount;
+          // final isAssociated = widget.channelData.isAssociated;
+          final videoDataLength = state.channelData.first.channelVideos.length;
+          final isAssociated = state.channelData.first.isAssociated;
           return CustomScrollView(
             slivers: [
               SliverList(
@@ -65,16 +67,17 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                               left: ScreenSize.screenWidth(context) * 0.04
                           ),
                         scrollDirection: Axis.horizontal,
-                        itemCount: widget.channelData.suggestedVideos!.length,
+                        itemCount: state.channelData.first.suggestedVideos.length,
                           itemBuilder: (context, index){
-                          final suggestedVideo = widget.channelData.suggestedVideos![index];
+                          final suggestedVideo = state.channelData.first.suggestedVideos[index];
                           final type = suggestedVideo.type;
+                          print('sssssssssssssss    ${state.channelData.first.suggestedVideos.length}');
                             return  type == "video" ? ForYouPreview(
-                              videoThumbnail: suggestedVideo.thumbnails!,
-                              videoTitle: '${suggestedVideo.title}',
-                              channelName: '${widget.channelData.channel!.name}',
-                              uploadTime: '${suggestedVideo.createdAtHuman}',
-                            ) : null;
+                              videoThumbnail: suggestedVideo.thumbnails,
+                              videoTitle: suggestedVideo.title,
+                              channelName: state.channelData.first.channel.name,
+                              uploadTime: suggestedVideo.createdAtHuman,
+                            ) : Container();
                       }),
                     ) : Container(),
 
@@ -98,8 +101,9 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  childCount: videoDataLength! + 1,
+                  childCount: videoDataLength + 1,
                       (BuildContext context, int index) {
+                    print('&&&&&&&&&&&&&    $videoDataLength  ');
                         if (index == videoDataLength) {
                           return SizedBox(height: 12.h,);
                           // return Padding(
@@ -117,20 +121,19 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                           // );
                         }
 
-                        final videoData = widget.channelData.channel!.videos?[index];
-                        final type = videoData!.type;
+                        final videoData = state.channelData.first.channelVideos[index];
                         final totalSeconds = videoData.duration;
-                        final formattedTime = formatDuration(totalSeconds!);
-                    return type != "short" ? Padding(
+                        final formattedTime = formatDuration(totalSeconds);
+                    return Padding(
                       padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                       child: CustomVideoPreview(
-                        imageUrl: '${videoData.thumbnails}',
-                        videoTitle: '${videoData.title}',
+                        imageUrl: videoData.thumbnails,
+                        videoTitle: videoData.title,
                         videoViews: videoData.views.toString(),
-                        uploadTime: '${videoData.createdAtHuman}',
+                        uploadTime: videoData.createdAtHuman,
                         videoDuration: formattedTime,
                       ),
-                    ) : null;
+                    );
                   },
                 ),
               ),

@@ -14,11 +14,13 @@ class ChannelProfileBloc extends Bloc<ChannelProfileEvent, ChannelProfileState>{
     try{
       final List<GetChannelDetailModel>? channelData = await ChannelProfileRepo().getChannelProfile(event.channelId);
       if(channelData != null){
+        print('*************    $channelData');
         emit(ChannelProfileLoaded(channelData: channelData));
       }else{
         print('Channel Data is NULL');
       }
     }catch(e){
+
       emit(ChannelProfileFailure(error: e.toString()));
     }
   }

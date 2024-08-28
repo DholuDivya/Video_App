@@ -9,6 +9,7 @@ import 'package:vimeo_clone/Repo/auth_repo.dart';
 import 'package:vimeo_clone/Repo/video_category_repo.dart';
 import 'package:vimeo_clone/Repo/video_list_repo.dart';
 import 'package:vimeo_clone/appLinks.dart';
+import 'package:vimeo_clone/bloc/add_comment/add_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
@@ -28,6 +29,7 @@ import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_bloc.dart';
+import 'package:vimeo_clone/bloc/like_dislike_comment/like_dislike_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
 import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_state.dart';
@@ -106,6 +108,8 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => ShowSinglePlaylistBloc()),
         BlocProvider(create: (context) => SearchSuggestionBloc()),
         BlocProvider(create: (context) => GetCommentsBloc()),
+        BlocProvider(create: (context) => AddCommentBloc()),
+        BlocProvider(create: (context) => LikeDislikeCommentBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

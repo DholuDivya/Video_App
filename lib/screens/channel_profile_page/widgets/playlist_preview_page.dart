@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
-import 'package:vimeo_clone/utils/widgets/custom_channal_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_playlist_preview.dart';
 
 import '../../../config/colors.dart';
 
 class PlaylistPreviewPage extends StatefulWidget {
-  final GetChannelDetailModel channelData;
-  const PlaylistPreviewPage({super.key, required this.channelData});
+  // final GetChannelDetailModel channelData;
+  const PlaylistPreviewPage({super.key,});
 
   @override
   State<PlaylistPreviewPage> createState() => _PlaylistPreviewPageState();
@@ -33,32 +35,39 @@ class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              padding: EdgeInsets.only(
-                top: 5.h,
-                bottom: ScreenSize.screenHeight(context) * 0.01,
-              ),
-              itemCount: widget.channelData.playlists!.length,
-              itemBuilder: (BuildContext context, int index){
-                final userPlaylist = widget.channelData.playlists![index];
-                return widget.channelData.playlists!.isNotEmpty 
-                    ? Padding(
-                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
-                      child: CustomPlaylistPreview(
+    return BlocBuilder<ChannelProfileBloc, ChannelProfileState>(
+      builder: (BuildContext context, ChannelProfileState state) {
+        if(state is ChannelProfileLoaded){
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(
+                      top: 5.h,
+                      bottom: ScreenSize.screenHeight(context) * 0.01,
+                    ),
+                    itemCount: state.channelData.first.playlists.length,
+                    itemBuilder: (BuildContext context, int index){
+                      final userPlaylist = state.channelData.first.playlists[index];
+                      return state.channelData.first.playlists.isNotEmpty
+                          ? Padding(
+                        padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                        child: CustomPlaylistPreview(
                           imageUrl: '',
-                          playlistName: userPlaylist.title!,
-                          channelName: userPlaylist.visibility!,
+                          playlistName: userPlaylist.title,
+                          channelName: userPlaylist.visibility,
                           numberOfVideos: 0,),
-                    ) : Container(color: red,);
-              }
-          )
-        ],
-      ),
+                      ) : Container();
+                    }
+                )
+              ],
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 }
