@@ -26,13 +26,11 @@ import 'package:vimeo_clone/bloc/get_thumbnail_of_shorts/get_shorts_thumbnail_bl
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
-import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike_comment/like_dislike_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
-import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_state.dart';
 import 'package:vimeo_clone/bloc/search_data/search_data_bloc.dart';
 import 'package:vimeo_clone/bloc/search_suggestion/search_suggestion_bloc.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';

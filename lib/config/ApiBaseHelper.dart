@@ -44,6 +44,7 @@ class ApiBaseHelper {
 
 
 
+  // POST METHOD
   Future<dynamic> postAPICall(String url, dynamic params) async {
     var responseJson;
     // var timeOut = 10;
@@ -199,6 +200,39 @@ class ApiBaseHelper {
       throw ApiException('Something went wrong, Server not Responding');
     } on Exception catch (e) {
       // print('------Error  ${e}');
+      throw ApiException('Something Went wrong with ${e.toString()}');
+    }
+    return responseJson;
+  }
+
+
+  // PUT METHOD
+  Future<dynamic> putAPICall(String url, dynamic params) async {
+    var responseJson;
+    final dio_.Dio dio = dio_.Dio();
+    print('#@###########   ${params}');
+    print('%%%%%%%%%%%%%%      ${headers}');
+    print('faihfiahihihif    ${url}');
+    try {
+      final response = await dio.put(
+        url,
+        data: params.isNotEmpty ? params : [],
+        options: dio_.Options(
+          headers: headers,
+        ),
+      );
+      log('+++ HEADERS  ${headers}');
+      if (kDebugMode) {
+        print(
+            'response api****$url***************${response.statusCode}*********${response.data}');
+      }
+
+      responseJson = response;
+    } on SocketException {
+      throw ApiException('No Internet connection');
+    } on TimeoutException {
+      throw ApiException('Something went wrong, Server not Responding');
+    } on Exception catch (e) {
       throw ApiException('Something Went wrong with ${e.toString()}');
     }
     return responseJson;

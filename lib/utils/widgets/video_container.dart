@@ -50,7 +50,7 @@ class VideoListItem extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: 16/9,
                     child: Container(
-                      color: greyShade300,
+                      color: Theme.of(context).colorScheme.secondary,
                       child: Image.network(
                         thumbnailUrl,
                         // height: ScreenSize.screenHeight(context) * 0.25,

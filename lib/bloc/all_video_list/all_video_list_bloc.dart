@@ -15,12 +15,11 @@ class AllVideoListBloc extends Bloc<AllVideoListEvent, AllVideoListState>{
     emit(AllVideoListLoading());
     try{
       final List<VideoData>? videoList = await AllVideoListRepo().getAllVideoList();
-      print('++++++++  ${videoList}');
+      print('++++++++  $videoList');
       emit(AllVideoListLoaded(videoList: videoList!));
     }catch(e){
       emit(AllVideoListFailure(error: e.toString()));
     }
   }
-
 
 }

@@ -155,23 +155,12 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
           ),
         ),
 
-        // GoRoute(
-        //   name: 'generalSetting',
-        //   path: '/generalSetting',
-        //   pageBuilder: (context, state) => const MaterialPage (
-        //     child: GeneralSettings(),
-        //   ),
-        // ),
-
         GoRoute(
           name: 'channelProfilePage',
           path: '/channelProfilePage/:channelId',
           builder: (context, state) => ChannelProfilePage(
               channelId: state.pathParameters['channelId']!
           ),
-          // pageBuilder: (context, state) => const CupertinoPage (
-          //   child: ChannelProfilePage(),
-          // ),
         ),
 
         // GoRoute(
@@ -249,7 +238,6 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
         GoRoute(
             name: 'singlePlaylistPage',
             path: '/singlePlaylistPage/:playlistId',
-            // pageBuilder: (context, state) => const CupertinoPage(child: SinglePlaylistPage())
             builder: (context, state) => SinglePlaylistPage(
                 playlistId: int.parse(state.pathParameters['playlistId']!),
           ),
