@@ -36,6 +36,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
+import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
@@ -58,14 +59,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    getTheme();
+    // getTheme();
     _navigateToNextScreen();
   }
 
-  void getTheme() async {
-    final box = await Hive.openBox('themebox');
-    mode = box.get('themeMode');
-  }
+  // void getTheme() async {
+  //   final box = await Hive.openBox('themebox');
+  //   mode = box.get('themeMode');
+  // }
 
   void _navigateToNextScreen() async {
     await Future.delayed(Duration(seconds: 2), () {});
@@ -96,7 +97,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    mode = context.read<ThemeBloc>().mode;
+    print('$mode       44444444');
 
+    print('1111   ::::    ${Global.userData!.userProfilePhoto}');
+    print('1111   ::::    ${Global.userData!.userName}');
+    print('1111   ::::    ${Global.userData!.userChannelId}');
+    print('1111   ::::    ${Global.userData!.userNumber}');
+    print('1111   ::::    ${Global.userData!.userToken}');
+    print('1111   ::::    ${Global.userData!.userEmail}');
+    print('1111   ::::    ${Global.userData!.userId}');
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

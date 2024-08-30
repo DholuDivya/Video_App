@@ -17,9 +17,16 @@ import 'package:vimeo_clone/bloc/get_comments/get_comments_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_state.dart';
+import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
+import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_event.dart';
+import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_bloc.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_event.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_state.dart';
+import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_state.dart';
 import 'package:vimeo_clone/bloc/video_list/video_list_state.dart';
@@ -33,6 +40,7 @@ import '../../bloc/video_category/video_category_event.dart';
 import '../../bloc/video_list/video_list_bloc.dart';
 import '../../bloc/video_list/video_list_event.dart';
 import '../../config/colors.dart';
+import '../../model/all_video_list_model.dart';
 import '../../utils/widgets/video_container.dart';
 import '../user_page/user_page.dart';
 
@@ -67,15 +75,23 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  @override
+  void initState() {
+    context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
+    context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
+    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+    super.initState();
+  }
   List screens = [
-    const HomePageContent(),
-    const ShortsPage(),
-    const SubscriptionsPage(),
-    const UserPage(),
+    HomePageContent(),
+    ShortsPage(),
+    SubscriptionsPage(),
+    UserPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
         child: screens[_currentIndex],
@@ -226,13 +242,14 @@ class HomePageContent extends StatefulWidget {
 
 class _HomePageContentState extends State<HomePageContent> {
   bool isAllCategorySelected = true;
+  int? mode;
 
   @override
   void initState() {
-    // TODO: implement initState
-    getThemeMode();
     super.initState();
+    // getTheme();
   }
+
   // final ScrollController _scrollController = ScrollController();
   //
   // @override
@@ -257,11 +274,8 @@ class _HomePageContentState extends State<HomePageContent> {
   //   if (currentScroll == maxScroll) _postBloc.add(PostFetched());
   // }
 
-  int? _themeMode;
-  void getThemeMode() async {
-    final box = await Hive.openBox('themebox');
-    _themeMode = box.get('themeMode');
-  }
+
+
 
   Future<void> _refreshVideosList() async {
     if (isAllCategorySelected) {
@@ -272,66 +286,76 @@ class _HomePageContentState extends State<HomePageContent> {
       // context.read<VideoListBloc>().add(GetVideoListEvent(categoryId: categoryId));
     }
   }
+  // void getTheme() async {
+  //   final box = await Hive.openBox('themebox');
+  //   setState(() {
+  //     mode = box.get('themeMode');
+  //   });
+  // }
+
+
+
 
   @override
   Widget build(BuildContext context) {
+    mode = context.read<ThemeBloc>().mode;
+    print('$mode   222222');
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            title: Container(
-              padding: EdgeInsets.only(left: 15.w),
-              child: _themeMode == 1
-                  ? Image.asset('assets/images/homepage_logo_light.png', height: 75.h, width: 115.w,)
-                  : Image.asset('assets/images/homepage_logo_dark.png', height: 75.h, width: 115.w,),
+      body: RefreshIndicator(
+        onRefresh: _refreshVideosList,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              title: Container(
+                padding: EdgeInsets.only(left: 15.w),
+                child: mode == 1
+                    ? Image.asset('assets/images/homepage_logo_light.png', height: 75.h, width: 115.w,)
+                    : Image.asset('assets/images/homepage_logo_dark.png', height: 75.h, width: 115.w,),
+              ),
+
+              titleSpacing: 1.0,
+              floating: true,
+              pinned: false,
+              snap: false,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    GoRouter.of(context).pushNamed('searchSuggestionPage');
+                  },
+                  icon: const Icon(
+                    HeroiconsOutline.magnifyingGlass,
+                    size: 22,
+                  ),
+                ),
+                // SizedBox(width: screenWidth * 0.01),
+                IconButton(
+                  onPressed: () {
+                    GoRouter.of(context).pushNamed('notificationPage');
+                  },
+                  icon: const Icon(
+                    HeroiconsOutline.bell,
+                    size: 22,
+                  ),
+                ),
+                SizedBox(width: ScreenSize.screenWidth(context) * 0.008),
+              ],
+
+              bottom: PreferredSize(
+                  preferredSize:
+                      Size.fromHeight(ScreenSize.screenHeight(context) * 0.05),
+                  child: Column(
+                    children: [
+                      categoryListView(),
+                      SizedBox(
+                        height: ScreenSize.screenHeight(context) * 0.006,
+                      )
+                    ],
+                  )),
             ),
-
-            titleSpacing: 1.0,
-            floating: true,
-            pinned: false,
-            snap: false,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  GoRouter.of(context).pushNamed('searchSuggestionPage');
-                },
-                icon: const Icon(
-                  HeroiconsOutline.magnifyingGlass,
-                  size: 22,
-                ),
-              ),
-              // SizedBox(width: screenWidth * 0.01),
-              IconButton(
-                onPressed: () {
-                  GoRouter.of(context).pushNamed('notificationPage');
-                },
-                icon: const Icon(
-                  HeroiconsOutline.bell,
-                  size: 22,
-                ),
-              ),
-              SizedBox(width: ScreenSize.screenWidth(context) * 0.008),
-            ],
-
-            bottom: PreferredSize(
-                preferredSize:
-                    Size.fromHeight(ScreenSize.screenHeight(context) * 0.05),
-                child: Column(
-                  children: [
-                    categoryListView(),
-                    SizedBox(
-                      height: ScreenSize.screenHeight(context) * 0.006,
-                    )
-                  ],
-                )),
-          ),
-
-          SliverToBoxAdapter(
-            // child: AllCategory(category: categoryList[isCategory]['type']),
-            child: RefreshIndicator(
-              onRefresh: _refreshVideosList,
+            SliverToBoxAdapter(
+              // child: AllCategory(category: categoryList[isCategory]['type']),
               child: isAllCategorySelected
                   ? BlocBuilder<AllVideoListBloc, AllVideoListState>(
                       builder: (BuildContext context, state) {
@@ -559,11 +583,85 @@ class _HomePageContentState extends State<HomePageContent> {
                       },
                     ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
+
+  Widget _buildLoadingShimmer() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AspectRatio(
+          aspectRatio: 16 / 9,
+          child: ShimmerWidget.rectangular(
+            isBorder: false,
+            height: 50,
+          ),
+        ),
+        SizedBox(height: 4),
+        Row(
+          children: [
+            const SizedBox(width: 8),
+            const ShimmerWidget.circular(width: 40, height: 40, isBorder: true),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShimmerWidget.rectangular(
+                  height: 16,
+                  width: 120,
+                  isBorder: true,
+                ),
+                const SizedBox(height: 8),
+                ShimmerWidget.rectangular(
+                  height: 16,
+                  width: 200,
+                  isBorder: true,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+
+  Widget _buildVideoItem(VideoData video) {
+    String formattedTime = formatDuration(video.duration!);
+    return VideoListItem(
+      onTap: () {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          GoRouter.of(context).pushNamed('videoPage', pathParameters: {
+            "slug": video.slug!,
+          });
+        });
+      },
+      onTapChannel: () {
+        final String channelId = video.channel!.id.toString();
+        GoRouter.of(context).pushNamed('channelProfilePage', pathParameters: {
+          'channelId': channelId,
+        });
+      },
+      channelPhoto: video.channel?.logo ?? 'assets/images/sonysab.jpg',
+      thumbnailUrl: video.thumbnail!,
+      duration: formattedTime,
+      title: video.title!,
+      author: video.channel!.name!,
+      views: video.views!.toString(),
+      uploadTime: video.createdAtHuman!,
+      onMorePressed: () {
+        showPopupMenu(context);
+      },
+    );
+  }
+
+
+
 
   void showPopupMenu(BuildContext context) {
     showDialog(

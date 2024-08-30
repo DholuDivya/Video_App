@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +16,8 @@ class UserHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String userName = Global.userData!.userName!;
+    final String channelLogo = Global.userData!.userProfilePhoto!;
     return Container(
       // color: red,
       height: ScreenSize.screenHeight(context) * 0.12,
@@ -28,7 +32,9 @@ class UserHeaderWidget extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 25,
-              backgroundImage: NetworkImage('${Global.userData!.userProfilePhoto}'),
+              backgroundImage: channelLogo.startsWith('http')
+                  ? NetworkImage(channelLogo)  // Load from network if it's a valid URL
+                  : FileImage(File(channelLogo)),
             ),
           ),
 
@@ -37,7 +43,7 @@ class UserHeaderWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${Global.userData!.userName}',
+                userName,
                 style: const TextStyle(
                   fontFamily: fontFamily,
                   fontSize: 22

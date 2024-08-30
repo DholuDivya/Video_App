@@ -250,7 +250,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: Theme.of(context).colorScheme.tertiaryFixedDim,
+                          // color: Theme.of(context).colorScheme.tertiaryFixedDim,
                         ),
                         // padding: EdgeInsets.all(0),
                         child: CustomToggleButton(

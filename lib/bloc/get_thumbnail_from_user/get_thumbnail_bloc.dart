@@ -1,6 +1,3 @@
-
-
-
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -13,8 +10,6 @@ import 'package:vimeo_clone/bloc/get_thumbnail_from_user/get_thumbnail_state.dar
 import 'package:vimeo_clone/config/colors.dart';
 
 class GetThumbnailBloc extends Bloc<GetThumbnailEvent, GetThumbnailState> {
-
-
   GetThumbnailBloc() : super(GetThumbnailInitial()) {
     on<OpenFilesToGetThumbnail>(_openFilesToGetThumbnail);
   }
@@ -31,7 +26,7 @@ class GetThumbnailBloc extends Bloc<GetThumbnailEvent, GetThumbnailState> {
       if (result != null && result.files.single.path != null) {
         final PlatformFile thumbnail = result.files.first;
         final croppedThumbnail = await cropImage(thumbnail);
-        print('Cropped image path: ${croppedThumbnail}');
+        print('Cropped image path: $croppedThumbnail');
 
         emit(GetThumbnailSuccess(videoThumbnail: croppedThumbnail));
       } else {

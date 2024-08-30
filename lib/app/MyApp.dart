@@ -16,6 +16,8 @@ import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/edit_channel/edit_channel_bloc.dart';
+import 'package:vimeo_clone/bloc/get_channel_logo/get_channel_logo_bloc.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_bloc.dart';
@@ -108,6 +110,8 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => GetCommentsBloc()),
         BlocProvider(create: (context) => AddCommentBloc()),
         BlocProvider(create: (context) => LikeDislikeCommentBloc()),
+        BlocProvider(create: (context) => EditChannelBloc()),
+        BlocProvider(create: (context) => GetChannelLogoBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

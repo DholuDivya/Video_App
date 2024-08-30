@@ -3,18 +3,40 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/custom_history_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/shimmer.dart';
 
-class UserHistoryWidget extends StatelessWidget {
+class UserHistoryWidget extends StatefulWidget {
   const UserHistoryWidget({super.key});
 
   @override
+  State<UserHistoryWidget> createState() => _UserHistoryWidgetState();
+}
+
+class _UserHistoryWidgetState extends State<UserHistoryWidget> {
+
+  // late int historyData;
+  //
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
+  //
+  //   final historyBloc = context.read<GetUserHistoryBloc>();
+  //   historyBloc.stream.listen((state){
+  //     if(state is GetUserHistorySuccess){
+  //       historyData = state.userHistory.length;
+  //     }
+  //   });
+  //
+  //   super.initState();
+  // }
+  @override
   Widget build(BuildContext context) {
-    return
-      Column(
+    return Column(
         children: [
           Padding(
             padding: EdgeInsets.only(

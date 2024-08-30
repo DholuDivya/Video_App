@@ -46,7 +46,7 @@ class UploadVideoBloc extends Bloc<UploadVideoEvent, UploadVideoState>{
         )
       );
 
-      print('99999999999999999999999       ${response} 99999999999999999999999       ${response.statusCode}');
+      print('99999999999999999999999       $response 99999999999999999999999       ${response.statusCode}');
       if(response.data != null){
         print('Video Uploaded Successfully');
 

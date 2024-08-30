@@ -22,19 +22,19 @@ class _NotificationPageState extends State<NotificationPage> {
           ),
         ),
 
-        actions: [
-          IconButton(
-              onPressed: (){
-                GoRouter.of(context).pushNamed('searchPage');
-              },
-              icon: Icon(Remix.search_line)
-          ),
-
-          IconButton(
-              onPressed: (){},
-              icon: Icon(Remix.more_2_fill)
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: (){
+        //         GoRouter.of(context).pushNamed('searchPage');
+        //       },
+        //       icon: Icon(Remix.search_line)
+        //   ),
+        //
+        //   IconButton(
+        //       onPressed: (){},
+        //       icon: Icon(Remix.more_2_fill)
+        //   ),
+        // ],
       ),
       body: SingleChildScrollView(
         child: Column(

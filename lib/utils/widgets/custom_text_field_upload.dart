@@ -14,6 +14,7 @@ class CustomTextFieldUpload extends StatelessWidget {
   final bool? isEnabled;
   final Widget? suffix;
   final bool? readOnly;
+  final Function(String)? onChange;
 
   const CustomTextFieldUpload({
     super.key,
@@ -25,7 +26,8 @@ class CustomTextFieldUpload extends StatelessWidget {
     this.obscure,
     this.isEnabled,
     this.suffix,
-    this.readOnly
+    this.readOnly,
+    this.onChange
   });
 
   @override
@@ -70,6 +72,7 @@ class CustomTextFieldUpload extends StatelessWidget {
           ),
           counterText: ''
       ),
+      onChanged: onChange,
     );
   }
 }

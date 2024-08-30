@@ -733,7 +733,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide:
-                                BorderSide(color: Colors.black12, width: 0.5),
+                                const BorderSide(color: Colors.black12, width: 0.5),
                           ),
                           labelText: 'Select a visibility',
                           labelStyle: TextStyle(

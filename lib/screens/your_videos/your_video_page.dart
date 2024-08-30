@@ -44,12 +44,12 @@ class YourVideoPage extends StatelessWidget {
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: state.videoData.first.channel!.videos!.length,
+                    itemCount: state.videoData.first.channel.videos.length,
                     itemBuilder: (BuildContext context, int index) {
 
-                      final videoData = state.videoData.first.channel!.videos?[index];
-                      int? totalSeconds = state.videoData.first.channel!.videos?[index].duration!;
-                      String formattedTime = formatDuration(totalSeconds!);
+                      final videoData = state.videoData.first.channel.videos[index];
+                      int? totalSeconds = state.videoData.first.channel.videos[index].duration;
+                      String formattedTime = formatDuration(totalSeconds);
 
                       return Padding(
                         padding: EdgeInsets.only(
@@ -57,10 +57,10 @@ class YourVideoPage extends StatelessWidget {
                           bottom: 5.h
                         ),
                         child: CustomVideoPreview(
-                            imageUrl: '${videoData?.thumbnails}',
-                            videoTitle: '${videoData?.title}',
-                            videoViews: '${videoData?.views}',
-                            uploadTime: '${videoData?.createdAtHuman}',
+                            imageUrl: videoData.thumbnails,
+                            videoTitle: videoData.title,
+                            videoViews: '${videoData.views}',
+                            uploadTime: videoData.createdAtHuman,
                             videoDuration: formattedTime
                         ),
                       );

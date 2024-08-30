@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:vimeo_clone/Config/constants.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
@@ -14,10 +16,10 @@ class YourVideosRepo{
      if(response.statusCode == 200){
        List<GetChannelDetailModel> yourVideoData = [];
        yourVideoData.add(GetChannelDetailModel.fromJson(response.data));
-
+       print('Your videos successfully fetched  $yourVideoData');
        return yourVideoData;
      }else{
-       return throw ApiException('Fail to Get Your Video ${response.statusCode}');
+       return throw ApiException('Fail to Get Channel Profile ${response.statusCode}');
      }
    }catch(e){
      throw ApiException('Fail to call API');

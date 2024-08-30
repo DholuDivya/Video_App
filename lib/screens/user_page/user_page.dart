@@ -4,15 +4,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/appLinks.dart';
+import 'package:vimeo_clone/bloc/add_user_history/add_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
+import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
+import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/config/security.dart';
+import 'package:vimeo_clone/model/user_history_model.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/custom_user_page_button.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_header_widget.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_history_widget.dart';
@@ -27,12 +32,30 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
 
+  late int historyLength = 0;
+  late List<Data> historyData = [];
+
+
   @override
   void initState() {
     print('88888888888888888888888   ');
+
+
+    final historyBloc = context.read<GetUserHistoryBloc>();
+    historyBloc.stream.listen((state){
+      if(state is GetUserHistorySuccess){
+        historyLength = state.userHistory.first.data!.length;
+        historyData = state.userHistory.first.data!;
+      }
+    });
+    // final historyBloc = context.read<GetUserHistoryBloc>();
+    print(':":::":":"":":""     $historyData');
+    super.initState();
+  }
+
+  Future<void> refreshData() async {
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
-    super.initState();
   }
 
 
@@ -51,7 +74,7 @@ class _UserPageState extends State<UserPage> {
 
           IconButton(
             onPressed: () {
-              GoRouter.of(context).pushNamed('searchPage');
+              GoRouter.of(context).pushNamed('searchSuggestionPage');
             },
             icon: const Icon(HeroiconsOutline.magnifyingGlass),
           ),
@@ -68,68 +91,73 @@ class _UserPageState extends State<UserPage> {
         ],
       ),
 
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const UserHeaderWidget(),
-            // SizedBox(height: ScreenSize.screenHeight(context) * 0.00,),
+      body: RefreshIndicator(
+        onRefresh: refreshData,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const UserHeaderWidget(),
+              // SizedBox(height: ScreenSize.screenHeight(context) * 0.00,),
 
-            const UserHistoryWidget(),
+              historyData.isEmpty && historyLength <0 ? Container() : const UserHistoryWidget(),
 
-            // SizedBox(height: 10.h,),
-            UserPlaylistWidget(),
+              // SizedBox(height: 10.h,),
+              UserPlaylistWidget(),
 
-            BlocBuilder<YourVideosBloc, YourVideosState>(
-              builder: (BuildContext context, YourVideosState state) {
-                var totalVideos;
-                if(state is YourVideosLoaded){
-                  totalVideos = state.videoData.first.videoCount;
-                  print('&&&&&&&&&&&&&&&&&&   $totalVideos');
-                }
-                return UserPageButton(
-                  buttonName: 'Your Videos',
-                  subTitle: '$totalVideos videos',
-                  buttonIcon: HeroiconsOutline.play,
-                  onTap: (){
-                    Future.delayed(const Duration(milliseconds: 220),(){
-                      GoRouter.of(context).pushNamed('yourVideoPage');
-                    });
-                  },
-                );
-              },
-            ),
+              BlocBuilder<YourVideosBloc, YourVideosState>(
+                builder: (BuildContext context, YourVideosState state) {
+                  var totalVideos;
+                  print('pppppppppppppp   $state');
+                  if(state is YourVideosLoaded){
+
+                    totalVideos = state.videoData.first;
+                    print('&&&&&&&&&&&&&&&&&&   $totalVideos');
+                  }
+                  return UserPageButton(
+                    buttonName: 'Your Videos',
+                    subTitle: '$totalVideos videos',
+                    buttonIcon: HeroiconsOutline.play,
+                    onTap: (){
+                      Future.delayed(const Duration(milliseconds: 220),(){
+                        GoRouter.of(context).pushNamed('yourVideoPage');
+                      });
+                    },
+                  );
+                },
+              ),
 
 
-            const UserPageButton(
-                buttonName: 'Downloads',
-                buttonIcon: HeroiconsOutline.arrowDownTray
-            ),
+              const UserPageButton(
+                  buttonName: 'Downloads',
+                  buttonIcon: HeroiconsOutline.arrowDownTray
+              ),
 
-            const Divider(thickness: 0.2, color: Colors.grey,),
+              const Divider(thickness: 0.2, color: Colors.grey,),
 
-            const UserPageButton(
-                buttonName: 'Your Movies',
-                buttonIcon: HeroiconsOutline.film
-            ),
+              const UserPageButton(
+                  buttonName: 'Your Movies',
+                  buttonIcon: HeroiconsOutline.film
+              ),
 
-            const UserPageButton(
-                buttonName: 'Get ${appName} Premium',
-                buttonIcon: Remix.youtube_line
-            ),
+              const UserPageButton(
+                  buttonName: 'Get ${appName} Premium',
+                  buttonIcon: Remix.youtube_line
+              ),
 
-            const Divider(thickness: 0.2, color: Colors.grey,),
+              const Divider(thickness: 0.2, color: Colors.grey,),
 
-            const UserPageButton(
-                buttonName: 'Time watched',
-                buttonIcon: HeroiconsOutline.chartBarSquare
-            ),
+              const UserPageButton(
+                  buttonName: 'Time watched',
+                  buttonIcon: HeroiconsOutline.chartBarSquare
+              ),
 
-            const UserPageButton(
-                buttonName: 'Help & feedback',
-                buttonIcon: HeroiconsOutline.questionMarkCircle
-            ),
+              const UserPageButton(
+                  buttonName: 'Help & feedback',
+                  buttonIcon: HeroiconsOutline.questionMarkCircle
+              ),
 
-          ],
+            ],
+          ),
         ),
       ),
     );

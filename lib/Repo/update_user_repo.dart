@@ -4,7 +4,7 @@ import 'package:vimeo_clone/config/api_routes.dart';
 class UpdateUserRepo{
   Future<dynamic> updateChannelDetail(String? channelName, String? channelLogo, String? channelBanner) async {
     try{
-      final response = await ApiBaseHelper().postAPICall(updateChannelUrl, {
+      final response = await ApiBaseHelper().postAPICall(editChannelUrl, {
         'name': channelName!,
         'logo': channelLogo!,
         'banner': channelBanner!

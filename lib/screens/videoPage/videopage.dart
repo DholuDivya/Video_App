@@ -55,6 +55,9 @@ import 'package:vimeo_clone/model/play_video_model.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
 
+import '../../bloc/add_user_history/add_user_history_bloc.dart';
+import '../../bloc/add_user_history/add_user_history_event.dart';
+
 
 
 class VideoPage extends StatefulWidget {
@@ -142,7 +145,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                   setState(() {
                     _lastReachedDuration = currentPosition;
                     _lastReachedDurationString = formatLastDuration(currentPosition);
-                    // context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
+                    context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
                   });
                 }
               }
@@ -1560,6 +1563,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
             return FractionallySizedBox(
               heightFactor: 0.605.h,
               child: Column(
+                // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // Top fixed container with comments text and close button
                   Padding(
@@ -1656,7 +1660,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                 SizedBox(height: ScreenSize.screenHeight(context) * 0.005),
                                                 Text(
                                                   getComments.comment!,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontFamily: fontFamily,
                                                     fontSize: 14,
                                                     overflow: TextOverflow.visible,
@@ -1670,7 +1674,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                         onTap: (){
                                                           context.read<LikeDislikeCommentBloc>().add(LikeCommentRequest(commentId: getComments.id!));
                                                           setState(() {
-                                                            if (isCommentLiked) {
+                                                            if (isCommentLiked){
                                                               isCommentLiked = false;
                                                               commentLikeCount--;
                                                             } else {
@@ -1680,7 +1684,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                               );
                                                               isCommentLiked = true;
                                                               commentLikeCount++;
-                                                              if (isCommentDisliked) {
+                                                              if (isCommentDisliked){
                                                                 isCommentDisliked = false;
                                                               }
                                                             }
