@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
@@ -34,8 +35,17 @@ class UserPlaylistPage extends StatelessWidget {
                         itemCount: state.userPlaylist.first.playlists!.length,
                         itemBuilder: (context, index){
                         final userPlaylist = state.userPlaylist.first.playlists![index];
+                        final playlistId = userPlaylist.id;
                           return InkWell(
-                            onTap: (){},
+                            onTap: (){
+                              Future.delayed(const Duration(milliseconds: 200),(){
+                                GoRouter.of(context).pushNamed('singlePlaylistPage',
+                                    pathParameters: {
+                                      'playlistId' : playlistId.toString()
+                                    }
+                                );
+                              });
+                            },
                             child: Padding(
                                 padding: EdgeInsets.only(
                                   top: 8.h,

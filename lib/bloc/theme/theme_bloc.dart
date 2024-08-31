@@ -7,7 +7,7 @@ import 'package:vimeo_clone/bloc/theme/theme_event.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeMode> {
   late int mode = 1;
-  ThemeBloc() : super(ThemeMode.system) {
+  ThemeBloc() : super(ThemeMode.light) {
     on<ThemeChanged>((event, emit) {
       _saveTheme(event.themeMode);
       emit(event.themeMode);
@@ -24,7 +24,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeMode> {
   void _loadTheme() {
     final box = Hive.box('themebox');
     final themeIndex =
-    box.get('themeMode', defaultValue: ThemeMode.system.index);
+    box.get('themeMode', defaultValue: ThemeMode.light.index);
     emit(ThemeMode.values[themeIndex]);
   }
 }

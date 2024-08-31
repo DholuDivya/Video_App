@@ -22,7 +22,8 @@ ThemeData lightTheme = ThemeData(
       primaryContainer: greyShade200,
 
         // TEXT
-        onPrimaryFixedVariant: greyShade800
+        onPrimaryFixedVariant: greyShade800,
+        onSecondaryFixedVariant: greyShade800
 
     ),
 
@@ -92,7 +93,8 @@ ThemeData darkTheme = ThemeData(
       onPrimaryContainer: white24,
 
       // TEXT
-      onPrimaryFixedVariant: white70
+      onPrimaryFixedVariant: white70,
+      onSecondaryFixedVariant: Colors.white54
 
     ),
 

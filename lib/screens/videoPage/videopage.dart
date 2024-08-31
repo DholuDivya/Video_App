@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:pod_player/pod_player.dart';
@@ -15,8 +13,6 @@ import 'package:vimeo_clone/bloc/add_comment/add_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/add_comment/add_comment_event.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_event.dart';
-import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
-import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
@@ -30,7 +26,6 @@ import 'package:vimeo_clone/bloc/like_dislike/like_dislike_event.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_state.dart';
 import 'package:vimeo_clone/bloc/like_dislike_comment/like_dislike_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike_comment/like_dislike_comment_event.dart';
-import 'package:vimeo_clone/bloc/like_dislike_comment/like_dislike_comment_state.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_event.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_state.dart';
@@ -54,7 +49,6 @@ import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/model/play_video_model.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
-
 import '../../bloc/add_user_history/add_user_history_bloc.dart';
 import '../../bloc/add_user_history/add_user_history_event.dart';
 
@@ -92,7 +86,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   late int commentLikeCount = 0;
   late bool isCommentLiked = false;
   late bool isCommentDisliked = false;
-
+  Timer? _timer;
 
   @override
   void initState() {
@@ -111,7 +105,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
         commentData = state.getCommentsList.first.data;
         print('^^^^^^^^^^^^^    $commentLength');
         print('898898989889989898989898');
-
       }
     });
 
@@ -140,18 +133,36 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
             _podController?.addListener(() {
               if (_podController?.isInitialised ?? false) {
-                final currentPosition = _podController?.currentVideoPosition;
-                if (currentPosition != null) {
-                  setState(() {
+                // Make the initial API call when the video is initialized
+                if (_lastReachedDuration == null) {
+                  final currentPosition = _podController?.currentVideoPosition;
+                  if (currentPosition != null) {
                     _lastReachedDuration = currentPosition;
                     _lastReachedDurationString = formatLastDuration(currentPosition);
                     context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
-                  });
+
+                    // Start the timer to make API calls every 10 seconds
+                    _startTimer();
+                  }
                 }
               }
             });
+
           });
         }
+      }
+    });
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+      final currentPosition = _podController?.currentVideoPosition;
+      if (currentPosition != null) {
+        setState(() {
+          _lastReachedDuration = currentPosition;
+          _lastReachedDurationString = formatLastDuration(currentPosition);
+          context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
+        });
       }
     });
   }
@@ -159,11 +170,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
   @override
   void dispose() {
-
-    if (_lastReachedDuration != null) {
-      print('Last reached video duration: $_lastReachedDurationString');
-    }
-
+    _timer?.cancel();
     _podController?.dispose();
     _videoBlocSubscription?.cancel();
     _focusNode.dispose();
@@ -285,9 +292,9 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                               Text(
                                                   _subscribeCount.toString(),
                                                   style: TextStyle(
-                                                  fontFamily: fontFamily,
-                                                  fontSize: 12,
-                                                  color: Colors.grey[700],
+                                                    fontFamily: fontFamily,
+                                                    fontSize: 12,
+                                                    color: Colors.grey[700],
                                                   ),
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
@@ -372,23 +379,8 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                             children: [
                               BlocBuilder<LikeDislikeVideoBloc, LikeDislikeVideoState>(
                                   builder: (BuildContext context, LikeDislikeVideoState state){
-                                    if(state is LikeVideoSuccess){
-
-                                      // _isLiked = state.likeVideo[0].data!.isLiked!;
-                                      // _isDisLiked = state.likeVideo[0].data!.isDisliked!;
-                                      // _likeCount = state.likeVideo[0].data!.likesCount!;
-                                      // print('>>>>>>>>>>>>>>>>>>      ${_isLiked}');
-                                      // print('>>>>>>>>>>>>>>>>>>      ${_isDisLiked}');
-                                      // print('>>>>>>>>>>>>>>>>>>      ${_likeCount}');
-                                    }else if(state is DislikeVideoSuccess){
-
-                                      // _isLiked = state.dislikeVideo[0].data!.isLiked!;
-                                      // _isDisLiked = state.dislikeVideo[0].data!.isDisliked!;
-                                      // _likeCount = state.dislikeVideo[0].data!.likesCount!;
-                                      // print('^^^^^^^^^^^^^^^^^^      ${_isLiked}');
-                                      // print('^^^^^^^^^^^^^^^^^^      ${_isDisLiked}');
-                                      // print('^^^^^^^^^^^^^^^^^^      ${_likeCount}');
-                                    }
+                                    if(state is LikeVideoSuccess){}
+                                    else if(state is DislikeVideoSuccess){}
                                     return IntrinsicWidth(
                                       child: IntrinsicHeight(
                                         child: Container(
@@ -411,10 +403,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                     print('((((  $_isDisLiked   )))) ');
                                                     print('((((  $_isLiked  ))))');
                                                     if (_isLiked) {
-                                                      // ToastManager().showToast(
-                                                      //     context: context,
-                                                      //     message: 'Video unliked'
-                                                      // );
                                                       _isLiked = false;
                                                       _likeCount--;
                                                     } else {
@@ -428,9 +416,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                         _isDisLiked = false;
                                                       }
                                                     }
-                                                    // _isLiked = !_isLiked;
-                                                    // _isDisLiked = !_isDisLiked;
-                                                    // _likeCount++;
                                                     print('***********     $_isLiked');
                                                     print('***********     $_isDisLiked');
                                                   });
@@ -477,9 +462,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                         _likeCount--;
                                                       }
                                                     }
-                                                    // _isDisLiked = !_isDisLiked;
-                                                    // _isLiked = !_isLiked;
-                                                    // _likeCount--;
                                                     print('***********     $_isDisLiked');
                                                     print('***********     $_isLiked');
                                                   });
@@ -495,9 +477,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                     );
                                   }
                                   ),
-                              // const LikeDislikeButton(
-                              //   initialLikeCount: 5824,
-                              // ),
+
                               SizedBox(
                                   width: ScreenSize.screenWidth(context) *
                                       0.03),
@@ -532,80 +512,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                           height: ScreenSize.screenHeight(context) * 0.02,),
 
 
-                        // Padding(
-                        //   padding: EdgeInsets.only(
-                        //       left: ScreenSize.screenWidth(context) * 0.03,
-                        //       right: ScreenSize.screenWidth(context) * 0.03
-                        //   ),
-                        //   child: InkWell(
-                        //     onTap: () {
-                        //       videoCommentSheet(context);
-                        //     },
-                        //     child: Container(
-                        //       // height: ScreenSize.screenHeight(context) * 0.,
-                        //       width: ScreenSize.screenWidth(context) * 0.95,
-                        //       decoration: BoxDecoration(
-                        //           color: Theme.of(context).colorScheme.surfaceDim,
-                        //           borderRadius: BorderRadius.circular(10)
-                        //       ),
-                        //       padding: const EdgeInsets.all(10),
-                        //       child: Column(
-                        //         children: [
-                        //           Row(
-                        //             children: [
-                        //               const Text(
-                        //                   'Comments',
-                        //                   style: TextStyle(
-                        //                       fontWeight: FontWeight.bold
-                        //                   )
-                        //               ),
-                        //               SizedBox(
-                        //                 width: ScreenSize.screenWidth(context) *
-                        //                     0.02,),
-                        //               Text(
-                        //                 commentLength,
-                        //                 style: TextStyle(
-                        //                     color: Colors.grey.shade500
-                        //                 ),
-                        //               )
-                        //             ],
-                        //           ),
-                        //           SizedBox(
-                        //             height: ScreenSize.screenHeight(context) *
-                        //                 0.01,),
-                        //
-                        //           Row(
-                        //             mainAxisAlignment: MainAxisAlignment.start,
-                        //             crossAxisAlignment: CrossAxisAlignment
-                        //                 .start,
-                        //             children: [
-                        //               CircleAvatar(
-                        //                 radius: 10,
-                        //                 backgroundImage: AssetImage(
-                        //                     'assets/images/tmkocteam.jpg'),
-                        //               ),
-                        //               SizedBox(
-                        //                 width: ScreenSize.screenWidth(context) *
-                        //                     0.02,),
-                        //
-                        //               Expanded(
-                        //                 child: Text(
-                        //                   userComment,
-                        //                   style: const TextStyle(
-                        //                       fontFamily: fontFamily,
-                        //                       fontSize: 12,
-                        //                       overflow: TextOverflow.ellipsis
-                        //                   ),
-                        //                   maxLines: 4,
-                        //                 ),
-                        //               )
-                        //             ],
-                        //           )
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                         commentLength != 0 ? BlocBuilder<GetCommentsBloc, GetCommentsState>(
                           builder: (BuildContext context, GetCommentsState state) {
                             if(state is GetCommentsLoaded){
@@ -825,17 +731,45 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                 final videoDuration = recommendedVideos.duration;
                                 final formattedDuration = formatDuration(videoDuration!);
                                 return recommendedVideos.type == "video" ? VideoListItem(
-                                        channelPhoto: '${recommendedVideos.channel!.logo}',
-                                        thumbnailUrl: '${recommendedVideos.thumbnail}',
-                                        duration: formattedDuration,
-                                        title: '${recommendedVideos.title}',
-                                        author: '${recommendedVideos.channel!.name}',
-                                        views: '${recommendedVideos.views}',
-                                        uploadTime: '${recommendedVideos.createdAtHuman}',
-                                        onMorePressed: () {
-                                          showPopupMenu();
-                                        },
-                                    ) : null;
+                                  onTap: (){
+                                    if(Navigator.canPop(context)){
+                                      Navigator.pop(context);
+                                      Future.delayed(
+                                          const Duration(milliseconds: 200), () {
+                                        GoRouter.of(context).pushNamed('videoPage',
+                                            pathParameters: {
+                                              "slug": recommendedVideos.slug!
+                                            });
+                                      });
+                                    }
+
+                                  },
+                                  onTapChannel: (){
+                                    if(Navigator.canPop(context)){
+                                      Navigator.pop(context);
+                                      final String channelId = recommendedVideos.channel!.id.toString();
+                                      GoRouter.of(context).pushNamed(
+                                          'channelProfilePage',
+                                          pathParameters: {
+                                            'channelId': channelId
+                                          }
+                                      );
+                                    }
+
+
+
+                                  },
+                                  channelPhoto: '${recommendedVideos.channel!.logo}',
+                                  thumbnailUrl: '${recommendedVideos.thumbnail}',
+                                  duration: formattedDuration,
+                                  title: '${recommendedVideos.title}',
+                                  author: '${recommendedVideos.channel!.name}',
+                                  views: '${recommendedVideos.views}',
+                                  uploadTime: '${recommendedVideos.createdAtHuman}',
+                                  onMorePressed: () {
+                                    showPopupMenu();
+                                    },
+                                ) : null;
                               }
                             },
                           ),
@@ -1784,9 +1718,14 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                             padding: EdgeInsets.only(
                                 left: ScreenSize.screenWidth(context) * 0.02
                             ),
-                            child: const Align(
+                            child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text('Add Comment...')
+                                child: Text(
+                                  'Add Comment...',
+                                  style: TextStyle(
+                                    fontFamily: fontFamily,
+                                  )
+                                )
                             ),
                           ),
                         ),
@@ -1820,64 +1759,79 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
         return Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom, // This ensures the padding matches the keyboard height
-            // left: 5.w,
-            // right: 5.w,
+            left: 5.w,
+            right: 5.w,
             // top: 5.h,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min, // Ensures the sheet is as small as possible
             children: [
-              TextField(
-                minLines: 1,
-                maxLines: 5,
-                autofocus: true,
-                controller: _commentController,
-                focusNode: _focusNode,
-                decoration: InputDecoration(
-                  hintText: 'Add Comment...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(0),
-                    borderSide: BorderSide.none,
+              Container(
+                height: 30.h,
+                child: TextField(
+                  minLines: 1,
+                  maxLines: 5,
+                  autofocus: true,
+                  controller: _commentController,
+                  focusNode: _focusNode,
+                  decoration: InputDecoration(
+                    hintText: 'Add Comment...',
+                    hintStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                      fontFamily: fontFamily
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: EdgeInsets.only(
+                      left: 15.w,
+                      right: 15.w,
+                      top: 5.h
+                    ),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.tertiaryFixedDim,
+
+                    suffix: GestureDetector(
+                      onTap: (){
+                        final text = _commentController.text;
+                        if (text.isNotEmpty) {
+                          context.read<AddCommentBloc>().add(AddCommentRequest(
+                            userComment: text,
+                            videoSlug: widget.slug,
+                          ));
+                          ToastManager().showToast(
+                            context: context,
+                            message: 'Comment added successfully',
+                          );
+
+                          context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
+                        }
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(HeroiconsOutline.paperAirplane, color: Colors.grey,),
+                    )
                   ),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.tertiaryFixedDim,
-                  suffix: GestureDetector(
-                    onTap: (){
-                      final text = _commentController.text;
-                      if (text.isNotEmpty) {
-                        context.read<AddCommentBloc>().add(AddCommentRequest(
-                          userComment: text,
-                          videoSlug: widget.slug,
-                        ));
-                        ToastManager().showToast(
-                          context: context,
-                          message: 'Comment added successfully',
-                        );
+                  onSubmitted: (text) {
+                    if (text.isNotEmpty) {
+                      context.read<AddCommentBloc>().add(AddCommentRequest(
+                        userComment: text,
+                        videoSlug: widget.slug,
+                      ));
+                      ToastManager().showToast(
+                        context: context,
+                        message: 'Comment added successfully',
+                      );
 
-                        context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
-                      }
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(HeroiconsOutline.paperAirplane),
-                  )
+                      print('succcessssss');
+                      context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
+                    }
+                    _commentController.clear();
+                    Navigator.pop(context);
+                  },
                 ),
-                onSubmitted: (text) {
-                  if (text.isNotEmpty) {
-                    context.read<AddCommentBloc>().add(AddCommentRequest(
-                      userComment: text,
-                      videoSlug: widget.slug,
-                    ));
-                    ToastManager().showToast(
-                      context: context,
-                      message: 'Comment added successfully',
-                    );
-
-                    context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
-                  }
-                  Navigator.pop(context); // Close the sheet after submitting
-                },
               ),
-              // SizedBox(height: 5.h,),
+              SizedBox(height: 5.h,),
               // const SizedBox(height: 16.0),
               // ElevatedButton(
               //   onPressed: () {

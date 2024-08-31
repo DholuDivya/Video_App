@@ -85,23 +85,23 @@ class _SettingPageState extends State<SettingPage> {
                         });
                       },
                     ),
-                    RadioListTile<ThemeMode>(
-                      visualDensity: const VisualDensity(horizontal: -4),
-                      activeColor: Colors.blue,
-                      title: const Text('System Mode',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: fontFamily
-                          )
-                      ),
-                      value: ThemeMode.system,
-                      groupValue: _selectedTheme,
-                      onChanged: (ThemeMode? value) {
-                        setState(() {
-                          _selectedTheme = value;
-                        });
-                      },
-                    ),
+                    // RadioListTile<ThemeMode>(
+                    //   visualDensity: const VisualDensity(horizontal: -4),
+                    //   activeColor: Colors.blue,
+                    //   title: const Text('System Mode',
+                    //       style: TextStyle(
+                    //           fontSize: 15,
+                    //           fontFamily: fontFamily
+                    //       )
+                    //   ),
+                    //   value: ThemeMode.system,
+                    //   groupValue: _selectedTheme,
+                    //   onChanged: (ThemeMode? value) {
+                    //     setState(() {
+                    //       _selectedTheme = value;
+                    //     });
+                    //   },
+                    // ),
                   ],
                 );
               },
@@ -176,11 +176,11 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // GO PRO
-                  CustomSettingButton(
-                      icon: Remix.star_fill,
-                      btnName: ('Go Pro'),
-                      onTap: () {}
-                  ),
+                  // CustomSettingButton(
+                  //     icon: Remix.star_fill,
+                  //     btnName: ('Go Pro'),
+                  //     onTap: () {}
+                  // ),
 
                   // AUTOPLAY
                   CustomSettingButton(
@@ -190,11 +190,11 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // POINTS
-                  CustomSettingButton(
-                      icon: Remix.sticky_note_line,
-                      btnName: ('Points'),
-                      onTap: () {}
-                  ),
+                  // CustomSettingButton(
+                  //     icon: Remix.sticky_note_line,
+                  //     btnName: ('Points'),
+                  //     onTap: () {}
+                  // ),
 
                   // BLOCKED USERS
                   CustomSettingButton(
@@ -211,32 +211,32 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
 
-                  SizedBox(height: 10,),
-                  Divider(thickness: 0.5, color: Colors.grey,),
-                  SizedBox(height: 10,),
-
-
-                  // PASSWORD
-                  CustomSettingButton(
-                      icon: HeroiconsOutline.lockClosed,
-                      btnName: ('Password'),
-                      onTap: () {}
-                  ),
-
-                  // TWO-FACTOR AUTHENTICATION
-                  CustomSettingButton(
-                      icon: HeroiconsOutline.key,
-                      btnName: ('Two-factor authentication'),
-                      onTap: () {}
-                  ),
-
-                  // MANAGE SESSIONS
-                  CustomSettingButton(
-                      icon: HeroiconsOutline.tv,
-                      btnName: ('Manage Sessions'),
-                      onTap: () {}
-                  ),
-
+                  // SizedBox(height: 10,),
+                  // Divider(thickness: 0.5, color: Colors.grey,),
+                  // SizedBox(height: 10,),
+                  //
+                  //
+                  // // PASSWORD
+                  // CustomSettingButton(
+                  //     icon: HeroiconsOutline.lockClosed,
+                  //     btnName: ('Password'),
+                  //     onTap: () {}
+                  // ),
+                  //
+                  // // TWO-FACTOR AUTHENTICATION
+                  // CustomSettingButton(
+                  //     icon: HeroiconsOutline.key,
+                  //     btnName: ('Two-factor authentication'),
+                  //     onTap: () {}
+                  // ),
+                  //
+                  // // MANAGE SESSIONS
+                  // CustomSettingButton(
+                  //     icon: HeroiconsOutline.tv,
+                  //     btnName: ('Manage Sessions'),
+                  //     onTap: () {}
+                  // ),
+                  //
 
                   SizedBox(height: 10,),
                   Divider(thickness: 0.5, color: Colors.grey,),
@@ -253,16 +253,16 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // PICTURE IN PICTURE
-                  CustomSettingButton(
-                      icon: Remix.picture_in_picture_2_line,
-                      btnName: ('Picture in picture'),
-                      onTap: () {}
-                  ),
+                  // CustomSettingButton(
+                  //     icon: Remix.picture_in_picture_2_line,
+                  //     btnName: ('Picture in picture'),
+                  //     onTap: () {}
+                  // ),
 
 
-                  SizedBox(height: 10,),
-                  Divider(thickness: 0.5, color: Colors.grey,),
-                  SizedBox(height: 10,),
+                  // SizedBox(height: 10,),
+                  // Divider(thickness: 0.5, color: Colors.grey,),
+                  // SizedBox(height: 10,),
 
 
                   // CLEAR WATCHED HISTORY
@@ -273,18 +273,18 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // PAUSE WATCH HISTORY
-                  CustomSettingButton(
-                      icon: HeroiconsOutline.pauseCircle,
-                      btnName: ('Pause watch history'),
-                      onTap: () {}
-                  ),
+                  // CustomSettingButton(
+                  //     icon: HeroiconsOutline.pauseCircle,
+                  //     btnName: ('Pause watch history'),
+                  //     onTap: () {}
+                  // ),
 
                   // CLEAR CACHE
-                  CustomSettingButton(
-                      icon: Remix.brush_2_line,
-                      btnName: ('Clear cache'),
-                      onTap: () {}
-                  ),
+                  // CustomSettingButton(
+                  //     icon: Remix.brush_2_line,
+                  //     btnName: ('Clear cache'),
+                  //     onTap: () {}
+                  // ),
 
 
                   SizedBox(height: 10,),
@@ -348,7 +348,6 @@ class _SettingPageState extends State<SettingPage> {
                         context.read<AuthBloc>().add(OnLogOutRequestEvent());
                       }
                   ),
-
 
 
 

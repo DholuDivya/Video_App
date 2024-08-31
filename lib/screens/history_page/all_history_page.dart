@@ -6,7 +6,7 @@ import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 
-import '../../utils/widgets/custom_channal_video_preview.dart';
+import '../../utils/widgets/custom_channel_video_preview.dart';
 
 class AllHistoryPage extends StatelessWidget {
   const AllHistoryPage({super.key});

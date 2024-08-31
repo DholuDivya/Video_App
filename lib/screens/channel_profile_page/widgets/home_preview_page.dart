@@ -5,7 +5,7 @@ import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
-import 'package:vimeo_clone/utils/widgets/custom_channal_video_preview.dart';
+import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_for_you_preview.dart';
 
 class HomePreviewPage extends StatefulWidget {

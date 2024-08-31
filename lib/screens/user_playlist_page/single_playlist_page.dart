@@ -12,7 +12,7 @@ import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channel_preview.dart';
 
-import '../../utils/widgets/custom_channal_video_preview.dart';
+import '../../utils/widgets/custom_channel_video_preview.dart';
 
 class SinglePlaylistPage extends StatefulWidget {
   final int playlistId;
@@ -55,7 +55,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                       //   bottomRight: Radius.circular(20),
                       //
                       // ),
-                      color: greyShade300,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     child: Stack(
                       children: [
@@ -103,7 +103,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                                         style: TextStyle(
                                             fontFamily: fontFamily,
                                             fontSize: 10,
-                                            color: greyShade700
+                                            color: greyShade500
                                         ),
                                       )
                                     ],
@@ -117,10 +117,6 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(100),
                                           color: Colors.white.withOpacity(0.4)
-
-
-
-
                                       ),
                                       child: const Icon(HeroiconsOutline.pencilSquare, size: 20,),
                                     ),
@@ -143,7 +139,8 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20)
                         ),
-                        color: Colors.white
+                        color: Colors.transparent
+                        // color: Theme.of(context).colorScheme.surface
                     ),
                     padding: EdgeInsets.only(top: 10.h),
                     child: ListView.builder(

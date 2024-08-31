@@ -35,6 +35,8 @@ import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/screens/ShortsScreen/shorts_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/crop_shorts_page.dart';
 import 'package:vimeo_clone/utils/widgets/custom_bottom_sheet_button.dart';
+import 'package:vimeo_clone/utils/widgets/custom_shorts_preview.dart';
+import 'package:vimeo_clone/utils/widgets/custom_shorts_preview_homepage.dart';
 import '../../Utils/Widgets/bottom_nav_bar.dart';
 import '../../bloc/video_category/video_category_event.dart';
 import '../../bloc/video_list/video_list_bloc.dart';
@@ -414,53 +416,124 @@ class _HomePageContentState extends State<HomePageContent> {
                         // return Center(child: CircularProgressIndicator(),);
                       } else if (state is AllVideoListLoaded) {
 
+                        final videoLength = state.videoList.length;
                         return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.only(
-                                top: ScreenSize.screenHeight(context) * 0.02),
-                            itemCount: state.videoList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final type = state.videoList[index].type;
-                              print('!!!!!!!!!!!!!!!!!!!!      ${state.videoList[index].duration}');
-                              int totalSeconds = state.videoList[index].duration!;
-                              String formattedTime = formatDuration(totalSeconds);
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.only(top: ScreenSize.screenHeight(context) * 0.02),
+                          itemCount: videoLength + 1, // Add 1 to account for the inserted container
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == 2) { // Insert the container between index 2 and 3
+                              return Column(
+                                children: [
+                                  _shortsView(),
+                                  SizedBox(
+                                    height: 15.h,
+                                  )
+                                ],
+                              );
+                            }
 
-                              return type == "video" ? VideoListItem(
-                                onTap: () {
-                                  Future.delayed(
-                                      const Duration(milliseconds: 200), () {
-                                    GoRouter.of(context).pushNamed('videoPage',
-                                        pathParameters: {
-                                          "slug": state.videoList[index].slug!
-                                        });
+                            // Adjust the index to access the correct video item
+                            final adjustedIndex = index > 2 ? index - 1 : index;
+                            final type = state.videoList[adjustedIndex].type;
+
+                            print('!!!!!!!!!!!!!!!!!!!!      ${state.videoList[adjustedIndex].duration}');
+                            int totalSeconds = state.videoList[adjustedIndex].duration!;
+                            String formattedTime = formatDuration(totalSeconds);
+
+                            return type == "video"
+                                ? VideoListItem(
+                              onTap: () {
+                                Future.delayed(const Duration(milliseconds: 200), () {
+                                  GoRouter.of(context).pushNamed('videoPage', pathParameters: {
+                                    "slug": state.videoList[adjustedIndex].slug!
                                   });
-                                },
-                                onTapChannel: (){
-                                  final String channelId = state.videoList[index].channel!.id.toString();
-                                  GoRouter.of(context).pushNamed(
-                                    'channelProfilePage',
-                                    pathParameters: {
-                                      'channelId': channelId
-                                    }
-                                  );
-                                },
-                                channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
-                                thumbnailUrl: '${state.videoList[index].thumbnail}',
-                                duration: formattedTime,
-                                title: '${state.videoList[index].title}',
-                                author: '${state.videoList[index].channel?.name}',
-                                views: '${state.videoList[index].views}',
-                                uploadTime:
-                                    '${state.videoList[index].createdAtHuman}',
-                                onMorePressed: () {
-                                  // final RenderBox renderBox = context.findRenderObject() as RenderBox;
-                                  // final Offset offset = renderBox.localToGlobal(Offset.zero);
-                                  // showPopupMenu(context, offset);
-                                  showPopupMenu(context);
-                                },
-                              ) : null;
-                            });
+                                });
+                              },
+                              onTapChannel: () {
+                                final String channelId =
+                                state.videoList[adjustedIndex].channel!.id.toString();
+                                GoRouter.of(context).pushNamed('channelProfilePage',
+                                    pathParameters: {'channelId': channelId});
+                              },
+                              channelPhoto: state.videoList[adjustedIndex].channel?.logo ??
+                                  'assets/images/sonysab.jpg',
+                              thumbnailUrl: '${state.videoList[adjustedIndex].thumbnail}',
+                              duration: formattedTime,
+                              title: '${state.videoList[adjustedIndex].title}',
+                              author: '${state.videoList[adjustedIndex].channel?.name}',
+                              views: '${state.videoList[adjustedIndex].views}',
+                              uploadTime: '${state.videoList[adjustedIndex].createdAtHuman}',
+                              onMorePressed: () {
+                                showPopupMenu(context);
+                              },
+                            )
+                                : null;
+                          },
+                        );
+
+
+
+
+
+                        // final videoLength = state.videoList.length;
+                        // return ListView.builder(
+                        //     shrinkWrap: true,
+                        //     physics: const NeverScrollableScrollPhysics(),
+                        //     padding: EdgeInsets.only(
+                        //         top: ScreenSize.screenHeight(context) * 0.02),
+                        //     itemCount: videoLength,
+                        //     itemBuilder: (BuildContext context, int index) {
+                        //       final type = state.videoList[index].type;
+                        //       print('!!!!!!!!!!!!!!!!!!!!      ${state.videoList[index].duration}');
+                        //       int totalSeconds = state.videoList[index].duration!;
+                        //       String formattedTime = formatDuration(totalSeconds);
+                        //
+                        //       if(videoLength == 2){
+                        //         return Container(
+                        //           height: 100,
+                        //           width: 100,
+                        //           color: red,
+                        //         );
+                        //       }
+                        //
+                        //
+                        //       return type == "video" ? VideoListItem(
+                        //         onTap: () {
+                        //           Future.delayed(
+                        //               const Duration(milliseconds: 200), () {
+                        //             GoRouter.of(context).pushNamed('videoPage',
+                        //                 pathParameters: {
+                        //                   "slug": state.videoList[index].slug!
+                        //                 });
+                        //           });
+                        //         },
+                        //         onTapChannel: (){
+                        //           final String channelId = state.videoList[index].channel!.id.toString();
+                        //           GoRouter.of(context).pushNamed(
+                        //             'channelProfilePage',
+                        //             pathParameters: {
+                        //               'channelId': channelId
+                        //             }
+                        //           );
+                        //         },
+                        //         channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
+                        //         thumbnailUrl: '${state.videoList[index].thumbnail}',
+                        //         duration: formattedTime,
+                        //         title: '${state.videoList[index].title}',
+                        //         author: '${state.videoList[index].channel?.name}',
+                        //         views: '${state.videoList[index].views}',
+                        //         uploadTime:
+                        //             '${state.videoList[index].createdAtHuman}',
+                        //         onMorePressed: () {
+                        //           // final RenderBox renderBox = context.findRenderObject() as RenderBox;
+                        //           // final Offset offset = renderBox.localToGlobal(Offset.zero);
+                        //           // showPopupMenu(context, offset);
+                        //           showPopupMenu(context);
+                        //         },
+                        //       ) : null;
+                        //     });
                       }
                       return Container();
                     })
@@ -572,9 +645,9 @@ class _HomePageContentState extends State<HomePageContent> {
                                   padding: EdgeInsets.only(top: 150.h),
                                   child: Center(
                                       child: Image.asset(
-                                    'assets/images/no_data.jpg',
-                                    width: 200,
-                                    height: 200,
+                                    'assets/images/no_data.png',
+                                    width: 200.w,
+                                    height: 200.h,
                                   )),
                                 );
                         }
@@ -588,6 +661,110 @@ class _HomePageContentState extends State<HomePageContent> {
       ),
     );
   }
+
+
+  Widget _shortsView(){
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 10.w,
+        right: 10.w,
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(HeroiconsSolid.fire, color: Theme.of(context).colorScheme.onSecondaryFixedVariant,),
+              SizedBox(width: 3.w,),
+              Text(
+                'Shorts',
+                style: TextStyle(
+                  fontFamily: fontFamily,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Theme.of(context).colorScheme.onSecondaryFixedVariant,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h,),
+          Container( // Wrap the GridView in a SizedBox with a fixed height
+            // height: 600,
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                mainAxisSpacing: 8.h,
+                crossAxisSpacing: 8.h,
+                maxCrossAxisExtent: 200,
+                // childAspectRatio: 9/16
+              ),
+              shrinkWrap: true,
+              itemCount: 4,
+              itemBuilder: (BuildContext context, int index) {
+                return CustomShortsPreviewHomepage(
+                  localImage: 'assets/images/tmkoc4.jpg',
+                    thumbNailPath: '',
+                    views: 20
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+
+  // Widget _shortsView(){
+  //   return Padding(
+  //     padding: EdgeInsets.only(
+  //       left: 10.w,
+  //       right: 10.w
+  //     ),
+  //     child: Column(
+  //       children: [
+  //         Row(
+  //           children: [
+  //             Text(
+  //                 'Shorts',
+  //               style: TextStyle(
+  //                 fontFamily: fontFamily,
+  //                 fontWeight: FontWeight.w700,
+  //                 fontSize: 20
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         Container(
+  //           // height: 350.h,
+  //           color: red,
+  //           child: GridView.builder(
+  //             physics: const NeverScrollableScrollPhysics(),
+  //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //                 crossAxisCount: 2,
+  //               mainAxisSpacing: 8.h,
+  //               crossAxisSpacing: 8.h,
+  //               // childAspectRatio: 9/16
+  //             ),
+  //             // scrollDirection: Axis.horizontal,
+  //             shrinkWrap: true,
+  //             itemCount: 4,
+  //               itemBuilder: (BuildContext context, int index){
+  //                 return Container(
+  //                   height: 280,
+  //                   // width: 120,
+  //                   color: blue,
+  //                 );
+  //               },
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
 
 
   Widget _buildLoadingShimmer() {

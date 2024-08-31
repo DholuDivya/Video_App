@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:vimeo_clone/model/get_your_videos_model.dart';
 
 import '../../model/get_channel_detail_model.dart';
 
@@ -15,7 +16,7 @@ class YourVideosLoading extends YourVideosState{
 }
 
 class YourVideosLoaded extends YourVideosState{
-  final List<GetChannelDetailModel> videoData;
+  final List<GetYourVideosModel> videoData;
 
   YourVideosLoaded({required this.videoData});
 

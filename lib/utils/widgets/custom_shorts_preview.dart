@@ -5,12 +5,14 @@ import '../../config/constants.dart';
 
 class CustomShortsPreview extends StatelessWidget {
   final String thumbNailPath;
+  final String? localImage;
   final String views;
   
   const CustomShortsPreview({
     super.key, 
     required this.thumbNailPath,
-    required this.views
+    required this.views,
+    this.localImage
   });
 
   @override
@@ -25,7 +27,9 @@ class CustomShortsPreview extends StatelessWidget {
             color: greyShade500,
             height: ScreenSize.screenHeight(context) * 0.25,
             width: ScreenSize.screenWidth(context) * 0.35,
-            child: Image.network(thumbNailPath, fit: BoxFit.cover),
+            child: thumbNailPath.isNotEmpty 
+                ? Image.network(thumbNailPath, fit: BoxFit.cover)
+                : Image.asset(localImage!, fit: BoxFit.cover,)
           ),
 
           Positioned(

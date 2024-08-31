@@ -95,20 +95,20 @@ class Channel {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['name'] = name;
-    _data['slug'] = slug;
-    _data['description'] = description;
-    _data['logo'] = logo;
-    _data['banner_image'] = bannerImage;
-    _data['status'] = status;
-    _data['deleted_at'] = deletedAt;
-    _data['region'] = region;
-    _data['created_at'] = createdAt;
-    _data['updated_at'] = updatedAt;
-    _data['videos'] = videos.map((e)=>e.toJson()).toList();
-    return _data;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['slug'] = slug;
+    data['description'] = description;
+    data['logo'] = logo;
+    data['banner_image'] = bannerImage;
+    data['status'] = status;
+    data['deleted_at'] = deletedAt;
+    data['region'] = region;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['videos'] = videos.map((e)=>e.toJson()).toList();
+    return data;
   }
 }
 

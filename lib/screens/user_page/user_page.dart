@@ -4,15 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
-import 'package:vimeo_clone/appLinks.dart';
-import 'package:vimeo_clone/bloc/add_user_history/add_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
-import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
@@ -63,7 +60,7 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Colors.transparent,
         actions: [
           IconButton(
               onPressed: () {
@@ -110,7 +107,7 @@ class _UserPageState extends State<UserPage> {
                   print('pppppppppppppp   $state');
                   if(state is YourVideosLoaded){
 
-                    totalVideos = state.videoData.first;
+                    totalVideos = state.videoData.first.videoCount;
                     print('&&&&&&&&&&&&&&&&&&   $totalVideos');
                   }
                   return UserPageButton(

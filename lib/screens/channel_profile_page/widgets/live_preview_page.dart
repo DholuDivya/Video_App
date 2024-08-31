@@ -7,7 +7,7 @@ import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
-import '../../../utils/widgets/custom_channal_video_preview.dart';
+import '../../../utils/widgets/custom_channel_video_preview.dart';
 
 class LivePreviewPage extends StatefulWidget {
   // final GetChannelDetailModel channelData;

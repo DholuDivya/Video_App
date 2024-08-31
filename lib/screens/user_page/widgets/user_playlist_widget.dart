@@ -104,15 +104,23 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                                     width: 40.w,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(100),
-                                      color: greyShade300,
+                                      // color: greyShade300,
+                                      color: Theme.of(context).colorScheme.secondary,
                                     ),
                                     child: Icon(
                                         HeroiconsOutline.plus,
-                                        size: 35
+                                        size: 35,
+                                        color: Theme.of(context).colorScheme.onSecondaryFixedVariant
                                     )
                                 ),
                                 SizedBox(height: 25.h),
-                                Text('Create new playlist'),
+                                Text(
+                                  'Create new playlist',
+                                  style: TextStyle(
+                                    fontFamily: fontFamily,
+                                    color: Theme.of(context).colorScheme.onSecondaryFixedVariant
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -296,6 +304,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                             playlistStatus: playlistStatus
                         ));
 
+                        print('Get playlist after creating new playlist');
                         context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
                         Navigator.pop(context);
                       },

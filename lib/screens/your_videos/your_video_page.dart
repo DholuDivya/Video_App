@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
-import 'package:vimeo_clone/utils/widgets/custom_channal_video_preview.dart';
+import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
 
 import '../../config/constants.dart';
 
@@ -38,33 +38,41 @@ class YourVideoPage extends StatelessWidget {
               },
             );
           }else if(state is YourVideosLoaded){
+            final length = state.videoData.first.channel.videos.length;
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  ListView.builder(
+                  length != 0 ? ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: state.videoData.first.channel.videos.length,
                     itemBuilder: (BuildContext context, int index) {
-
+                      final videoCount = state.videoData.first.videoCount;
                       final videoData = state.videoData.first.channel.videos[index];
                       int? totalSeconds = state.videoData.first.channel.videos[index].duration;
                       String formattedTime = formatDuration(totalSeconds);
-
                       return Padding(
-                        padding: EdgeInsets.only(
-                          top: 5.h,
-                          bottom: 5.h
-                        ),
-                        child: CustomVideoPreview(
-                            imageUrl: videoData.thumbnails,
-                            videoTitle: videoData.title,
-                            videoViews: '${videoData.views}',
-                            uploadTime: videoData.createdAtHuman,
-                            videoDuration: formattedTime
-                        ),
-                      );
+                          padding: EdgeInsets.only(
+                            top: 5.h,
+                            bottom: 5.h
+                          ),
+                          child: CustomVideoPreview(
+                              imageUrl: videoData.thumbnails,
+                              videoTitle: videoData.title,
+                              videoViews: '${videoData.views}',
+                              uploadTime: videoData.createdAtHuman,
+                              videoDuration: formattedTime
+                          ),
+                        );
                     },
+                  ) : Padding(
+                    padding: EdgeInsets.only(top: 150.h),
+                    child: Center(
+                        child: Image.asset(
+                          'assets/images/no_data.png',
+                          width: 200.w,
+                          height: 200.h,
+                        )),
                   )
                 ],
               ),

@@ -9,6 +9,9 @@ import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_event.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_state.dart';
+import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
+import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
+import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/shimmer.dart';
 
@@ -36,7 +39,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              title: Text(
+              title: const Text(
                 'Subscriptions',
                 style: TextStyle(
                   fontFamily: fontFamily,
@@ -47,7 +50,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
               pinned: false,
               snap: false,
               backgroundColor: Theme.of(context).colorScheme.surface,
-              leading: Icon(
+              leading: const Icon(
                 Remix.youtube_fill,
                 size: 35,
                 color: Colors.red,
@@ -57,7 +60,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                   onPressed: () {
                     GoRouter.of(context).pushNamed('searchPage');
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     HeroiconsOutline.magnifyingGlass,
                     size: 22,
                   ),
@@ -80,7 +83,9 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
               child: BlocBuilder<GetSubscribedChannelListBloc, GetSubscribedChannelListState>(
                 builder: (BuildContext context, GetSubscribedChannelListState state) {
                   var channelLength = 0;
+                  int unsubscribeChannelId = 0 ;
                   if(state is GetSubscribedChannelListLoaded){
+
                     print(''''''''''''''''''''''object'''''''''''''''''''''' ');
                     return ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
@@ -89,49 +94,53 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                         itemBuilder: (context, index){
                           final channelsList = state.channelList.first.data![index];
                           channelLength = state.channelList.first.data!.length;
+                          unsubscribeChannelId = channelsList.channelId!;
+                          // isSubscribed = channelsList.
                           return SizedBox(
                             height: 60,
                             child: InkWell(
                               onTap: (){
                                 final String channelId = state.channelList.first.data![index].channelId.toString();
+                                print('00000000000000000000   $channelId');
                                 context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId));
-                                GoRouter.of(context).pushNamed('channelProfilePage');
+                                GoRouter.of(context).pushNamed(
+                                  'channelProfilePage',
+                                  pathParameters: {
+                                    'channelId': channelId
+                                  }
+                                );
                               },
                               child: ListTile(
                                 leading: CircleAvatar(
                                   radius: 22,
                                   backgroundImage: NetworkImage(channelsList.channelLogo!),
                                 ),
-                                // leading: ClipRRect(
-                                //   borderRadius: BorderRadius.circular(100),
-                                //   child: Image.asset(
-                                //       'assets/images/sonysab.jpg',
-                                //       fit: BoxFit.cover,
-                                //     height: ScreenSize.screenHeight(context) * 0.05,
-                                //     width: ScreenSize.screenWidth(context) * 0.12,
-                                //   ),
-                                // ),
                                 title: Text('${channelsList.channelName}'),
-                                trailing: Container(
-                                  width: 55,
-                                  height: 30,
-                                  decoration: BoxDecoration(
+                                trailing: isSubscribed
+                                    ? SizedBox(
+                                  width: 60, // Adjust this width as needed
+                                  child: Container(
+                                    height: 30,
+                                    decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      color: Theme.of(context).colorScheme.secondary
-                                  ),
-                                  child: InkWell(
-                                    onTap: _showNotificationDialog,
-                                    child: const Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      // mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Icon(HeroiconsOutline.bell, size: 16,)  ,
-                                        Icon(HeroiconsOutline.chevronDown, size: 16,)
-                                      ],
+                                      color: Theme.of(context).colorScheme.secondary,
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        _showNotificationDialog(unsubscribeChannelId);
+                                      },
+                                      child: const Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(HeroiconsOutline.bell, size: 16),
+                                          Icon(HeroiconsOutline.chevronDown, size: 16),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
+                                )
+                                    : const SizedBox.shrink(),
                               ),
                             ),
                           );
@@ -165,11 +174,10 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
   }
 
 
-  void _showNotificationDialog() {
+  void _showNotificationDialog(channelId) {
     showDialog(
       context: context,
       builder: (context) {
-
         return StatefulBuilder(
           builder: (BuildContext context, setState) {
             return AlertDialog(
@@ -228,17 +236,20 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
 
                   Divider(thickness: 0.3,),
 
-                  CustomNotificationRow(
-                      notificationIcon: HeroiconsOutline.userMinus,
-                      type: 'Unsubscribe',
-                      onTap: (){
-                      // Navigator.of(context).pop();
-                        GoRouter.of(context).pop();
-                        setState(() {
-                          isSubscribed = !isSubscribed;
-                        });
-                      },
-                  )
+                   CustomNotificationRow(
+                        notificationIcon: HeroiconsOutline.userMinus,
+                        type: 'Unsubscribe',
+                        onTap: (){
+                          print('fgioshgosh    $channelId \$\$\$\$\$');
+                          context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: channelId));
+                          GoRouter.of(context).pop();
+                          setState(() {
+                            isSubscribed = !isSubscribed;
+                          });
+                          context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
+                        },
+                      )
+
                 ],
               ),
             );
