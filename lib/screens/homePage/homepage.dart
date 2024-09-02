@@ -17,6 +17,9 @@ import 'package:vimeo_clone/bloc/get_comments/get_comments_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_state.dart';
+import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_bloc.dart';
+import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_event.dart';
+import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_state.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
@@ -368,6 +371,37 @@ class _HomePageContentState extends State<HomePageContent> {
                             shrinkWrap: true,
                             itemCount: 8,
                             itemBuilder: (context, index) {
+
+                              if (index == 2) {
+                                return Container(
+                                  height: 400.h,
+                                  child: GridView.builder(
+                                    padding: EdgeInsets.only(
+                                      top: 30.h,
+                                      bottom: 25.h
+                                    ),
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 300,
+                                      mainAxisSpacing: 5.h,
+                                      crossAxisSpacing: 5.h,
+                                      childAspectRatio: 0.75,
+                                    ),
+                                    semanticChildCount: 2,
+                                    shrinkWrap: true,
+                                    itemCount: 4,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return ShimmerWidget.rectangular(
+                                        isBorder: true,
+                                        height: 120.h,
+                                        width: 80.w,
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+
+
                               return Padding(
                                 padding: EdgeInsets.only(top: 20.h),
                                 child: Column(
@@ -421,9 +455,20 @@ class _HomePageContentState extends State<HomePageContent> {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           padding: EdgeInsets.only(top: ScreenSize.screenHeight(context) * 0.02),
-                          itemCount: videoLength + 1, // Add 1 to account for the inserted container
+                          itemCount: videoLength + 2, // Add 1 to account for the inserted container
                           itemBuilder: (BuildContext context, int index) {
                             if (index == 2) { // Insert the container between index 2 and 3
+                              return Column(
+                                children: [
+                                  _shortsView(),
+                                  SizedBox(
+                                    height: 15.h,
+                                  )
+                                ],
+                              );
+                            }
+
+                            if (index == 6) {
                               return Column(
                                 children: [
                                   _shortsView(),
@@ -560,7 +605,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                             isBorder: false,
                                             height: 50,
                                           )),
-                                      SizedBox(height: 4),
+                                      const SizedBox(height: 4),
                                       Row(
                                         children: [
                                           const SizedBox(width: 8),
@@ -662,6 +707,24 @@ class _HomePageContentState extends State<HomePageContent> {
     );
   }
 
+  List<Map<String, dynamic>> shortsThumbnail = [
+    {
+      'thumbnail': 'assets/images/tmkoc8.jpg',
+      'title': 'Tarak mehta ka ooltah chashma',
+    },
+    {
+      'thumbnail': 'assets/images/tmkoc2.jpg',
+      'title': 'Jab boss aapko last minute koi kaam dede',
+    },
+    {
+      'thumbnail': 'assets/images/tmkoc6.jpg',
+      'title': 'When your friend believes too much in superstition',
+    },
+    {
+      'thumbnail': 'assets/images/tmkoc10.jpg',
+      'title': 'Mood Nowadays..',
+    }
+  ];
 
   Widget _shortsView(){
     return Padding(
@@ -673,7 +736,7 @@ class _HomePageContentState extends State<HomePageContent> {
         children: [
           Row(
             children: [
-              Icon(HeroiconsSolid.fire, color: Theme.of(context).colorScheme.onSecondaryFixedVariant,),
+              Icon(HeroiconsSolid.fire, color: primaryColor),
               SizedBox(width: 3.w,),
               Text(
                 'Shorts',
@@ -687,27 +750,57 @@ class _HomePageContentState extends State<HomePageContent> {
             ],
           ),
           SizedBox(height: 8.h,),
-          Container( // Wrap the GridView in a SizedBox with a fixed height
-            // height: 600,
-            child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                mainAxisSpacing: 8.h,
-                crossAxisSpacing: 8.h,
-                maxCrossAxisExtent: 200,
-                // childAspectRatio: 9/16
-              ),
-              shrinkWrap: true,
-              itemCount: 4,
-              itemBuilder: (BuildContext context, int index) {
-                return CustomShortsPreviewHomepage(
-                  localImage: 'assets/images/tmkoc4.jpg',
-                    thumbNailPath: '',
-                    views: 20
+          BlocBuilder<GetShortsListBloc, GetShortsListState>(
+            builder: (BuildContext context, GetShortsListState state) {
+              if(state is GetShortsListLoaded){
+                return SizedBox(
+                  height: 400.h,
+                  child: GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 300,
+                      mainAxisSpacing: 5.h,
+                      crossAxisSpacing: 5.h,
+                      childAspectRatio: 0.75,
+                    ),
+                    semanticChildCount: 2,
+                    shrinkWrap: true,
+                    itemCount: 4,
+                    itemBuilder: (BuildContext context, int index) {
+                      final shortsData = state.shortsData.first.data!.data![index];
+                      return CustomShortsPreviewHomepage(
+                        onTap: (){},
+                        localImage: '',
+                        thumbNailPath: '${shortsData.thumbnail}',
+                        title: '${shortsData.title}',
+                      );
+                    },
+                  ),
                 );
-              },
-            ),
+              }
+              return Container(
+                height: 400.h,
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 300,
+                    mainAxisSpacing: 5.h,
+                    crossAxisSpacing: 5.h,
+                    childAspectRatio: 0.75,
+                  ),
+                  semanticChildCount: 2,
+                  shrinkWrap: true,
+                  itemCount: 4,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ShimmerWidget.rectangular(
+                        isBorder: true,
+                      height: 120.h,
+                      width: 80.w,
+                    );
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),

@@ -7,19 +7,22 @@ import 'package:vimeo_clone/config/constants.dart';
 class UserPageButton extends StatelessWidget {
   final String buttonName;
   final String? subTitle;
-  final IconData buttonIcon;
+  final IconData? buttonIcon;
+  final IconData? appLogo;
   final VoidCallback? onTap;
 
   const UserPageButton({
     super.key,
     required this.buttonName,
     this.subTitle,
-    required this.buttonIcon,
+    this.appLogo,
+    this.buttonIcon,
     this.onTap
   });
 
   @override
   Widget build(BuildContext context) {
+    print('ojmidninire      $buttonIcon');
     return subTitle != null ? InkWell(
       onTap: onTap,
       child: Container(
@@ -28,7 +31,15 @@ class UserPageButton extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(width: 15.w,),
-            Icon(buttonIcon),
+            buttonIcon == null
+                ?
+            Container(
+              height: 15.h,
+              width: 20.w,
+              color: blue,
+              child: Image.asset('assets/images/tmkoc8.jpg', fit: BoxFit.fill),
+            )
+                : Icon(buttonIcon!),
             SizedBox(width: 20.w,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,7 +47,7 @@ class UserPageButton extends StatelessWidget {
               children: [
                 Text(
                   buttonName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 17,
                   ),

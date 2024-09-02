@@ -276,6 +276,10 @@ class _ShortsPageState extends State<ShortsPage> {
     super.initState();
   }
 
+  Future<void> refreshList()async{
+    context.read<GetShortsListBloc>().add(GetShortsListRequest());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -288,15 +292,18 @@ class _ShortsPageState extends State<ShortsPage> {
               builder: (BuildContext context, state) {
                 if(state is GetShortsListLoaded){
                   final shortsData = state.shortsData.first.data;
-                  return Swiper(
-                    loop: false,
-                    scrollDirection: Axis.vertical,
-                    itemCount: shortsData!.data!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ContentScreen(
-                        shortsData: shortsData.data![index],
-                      );
-                    },
+                  return RefreshIndicator(
+                    onRefresh: refreshList,
+                    child: Swiper(
+                      loop: false,
+                      scrollDirection: Axis.vertical,
+                      itemCount: shortsData!.data!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ContentScreen(
+                          shortsData: shortsData.data![index],
+                        );
+                      },
+                    ),
                   );
                 }
                   return Container();
@@ -307,7 +314,7 @@ class _ShortsPageState extends State<ShortsPage> {
                   left: MediaQuery.of(context).size.width * 0.03,
                   right: MediaQuery.of(context).size.width * 0.03,
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(

@@ -253,11 +253,13 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // PICTURE IN PICTURE
-                  // CustomSettingButton(
-                  //     icon: Remix.picture_in_picture_2_line,
-                  //     btnName: ('Picture in picture'),
-                  //     onTap: () {}
-                  // ),
+                  CustomSettingButton(
+                      icon: Remix.picture_in_picture_2_line,
+                      btnName: ('Picture in picture'),
+                      onTap: () {
+                        GoRouter.of(context).pushNamed('plansPage');
+                      }
+                  ),
 
 
                   // SizedBox(height: 10,),
@@ -325,20 +327,16 @@ class _SettingPageState extends State<SettingPage> {
                   CustomSettingButton(
                       icon: HeroiconsOutline.questionMarkCircle,
                       btnName: ('Help'),
-                      onTap: () {
-                        GoRouter.of(context).pushReplacementNamed('signupPage');
-                      }
+                      onTap: () {}
                   ),
 
-                  SizedBox(height: 10,),
-                  Divider(thickness: 0.5, color: Colors.grey,),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
+                  const Divider(thickness: 0.5, color: Colors.grey,),
+                  const SizedBox(height: 10,),
 
                   CustomLogOutWidget(
                       btnName: 'Delete account',
-                      onTap: (){
-                        // GoRouter.of(context).pushReplacementNamed('');
-                      }
+                      onTap: (){}
                   ),
 
                   CustomLogOutWidget(

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
@@ -31,7 +32,7 @@ class UserHeaderWidget extends StatelessWidget {
               right: ScreenSize.screenWidth(context) * 0.04,
             ),
             child: CircleAvatar(
-              radius: 25,
+              radius: 22.r,
               backgroundImage: channelLogo.startsWith('http')
                   ? NetworkImage(channelLogo)  // Load from network if it's a valid URL
                   : FileImage(File(channelLogo)),

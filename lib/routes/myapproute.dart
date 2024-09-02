@@ -16,6 +16,7 @@ import 'package:vimeo_clone/screens/auth/reset_password.dart';
 import 'package:vimeo_clone/screens/auth/verification_page.dart';
 import 'package:vimeo_clone/screens/edit_channel_page/edit_channel_page.dart';
 import 'package:vimeo_clone/screens/history_page/all_history_page.dart';
+import 'package:vimeo_clone/screens/plans_page/plans_page.dart';
 import 'package:vimeo_clone/screens/searchScreen/search_data_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/crop_shorts_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/get_shorts_thumbnail_page.dart';
@@ -247,6 +248,12 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
           name: 'editChannelPage',
           path: '/editChannelPage',
           pageBuilder: (context, state) => const CupertinoPage(child: EditChannelPage())
+        ),
+
+        GoRoute(
+            name: 'plansPage',
+            path: '/plansPage',
+            pageBuilder: (context, state) => const CupertinoPage(child: PlansPage())
         ),
       ]
   );

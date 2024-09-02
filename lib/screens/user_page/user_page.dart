@@ -131,26 +131,31 @@ class _UserPageState extends State<UserPage> {
 
               const Divider(thickness: 0.2, color: Colors.grey,),
 
-              const UserPageButton(
-                  buttonName: 'Your Movies',
-                  buttonIcon: HeroiconsOutline.film
+              // const UserPageButton(
+              //     buttonName: 'Your Movies',
+              //     buttonIcon: HeroiconsOutline.film
+              // ),
+
+              UserPageButton(
+                  onTap: (){
+                    GoRouter.of(context).pushNamed('plansPage');
+                  },
+                  buttonName: 'Get $appName Premium',
+                  appLogo: HeroiconsOutline.arrowUpRight,
               ),
 
-              const UserPageButton(
-                  buttonName: 'Get ${appName} Premium',
-                  buttonIcon: Remix.youtube_line
-              ),
+              // const Divider(thickness: 0.2, color: Colors.grey,),
 
-              const Divider(thickness: 0.2, color: Colors.grey,),
-
-              const UserPageButton(
+              UserPageButton(
                   buttonName: 'Time watched',
-                  buttonIcon: HeroiconsOutline.chartBarSquare
+                  buttonIcon: HeroiconsOutline.chartBarSquare,
+                onTap: (){},
               ),
 
-              const UserPageButton(
+              UserPageButton(
                   buttonName: 'Help & feedback',
-                  buttonIcon: HeroiconsOutline.questionMarkCircle
+                  buttonIcon: HeroiconsOutline.questionMarkCircle,
+                onTap: (){},
               ),
 
             ],
