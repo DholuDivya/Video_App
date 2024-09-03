@@ -87,7 +87,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                   if(state is GetSubscribedChannelListLoaded){
 
                     print(''''''''''''''''''''''object'''''''''''''''''''''' ');
-                    return ListView.builder(
+                    return channelLength != 0 ? ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: state.channelList.first.data!.length,
@@ -144,7 +144,16 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                               ),
                             ),
                           );
-                    });
+                      }
+                    ) : Padding(
+                      padding: EdgeInsets.only(top: 150.h),
+                      child: Center(
+                          child: Image.asset(
+                            'assets/images/no_data.png',
+                            width: 200.w,
+                            height: 200.h,
+                          )),
+                    );
                   }
                   return ListView.builder(
                     shrinkWrap: true,

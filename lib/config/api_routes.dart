@@ -22,3 +22,5 @@ const String showSinglePlaylistUrl = "${apiUrl}playlists/";
 const String getSearchSuggestionUrl = "${apiUrl}search-suggestions";
 const String likeCommentUrl = "${apiUrl}comments/";
 const String editChannelUrl = "${apiUrl}channels/";
+const String getPlansUrl = "${apiUrl}plans";
+const String generateSignatureUrl = "${apiUrl}payment/generate-signature";

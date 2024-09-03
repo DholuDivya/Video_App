@@ -18,22 +18,22 @@ class UserHistoryWidget extends StatefulWidget {
 
 class _UserHistoryWidgetState extends State<UserHistoryWidget> {
 
-  // late int historyData;
-  //
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
-  //
-  //   final historyBloc = context.read<GetUserHistoryBloc>();
-  //   historyBloc.stream.listen((state){
-  //     if(state is GetUserHistorySuccess){
-  //       historyData = state.userHistory.length;
-  //     }
-  //   });
-  //
-  //   super.initState();
-  // }
+  late int historyLength;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
+
+    final historyBloc = context.read<GetUserHistoryBloc>();
+    historyBloc.stream.listen((state){
+      if(state is GetUserHistorySuccess){
+        historyLength = state.userHistory.length;
+      }
+    });
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Column(

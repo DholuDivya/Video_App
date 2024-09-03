@@ -100,13 +100,13 @@ class _SplashScreenState extends State<SplashScreen> {
     mode = context.read<ThemeBloc>().mode;
     print('$mode       44444444');
 
-    print('1111   ::::    ${Global.userData!.userProfilePhoto}');
-    print('1111   ::::    ${Global.userData!.userName}');
-    print('1111   ::::    ${Global.userData!.userChannelId}');
-    print('1111   ::::    ${Global.userData!.userNumber}');
-    print('1111   ::::    ${Global.userData!.userToken}');
-    print('1111   ::::    ${Global.userData!.userEmail}');
-    print('1111   ::::    ${Global.userData!.userId}');
+    // print('1111   ::::    ${Global.userData!.userProfilePhoto}');
+    // print('1111   ::::    ${Global.userData!.userName}');
+    // print('1111   ::::    ${Global.userData!.userChannelId}');
+    // print('1111   ::::    ${Global.userData!.userNumber}');
+    // print('1111   ::::    ${Global.userData!.userToken}');
+    // print('1111   ::::    ${Global.userData!.userEmail}');
+    // print('1111   ::::    ${Global.userData!.userId}');
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

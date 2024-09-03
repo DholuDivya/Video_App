@@ -7,105 +7,214 @@
 // class CustomPlansContainer extends StatelessWidget {
 //   final String planName;
 //   final String planPrice;
-//   final bool isPlanSelected;
-//   final VoidCallback onTap;
 //   final String timePeriod;
+//   final bool isPlanSelected;
+//   final bool isExpanded;
+//   final VoidCallback onTap;
+//   final List<String> feature;
 //
 //   const CustomPlansContainer({
 //     super.key,
 //     required this.planName,
 //     required this.planPrice,
+//     required this.timePeriod,
 //     required this.isPlanSelected,
+//     required this.isExpanded,
 //     required this.onTap,
-//     required this.timePeriod
+//     required this.feature,
 //   });
 //
 //   @override
 //   Widget build(BuildContext context) {
-//     print('5555555555555    $isPlanSelected');
 //     return InkWell(
 //       borderRadius: BorderRadius.circular(12),
 //       onTap: onTap,
-//       child: Container(
-//         height: 70.h,
-//         width: double.infinity,
-//         padding: EdgeInsets.only(
-//           left: 15.w,
-//           right: 12.w,
-//         ),
+//       child: AnimatedContainer(
+//         duration: Duration(milliseconds: 300),
+//         padding: EdgeInsets.symmetric(horizontal: 15.w),
 //         decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(12),
-//             border: isPlanSelected ? Border.all(
-//               width: 3.5,
-//               color: primaryColor,
-//             ) : Border.all(
-//               width: 1.0,
-//               color: greyShade400,
-//             )
+//           borderRadius: BorderRadius.circular(12),
+//           border: isPlanSelected
+//               ? Border.all(
+//             width: 3.5,
+//             color: Colors.white,
+//           )
+//               : Border.all(
+//             width: 1.0,
+//             color: greyShade400,
+//           ),
 //         ),
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           crossAxisAlignment: CrossAxisAlignment.start,
+//         child: Column(
 //           children: [
-//             Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: [
-//                 Text(
-//                   planName,
-//                   style: TextStyle(
-//                       fontFamily: fontFamily,
-//                       fontSize: 13.sp
-//                   ),
-//                 ),
-//
-//                 Row(
-//                   children: [
-//                     Text(
-//                       planPrice,
-//                       style: TextStyle(
+//             Container(
+//               height: isExpanded ? 70.h : 80.h, // Height adjustment
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                     children: [
+//                       Text(
+//                         planName,
+//                         style: TextStyle(
 //                           fontFamily: fontFamily,
-//                           fontSize: 18.sp,
-//                           fontWeight: FontWeight.w500
+//                           fontSize: 14.sp,
+//                           fontWeight: FontWeight.w700,
+//                           color: Colors.white
+//                         ),
 //                       ),
-//                     ),
-//                     SizedBox(width: 5.w,),
-//
-//                     Text(
-//                       '/$timePeriod',
-//                       style: TextStyle(
-//                         fontFamily: fontFamily,
+//                       Row(
+//                         children: [
+//                           Text(
+//                             planPrice,
+//                             style: TextStyle(
+//                               fontFamily: fontFamily,
+//                               fontSize: 18.sp,
+//                               fontWeight: FontWeight.w300,
+//                               color: Colors.white
+//                             ),
+//                           ),
+//                           SizedBox(width: 5.w),
+//                           Text(
+//                             '/$timePeriod',
+//                             style: TextStyle(
+//                               fontFamily: fontFamily,
+//                               color: Colors.white60
+//                             ),
+//                           ),
+//                         ],
 //                       ),
-//                     ),
-//                   ],
-//                 )
+//                     ],
+//                   ),
+//                   Column(
+//                     children: [
+//                       SizedBox(height: 8.h),
+//                       Container(
+//                         height: 14.h,
+//                         width: 16.w,
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(100),
+//                           border: isPlanSelected
+//                               ? Border.all(
+//                             width: 5.5,
+//                             color: primaryColor,
+//                           )
+//                               : Border.all(
+//                             width: 1.2,
+//                             color: greyShade500,
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),
 //
-//               ],
+//             TextButton(
+//                 onPressed: (){},
+//                 child: Text('Show benefits'),
 //             ),
 //
 //
-//             Column(
-//               // mainAxisAlignment: MainAxisAlignment.spaceAround,
-//               children: [
-//                 // Icon(HeroiconsOutline.checkCircle),
-//                 SizedBox(height: 8.h,),
-//                 Container(
-//                   height: 14.h,
-//                   width: 16.w,
-//                   decoration: BoxDecoration(
-//                       borderRadius: BorderRadius.circular(100),
-//                       border: isPlanSelected ? Border.all(
-//                           width: 5.5,
-//                           color: primaryColor
-//                       ) : Border.all(
-//                           width: 1.2,
-//                           color: greyShade500
-//                       )
+//             if (isExpanded) ...[
+//               SizedBox(height: 10.h),
+//               Row(
+//                 children: [
+//                   Text(
+//                     'Features:',
+//                     style: TextStyle(
+//                       fontFamily: fontFamily,
+//                       fontSize: 14.sp,
+//                         color: Colors.white60
+//                       // fontWeight: FontWeight.w600,
+//                     ),
 //                   ),
-//                 ),
-//                 // SizedBox.shrink()
-//               ],
-//             )
+//                 ],
+//               ),
+//               SizedBox(height: 5.h,),
+//               ListView.builder(
+//                 shrinkWrap: true,
+//                 physics: const NeverScrollableScrollPhysics(),
+//                 itemCount: feature.length,
+//                   itemBuilder: (BuildContext context, int index){
+//                     return Padding(
+//                       padding: const EdgeInsets.symmetric(vertical: 4.0),
+//                       child: Row(
+//                         children: [
+//                           const Icon(Icons.check, color: Colors.green, size: 16.0),
+//                           SizedBox(width: 8.0),
+//                           Text(
+//                             feature[index],
+//                             style: TextStyle(
+//                                 fontFamily: fontFamily,
+//                                 fontSize: 14.sp,
+//                                 fontWeight: FontWeight.w200,
+//                                 color: Colors.white60
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     );
+//                   }
+//               ),
+//
+//               // Padding(
+//               //   padding: const EdgeInsets.symmetric(vertical: 4.0),
+//               //   child: Row(
+//               //     children: [
+//               //       const Icon(Icons.check, color: Colors.green, size: 16.0),
+//               //       SizedBox(width: 8.0),
+//               //       Text(
+//               //         'Ads free',
+//               //         style: TextStyle(
+//               //           fontFamily: fontFamily,
+//               //           fontSize: 14.sp,
+//               //           fontWeight: FontWeight.w200,
+//               //             color: Colors.white60
+//               //         ),
+//               //       ),
+//               //     ],
+//               //   ),
+//               // ),
+//               // Padding(
+//               //   padding: const EdgeInsets.symmetric(vertical: 4.0),
+//               //   child: Row(
+//               //     children: [
+//               //       const Icon(Icons.check, color: Colors.green, size: 16.0),
+//               //       const SizedBox(width: 8.0),
+//               //       Text(
+//               //         'Access premium content',
+//               //         style: TextStyle(
+//               //           fontFamily: fontFamily,
+//               //           fontSize: 14.sp,
+//               //           color: Colors.white60
+//               //         ),
+//               //       ),
+//               //     ],
+//               //   ),
+//               // ),
+//               // Padding(
+//               //   padding: const EdgeInsets.symmetric(vertical: 4.0),
+//               //   child: Row(
+//               //     children: [
+//               //       const Icon(Icons.check, color: Colors.green, size: 16.0),
+//               //       const SizedBox(width: 8.0),
+//               //       Text(
+//               //         'Picture-in-picture',
+//               //         style: TextStyle(
+//               //           fontFamily: fontFamily,
+//               //           fontSize: 14.sp,
+//               //           color: Colors.white60
+//               //         ),
+//               //       ),
+//               //     ],
+//               //   ),
+//               // ),
+//               SizedBox(height: 10.h,)
+//             ],
 //           ],
 //         ),
 //       ),
@@ -121,18 +230,221 @@
 
 
 
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+//
+// import '../../../config/colors.dart';
+// import '../../../config/constants.dart';
+//
+// class CustomPlansContainer extends StatefulWidget {
+//   final String planName;
+//   final String planPrice;
+//   final String timePeriod;
+//   final bool isPlanSelected;
+//   final List<String> feature;
+//   final VoidCallback onTap;
+//
+//   const CustomPlansContainer({
+//     super.key,
+//     required this.planName,
+//     required this.planPrice,
+//     required this.timePeriod,
+//     required this.isPlanSelected,
+//     required this.feature,
+//     required this.onTap,
+//   });
+//
+//   @override
+//   _CustomPlansContainerState createState() => _CustomPlansContainerState();
+// }
+//
+// class _CustomPlansContainerState extends State<CustomPlansContainer> {
+//   bool _isExpanded = false;
+//
+//   void _toggleExpand() {
+//     setState(() {
+//       _isExpanded = !_isExpanded;
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       borderRadius: BorderRadius.circular(12),
+//       onTap: widget.onTap,
+//       child: Container(
+//         // duration: Duration(milliseconds: 300),
+//         padding: EdgeInsets.symmetric(horizontal: 15.w),
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(12),
+//           border: widget.isPlanSelected
+//               ? Border.all(
+//             width: 3.5,
+//             color: primaryColor,
+//           )
+//               : Border.all(
+//             width: 1.0,
+//             color: greyShade400,
+//           ),
+//         ),
+//         child: Column(
+//           children: [
+//             Container(
+//               height: _isExpanded ? 70.h : 80.h, // Adjust height based on expansion
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                     children: [
+//                       Text(
+//                         widget.planName,
+//                         style: TextStyle(
+//                           fontFamily: fontFamily,
+//                           fontSize: 14.sp,
+//                           fontWeight: FontWeight.w700,
+//                           // color: Colors.white,
+//                         ),
+//                       ),
+//                       Row(
+//                         children: [
+//                           Text(
+//                             widget.planPrice,
+//                             style: TextStyle(
+//                               fontFamily: fontFamily,
+//                               fontSize: 18.sp,
+//                               fontWeight: FontWeight.w300,
+//                               // color: Colors.white,
+//                             ),
+//                           ),
+//                           SizedBox(width: 5.w),
+//                           Text(
+//                             '/${widget.timePeriod}',
+//                             style: TextStyle(
+//                               fontFamily: fontFamily,
+//                               color: Colors.white60,
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ],
+//                   ),
+//                   Column(
+//                     children: [
+//                       SizedBox(height: 8.h),
+//                       Container(
+//                         height: 14.h,
+//                         width: 16.w,
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(100),
+//                           border: widget.isPlanSelected
+//                               ? Border.all(
+//                             width: 5.5,
+//                             color: primaryColor,
+//                           )
+//                               : Border.all(
+//                             width: 1.2,
+//                             color: greyShade500,
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: _toggleExpand,
+//               child: Text(
+//                 _isExpanded ? 'Hide benefits' : 'Show benefits',
+//                 style: TextStyle(
+//                   color: greyShade500,
+//                 ),
+//               ),
+//             ),
+//             if (_isExpanded) ...[
+//               SizedBox(height: 10.h),
+//               Row(
+//                 children: [
+//                   Text(
+//                     'Features:',
+//                     style: TextStyle(
+//                       fontFamily: fontFamily,
+//                       fontSize: 14.sp,
+//                       // color: Colors.white60,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//               SizedBox(height: 5.h),
+//               ListView.builder(
+//                 shrinkWrap: true,
+//                 physics: const NeverScrollableScrollPhysics(),
+//                 itemCount: widget.feature.length,
+//                 itemBuilder: (BuildContext context, int index) {
+//                   return Padding(
+//                     padding: const EdgeInsets.symmetric(vertical: 4.0),
+//                     child: Row(
+//                       children: [
+//                         const Icon(Icons.check, color: Colors.green, size: 16.0),
+//                         SizedBox(width: 8.0),
+//                         Text(
+//                           widget.feature[index],
+//                           style: TextStyle(
+//                             fontFamily: fontFamily,
+//                             fontSize: 14.sp,
+//                             fontWeight: FontWeight.w200,
+//                             color: Colors.white60,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   );
+//                 },
+//               ),
+//               SizedBox(height: 10.h),
+//             ],
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:heroicons_flutter/heroicons_flutter.dart';
 
 import '../../../config/colors.dart';
 import '../../../config/constants.dart';
 
-class CustomPlansContainer extends StatelessWidget {
+class CustomPlansContainer extends StatefulWidget {
   final String planName;
   final String planPrice;
   final String timePeriod;
   final bool isPlanSelected;
-  final bool isExpanded; // To manage expansion
+  final List<String> feature;
   final VoidCallback onTap;
 
   const CustomPlansContainer({
@@ -141,34 +453,46 @@ class CustomPlansContainer extends StatelessWidget {
     required this.planPrice,
     required this.timePeriod,
     required this.isPlanSelected,
-    required this.isExpanded,
+    required this.feature,
     required this.onTap,
   });
+
+  @override
+  _CustomPlansContainerState createState() => _CustomPlansContainerState();
+}
+
+class _CustomPlansContainerState extends State<CustomPlansContainer> {
+  bool _isExpanded = false;
+
+  void _toggleExpand() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(12),
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+      onTap: widget.onTap,
+      child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: isPlanSelected
+          border: widget.isPlanSelected
               ? Border.all(
-            width: 3.5,
-            color: Colors.white,
+            width: 1.5,
+            color: primaryColor,
           )
               : Border.all(
-            width: 1.0,
+            width: 1.5,
             color: greyShade400,
           ),
         ),
         child: Column(
           children: [
             Container(
-              height: isExpanded ? 60.h : 50.h, // Height adjustment
+              height: _isExpanded ? 70.h : 70.h, // Adjust height based on expansion
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,31 +502,31 @@ class CustomPlansContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        planName,
+                        widget.planName,
                         style: TextStyle(
                           fontFamily: fontFamily,
                           fontSize: 14.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white
+                          // fontWeight: FontWeight.w700,
+                          // color: Colors.white,
                         ),
                       ),
                       Row(
                         children: [
                           Text(
-                            planPrice,
+                            widget.planPrice,
                             style: TextStyle(
                               fontFamily: fontFamily,
                               fontSize: 18.sp,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.white
+                              fontWeight: FontWeight.w500,
+                              // color: Colors.white,
                             ),
                           ),
                           SizedBox(width: 5.w),
                           Text(
-                            '/$timePeriod',
+                            '/${widget.timePeriod}',
                             style: TextStyle(
                               fontFamily: fontFamily,
-                              color: Colors.white60
+                              color: Theme.of(context).colorScheme.onTertiaryFixedVariant,
                             ),
                           ),
                         ],
@@ -217,7 +541,7 @@ class CustomPlansContainer extends StatelessWidget {
                         width: 16.w,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
-                          border: isPlanSelected
+                          border: widget.isPlanSelected
                               ? Border.all(
                             width: 5.5,
                             color: primaryColor,
@@ -233,7 +557,32 @@ class CustomPlansContainer extends StatelessWidget {
                 ],
               ),
             ),
-            if (isExpanded) ...[
+            GestureDetector(
+              // borderRadius: BorderRadius.circular(25),
+              onTap: _toggleExpand,
+              child: Container(
+                alignment: Alignment.center,
+                width: _isExpanded ? 103.w : 108.w,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      _isExpanded ? 'Hide benefits' : 'Show benefits',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondaryFixedDim
+                        // color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 3.w,),
+                    _isExpanded
+                        ? Icon(HeroiconsOutline.chevronUp, size: 13.r, color: Theme.of(context).colorScheme.secondaryFixedDim,)
+                        : Icon(HeroiconsOutline.chevronDown, size: 13.r, color: Theme.of(context).colorScheme.secondaryFixedDim,)
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10.h,),
+            if (_isExpanded) ...[
               SizedBox(height: 10.h),
               Row(
                 children: [
@@ -242,65 +591,38 @@ class CustomPlansContainer extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 14.sp,
-                        color: Colors.white60
-                      // fontWeight: FontWeight.w600,
+                      // color: Colors.white60,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 5.h,),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.check, color: Colors.green, size: 16.0),
-                    SizedBox(width: 8.0),
-                    Text(
-                      'Ads free',
-                      style: TextStyle(
-                        fontFamily: fontFamily,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w200,
-                          color: Colors.white60
-                      ),
+              SizedBox(height: 5.h),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.feature.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.check, color: Colors.green, size: 16.0),
+                        SizedBox(width: 8.0),
+                        Text(
+                          widget.feature[index],
+                          style: TextStyle(
+                            fontFamily: fontFamily,
+                            fontSize: 14.sp,
+                            // fontWeight: FontWeight.w200,
+                            // color: Colors.white60,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.check, color: Colors.green, size: 16.0),
-                    SizedBox(width: 8.0),
-                    Text(
-                      'Access premium content',
-                      style: TextStyle(
-                        fontFamily: fontFamily,
-                        fontSize: 14.sp,
-                        color: Colors.white60
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.check, color: Colors.green, size: 16.0),
-                    SizedBox(width: 8.0),
-                    Text(
-                      'Picture-in-picture',
-                      style: TextStyle(
-                        fontFamily: fontFamily,
-                        fontSize: 14.sp,
-                        color: Colors.white60
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              SizedBox(height: 10.h),
             ],
           ],
         ),

@@ -46,7 +46,7 @@ class _UserPageState extends State<UserPage> {
       }
     });
     // final historyBloc = context.read<GetUserHistoryBloc>();
-    print(':":::":":"":":""     $historyData');
+    print(':":::":":"":":""     $historyLength');
     super.initState();
   }
 
@@ -96,14 +96,14 @@ class _UserPageState extends State<UserPage> {
               const UserHeaderWidget(),
               // SizedBox(height: ScreenSize.screenHeight(context) * 0.00,),
 
-              historyData.isEmpty && historyLength <0 ? Container() : const UserHistoryWidget(),
+              historyData.isEmpty ? Container() : UserHistoryWidget(),
 
               // SizedBox(height: 10.h,),
               UserPlaylistWidget(),
 
               BlocBuilder<YourVideosBloc, YourVideosState>(
                 builder: (BuildContext context, YourVideosState state) {
-                  var totalVideos;
+                  int? totalVideos;
                   print('pppppppppppppp   $state');
                   if(state is YourVideosLoaded){
 
@@ -130,11 +130,6 @@ class _UserPageState extends State<UserPage> {
               ),
 
               const Divider(thickness: 0.2, color: Colors.grey,),
-
-              // const UserPageButton(
-              //     buttonName: 'Your Movies',
-              //     buttonIcon: HeroiconsOutline.film
-              // ),
 
               UserPageButton(
                   onTap: (){

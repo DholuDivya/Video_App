@@ -14,6 +14,8 @@ import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_state.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_event.dart';
+import 'package:vimeo_clone/bloc/get_plans/get_plans_bloc.dart';
+import 'package:vimeo_clone/bloc/get_plans/get_plans_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_state.dart';
@@ -85,6 +87,7 @@ class _HomePageState extends State<HomePage> {
     context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+    context.read<GetPlansBloc>().add(GetPlansRequest());
     super.initState();
   }
   List screens = [
@@ -453,9 +456,9 @@ class _HomePageContentState extends State<HomePageContent> {
                         final videoLength = state.videoList.length;
                         return ListView.builder(
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
+                          physics: NeverScrollableScrollPhysics(),
                           padding: EdgeInsets.only(top: ScreenSize.screenHeight(context) * 0.02),
-                          itemCount: videoLength + 2, // Add 1 to account for the inserted container
+                          itemCount: videoLength + 1, // Add 1 to account for the inserted container
                           itemBuilder: (BuildContext context, int index) {
                             if (index == 2) { // Insert the container between index 2 and 3
                               return Column(
@@ -468,16 +471,16 @@ class _HomePageContentState extends State<HomePageContent> {
                               );
                             }
 
-                            if (index == 6) {
-                              return Column(
-                                children: [
-                                  _shortsView(),
-                                  SizedBox(
-                                    height: 15.h,
-                                  )
-                                ],
-                              );
-                            }
+                            // if (index == 6) {
+                            //   return Column(
+                            //     children: [
+                            //       _shortsView(),
+                            //       SizedBox(
+                            //         height: 15.h,
+                            //       )
+                            //     ],
+                            //   );
+                            // }
 
                             // Adjust the index to access the correct video item
                             final adjustedIndex = index > 2 ? index - 1 : index;
@@ -754,14 +757,14 @@ class _HomePageContentState extends State<HomePageContent> {
             builder: (BuildContext context, GetShortsListState state) {
               if(state is GetShortsListLoaded){
                 return SizedBox(
-                  height: 400.h,
+                  height: 420.h,
                   child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 300,
                       mainAxisSpacing: 5.h,
                       crossAxisSpacing: 5.h,
-                      childAspectRatio: 0.75,
+                      childAspectRatio: 0.73,
                     ),
                     semanticChildCount: 2,
                     shrinkWrap: true,

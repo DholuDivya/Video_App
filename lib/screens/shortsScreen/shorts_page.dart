@@ -272,7 +272,7 @@ class _ShortsPageState extends State<ShortsPage> {
 
   @override
   void initState() {
-    // context.read<GetShortsListBloc>().add(GetShortsListRequest());
+    context.read<GetShortsListBloc>().add(GetShortsListRequest());
     super.initState();
   }
 
@@ -284,54 +284,52 @@ class _ShortsPageState extends State<ShortsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      body: SafeArea(
-        child: Container(
-          child: Stack(
-            children: [
-              BlocBuilder<GetShortsListBloc, GetShortsListState>(
-              builder: (BuildContext context, state) {
-                if(state is GetShortsListLoaded){
-                  final shortsData = state.shortsData.first.data;
-                  return RefreshIndicator(
-                    onRefresh: refreshList,
-                    child: Swiper(
-                      loop: false,
-                      scrollDirection: Axis.vertical,
-                      itemCount: shortsData!.data!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ContentScreen(
-                          shortsData: shortsData.data![index],
-                        );
-                      },
-                    ),
-                  );
-                }
-                  return Container();
-                },
+      body: Container(
+        child: Stack(
+          children: [
+            BlocBuilder<GetShortsListBloc, GetShortsListState>(
+            builder: (BuildContext context, state) {
+              if(state is GetShortsListLoaded){
+                final shortsData = state.shortsData.first.data;
+                return RefreshIndicator(
+                  onRefresh: refreshList,
+                  child: Swiper(
+                    loop: false,
+                    scrollDirection: Axis.vertical,
+                    itemCount: shortsData!.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ContentScreen(
+                        shortsData: shortsData.data![index],
+                      );
+                    },
+                  ),
+                );
+              }
+                return Container();
+              },
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.03,
+                right: MediaQuery.of(context).size.width * 0.03,
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.03,
-                  right: MediaQuery.of(context).size.width * 0.03,
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Shorts',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: fontFamily,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Shorts',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: fontFamily,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
                     ),
-                    // Icon(Icons.camera_alt, color: Colors.white),
-                  ],
-                ),
+                  ),
+                  // Icon(Icons.camera_alt, color: Colors.white),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
