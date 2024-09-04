@@ -22,32 +22,33 @@ class LoginWithGoogleSubmitted extends AuthEvent {
 // NUMBER SUBMITTED ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class SendOtpToPhoneEvent extends AuthEvent{
   final String number;
-  // final String name;
+  final String name;
 
-  SendOtpToPhoneEvent({required this.number});
+  SendOtpToPhoneEvent({required this.number, required this.name});
 
   @override
-  List<Object?> get props => [number];
+  List<Object?> get props => [number, name];
 }
 
 class OnPhoneOtpSend extends AuthEvent{
   final String verificationId;
   final int? resendToken;
+  final String? name;
 
-  OnPhoneOtpSend({required this.verificationId, this.resendToken});
+  OnPhoneOtpSend({required this.verificationId, this.resendToken, this.name});
 
   @override
-  List<Object?> get props => [verificationId, resendToken];
+  List<Object?> get props => [verificationId, resendToken, name];
 }
 
 class VerifySentOtp extends AuthEvent{
   final String otpCode;
   final String verificationId;
-  // final String name;
+  final String? name;
 
-  VerifySentOtp({required this.otpCode, required this.verificationId});
+  VerifySentOtp({required this.otpCode, required this.verificationId, this.name});
   @override
-  List<Object?> get props => [otpCode, verificationId];
+  List<Object?> get props => [otpCode, verificationId, name];
 }
 
 
@@ -62,13 +63,14 @@ class OnPhoneAuthErrorEvent extends AuthEvent{
 
 
 class OnPhoneAuthVerificationCompleted extends AuthEvent{
+  final String? name;
   final AuthCredential credential;
   // final String name;
 
-  OnPhoneAuthVerificationCompleted({required this.credential});
+  OnPhoneAuthVerificationCompleted({required this.credential, this.name});
 
   @override
-  List<Object?> get props => [credential];
+  List<Object?> get props => [credential, name];
 }
 
 
@@ -106,6 +108,11 @@ class OnLogOutRequestEvent extends AuthEvent{
   List<Object?> get props => [];
 }
 
+
+class OnDeleteUserAccountRequestEvent extends AuthEvent{
+  @override
+  List<Object?> get props => [];
+}
 
 
 // class LoginWithPhoneNumber extends AuthEvent {

@@ -60,6 +60,7 @@ class _SearchDataPageState extends State<SearchDataPage> {
                         //   final searchQuery = _searchController.text;
                         //   context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
                         // });
+                        GoRouter.of(context).pop();
                       },
                       child: Container(
                         alignment: Alignment.centerLeft,

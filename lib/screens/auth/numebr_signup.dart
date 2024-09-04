@@ -43,8 +43,10 @@ class _SignupWithPhoneNumberState extends State<SignupWithPhoneNumber> {
 
   void _phoneNumberAuthentication() {
     final phoneNumber = _countryCode+_phoneNumber;
+    final userName = _nameController.text;
+    print('UIUIUIUIUIUIU   $userName');
     // context.read<AuthBloc>().authRepository()
-    context.read<AuthBloc>().add(SendOtpToPhoneEvent(number: phoneNumber));
+    context.read<AuthBloc>().add(SendOtpToPhoneEvent(number: phoneNumber, name: userName));
   }
 
   @override

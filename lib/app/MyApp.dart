@@ -44,6 +44,7 @@ import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_video/upload_video_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_video_external/upload_video_external_bloc.dart';
 import 'package:vimeo_clone/bloc/add_user_history/add_user_history_bloc.dart';
+import 'package:vimeo_clone/bloc/verify_payment/verify_payment_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_event.dart';
 import 'package:vimeo_clone/bloc/video_list/video_list_bloc.dart';
@@ -54,6 +55,7 @@ import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/routes/myapproute.dart';
 
 import '../bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
+import '../config/notification_service.dart';
 
 
 
@@ -71,6 +73,14 @@ class _MyAppState extends State<MyApp> {
 // Subscribe to all events (initial link and further)
   final AppLinksDeepLink _appLinksDeepLink = AppLinksDeepLink.instance;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NotificationService().initNotification(context);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +126,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => GetChannelLogoBloc()),
         BlocProvider(create: (context) => GetPlansBloc()),
         BlocProvider(create: (context) => GenerateSignatureBloc()),
+        BlocProvider(create: (context) => VerifyPaymentBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

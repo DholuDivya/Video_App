@@ -16,6 +16,7 @@ import '../../Repo/auth_repo.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
+  late String userName;
 
   AuthBloc(this.authRepository) : super(AuthInitial()) {
     on<LoginWithGoogleSubmitted>((event, emit) async {
@@ -42,10 +43,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SendOtpToPhoneEvent>((event, emit) async {
       emit(AuthProgress());
       try {
+        userName = event.name;
         await FirebaseAuth.instance.verifyPhoneNumber(
           phoneNumber: event.number,
           verificationCompleted: (PhoneAuthCredential credentials) {
-            add(OnPhoneAuthVerificationCompleted(credential: credentials));
+            add(OnPhoneAuthVerificationCompleted(credential: credentials,));
           },
           verificationFailed: (FirebaseAuthException ex) {
             print('.....==.....Firebase Exception   ${ex}');
@@ -53,7 +55,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           codeAutoRetrievalTimeout: (String verificationId) {},
           codeSent: (String verificationid, int? resendtoekn) {
             add(OnPhoneOtpSend(
-                verificationId: verificationid, resendToken: resendtoekn));
+                verificationId: verificationid, resendToken: resendtoekn, name: event.name));
             print('-------------<><><><>${resendtoekn}');
           },
         );
@@ -92,8 +94,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         print(
             '----   ${firebaseUserToken}\n----refreshToken   ${userCredential.user!.refreshToken}  ');
 
-
-        final userToken = await authRepository.loginWithPhone(firebaseUserToken!);
+        final userToken = await authRepository.loginWithPhone(firebaseUserToken!, userName);
         print('Firebase Token of Phone Number Login ::: ${firebaseUserToken}');
         print('User Token by Phone Number Login ::: ${userToken}');
 
@@ -153,6 +154,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } catch (e) {
         emit(AuthFailure(error: e.toString()));
       }
+    });
+
+
+
+    on<OnDeleteUserAccountRequestEvent>((event, emit) async {
+      emit(AuthProgress());
+      try{}catch(e){}
     });
   }
 }

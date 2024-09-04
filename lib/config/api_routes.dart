@@ -24,3 +24,4 @@ const String likeCommentUrl = "${apiUrl}comments/";
 const String editChannelUrl = "${apiUrl}channels/";
 const String getPlansUrl = "${apiUrl}plans";
 const String generateSignatureUrl = "${apiUrl}payment/generate-signature";
+const String verifyPaymentUrl = "${apiUrl}payment/verify-payment";

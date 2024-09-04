@@ -183,11 +183,11 @@ class _SettingPageState extends State<SettingPage> {
                   // ),
 
                   // AUTOPLAY
-                  CustomSettingButton(
-                      icon: HeroiconsOutline.checkBadge,
-                      btnName: ('Verification'),
-                      onTap: () {}
-                  ),
+                  // CustomSettingButton(
+                  //     icon: HeroiconsOutline.checkBadge,
+                  //     btnName: ('Verification'),
+                  //     onTap: () {}
+                  // ),
 
                   // POINTS
                   // CustomSettingButton(
@@ -197,18 +197,18 @@ class _SettingPageState extends State<SettingPage> {
                   // ),
 
                   // BLOCKED USERS
-                  CustomSettingButton(
-                      icon: HeroiconsOutline.noSymbol,
-                      btnName: ('Blocked Users'),
-                      onTap: () {}
-                  ),
+                  // CustomSettingButton(
+                  //     icon: HeroiconsOutline.noSymbol,
+                  //     btnName: ('Blocked Users'),
+                  //     onTap: () {}
+                  // ),
 
                   // WALLETS
-                  CustomSettingButton(
-                      icon: HeroiconsOutline.wallet,
-                      btnName: ('Wallet'),
-                      onTap: () {}
-                  ),
+                  // CustomSettingButton(
+                  //     icon: HeroiconsOutline.wallet,
+                  //     btnName: ('Wallet'),
+                  //     onTap: () {}
+                  // ),
 
 
                   // SizedBox(height: 10,),
@@ -238,9 +238,9 @@ class _SettingPageState extends State<SettingPage> {
                   // ),
                   //
 
-                  SizedBox(height: 10,),
-                  Divider(thickness: 0.5, color: Colors.grey,),
-                  SizedBox(height: 10,),
+                  // SizedBox(height: 10,),
+                  // Divider(thickness: 0.5, color: Colors.grey,),
+                  // SizedBox(height: 10,),
 
 
                   // THEME

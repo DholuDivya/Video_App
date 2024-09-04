@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
@@ -187,10 +188,11 @@ class AuthRepository{
 
 
 
-  Future<String?> loginWithPhone(String firebaseUserToken) async {
+  Future<String?> loginWithPhone(String firebaseUserToken, String userName) async {
     try{
       print('11111111111111111111111111111111');
-      final response = await apiHelper.firebaseLoginPostAPICall(loginWithPhoneUrl, {},firebaseUserToken);
+      print('MIIIIIIIIIIIIIIIIIII     $userName');
+      final response = await apiHelper.firebaseLoginPostAPICall(loginWithPhoneUrl, {'name': userName},firebaseUserToken);
       print('ifgWRHNGOIERGOIRBNIORBIODIDDirdigjirdj');
       if (response.statusCode == 200) {
         // STORING THE TOKEN IN HIVE

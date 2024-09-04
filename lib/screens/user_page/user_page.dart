@@ -37,6 +37,7 @@ class _UserPageState extends State<UserPage> {
   void initState() {
     print('88888888888888888888888   ');
 
+    context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
 
     final historyBloc = context.read<GetUserHistoryBloc>();
     historyBloc.stream.listen((state){
@@ -46,7 +47,7 @@ class _UserPageState extends State<UserPage> {
       }
     });
     // final historyBloc = context.read<GetUserHistoryBloc>();
-    print(':":::":":"":":""     $historyLength');
+    print(':":::":":"":":""     $historyData');
     super.initState();
   }
 

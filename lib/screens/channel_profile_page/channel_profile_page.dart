@@ -10,13 +10,11 @@ import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart'
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/home_preview_page.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/live_preview_page.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/playlist_preview_page.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/shorts_preview_page.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/videos_preview_page.dart';
-import 'package:vimeo_clone/utils/widgets/custom_shorts_preview.dart';
 
 import '../../bloc/channel_profile/channel_profile_state.dart';
 
@@ -54,9 +52,10 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
         body: BlocBuilder<ChannelProfileBloc, ChannelProfileState>(
           builder: (BuildContext context, state) {
 
+            print('ighsirghishgishgisg    $state');
             if(state is ChannelProfileLoaded){
               final channelData = state.channelData.first;
-              _channelId = channelData.channel!.id!;
+              _channelId = channelData.channel.id;
 
               print('************      $_isSubscribed');
               return NestedScrollView(

@@ -287,19 +287,11 @@ class _HomePageContentState extends State<HomePageContent> {
 
   Future<void> _refreshVideosList() async {
     if (isAllCategorySelected) {
-      // Trigger refresh for "All" category
       context.read<AllVideoListBloc>().add(GetAllVideoListEvent());
     } else {
-      // Trigger refresh for selected category
       // context.read<VideoListBloc>().add(GetVideoListEvent(categoryId: categoryId));
     }
   }
-  // void getTheme() async {
-  //   final box = await Hive.openBox('themebox');
-  //   setState(() {
-  //     mode = box.get('themeMode');
-  //   });
-  // }
 
 
 
@@ -520,68 +512,6 @@ class _HomePageContentState extends State<HomePageContent> {
                                 : null;
                           },
                         );
-
-
-
-
-
-                        // final videoLength = state.videoList.length;
-                        // return ListView.builder(
-                        //     shrinkWrap: true,
-                        //     physics: const NeverScrollableScrollPhysics(),
-                        //     padding: EdgeInsets.only(
-                        //         top: ScreenSize.screenHeight(context) * 0.02),
-                        //     itemCount: videoLength,
-                        //     itemBuilder: (BuildContext context, int index) {
-                        //       final type = state.videoList[index].type;
-                        //       print('!!!!!!!!!!!!!!!!!!!!      ${state.videoList[index].duration}');
-                        //       int totalSeconds = state.videoList[index].duration!;
-                        //       String formattedTime = formatDuration(totalSeconds);
-                        //
-                        //       if(videoLength == 2){
-                        //         return Container(
-                        //           height: 100,
-                        //           width: 100,
-                        //           color: red,
-                        //         );
-                        //       }
-                        //
-                        //
-                        //       return type == "video" ? VideoListItem(
-                        //         onTap: () {
-                        //           Future.delayed(
-                        //               const Duration(milliseconds: 200), () {
-                        //             GoRouter.of(context).pushNamed('videoPage',
-                        //                 pathParameters: {
-                        //                   "slug": state.videoList[index].slug!
-                        //                 });
-                        //           });
-                        //         },
-                        //         onTapChannel: (){
-                        //           final String channelId = state.videoList[index].channel!.id.toString();
-                        //           GoRouter.of(context).pushNamed(
-                        //             'channelProfilePage',
-                        //             pathParameters: {
-                        //               'channelId': channelId
-                        //             }
-                        //           );
-                        //         },
-                        //         channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
-                        //         thumbnailUrl: '${state.videoList[index].thumbnail}',
-                        //         duration: formattedTime,
-                        //         title: '${state.videoList[index].title}',
-                        //         author: '${state.videoList[index].channel?.name}',
-                        //         views: '${state.videoList[index].views}',
-                        //         uploadTime:
-                        //             '${state.videoList[index].createdAtHuman}',
-                        //         onMorePressed: () {
-                        //           // final RenderBox renderBox = context.findRenderObject() as RenderBox;
-                        //           // final Offset offset = renderBox.localToGlobal(Offset.zero);
-                        //           // showPopupMenu(context, offset);
-                        //           showPopupMenu(context);
-                        //         },
-                        //       ) : null;
-                        //     });
                       }
                       return Container();
                     })
@@ -682,12 +612,17 @@ class _HomePageContentState extends State<HomePageContent> {
                                       views: '${state.videoList[index].views}',
                                       uploadTime: '${state.videoList[index].createdAtHuman}',
                                       onMorePressed: () {
-                                        // final RenderBox renderBox = context.findRenderObject() as RenderBox;
-                                        // final Offset offset = renderBox.localToGlobal(Offset.zero);
-                                        // showPopupMenu(context, offset);
                                         showPopupMenu(context);
                                       },
-                                    ) : null;
+                                    ) : Padding(
+                                      padding: EdgeInsets.only(top: 150.h),
+                                      child: Center(
+                                          child: Image.asset(
+                                            'assets/images/no_data.png',
+                                            width: 200.w,
+                                            height: 200.h,
+                                          )),
+                                    );
                                   })
                               : Padding(
                                   padding: EdgeInsets.only(top: 150.h),
@@ -874,7 +809,7 @@ class _HomePageContentState extends State<HomePageContent> {
             height: 50,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Row(
           children: [
             const SizedBox(width: 8),

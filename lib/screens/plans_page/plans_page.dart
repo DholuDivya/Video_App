@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:vimeo_clone/Config/colors.dart';
 import 'package:vimeo_clone/bloc/generate_signature/generate_signature_bloc.dart';
 import 'package:vimeo_clone/bloc/generate_signature/generate_signature_event.dart';
 import 'package:vimeo_clone/bloc/generate_signature/generate_signature_state.dart';
 import 'package:vimeo_clone/bloc/get_plans/get_plans_bloc.dart';
 import 'package:vimeo_clone/bloc/get_plans/get_plans_state.dart';
+import 'package:vimeo_clone/bloc/verify_payment/verify_payment_bloc.dart';
+import 'package:vimeo_clone/bloc/verify_payment/verify_payment_event.dart';
+import 'package:vimeo_clone/bloc/verify_payment/verify_payment_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/plans_page/widgets/custom_plans_container.dart';
+import 'package:vimeo_clone/utils/widgets/custom_alert_dialog.dart';
 
 import '../../config/global_variable.dart';
 
@@ -62,11 +64,11 @@ class _PlansPageState extends State<PlansPage> {
       String planName,
       String userNumber,
       String userEmail) async {
-    String amountInPaise = (amount * 100).toString();
+    String userAmount = (amount * 100).toString();
 
     var options = {
       'key': 'rzp_test_43YUyaXUhNqIVZ',
-      'amount': amountInPaise,
+      'amount': userAmount,
       'name': userName,
       'description': planName,
       'order_id': orderId,
@@ -90,90 +92,30 @@ class _PlansPageState extends State<PlansPage> {
   }
 
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
+    print('Payment Success: ${response.orderId}');
     print('Payment Success: ${response.paymentId}');
+    print('Payment Success: ${response.signature}');
+    final razorpayOrderId = response.orderId;
+    final razorpayPaymentId = response.paymentId;
+    final razorpaySignature = response.signature;
+    context.read<VerifyPaymentBloc>().add(VerifyPaymentRequest(
+        razorpayOrderId: razorpayOrderId!,
+        razorpayPaymentId: razorpayPaymentId!,
+        razorpaySignature: razorpaySignature!,
+        planId: selectedPlanId
+    ));
+
+    final verifyPaymentBloc = context.read<VerifyPaymentBloc>();
+    verifyPaymentBloc.stream.listen((state){
+      if(state is VerifyPaymentLoaded){
+
+      }
+    });
   }
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {
     print('External Wallet Selected: ${response.walletName}');
   }
-
-
-
-
-
-
-
-
-  // Future<dynamic> buyPlan(
-  //     String userName,
-  //     String key,
-  //     double amount,
-  //
-  //     ) async {
-  //   Razorpay razorpay = Razorpay();
-  //   var options = {
-  //     'key': key,
-  //     'amount': amount,
-  //     'name': userName,
-  //     'description': 'Fine T-Shirt',
-  //     'retry': {'enabled': true, 'max_count': 1},
-  //     'send_sms_hash': true,
-  //     'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
-  //     'external': {
-  //       'wallets': ['paytm']
-  //     }
-  //   };
-  //   razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
-  //   razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
-  //   razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
-  //   razorpay.open(options);
-  // }
-  //
-  // void handlePaymentErrorResponse(PaymentFailureResponse response){
-  //   /*
-  //   * PaymentFailureResponse contains three values:
-  //   * 1. Error Code
-  //   * 2. Error Description
-  //   * 3. Metadata
-  //   * */
-  //   showAlertDialog(context, "Payment Failed", "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}");
-  // }
-  //
-  // void handlePaymentSuccessResponse(PaymentSuccessResponse response){
-  //   /*
-  //   * Payment Success Response contains three values:
-  //   * 1. Order ID
-  //   * 2. Payment ID
-  //   * 3. Signature
-  //   * */
-  //   showAlertDialog(context, "Payment Successful", "Payment ID: ${response.paymentId}");
-  // }
-  //
-  // void handleExternalWalletSelected(ExternalWalletResponse response){
-  //   showAlertDialog(context, "External Wallet Selected", "${response.walletName}");
-  // }
-  //
-  // void showAlertDialog(BuildContext context, String title, String message){
-  //   // set up the buttons
-  //   Widget continueButton = ElevatedButton(
-  //     child: const Text("Continue"),
-  //     onPressed:  () {},
-  //   );
-  //   // set up the AlertDialog
-  //   AlertDialog alert = AlertDialog(
-  //     title: Text(title),
-  //     content: Text(message),
-  //   );
-  //   // show the dialog
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return alert;
-  //     },
-  //   );
-  // }
-
-
 
 
   @override
@@ -200,7 +142,7 @@ class _PlansPageState extends State<PlansPage> {
                children: [
                  userHeaderWidget(),
                  SizedBox(height: 25.h,),
-                 Text(
+                 const Text(
                      'Choose a plan',
                      style: const TextStyle(
                          fontFamily: fontFamily,
@@ -224,84 +166,20 @@ class _PlansPageState extends State<PlansPage> {
         ),
       ),
 
-
-      // bottomNavigationBar: _selectedPlanIndex >= 0
-      //     ? BottomAppBar(
-      //   child: BlocBuilder<GenerateSignatureBloc, GenerateSignatureState>(
-      //     builder: (BuildContext context, GenerateSignatureState state) {
-      //       var key = '';
-      //       var orderId = '';
-      //       if (state is GenerateSignatureSuccess) {
-      //         key = state.signatureData.isNotEmpty ? state.signatureData[0].keyId ?? '' : '';
-      //         orderId = state.signatureData.isNotEmpty ? state.signatureData[0].orderId ?? '' : '';
-      //         print('Key: $key');
-      //         print('Order ID: $orderId');
-      //       }
-      //
-      //       return ElevatedButton(
-      //         onPressed: () {
-      //           // Ensure `GenerateSignatureBloc` request is made to update the state
-      //           context.read<GenerateSignatureBloc>().add(GenerateSignatureRequest(planId: selectedPlanId));
-      //
-      //           // Print values for debugging
-      //           print('Selected Price: $selectedPrice');
-      //           print('User Name: $userName');
-      //           print('Key: $key');
-      //           print('Order ID: $orderId');
-      //
-      //           // Call buyPlan with correct parameters if data is valid
-      //           if (userName != null && key.isNotEmpty && orderId.isNotEmpty && selectedPrice > 0) {
-      //             buyPlan(
-      //               userName!,
-      //               key,
-      //               orderId,
-      //               selectedPrice,
-      //             );
-      //           } else {
-      //             print('Error: Invalid parameters');
-      //           }
-      //         },
-      //         style: ElevatedButton.styleFrom(
-      //           shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.circular(10),
-      //           ),
-      //         ),
-      //         child: Text(
-      //           'Pay Rs $selectedPrice',
-      //           style: TextStyle(
-      //             fontFamily: fontFamily,
-      //             fontSize: 18,
-      //             color: Colors.white,
-      //           ),
-      //         ),
-      //       );
-      //     },
-      //   ),
-      // )
-      //     : null,
-
-
-
-
       bottomNavigationBar: _selectedPlanIndex >= 0 ? BottomAppBar(
         child: BlocBuilder<GenerateSignatureBloc, GenerateSignatureState>(
           builder: (BuildContext context, GenerateSignatureState state) {
-            print('fgnbrghghsrugsug      $state');
             var key = '';
             var orderId = '';
-
             if(state is GenerateSignatureSuccess){
-              print('dlonmhjdonhiodtehbniojtioJTbhnmib');
               key = state.signatureData[0].keyId!;
               orderId = state.signatureData.first.orderId!;
               print('TTTTTTTTTTTTTTTT     ${state.signatureData.first.orderId}');
             }
-
             return ElevatedButton(
                 onPressed: (){
                   print(';;;;;;;;;;    $selectedPrice');
                   context.read<GenerateSignatureBloc>().add(GenerateSignatureRequest(planId: selectedPlanId));
-
                   print('vvvvvvvvvvvv    $userName');
                   print('vvvvvvvvvvvv    $key');
                   print('vvvvvvvvvvvv    $orderId');
@@ -311,9 +189,9 @@ class _PlansPageState extends State<PlansPage> {
                        key,
                        orderId,
                        selectedPrice,
-                     planName,
-                     userNumber!,
-                     userEmail!
+                       planName,
+                       userNumber!,
+                       userEmail!
                    );
                 },
                 style: ElevatedButton.styleFrom(
@@ -349,7 +227,6 @@ class _PlansPageState extends State<PlansPage> {
           style: TextStyle(
               fontFamily: fontFamily,
               fontSize: 16.sp,
-              // color: Colors.white70
           ),
         ),
       ],
@@ -363,7 +240,6 @@ class _PlansPageState extends State<PlansPage> {
         CircleAvatar(
           radius: 22.r,
           backgroundImage: NetworkImage(userProfile!),
-          // backgroundColor: blue,
         ),
 
         SizedBox(width: 8.w,),
@@ -376,7 +252,6 @@ class _PlansPageState extends State<PlansPage> {
                 style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 17.sp,
-                  // color: Colors.white
                 )
             ),
 

@@ -9,6 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/api_routes.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
+import 'package:vimeo_clone/config/notification_service.dart';
 import 'package:vimeo_clone/firebase_options.dart';
 
 import 'Repo/auth_repo.dart';

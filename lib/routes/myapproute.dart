@@ -29,6 +29,7 @@ import 'package:vimeo_clone/screens/user_playlist_page/user_playlist_page.dart';
 import 'package:vimeo_clone/screens/your_videos/your_video_page.dart';
 import '../Screens/HomePage/homepage.dart';
 import '../screens/channel_profile_page/channel_profile_page.dart';
+import '../screens/edit_video_detail/edit_video_detail_page.dart';
 
 // class MyAppRoute {
   final GoRouter router = GoRouter(
@@ -254,6 +255,12 @@ import '../screens/channel_profile_page/channel_profile_page.dart';
             name: 'plansPage',
             path: '/plansPage',
             pageBuilder: (context, state) => const CupertinoPage(child: PlansPage())
+        ),
+
+        GoRoute(
+            name: 'editVideoDetailPage',
+            path: '/editVideoDetailPage',
+            pageBuilder: (context, state) => const CupertinoPage(child: EditVideoDetailPage())
         ),
       ]
   );

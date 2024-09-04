@@ -58,42 +58,6 @@ class _SearchScreenState extends State<SearchScreen> {
     print("API called after dismissing keyboard.");
   }
 
-
-  // void apiCall() {
-  //   final searchQuery = _searchController.text.trim();
-  //   if (searchQuery.isNotEmpty) {
-  //     context.read<SearchDataBloc>().add(SearchDataRequest(searchQuery: searchQuery));
-  //     print("API called with query: $searchQuery");
-  //   } else {
-  //     print("Search query is empty. No API call made.");
-  //   }
-  // }
-  // void _initSpeech() async {
-  //   _speechEnabled = await _speechToText.initialize();
-  //   setState(() {});
-  // }
-
-  // void _startListening() async {
-  //   await _speechToText.listen(onResult: _onSpeechResult);
-  //   setState(() {});
-  // }
-
-  // void _stopListening() async {
-  //   await _speechToText.stop();
-  //   setState(() {});
-  // }
-
-  // void _onSpeechResult(SpeechRecognitionResult result) {
-  //   setState(() {
-  //     _lastWord = result.recognizedWords;
-  //     _updateSearchText(); // Update text field when speech result changes
-  //   });
-  // }
-
-  // void _updateSearchText() {
-  //   _searchText.text = _lastWord;
-  // }
-
   @override
   Widget build(BuildContext context) {
     //     ),

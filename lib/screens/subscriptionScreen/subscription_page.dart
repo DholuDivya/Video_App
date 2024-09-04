@@ -12,6 +12,7 @@ import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_chan
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
+import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/shimmer.dart';
 
@@ -27,34 +28,38 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
   bool isSelectedPersonalized = false;
   bool isSelectedNone = false;
   bool isSubscribed = false;
+  int? mode;
 
  Future<void> refreshData() async {
    context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
  }
  @override
   Widget build(BuildContext context) {
+   mode = context.read<ThemeBloc>().mode;
+   print('$mode   222222');
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: refreshData,
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              title: const Text(
-                'Subscriptions',
-                style: TextStyle(
-                  fontFamily: fontFamily,
-                ),
+              title: Container(
+                padding: EdgeInsets.only(left: 15.w),
+                child: mode == 1
+                    ? Image.asset('assets/images/homepage_logo_light.png', height: 75.h, width: 115.w,)
+                    : Image.asset('assets/images/homepage_logo_dark.png', height: 75.h, width: 115.w,),
               ),
               // centerTitle: true,
+              titleSpacing: 1.0,
               floating: true,
               pinned: false,
               snap: false,
               backgroundColor: Theme.of(context).colorScheme.surface,
-              leading: const Icon(
-                Remix.youtube_fill,
-                size: 35,
-                color: Colors.red,
-              ),
+              // leading: const Icon(
+              //   Remix.youtube_fill,
+              //   size: 35,
+              //   color: Colors.red,
+              // ),
               actions: [
                 IconButton(
                   onPressed: () {
