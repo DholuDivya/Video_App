@@ -66,16 +66,20 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
   // }
 
   void _extractHashtags(String text) {
-    final RegExp hashtagRegExp = RegExp(r'\B#\w\w+');
+    final RegExp hashtagRegExp = RegExp(r'(#\w+|\b\w{3,}\b)');
     final Iterable<RegExpMatch> matches = hashtagRegExp.allMatches(text);
+
     setState(() {
-      _hashtags = matches.map((match) => match.group(0)!).toList();
+      _hashtags = matches
+          .map((match) => '#' + match.group(0)!.replaceAll('#', ''))
+          .toList();
     });
   }
 
   @override
   void dispose() {
     _hashtagController.dispose();
+    finalThumbnail = null;
     super.dispose();
   }
 
@@ -160,39 +164,10 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
     {"type": "private"}
   ];
 
-  // String? _validateTitle(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return "Please enter Title !";
-  //   }
-  //   return null;
-  // }
-  //
-  // String? _validateDescription(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return "Please enter Description !";
-  //   }
-  //   return null;
-  // }
-  //
-  // String? _validateCategory(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return "Please select Category !";
-  //   }
-  //   return null;
-  // }
-  //
-  // String? _validateVisibility(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return "Please select Visibility !";
-  //   }
-  //   return null;
-  // }
 
    CroppedFile? finalThumbnail;
   late PlatformFile selectedVideo;
-  // late final categoryId;
-  // VideoCategoriesModel? selectedCategory;
-  List<int> selectedCategoryIds = [];
+   List<int> selectedCategoryIds = [];
   late String selectedCategoryNames;
 
   @override
@@ -311,8 +286,6 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                                   height: 15.h,
                                 ),
                                 ClipRRect(
-
-                                  // radius: 50,
                                   child: Container(
                                     height: 70.h,
                                     width: 200.w,

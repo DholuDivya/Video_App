@@ -10,12 +10,15 @@ import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_event.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/utils/widgets/CustomLogOutWidget.dart';
+import 'package:vimeo_clone/utils/widgets/custom_text_field_password.dart';
+import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 
 
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
 import '../../config/constants.dart';
 import '../../config/security.dart';
+import '../../utils/widgets/custom_text_field_auth.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -26,6 +29,24 @@ class SettingPage extends StatefulWidget {
 
 
 class _SettingPageState extends State<SettingPage> {
+  TextEditingController _passwordController = TextEditingController();
+  bool isPasswordVisible = false;
+  String pattern = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$';
+
+
+  String? _validatePassword(String? value){
+    if(value == null || value.isEmpty){
+      return "Please enter First Name !";
+    }
+    if (value.length < 6) {
+      return "Password must be at least 6 characters";
+    }
+    RegExp regexp = RegExp(pattern);
+    if(!regexp.hasMatch(value)){
+      return 'Password must be at least 8 characters long, include an uppercase letter, number, and symbol';
+    }
+    return null;
+  }
 
 
   void showThemeDialog(BuildContext context) {
@@ -152,6 +173,18 @@ class _SettingPageState extends State<SettingPage> {
               // print('Logged Out ---- ${headers} \n Token${Global.userName}');
               print('Log Out API Successfully Called');
               GoRouter.of(context).pushReplacementNamed('signupPage');
+            }
+            else if(state is AuthDeleteUserAccount){
+              print('Delete Account API Successfully Called');
+              if(Navigator.canPop(context)){
+                Navigator.pop(context);
+              }
+              GoRouter.of(context).pushReplacementNamed('signupPage');
+            }
+            else if(state is AuthProgress){
+              Center(
+                child: CircularProgressIndicator(),
+              );
             }
           },
           builder: (context, state) {
@@ -335,11 +368,15 @@ class _SettingPageState extends State<SettingPage> {
                   const SizedBox(height: 10,),
 
                   CustomLogOutWidget(
+                    icon: HeroiconsOutline.trash,
                       btnName: 'Delete account',
-                      onTap: (){}
+                      onTap: (){
+                        onDeleteAccountShowDialog();
+                      }
                   ),
 
                   CustomLogOutWidget(
+                    icon: HeroiconsOutline.arrowLeftOnRectangle,
                       btnName: 'Log Out',
                       onTap: () {
                         print('log out');
@@ -356,6 +393,72 @@ class _SettingPageState extends State<SettingPage> {
         )
 
 
+      );
+    }
+
+    void onDeleteAccountShowDialog(){
+      showDialog(
+          context: context,
+          builder: (context){
+            return StatefulBuilder(
+              builder: (BuildContext context, void Function(void Function()) setState) {
+                return AlertDialog(
+
+                  title: Center(
+                    child: Text(
+                        'Enter your password',
+                      style: TextStyle(
+                        fontFamily: fontFamily,
+                        fontSize: 15
+                      ),
+                    ),
+                  ),
+                    content: Container(
+                      height: 110.h,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10.h,),
+                          CustomTextField(
+                            obscureText: true && !isPasswordVisible,
+                            controller: _passwordController,
+                            validator: _validatePassword,
+                            label: 'Password',
+                            suffixIcon: IconButton(
+                                onPressed: (){
+                                  setState(() {
+                                    isPasswordVisible = !isPasswordVisible;
+                                  });
+                                },
+                                icon: Icon(
+                                    isPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash
+                                )
+                            ),
+                          ),
+                          SizedBox(height: 15.h,),
+                          Container(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                onPressed: (){
+                                  final password = _passwordController.text;
+                                  context.read<AuthBloc>().add(OnDeleteUserAccountRequestEvent(
+                                      password: password
+                                  ));
+                                },
+                                child: Text(
+                                    'Submit',
+                                  style: TextStyle(
+                                    fontFamily: fontFamily
+                                  ),
+                                )
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                );
+              },
+            );
+          }
       );
     }
 }

@@ -52,11 +52,11 @@ ThemeData lightTheme = ThemeData(
 
     // textButtonTheme: TextButtonThemeData(
     //   style: ButtonStyle(
-    //     shape: MaterialStateProperty.all<OutlinedBorder>(
-    //       RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(10.0),
-    //       ),
-    //     ),
+    //     // shape: MaterialStateProperty.all<OutlinedBorder>(
+    //     //   RoundedRectangleBorder(
+    //     //     borderRadius: BorderRadius.circular(10.0),
+    //     //   ),
+    //     // ),
     //     backgroundColor: MaterialStateProperty.all<Color>(
     //       primaryColor,
     //     ),
@@ -125,11 +125,11 @@ ThemeData darkTheme = ThemeData(
     //     // textStyle: WidgetStatePropertyAll<TextStyle>(
     //     //
     //     // ),
-    //     shape: MaterialStateProperty.all<OutlinedBorder>(
-    //       RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(10.0),
-    //       ),
-    //     ),
+    //     // shape: MaterialStateProperty.all<OutlinedBorder>(
+    //     //   RoundedRectangleBorder(
+    //     //     borderRadius: BorderRadius.circular(10.0),
+    //     //   ),
+    //     // ),
     //     backgroundColor: MaterialStateProperty.all<Color>(
     //       primaryColor,
     //     ),

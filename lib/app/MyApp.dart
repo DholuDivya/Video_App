@@ -54,6 +54,7 @@ import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/routes/myapproute.dart';
 
+import '../bloc/edit_video_detail/edit_video_detail_bloc.dart';
 import '../bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
 import '../config/notification_service.dart';
 
@@ -127,6 +128,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => GetPlansBloc()),
         BlocProvider(create: (context) => GenerateSignatureBloc()),
         BlocProvider(create: (context) => VerifyPaymentBloc()),
+        BlocProvider(create: (context) => EditVideoDetailBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

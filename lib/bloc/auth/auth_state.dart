@@ -39,7 +39,11 @@ class LoginPhoneCodeSentState extends AuthState {
 class AuthLogOut extends AuthState{
   @override
   List<Object?> get props => [];
+}
 
+class AuthDeleteUserAccount extends AuthState{
+  @override
+  List<Object?> get props => [];
 }
 
 

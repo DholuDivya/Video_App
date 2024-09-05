@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:lottie/lottie.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:vimeo_clone/bloc/generate_signature/generate_signature_bloc.dart';
 import 'package:vimeo_clone/bloc/generate_signature/generate_signature_event.dart';
@@ -108,7 +109,23 @@ class _PlansPageState extends State<PlansPage> {
     final verifyPaymentBloc = context.read<VerifyPaymentBloc>();
     verifyPaymentBloc.stream.listen((state){
       if(state is VerifyPaymentLoaded){
-
+        print('yuyuyuyuyuyuyuyuuy    $state');
+        showDialog(
+          context: context,
+          builder: (BuildContext context){
+            return AlertDialog(
+              content: Center(
+                  child: Lottie.asset('assets/animation/payment_success.json')
+              ),
+            );
+          },
+        );
+      }else if(state is VerifyPaymentFailure){
+        AlertDialog(
+          content: Center(
+              child: Lottie.asset('assets/animation/payment_failed.json')
+          ),
+        );
       }
     });
   }
@@ -116,6 +133,10 @@ class _PlansPageState extends State<PlansPage> {
   void handleExternalWalletSelected(ExternalWalletResponse response) {
     print('External Wallet Selected: ${response.walletName}');
   }
+
+
+
+
 
 
   @override

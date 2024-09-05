@@ -4,13 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/model/get_channel_detail_model.dart';
-import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
-import 'package:vimeo_clone/utils/widgets/custom_for_you_preview.dart';
+
+import '../../../utils/widgets/custom_channel_video_preview.dart';
+import '../../../utils/widgets/custom_for_you_preview.dart';
 
 class HomePreviewPage extends StatefulWidget {
   // final GetChannelDetailModel channelData;
-  const HomePreviewPage({super.key,});
+  const HomePreviewPage({super.key});
 
   @override
   State<HomePreviewPage> createState() => _HomePreviewPageState();
@@ -73,10 +73,10 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                           final type = suggestedVideo.type;
                           print('sssssssssssssss    ${state.channelData.first.suggestedVideos.length}');
                             return  type == "video" ? ForYouPreview(
-                              videoThumbnail: suggestedVideo.thumbnails,
-                              videoTitle: suggestedVideo.title,
-                              channelName: state.channelData.first.channel.name,
-                              uploadTime: suggestedVideo.createdAtHuman,
+                              videoThumbnail: suggestedVideo.thumbnails!,
+                              videoTitle: suggestedVideo.title!,
+                              channelName: state.channelData.first.channel!.name!,
+                              uploadTime: suggestedVideo.createdAtHuman!,
                             ) : Container();
                       }),
                     ) : Container(),

@@ -349,5 +349,21 @@ class AuthRepository{
       throw ApiException('Failed to Log out user ----- $e');
     }
   }
+
+
+  Future deleteUserAccount(String password) async {
+    try{
+      final response = await ApiBaseHelper().deleteAPICall(deleteUserAccountUrl, {
+        'password': password
+      });
+
+      if(response.statusCode == 200){
+        await Global.clearUserData();
+        print('User account is successfully delete');
+      }
+    }catch(e){
+      throw ApiException('Failed to delete user account ');
+    }
+  }
 }
 

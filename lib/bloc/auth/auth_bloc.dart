@@ -160,7 +160,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<OnDeleteUserAccountRequestEvent>((event, emit) async {
       emit(AuthProgress());
-      try{}catch(e){}
+      try{
+        await authRepository.deleteUserAccount(event.password);
+        print('Account deleted successfully');
+        emit(AuthDeleteUserAccount());
+      }catch(e){
+        emit(AuthFailure(error: e.toString()));
+      }
     });
   }
 }

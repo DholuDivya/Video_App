@@ -40,6 +40,7 @@ import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/screens/ShortsScreen/shorts_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/crop_shorts_page.dart';
 import 'package:vimeo_clone/utils/widgets/custom_bottom_sheet_button.dart';
+import 'package:vimeo_clone/utils/widgets/custom_popup_menu.dart';
 import 'package:vimeo_clone/utils/widgets/custom_shorts_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_shorts_preview_homepage.dart';
 import '../../Utils/Widgets/bottom_nav_bar.dart';
@@ -251,10 +252,12 @@ class HomePageContent extends StatefulWidget {
 class _HomePageContentState extends State<HomePageContent> {
   bool isAllCategorySelected = true;
   int? mode;
+  late final GlobalKey _menuKey;
 
   @override
   void initState() {
     super.initState();
+    _menuKey = GlobalKey();
     // getTheme();
   }
 
@@ -505,9 +508,7 @@ class _HomePageContentState extends State<HomePageContent> {
                               author: '${state.videoList[adjustedIndex].channel?.name}',
                               views: '${state.videoList[adjustedIndex].views}',
                               uploadTime: '${state.videoList[adjustedIndex].createdAtHuman}',
-                              onMorePressed: () {
-                                showPopupMenu(context);
-                              },
+                              onMorePressed: _showCustomMenu
                             )
                                 : null;
                           },
@@ -644,6 +645,51 @@ class _HomePageContentState extends State<HomePageContent> {
       ),
     );
   }
+  // final GlobalKey _menuKey = GlobalKey();
+  void _showCustomMenu() {
+    final RenderBox renderBox = _menuKey.currentContext?.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: offset.dy + renderBox.size.height,
+        left: offset.dx,
+        child: Material(
+          child: Container(
+            height: 200,
+            child: PopupMenuButton<String>(
+              onSelected: (value) {
+                switch (value) {
+                  case 'Edit':
+                  // Handle edit action
+                    break;
+                  case 'Delete':
+                  // Handle delete action
+                    break;
+                // Add more cases if needed
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return {'Edit', 'Delete'}.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+
+    overlay.insert(overlayEntry);
+  }
+
+
+
+
 
   List<Map<String, dynamic>> shortsThumbnail = [
     {
@@ -745,6 +791,16 @@ class _HomePageContentState extends State<HomePageContent> {
     );
   }
 
+  
+  Widget videoPopupMenu() {
+    return CustomPopupMenu(
+        menuItems: [
+          PopupMenuItem(child: Text('Save'), value: 'save',),
+          PopupMenuItem(child: Text('block'), value: 'block',)
+        ],
+        onSelected: (value){}
+    );
+  }
 
 
 

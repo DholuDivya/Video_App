@@ -196,7 +196,7 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
                   ),
                   itemBuilder: (context, index) {
                     final shortsData = state.channelData.first.channelShorts[index];
-                    // final type = shortsData.type;
+                    final type = shortsData.type;
                     return CustomShortsPreview(
                       thumbNailPath: shortsData.thumbnails,
                       views: shortsData.views.toString(),

@@ -262,6 +262,14 @@ import '../screens/edit_video_detail/edit_video_detail_page.dart';
             path: '/editVideoDetailPage',
             pageBuilder: (context, state) => const CupertinoPage(child: EditVideoDetailPage())
         ),
+
+        // GoRoute(
+        //     name: 'editVideoDetailPage',
+        //     path: '/editVideoDetailPage/:videoSlug',
+        //   builder: (context, state) => EditVideoDetailPage(
+        //     videoSlug: state.pathParameters['videoSlug']!
+        //   ),
+        // ),
       ]
   );
 // }

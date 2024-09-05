@@ -26,7 +26,6 @@ class UploadVideoBloc extends Bloc<UploadVideoEvent, UploadVideoState>{
       print('lllllllllllllll     ${event.videoCategory.single}');
 
 
-
       String fileName = event.video.path!.split('/').last;
       FormData formData = FormData.fromMap({
         'video': await MultipartFile.fromFile(event.video.path!, filename: fileName),
@@ -36,9 +35,7 @@ class UploadVideoBloc extends Bloc<UploadVideoEvent, UploadVideoState>{
         'categories[]': event.videoCategory,
         'visibility': event.videoVisibility,
       });
-      // final String? token = Global.token;
-      // print('************   ${formData}');
-      // final response = await UploadVideoRepo().uploadVideo(formData);
+
       final response = await Dio().post('https://videoapp.taskhub.company/api/video',
         data: formData,
         options: Options(

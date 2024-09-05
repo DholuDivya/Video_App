@@ -85,10 +85,8 @@ class _SplashScreenState extends State<SplashScreen> {
       GoRouter.of(context).pushReplacementNamed('homePage');
     } else {
       print('Token: --- NULLLLLLLl');
-      GoRouter.of(context).pushReplacementNamed('signupPage');  // Make sure this route is correctly defined
+      GoRouter.of(context).pushReplacementNamed('signupPage');
     }
-
-
   }
 
 

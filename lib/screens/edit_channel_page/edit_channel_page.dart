@@ -237,6 +237,9 @@ class _EditChannelPageState extends State<EditChannelPage> {
       floatingActionButton: isEdit == true ? BlocBuilder<EditChannelBloc, EditChannelState>(
         builder: (BuildContext context, EditChannelState state) {
           if(state is EditChannelSuccess){
+            if(Navigator.canPop(context)){
+              Navigator.pop(context);
+            }
             ToastManager().showToast(
                 context: context,
                 message: 'Channel details is successfully updated!'
@@ -245,12 +248,14 @@ class _EditChannelPageState extends State<EditChannelPage> {
           return ElevatedButton(
               onPressed: (){
                 String channelName = '';
+                var logo;
                 print('!!!!!!!!!!!!!!!!!!!     :::::   ${_nameController.text}');
                 Global.userData!.userName == _nameController.text
                     ? null : channelName = _nameController.text;
                 final channelLogo = finalChannelLogo;
                 // final channelBanner = null;
 
+                print('popopopoopoppopopop    $channelName');
                 context.read<EditChannelBloc>().add(EditChannelRequest(
                   channelName: channelName.isEmpty ? null : channelName,
                   channelLogo: channelLogo,

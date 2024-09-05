@@ -13,7 +13,7 @@ class VideoListItem extends StatelessWidget {
   final String uploadTime;
   final Function()? onTap;
   final Function()? onTapChannel;
-  final Function()? onMorePressed;
+  final VoidCallback? onMorePressed;
 
   const VideoListItem({
     super.key,

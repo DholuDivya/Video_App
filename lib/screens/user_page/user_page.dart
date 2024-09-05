@@ -145,7 +145,12 @@ class _UserPageState extends State<UserPage> {
               UserPageButton(
                   buttonName: 'Time watched',
                   buttonIcon: HeroiconsOutline.chartBarSquare,
-                onTap: (){},
+                onTap: (){
+                    GoRouter.of(context).pushNamed('editVideoDetailPage');
+                    // GoRouter.of(context).pushNamed('editVideoDetailPage', pathParameters: {
+                    //   'videoSlug': ''
+                    // });
+                },
               ),
 
               UserPageButton(

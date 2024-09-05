@@ -19,11 +19,37 @@ class EditChannelBloc extends Bloc<EditChannelEvent, EditChannelState>{
       print('KKKKKKKKKKKKKK      ${event.channelLogo}');
       print('KKKKKKKKKKKKKK      ${event.channelBanner}');
 
-      FormData formData = FormData.fromMap({
+      FormData formData;
+
+      // if(event.channelName!.isEmpty){
+      //   print('iiiiiiiiii');
+      //   formData = FormData.fromMap({
+      //     // 'name': event.channelName,
+      //     'logo': await MultipartFile.fromFile(event.channelLogo!.path),
+      //     // 'banner': await MultipartFile.fromFile(event.channelBanner!.path),
+      //   });
+      // }else if(event.channelLogo!.path.isNotEmpty){
+      //   print('ppppppppppp');
+      //   formData = FormData.fromMap({
+      //     'name': event.channelName,
+      //     // 'logo': await MultipartFile.fromFile(event.channelLogo!.path),
+      //     // 'banner': await MultipartFile.fromFile(event.channelBanner!.path),
+      //   });
+      // }else{
+      //   print('4444444444444');
+      //   formData = FormData.fromMap({
+      //     // 'name': event.channelName,
+      //     // 'logo': await MultipartFile.fromFile(event.channelLogo!.path),
+      //     // 'banner': await MultipartFile.fromFile(event.channelBanner!.path),
+      //   });
+      // }
+
+      formData = FormData.fromMap({
         'name': event.channelName,
-        'logo': await MultipartFile.fromFile(event.channelLogo!.path),
+        // 'logo': await MultipartFile.fromFile(event.channelLogo!.path),
         // 'banner': await MultipartFile.fromFile(event.channelBanner!.path),
       });
+
 
 
       final response = await Dio().post('$editChannelUrl${Global.userData!.userChannelId}',
@@ -40,17 +66,21 @@ class EditChannelBloc extends Bloc<EditChannelEvent, EditChannelState>{
         print('Updated user banner :::::        ${response.data['channel']['banner_image']}');
 
 
+        String userNumber;
         final String userToken = Global.userData!.userToken!;
         print('1  :::   $userToken');
         final String userId = Global.userData!.userId!;
         print('2  :::   $userId');
         final String userName = response.data['channel']['name'] ?? Global.userData!.userName!;
         print('3  :::   $userName');
-        final String userNumber = Global.userData!.userNumber!;
-        print('4  :::   $userNumber');
+        if(Global.userData!.userNumber!.isEmpty){
+          userNumber = '';
+        }else{
+          userNumber = Global.userData!.userNumber! ?? '';
+        }
         final String userEmail = Global.userData!.userEmail!;
         print('5  :::   $userEmail');
-        final String userProfilePhoto = response.data['user']['logo'];
+        final String userProfilePhoto = response.data['channel']['logo'];
         print('6  :::   $userProfilePhoto');
         final String userChannelId = Global.userData!.userChannelId!;
         print('7  :::   $userChannelId');
