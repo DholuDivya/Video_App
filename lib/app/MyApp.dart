@@ -16,6 +16,7 @@ import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/delete_playlist/delete_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/edit_channel/edit_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/generate_signature/generate_signature_bloc.dart';
 import 'package:vimeo_clone/bloc/get_channel_logo/get_channel_logo_bloc.dart';
@@ -35,6 +36,8 @@ import 'package:vimeo_clone/bloc/like_dislike/like_dislike_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike_comment/like_dislike_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
+import 'package:vimeo_clone/bloc/remove_video_from_history/remove_video_from_history_bloc.dart';
+import 'package:vimeo_clone/bloc/remove_video_from_playlist/remove_video_from_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/search_data/search_data_bloc.dart';
 import 'package:vimeo_clone/bloc/search_suggestion/search_suggestion_bloc.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';
@@ -53,7 +56,6 @@ import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/routes/myapproute.dart';
-
 import '../bloc/edit_video_detail/edit_video_detail_bloc.dart';
 import '../bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
 import '../config/notification_service.dart';
@@ -77,9 +79,9 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      NotificationService().initNotification(context);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   NotificationService().initNotification(context);
+    // });
     super.initState();
   }
 
@@ -90,7 +92,6 @@ class _MyAppState extends State<MyApp> {
 
     return MultiBlocProvider(
       providers: [
-        // BlocProvider(create: (context) => ThemeBloc(Hive.box('themeBox'))..add(ThemeLoadEvent())),
         BlocProvider(create: (context) => YourVideosBloc()..add(GetYourVideosEvent())),
         BlocProvider(create: (context) => ThemeBloc()),
         BlocProvider(create: (context) => AuthBloc(AuthRepository(ApiBaseHelper()))),
@@ -129,6 +130,10 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => GenerateSignatureBloc()),
         BlocProvider(create: (context) => VerifyPaymentBloc()),
         BlocProvider(create: (context) => EditVideoDetailBloc()),
+        BlocProvider(create: (context) => RemoveVideoFromHistoryBloc()),
+        BlocProvider(create: (context) => RemoveVideoFromPlaylistBloc()),
+        BlocProvider(create: (context) => DeletePlaylistBloc()),
+
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

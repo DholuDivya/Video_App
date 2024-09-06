@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
-import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
+import 'package:vimeo_clone/bloc/remove_video_from_playlist/remove_video_from_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/remove_video_from_playlist/remove_video_from_playlist_event.dart';
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_event.dart';
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_state.dart';
@@ -12,6 +15,7 @@ import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channel_preview.dart';
 
+import '../../utils/widgets/customBottomSheet.dart';
 import '../../utils/widgets/custom_channel_video_preview.dart';
 
 class SinglePlaylistPage extends StatefulWidget {
@@ -24,11 +28,40 @@ class SinglePlaylistPage extends StatefulWidget {
 
 class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
 
+  List<Map<String, dynamic>> bottomSheetListTileField = [
+    {
+      'name': 'Remove from playlist',
+      'icon': HeroiconsOutline.trash
+    },
+    {
+      'name': 'Download video',
+      'icon': HeroiconsOutline.arrowDownTray
+    },
+    {
+      'name': 'Share',
+      'icon': HeroiconsOutline.share
+    },
+    {
+      'name': 'Report',
+      'icon': HeroiconsOutline.chatBubbleBottomCenterText
+    },
+  ];
+
+
+  List<int> selectedToRemove = [];
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: (){
+              context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+              Navigator.pop(context);
+            },
+            icon: Icon(CupertinoIcons.back)
+        ),
         actions: [
           IconButton(
               onPressed: (){},
@@ -176,6 +209,29 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                                 videoViews: userSinglePlaylistData.views.toString(),
                                 uploadTime: '${userSinglePlaylistData.createdAtHuman}',
                                 videoDuration: formattedDuration,
+                                onShowMorePressed: (){
+                                  selectedToRemove.add(userSinglePlaylistData.id!);
+                                  customShowMoreBottomSheet(
+                                    context,
+                                    bottomSheetListTileField,
+                                        (int index) {
+                                      if (index == 0) {
+                                        context.read<RemoveVideoFromPlaylistBloc>().add(
+                                            RemoveVideoFromPlaylistRequest(
+                                              videoIds: selectedToRemove,
+                                              playlistId: widget.playlistId
+                                            ));
+                                        context.read<ShowSinglePlaylistBloc>().add((ShowSinglePlaylistRequest(playlistId: widget.playlistId)));
+
+                                        Future.delayed(const Duration(milliseconds: 200), (){
+                                          Navigator.pop(context);
+                                        });
+                                      } else if (index == 1) {
+                                        // GoRouter.of(context).pushNamed('settingPage');
+                                      }
+                                    },
+                                  );
+                                },
                               ),
                             ),
                           );

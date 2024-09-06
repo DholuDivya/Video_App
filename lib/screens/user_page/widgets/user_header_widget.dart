@@ -80,27 +80,6 @@ class UserHeaderWidget extends StatelessWidget {
           )
         ],
       )
-        // title: Text(
-        //   'User Name',
-        //   style: TextStyle(
-        //     fontFamily: fontFamily,
-        //     fontSize: 25
-        //   )
-        // ),
-        // subtitle: Row(
-        //   children: [
-        //     Text(
-        //       'View channel ',
-        //       style: TextStyle(
-        //         fontFamily: fontFamily,
-        //         color: Colors.grey
-        //       )
-        //     ),
-        //     Icon(HeroiconsOutline.chevronRight, size: 15, color: Colors.grey)
-        //   ],
-        // ),
-
-
     );
   }
 }

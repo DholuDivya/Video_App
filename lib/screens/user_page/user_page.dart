@@ -29,8 +29,8 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
 
-  late int historyLength = 0;
-  late List<Data> historyData = [];
+  var historyLength = 0;
+  var historyData = [];
 
 
   @override
@@ -46,8 +46,6 @@ class _UserPageState extends State<UserPage> {
         historyData = state.userHistory.first.data!;
       }
     });
-    // final historyBloc = context.read<GetUserHistoryBloc>();
-    print(':":::":":"":":""     $historyData');
     super.initState();
   }
 
@@ -97,7 +95,10 @@ class _UserPageState extends State<UserPage> {
               const UserHeaderWidget(),
               // SizedBox(height: ScreenSize.screenHeight(context) * 0.00,),
 
-              historyData.isEmpty ? Container() : UserHistoryWidget(),
+
+              // historyLength > 0
+                  const UserHistoryWidget(),
+                  // : Container(),
 
               // SizedBox(height: 10.h,),
               UserPlaylistWidget(),

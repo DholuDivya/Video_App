@@ -10,12 +10,14 @@ class HistoryVideoPreview extends StatelessWidget {
   final String videoTitle;
   final String channelName;
   final String videoDuration;
+  final Function()? onMorePressed;
 
   const HistoryVideoPreview({super.key,
     required this.imageUrl,
     required this.videoTitle,
     required this.channelName,
-    required this.videoDuration
+    required this.videoDuration,
+    this.onMorePressed
   });
 
   @override
@@ -69,12 +71,14 @@ class HistoryVideoPreview extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+
                 width: ScreenSize.screenWidth(context) * 0.4,
                 height: ScreenSize.screenHeight(context) * 0.09,
                 padding: EdgeInsets.only(left: 5.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 4.h,),
                     Text(
                       videoTitle,
                       style: TextStyle(
@@ -98,7 +102,7 @@ class HistoryVideoPreview extends StatelessWidget {
             ),
             InkWell(
               borderRadius: BorderRadius.circular(100),
-              onTap: (){},
+              onTap: onMorePressed,
               child: Container(
                 height: ScreenSize.screenHeight(context) * 0.045,
                 width: ScreenSize.screenWidth(context) * 0.1,

@@ -5,12 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_event.dart';
+import 'package:vimeo_clone/bloc/delete_playlist/delete_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/delete_playlist/delete_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart';
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_event.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/custom_playlist_widget_userpage.dart';
+import 'package:vimeo_clone/utils/widgets/customBottomSheet.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 import 'package:vimeo_clone/utils/widgets/shimmer.dart';
 import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
@@ -25,6 +28,23 @@ class UserPlaylistWidget extends StatefulWidget {
 }
 
 class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
+
+  List<Map<String, dynamic>> bottomSheetListTileField = [
+    {
+      'name': 'Delete playlist',
+      'icon': HeroiconsOutline.trash
+    },
+    {
+      'name': 'Share playlist',
+      'icon': HeroiconsOutline.share
+    },
+
+  ];
+
+
+  List<int> selectedToRemove = [];
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -158,6 +178,24 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                               : userPlaylist.videos!.first.thumbnails!,
                           playlistTitle: userPlaylist.title!,
                           playlistVisibility: userPlaylist.visibility!,
+                          onShowMorePressed: (){
+                            customShowMoreBottomSheet(
+                                context,
+                                bottomSheetListTileField,
+                                  (int index) {
+                                if (index == 0) {
+                                  if (Navigator.canPop(context)) {
+                                    Navigator.pop(context);
+                                  }
+                                  context.read<DeletePlaylistBloc>().add(
+                                      DeletePlaylistRequest(playlistId: userPlaylist.id!));
+                                  context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                                } else if (index == 1) {
+                                  // GoRouter.of(context).pushNamed('settingPage');
+                                }
+                              },
+                            );
+                          },
                         ),
                       ),
                     );
@@ -303,9 +341,8 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                             playlistDescription: playlistDescription,
                             playlistStatus: playlistStatus
                         ));
-
-                        print('Get playlist after creating new playlist');
                         context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                        print('Get playlist after creating new playlist');
                         Navigator.pop(context);
                       },
                       child: Container(

@@ -12,6 +12,7 @@ class CustomVideoPreview extends StatelessWidget {
   final String videoViews;
   final String uploadTime;
   final String videoDuration;
+  final Function()? onShowMorePressed;
 
   const CustomVideoPreview(
       {super.key,
@@ -19,7 +20,9 @@ class CustomVideoPreview extends StatelessWidget {
       required this.videoTitle,
       required this.videoViews,
       required this.uploadTime,
-      required this.videoDuration});
+      required this.videoDuration,
+        this.onShowMorePressed
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +136,7 @@ class CustomVideoPreview extends StatelessWidget {
             top: 0,
             right: 5,
             child: InkWell(
-              onTap: () {},
+              onTap: onShowMorePressed,
               borderRadius: BorderRadius.circular(25),
               child: Container(
                 height: 35,

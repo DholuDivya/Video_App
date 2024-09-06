@@ -2,12 +2,16 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/api_routes.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
+
+import '../config/notification_service.dart';
 
 class AuthRepository{
   final ApiBaseHelper apiHelper;
@@ -266,8 +270,10 @@ class AuthRepository{
   // LOGIN USER
   Future<dynamic> loginUser(String email, String password) async {
     try{
+      final fcmId = await NotificationService().getFcmToken();
+      print('FCM ID  ::::  $fcmId');
       print('2000000000000000000');
-      final response = await apiHelper.loginUserEmail(loginUserUrl, {'email': email, 'password': password});
+      final response = await apiHelper.loginUserEmail(loginUserUrl, {'email': email, 'password': password, 'fcm_id': fcmId});
       print('srbgirswugbhuswgbhusrhsbhvjuvjubhvujjuhvujhbd');
       print('${response.data}');
       if(response.statusCode == 200){
@@ -304,6 +310,7 @@ class AuthRepository{
           // RETURN TOKEN
           print('Token Verified Successfully');
           print(':::::::::::::::::::  $userToken   :::::::::::::::::::');
+
           return userToken;
         }else{
           print('Data Not Found');

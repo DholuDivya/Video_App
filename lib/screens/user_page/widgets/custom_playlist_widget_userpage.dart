@@ -10,13 +10,15 @@ class CustomPlaylistWidgetUserPage extends StatelessWidget {
   final String imageUrl;
   final String playlistTitle;
   final String playlistVisibility;
+  final Function()? onShowMorePressed;
 
   const CustomPlaylistWidgetUserPage({
     super.key,
     required this.numberOfVideos,
     required this.imageUrl,
     required this.playlistTitle,
-    required this.playlistVisibility
+    required this.playlistVisibility,
+    this.onShowMorePressed
   });
 
   @override
@@ -170,7 +172,7 @@ class CustomPlaylistWidgetUserPage extends StatelessWidget {
               ),
               InkWell(
                 borderRadius: BorderRadius.circular(100),
-                onTap: (){},
+                onTap: onShowMorePressed,
                 child: Container(
                   height: ScreenSize.screenHeight(context) * 0.045,
                   width: ScreenSize.screenWidth(context) * 0.1,
@@ -178,7 +180,7 @@ class CustomPlaylistWidgetUserPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
 
                   ),
-                  child: Icon(HeroiconsOutline.ellipsisVertical, size: 20,),
+                  child: const Icon(HeroiconsOutline.ellipsisVertical, size: 20,),
                 ),
               )
             ],

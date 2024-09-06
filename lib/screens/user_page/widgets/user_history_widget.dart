@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
+import 'package:vimeo_clone/bloc/remove_video_from_history/remove_video_from_history_bloc.dart';
+import 'package:vimeo_clone/bloc/remove_video_from_history/remove_video_from_history_event.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/custom_history_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/shimmer.dart';
+
+import '../../../utils/widgets/customBottomSheet.dart';
 
 class UserHistoryWidget extends StatefulWidget {
   const UserHistoryWidget({super.key});
@@ -34,6 +39,35 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
 
     super.initState();
   }
+
+
+
+  List<Map<String, dynamic>> bottomSheetListTileField = [
+    {
+      'name': 'Remove from history',
+      'icon': HeroiconsOutline.trash
+    },
+    {
+      'name': 'Save to playlist',
+      'icon': HeroiconsOutline.bookmark
+    },
+    {
+      'name': 'Download video',
+      'icon': HeroiconsOutline.arrowDownTray
+    },
+    {
+      'name': 'Share',
+      'icon': HeroiconsOutline.share
+    },
+    {
+      'name': 'Report',
+      'icon': HeroiconsOutline.chatBubbleBottomCenterText
+    },
+  ];
+
+
+  List<int> selectedToRemove = [];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -79,66 +113,83 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
 
           BlocBuilder<GetUserHistoryBloc, GetUserHistoryState>(
             builder: (BuildContext context, GetUserHistoryState state) {
-              if(state is GetUserHistorySuccess){
+              if (state is GetUserHistorySuccess) {
+                final reversedUserHistory = state.userHistory.first.data!.reversed.toList(); // Reversing the data list
+
                 return Container(
                   height: ScreenSize.screenHeight(context) * 0.21,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
-                      padding: EdgeInsets.only(
-                          left: ScreenSize.screenWidth(context) * 0.04
-                      ),
-                    itemCount: state.userHistory.first.data!.length,
-                      itemBuilder: (context, index){
-                      final userHistory = state.userHistory.first.data![index];
+                    padding: EdgeInsets.only(
+                      left: ScreenSize.screenWidth(context) * 0.04,
+                    ),
+                    itemCount: reversedUserHistory.length,
+                    itemBuilder: (context, index) {
+                      final userHistory = reversedUserHistory[index];
                       final totalSeconds = userHistory.duration;
                       final formattedDuration = formatDuration(totalSeconds!);
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            // left: ScreenSize.screenWidth(context) * 0.022,
-                            right: ScreenSize.screenWidth(context) * 0.04,
-                          ),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(10),
-                            onTap: (){
-                              Future.delayed(const Duration(milliseconds: 100), (){
-                                GoRouter.of(context).pushNamed('videoPage',
-                                    pathParameters: {
-                                      "slug": userHistory.slug!
-                                    });
-                              });
-                            },
-                            child: HistoryVideoPreview(
-                                imageUrl: '${userHistory.thumbnail}',
-                                videoTitle: '${userHistory.title}',
-                                channelName: '${userHistory.channel!.name}',
-                                videoDuration: formattedDuration
-                            ),
-                          ),
-                        );
-                  }),
-                );
 
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          right: ScreenSize.screenWidth(context) * 0.04,
+                        ),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          onTap: () {
+                            Future.delayed(const Duration(milliseconds: 100), () {
+                              GoRouter.of(context).pushNamed('videoPage', pathParameters: {
+                                "slug": userHistory.slug!,
+                              });
+                            });
+                          },
+                          child: HistoryVideoPreview(
+                            imageUrl: '${userHistory.thumbnail}',
+                            videoTitle: '${userHistory.title}',
+                            channelName: '${userHistory.channel!.name}',
+                            videoDuration: formattedDuration,
+                            onMorePressed: () {
+                              selectedToRemove.add(userHistory.id!);
+                              customShowMoreBottomSheet(
+                                context,
+                                bottomSheetListTileField,
+                                    (int index) {
+                                  if (index == 0) {
+                                    if (Navigator.canPop(context)) {
+                                      Navigator.pop(context);
+                                    }
+                                    context.read<RemoveVideoFromHistoryBloc>().add(
+                                        RemoveVideoFromHistoryRequest(videoIds: selectedToRemove));
+                                    context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
+                                  } else if (index == 1) {
+                                    // GoRouter.of(context).pushNamed('settingPage');
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
               }
-              // return Container();
+
               return Container(
                 height: 80.h,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.only(
-                      left: ScreenSize.screenWidth(context) * 0.04
+                    left: ScreenSize.screenWidth(context) * 0.04,
                   ),
                   itemCount: 5,
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
-                      padding: EdgeInsets.only(
-                        left: 5.w,
-                        right: 5.w
-                      ),
+                      padding: EdgeInsets.only(left: 5.w, right: 5.w),
                       child: ShimmerWidget.rectangular(
                         isBorder: true,
                         height: 80.h,
@@ -148,9 +199,9 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
                   },
                 ),
               );
-
             },
           ),
+
 
           SizedBox(height: ScreenSize.screenHeight(context) * 0.01,),
 

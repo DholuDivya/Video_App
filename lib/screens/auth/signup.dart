@@ -25,7 +25,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  // final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   bool isChecked = false;
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -74,15 +74,15 @@ class _SignupPageState extends State<SignupPage> {
         children: [
 
           Positioned(
-            top: 650,
-            right: 5,
+            top: 510.h,
+            right: -10.w,
             child: Material(
               borderRadius: BorderRadius.circular(500),
-              elevation: 10,
-                shadowColor: Colors.grey,
+              // elevation: 10,
+              //   shadowColor: Colors.grey,
               child: Container(
-                  height: 160,
-                  width: 160,
+                  height: 100.h,
+                  width: 110.w,
                   decoration: BoxDecoration(
                     // color: Colors.grey.shade900,
                     color: Colors.blue.shade100,
@@ -94,32 +94,36 @@ class _SignupPageState extends State<SignupPage> {
           ),
 
 
+          // MIDDLE
+          // Positioned(
+          //   top: 270.h,
+          //   left: 190.w,
+          //   child: Material(
+          //     borderRadius: BorderRadius.circular(500),
+          //     // elevation: 10,
+          //     //   shadowColor: Colors.grey,
+          //     child: Container(
+          //         height: 140.h,
+          //         width: 160.w,
+          //         decoration: BoxDecoration(
+          //           // color: Colors.grey.shade900,
+          //           color: Colors.blue.shade100,
+          //           borderRadius:
+          //           BorderRadius.circular(500),
+          //         )
+          //     ),
+          //   ),
+          // ),
+
+
+
           Positioned(
-            top: 270.h,
-            left: 190.w,
+            top: 400.h,
+            left: -30.w,
             child: Material(
               borderRadius: BorderRadius.circular(500),
-              elevation: 10,
-                shadowColor: Colors.grey,
-              child: Container(
-                  height: 140.h,
-                  width: 160.w,
-                  decoration: BoxDecoration(
-                    // color: Colors.grey.shade900,
-                    color: Colors.blue.shade100,
-                    borderRadius:
-                    BorderRadius.circular(500),
-                  )
-              ),
-            ),
-          ),
-          Positioned(
-            top: 500.h,
-            left: 0,
-            child: Material(
-              borderRadius: BorderRadius.circular(500),
-              elevation: 10,
-                shadowColor: Colors.grey,
+              // elevation: 10,
+              //   shadowColor: Colors.grey,
               child: Container(
                 height: 120,
                 width: 120,
@@ -132,13 +136,15 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
           ),
+
+
           Positioned(
-            top: 90.h,
-           right: - 5,
+            top: 150.h,
+           right: -55.w,
             child: Material(
               borderRadius: BorderRadius.circular(500),
-              elevation: 10,
-                shadowColor: Colors.grey,
+              // elevation: 10,
+              //   shadowColor: Colors.grey,
               child: Container(
                   height: 100.h,
                   width: 100.w,
@@ -151,13 +157,15 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
           ),
+
+
           Positioned(
-            top: -15.w,
-            left: -20,
+            top: -50.h,
+            left: -50.w,
             child: Material(
               borderRadius: BorderRadius.circular(500),
-              elevation: 10,
-              shadowColor: Colors.grey,
+              // elevation: 10,
+              // shadowColor: Colors.grey,
               child: Container(
                 height: 160.h,
                 width: 180.w,
@@ -186,7 +194,7 @@ class _SignupPageState extends State<SignupPage> {
                 right: ScreenSize.screenWidth(context) * 0.05
             ),
             child: SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               child: Column(
                 children: [
                   SizedBox(height: 130.h),
@@ -198,279 +206,287 @@ class _SignupPageState extends State<SignupPage> {
                       child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withOpacity(0.03),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: Colors.white.withOpacity(0.2),
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: Text(
-                                'Sign-in with account',
-                                style: TextStyle(
-                                  fontFamily: fontFamily,
-                                  fontSize: 24.sp,
-                                  fontWeight: FontWeight.bold,
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: Text(
+                                  'Sign-in with account',
+                                  style: TextStyle(
+                                    fontFamily: fontFamily,
+                                    fontSize: 24.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
+                              SizedBox(height: 8),
+                              Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    GoRouter.of(context).pushNamed('emailSignup');
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Don\'t have an account?',
+                                        style: TextStyle(
+                                          fontFamily: fontFamily,
+                                          fontSize: 14.sp,
+                                          // color: Colors.blue,
+                                        ),
+                                      ),
+                                      Text(
+                                        ' Register',
+                                        style: TextStyle(
+                                          fontFamily: fontFamily,
+                                            fontSize: 14.sp,
+                                            color: blue
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 32.h),
+
+                              CustomTextField(
+                                obscureText: false,
+                                controller: _emailController,
+                                validator: _validateEmail,
+                                label: 'Email',
+                              ),
+
+                              SizedBox(height: 16),
+                              CustomTextField(
+                                obscureText: true && !isPasswordVisible,
+                                controller: _passwordController,
+                                validator: _validatePassword,
+                                label: 'Password',
+                                suffixIcon: IconButton(
+                                    onPressed: (){
+                                      setState(() {
+                                        isPasswordVisible = !isPasswordVisible;
+                                      });
+                                    },
+                                    icon: Icon(
+                                        isPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash
+                                    )
+                                ),
+                              ),
+
+                                                Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              GoRouter.of(context).pushNamed(
+                                  'forgotPasswordPage');
+                            },
+                            child: const Text(
+                              'Forgot Password',
+                              style: TextStyle(
+                                  fontFamily: fontFamily,
+                                  fontSize: 11,
+                                  color: Colors.black54
+                              ),
                             ),
-                            SizedBox(height: 8),
-                            Center(
-                              child: GestureDetector(
-                                onTap: () {
-                                  GoRouter.of(context).pushNamed('emailSignup');
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Don\'t have an account?',
-                                      style: TextStyle(
-                                        fontFamily: fontFamily,
-                                        fontSize: 14.sp,
-                                        // color: Colors.blue,
+                          ),
+                                                ),
+                              BlocBuilder<AuthBloc, AuthState>(
+                                builder: (BuildContext context, state) {
+                                   if(state is LoginAuthSuccess) {
+                                    print('Login success with email and password');
+
+                                    Future.delayed(const Duration(seconds: 1),(){
+                                      router.goNamed('homePage');
+                                    });
+
+                                  }else if(state is LoginAuthFailure){
+                                    print('Login Fail');
+                                  }else if(state is LoginAuthLoading){
+                                     return const Center(child: CircularProgressIndicator());
+                                   }
+
+                                  return ElevatedButton(
+                                    onPressed: () {
+                                      if(_formKey.currentState!.validate()){
+                                        final String email = _emailController.text;
+                                        final String password = _passwordController.text;
+                                        context.read<AuthBloc>().add(OnUserLoginRequestEvent(email: email, password: password));
+                                      }
+                                      else{
+                                        print('Form is invalid');
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
-                                    Text(
-                                      ' Register',
-                                      style: TextStyle(
-                                        fontFamily: fontFamily,
-                                          fontSize: 14.sp,
-                                          color: blue
+                                    child: Center(
+                                      child: Text(
+                                        'Login',
+                                        style: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontFamily: fontFamily,
+                                            color: Colors.white
+                                        ),
                                       ),
-                                    )
+                                    ),
+                                  );
+                                }
+                              ),
+                              const SizedBox(height: 16),
+
+                              const SizedBox(height: 24),
+                              const Center(
+                                child: Row(
+                                  children: [
+                                    Expanded(child: Divider(thickness: 0.5,)),
+                                    SizedBox(width: 5,),
+                                    Text(
+                                      'or sign up with',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                        fontFamily: fontFamily,
+                                      ),
+                                    ),
+                                    SizedBox(width: 5,),
+                                    Expanded(child: Divider(thickness: 0.5,)),
                                   ],
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 32.h),
-
-                            CustomTextField(
-                              obscureText: false,
-                              controller: _emailController,
-                              validator: _validateEmail,
-                              label: 'Email',
-                            ),
-                            
-                            SizedBox(height: 16),
-                            CustomTextField(
-                              obscureText: true && !isPasswordVisible,
-                              controller: _passwordController,
-                              validator: _validatePassword,
-                              label: 'Password',
-                              suffixIcon: IconButton(
-                                  onPressed: (){
-                                    setState(() {
-                                      isPasswordVisible = !isPasswordVisible;
-                                    });
-                                  },
-                                  icon: Icon(
-                                      isPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash
-                                  )
-                              ),
-                            ),
-
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            GoRouter.of(context).pushNamed(
-                                'forgotPasswordPage');
-                          },
-                          child: const Text(
-                            'Forgot Password',
-                            style: TextStyle(
-                                fontFamily: fontFamily,
-                                fontSize: 11,
-                                color: Colors.black54
-                            ),
-                          ),
-                        ),
-                      ),
-                            BlocBuilder<AuthBloc, AuthState>(
-                              builder: (BuildContext context, state) {
-                                 if(state is LoginAuthSuccess) {
-                                  print('Login success with email and password');
-
-                                  Future.delayed(const Duration(seconds: 1),(){
-                                    router.goNamed('homePage');
-                                  });
-
-                                }else if(state is LoginAuthFailure){
-                                  print('Login Fail');
-                                }else if(state is LoginAuthLoading){
-                                   return const Center(child: CircularProgressIndicator());
-                                 }
-
-                                return ElevatedButton(
-                                  onPressed: () {
-                                    final String email = _emailController.text;
-                                    final String password = _passwordController.text;
-                                    context.read<AuthBloc>().add(OnUserLoginRequestEvent(email: email, password: password));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      'Continue',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontFamily: fontFamily,
-                                          color: Colors.white
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-                            ),
-                            const SizedBox(height: 16),
-
-                            const SizedBox(height: 24),
-                            const Center(
-                              child: Row(
+                              SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Expanded(child: Divider(thickness: 0.5,)),
-                                  SizedBox(width: 5,),
-                                  Text(
-                                    'or sign up with',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                      fontFamily: fontFamily,
+                                  BlocConsumer<AuthBloc, AuthState>(
+                                    listener: (BuildContext context, state) {
+                                      if(state is AuthSuccess){
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Login Successful')),
+                                        );
+
+                                        Future.delayed(const Duration(seconds: 1),(){
+                                          router.goNamed('homePage');
+                                        });
+                                      } else if (state is AuthFailure) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Login Failed')),
+                                        );
+                                      }
+                                    },
+
+                                    builder: (BuildContext context, Object? state) {
+                                      if(state is AuthProgress){
+                                        return const Center(child: CircularProgressIndicator(),);
+                                      }
+                                      return Container(
+                                        height: 42.h,
+                                        width: 80.w,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                10),
+                                            border: Border.all(
+                                                color: Theme
+                                                    .of(context)
+                                                    .colorScheme
+                                                    .tertiary,
+                                                width: 0.5
+                                            )
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            // await loginWithGoogle();
+                                            BlocProvider.of<AuthBloc>(context).add(LoginWithGoogleSubmitted());
+                                          },
+                                          child: Image.asset(
+                                            'assets/images/google_logo.png',
+                                            // height: 10,
+                                            // width: 10,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  ),
+
+                                  const SizedBox(width: 16),
+                                  Container(
+                                    height: 42.h,
+                                    width: 80.w,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: Theme.of(context).colorScheme.tertiary,
+                                            width: 0.5
+                                        )
+                                    ),
+                                    child: IconButton(
+                                      style: ButtonStyle(
+                                        shape: WidgetStateProperty.all(RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10)
+                                        ))
+                                      ),
+                                      icon:  const Icon(Remix.apple_fill),
+                                      iconSize: 30,
+                                      onPressed: () {
+                                        loginWithApple();
+                                      },
                                     ),
                                   ),
-                                  SizedBox(width: 5,),
-                                  Expanded(child: Divider(thickness: 0.5,)),
+                                  const SizedBox(width: 16),
+                                  Container(
+                                    height: 42.h,
+                                    width: 80.w,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: Theme.of(context).colorScheme.tertiary,
+                                            width: 0.5
+                                        )
+                                    ),
+                                    child: IconButton(
+                                      style: ButtonStyle(
+                                          shape: WidgetStateProperty.all(RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10)
+                                          ))
+                                      ),
+                                      icon:  const Icon(Remix.phone_fill, color: Colors.blue,),
+                                      iconSize: 30,
+                                      onPressed: () {
+                                        GoRouter.of(context).pushNamed('numberSignup');
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
-                            SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                BlocConsumer<AuthBloc, AuthState>(
-                                  listener: (BuildContext context, state) {
-                                    if(state is AuthSuccess){
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Login Successful')),
-                                      );
-
-                                      Future.delayed(const Duration(seconds: 1),(){
-                                        router.goNamed('homePage');
-                                      });
-                                    } else if (state is AuthFailure) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Login Failed')),
-                                      );
-                                    }
-                                  },
-
-                                  builder: (BuildContext context, Object? state) {
-                                    if(state is AuthProgress){
-                                      return const Center(child: CircularProgressIndicator(),);
-                                    }
-                                    return Container(
-                                      height: 42.h,
-                                      width: 80.w,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              10),
-                                          border: Border.all(
-                                              color: Theme
-                                                  .of(context)
-                                                  .colorScheme
-                                                  .tertiary,
-                                              width: 0.5
-                                          )
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          // await loginWithGoogle();
-                                          BlocProvider.of<AuthBloc>(context).add(LoginWithGoogleSubmitted());
-                                        },
-                                        child: Image.asset(
-                                          'assets/images/google_logo.png',
-                                          // height: 10,
-                                          // width: 10,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                ),
-
-                                const SizedBox(width: 16),
-                                Container(
-                                  height: 42.h,
-                                  width: 80.w,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                          color: Theme.of(context).colorScheme.tertiary,
-                                          width: 0.5
-                                      )
-                                  ),
-                                  child: IconButton(
-                                    style: ButtonStyle(
-                                      shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10)
-                                      ))
+                              SizedBox(height: 25.h),
+                              const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Text(
+                                    'By clicking Create account you agree to our Terms of use and Privacy policy',
+                                    textAlign: TextAlign.center,
+                                    style:TextStyle(
+                                      fontSize: 12,
                                     ),
-                                    icon:  const Icon(Remix.apple_fill),
-                                    iconSize: 30,
-                                    onPressed: () {
-                                      loginWithApple();
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Container(
-                                  height: 42.h,
-                                  width: 80.w,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                          color: Theme.of(context).colorScheme.tertiary,
-                                          width: 0.5
-                                      )
-                                  ),
-                                  child: IconButton(
-                                    style: ButtonStyle(
-                                        shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10)
-                                        ))
-                                    ),
-                                    icon:  const Icon(Remix.phone_fill, color: Colors.blue,),
-                                    iconSize: 30,
-                                    onPressed: () {
-                                      GoRouter.of(context).pushNamed('numberSignup');
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 50.h),
-                            const Center(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                                child: Text(
-                                  'By clicking Create account you agree to our Terms of use and Privacy policy',
-                                  textAlign: TextAlign.center,
-                                  style:TextStyle(
-                                    fontSize: 12,
-                                    // color: Colors.grey,
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 10),
-                          ],
+                              const SizedBox(height: 10),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -479,37 +495,6 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
           ),
-
-
-          // Skip button
-          // Align(
-          //   alignment: Alignment.topRight,
-          //   child: Padding(
-          //     padding: EdgeInsets.only(top: 50.h, right: 20.w),
-          //     child: Container(
-          //         decoration: BoxDecoration(
-          //           borderRadius: BorderRadius.circular(10),
-          //           color: darkOpacityColor,
-          //         ),
-          //         height: 30.h,
-          //         width: 55.w,
-          //         child: TextButton(
-          //             onPressed: (){
-          //               GoRouter.of(context).pushReplacementNamed('homePage');
-          //             },
-          //             child: Text(
-          //               'skip',
-          //               style: TextStyle(
-          //                   fontFamily: fontFamily,
-          //                   fontSize: 10,
-          //                   color: Theme.of(context).colorScheme.tertiary
-          //               ),
-          //             )
-          //         )
-          //     ),
-          //   ),
-          // ),
-
         ],
       ),
     );

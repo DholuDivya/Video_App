@@ -49,6 +49,7 @@ import '../../bloc/video_list/video_list_bloc.dart';
 import '../../bloc/video_list/video_list_event.dart';
 import '../../config/colors.dart';
 import '../../model/all_video_list_model.dart';
+import '../../utils/widgets/customBottomSheet.dart';
 import '../../utils/widgets/video_container.dart';
 import '../user_page/user_page.dart';
 
@@ -296,7 +297,24 @@ class _HomePageContentState extends State<HomePageContent> {
     }
   }
 
-
+  List<Map<String, dynamic>> bottomSheetListTileField = [
+    {
+      'name': 'Save to playlist',
+      'icon': HeroiconsOutline.bookmark
+    },
+    {
+      'name': 'Download video',
+      'icon': HeroiconsOutline.arrowDownTray
+    },
+    {
+      'name': 'Share',
+      'icon': HeroiconsOutline.share
+    },
+    {
+      'name': 'Report',
+      'icon': HeroiconsOutline.chatBubbleBottomCenterText
+    },
+  ];
 
 
   @override
@@ -508,7 +526,17 @@ class _HomePageContentState extends State<HomePageContent> {
                               author: '${state.videoList[adjustedIndex].channel?.name}',
                               views: '${state.videoList[adjustedIndex].views}',
                               uploadTime: '${state.videoList[adjustedIndex].createdAtHuman}',
-                              onMorePressed: _showCustomMenu
+                              onMorePressed: (){
+                                customShowMoreBottomSheet(
+                                    context,
+                                    bottomSheetListTileField,
+                                    (int index){
+                                      if(index == 2){
+                                        GoRouter.of(context).pushNamed('settingPage');
+                                      }
+                                    }
+                                );
+                              },
                             )
                                 : null;
                           },
@@ -612,8 +640,16 @@ class _HomePageContentState extends State<HomePageContent> {
                                       author: '${state.videoList[index].channel?.name}',
                                       views: '${state.videoList[index].views}',
                                       uploadTime: '${state.videoList[index].createdAtHuman}',
-                                      onMorePressed: () {
-                                        showPopupMenu(context);
+                                      onMorePressed: (){
+                                        customShowMoreBottomSheet(
+                                            context,
+                                            bottomSheetListTileField,
+                                                (int index){
+                                              if(index == 2){
+                                                GoRouter.of(context).pushNamed('settingPage');
+                                              }
+                                            }
+                                        );
                                       },
                                     ) : Padding(
                                       padding: EdgeInsets.only(top: 150.h),
@@ -645,47 +681,7 @@ class _HomePageContentState extends State<HomePageContent> {
       ),
     );
   }
-  // final GlobalKey _menuKey = GlobalKey();
-  void _showCustomMenu() {
-    final RenderBox renderBox = _menuKey.currentContext?.findRenderObject() as RenderBox;
-    final Offset offset = renderBox.localToGlobal(Offset.zero);
 
-    final overlay = Overlay.of(context);
-    final overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: offset.dy + renderBox.size.height,
-        left: offset.dx,
-        child: Material(
-          child: Container(
-            height: 200,
-            child: PopupMenuButton<String>(
-              onSelected: (value) {
-                switch (value) {
-                  case 'Edit':
-                  // Handle edit action
-                    break;
-                  case 'Delete':
-                  // Handle delete action
-                    break;
-                // Add more cases if needed
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                return {'Edit', 'Delete'}.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(choice),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-
-    overlay.insert(overlayEntry);
-  }
 
 
 
@@ -894,72 +890,112 @@ class _HomePageContentState extends State<HomePageContent> {
   }
 
 
-
-  Widget _buildVideoItem(VideoData video) {
-    String formattedTime = formatDuration(video.duration!);
-    return VideoListItem(
-      onTap: () {
-        Future.delayed(const Duration(milliseconds: 200), () {
-          GoRouter.of(context).pushNamed('videoPage', pathParameters: {
-            "slug": video.slug!,
-          });
-        });
-      },
-      onTapChannel: () {
-        final String channelId = video.channel!.id.toString();
-        GoRouter.of(context).pushNamed('channelProfilePage', pathParameters: {
-          'channelId': channelId,
-        });
-      },
-      channelPhoto: video.channel?.logo ?? 'assets/images/sonysab.jpg',
-      thumbnailUrl: video.thumbnail!,
-      duration: formattedTime,
-      title: video.title!,
-      author: video.channel!.name!,
-      views: video.views!.toString(),
-      uploadTime: video.createdAtHuman!,
-      onMorePressed: () {
-        showPopupMenu(context);
-      },
-    );
-  }
-
-
+  //
+  // Widget _buildVideoItem(VideoData video) {
+  //   String formattedTime = formatDuration(video.duration!);
+  //   return VideoListItem(
+  //     onTap: () {
+  //       Future.delayed(const Duration(milliseconds: 200), () {
+  //         GoRouter.of(context).pushNamed('videoPage', pathParameters: {
+  //           "slug": video.slug!,
+  //         });
+  //       });
+  //     },
+  //     onTapChannel: () {
+  //       final String channelId = video.channel!.id.toString();
+  //       GoRouter.of(context).pushNamed('channelProfilePage', pathParameters: {
+  //         'channelId': channelId,
+  //       });
+  //     },
+  //     channelPhoto: video.channel?.logo ?? 'assets/images/sonysab.jpg',
+  //     thumbnailUrl: video.thumbnail!,
+  //     duration: formattedTime,
+  //     title: video.title!,
+  //     author: video.channel!.name!,
+  //     views: video.views!.toString(),
+  //     uploadTime: video.createdAtHuman!,
+  //     onMorePressed: (){
+  //       customShowMoreBottomSheet(context, bottomSheetListTileField);
+  //     },
+  //   );
+  // }
 
 
-  void showPopupMenu(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: MenuAnchor(
-            builder: (BuildContext context, MenuController controller, Widget? child) {
-              return IconButton(
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
-                icon: const Icon(Icons.more_horiz),
-                tooltip: 'Show menu',
-              );
-            },
-            menuChildren: List<MenuItemButton>.generate(3, (int index) {
-              return MenuItemButton(
-                onPressed: () {
-                  // Add your action here
-                  Navigator.of(context).pop(); // Close the menu after selection
-                },
-                child: Text('Item ${index + 1}'),
-              );
-            }),
-          ),
-        );
-      },
-    );
-  }
+
+
+  // void showMoreOptionSheet(){
+  //   showModalBottomSheet(
+  //     backgroundColor: Colors.transparent,
+  //       context: context,
+  //       builder: (BuildContext context){
+  //         return Padding(
+  //           padding: EdgeInsets.only(
+  //               left: 10.w,
+  //               right: 10.w,
+  //           ),
+  //           child: Card(
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //
+  //                 SizedBox(height: 10.h,),
+  //                 ListView.builder(
+  //                   physics: NeverScrollableScrollPhysics(),
+  //                   shrinkWrap: true,
+  //                   itemCount: 4,
+  //                     itemBuilder: (BuildContext context, int index){
+  //                       return InkWell(
+  //                         onTap: (){},
+  //                         child: ListTile(
+  //                           leading: const Icon(HeroiconsOutline.plus),
+  //                           title: Text(bottomSheetListTileField[index]['name']),
+  //                         ),
+  //                       );
+  //                     }
+  //                 )
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //   );
+  // }
+
+
+  // void showPopupMenu(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         content: MenuAnchor(
+  //           builder: (BuildContext context, MenuController controller, Widget? child) {
+  //             return IconButton(
+  //               onPressed: () {
+  //                 if (controller.isOpen) {
+  //                   controller.close();
+  //                 } else {
+  //                   controller.open();
+  //                 }
+  //               },
+  //               icon: const Icon(Icons.more_horiz),
+  //               tooltip: 'Show menu',
+  //             );
+  //           },
+  //           menuChildren: List<MenuItemButton>.generate(3, (int index) {
+  //             return MenuItemButton(
+  //               onPressed: () {
+  //                 // Add your action here
+  //                 Navigator.of(context).pop(); // Close the menu after selection
+  //               },
+  //               child: Text('Item ${index + 1}'),
+  //             );
+  //           }),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
 
 

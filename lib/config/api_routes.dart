@@ -27,3 +27,6 @@ const String getPlansUrl = "${apiUrl}plans";
 const String generateSignatureUrl = "${apiUrl}payment/generate-signature";
 const String verifyPaymentUrl = "${apiUrl}payment/verify-payment";
 const String editVideoDetailUrl = "${apiUrl}video-update/updated";
+const String removeVideoFromHistoryUrl = "${apiUrl}watched-videos/delete";
+const String removeVideoFromPlaylistUrl = "${apiUrl}playlists";
+const String deletePlaylistUrl = "${apiUrl}playlists/";
