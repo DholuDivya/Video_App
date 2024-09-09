@@ -15,7 +15,6 @@ import 'package:vimeo_clone/bloc/verify_payment/verify_payment_event.dart';
 import 'package:vimeo_clone/bloc/verify_payment/verify_payment_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/plans_page/widgets/custom_plans_container.dart';
-import 'package:vimeo_clone/utils/widgets/custom_alert_dialog.dart';
 
 import '../../config/global_variable.dart';
 
@@ -114,16 +113,26 @@ class _PlansPageState extends State<PlansPage> {
           context: context,
           builder: (BuildContext context){
             return AlertDialog(
-              content: Center(
-                  child: Lottie.asset('assets/animation/payment_success.json')
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                      child: Lottie.asset('assets/animation/payment_success.json', height: 80.h, width: 80.w)
+                  ),
+                ],
               ),
             );
           },
         );
       }else if(state is VerifyPaymentFailure){
         AlertDialog(
-          content: Center(
-              child: Lottie.asset('assets/animation/payment_failed.json')
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                  child: Lottie.asset('assets/animation/payment_failed.json',  height: 80.h, width: 80.w)
+              ),
+            ],
           ),
         );
       }

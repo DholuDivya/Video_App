@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
+import 'package:vimeo_clone/utils/widgets/customBottomSheet.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
@@ -70,6 +73,28 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
     });
   }
 
+
+  List<Map<String, dynamic>> bottomSheetListTileField = [
+    {
+      'name': 'Edit video detail',
+      'icon': HeroiconsOutline.bookmark
+    },
+    {
+      'name': 'Save to playlist',
+      'icon': HeroiconsOutline.arrowDownTray
+    },
+    {
+      'name': 'Share',
+      'icon': HeroiconsOutline.share
+    },
+    {
+      'name': 'Report',
+      'icon': HeroiconsOutline.chatBubbleBottomCenterText
+    },
+  ];
+
+
+
   @override
   Widget build(BuildContext context) {
     // String selectedSortType = sortList[selectedIndex]['type'];
@@ -79,7 +104,7 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
       builder: (BuildContext context, ChannelProfileState state) {
         if(state is ChannelProfileLoaded) {
           return SingleChildScrollView(
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             child: Column(
               children: [
                 Padding(
@@ -95,7 +120,7 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
                 ),
 
                 ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     padding: EdgeInsets.only(
                       top: 5.h,
@@ -113,7 +138,18 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
                             videoTitle: videoData.title,
                             videoViews: '${videoData.views}',
                             uploadTime: videoData.createdAtHuman,
-                            videoDuration: formattedDuration
+                            videoDuration: formattedDuration,
+                          onShowMorePressed: (){
+                            customShowMoreBottomSheet(
+                                context,
+                                bottomSheetListTileField,
+                                    (int index){
+                                  if(index == 0){
+                                    GoRouter.of(context).pushNamed('editVideoDetailPage');
+                                  }
+                                }
+                            );
+                          },
                         ),
                       );
                     }

@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:vimeo_clone/bloc/reset_password/reset_password_bloc.dart';
+import 'package:vimeo_clone/bloc/reset_password/reset_password_event.dart';
+import 'package:vimeo_clone/bloc/reset_password/reset_password_state.dart';
+import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 
 import '../../config/constants.dart';
 import '../../utils/widgets/custom_text_field_auth.dart';
 
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+  final String email;
+  const ResetPasswordPage({super.key, required this.email});
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
@@ -15,6 +22,7 @@ class ResetPasswordPage extends StatefulWidget {
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
+  TextEditingController _tokenController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   String pattern = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$';
@@ -99,6 +107,17 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             ),
             SizedBox(height: 40.h),
 
+
+            CustomTextFieldUpload(
+              readOnly: false,
+                isEnabled: false,
+                controller: TextEditingController(
+                  text: widget.email
+                ),
+                fieldLabel: 'Email'
+            ),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.02,),
+
             CustomTextField(
               obscureText: true && !_isPasswordVisible,
               controller: _passwordController,
@@ -134,29 +153,58 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   )
               ),
             ),
+            SizedBox(height: ScreenSize.screenHeight(context) * 0.02,),
+
+
+            CustomTextFieldUpload(
+                readOnly: false,
+                isEnabled: true,
+                controller: _tokenController,
+                fieldLabel: 'Token'
+            ),
             SizedBox(height: 50.h,),
 
-            ElevatedButton(
-              onPressed: () {
-                // Handle continue action
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  'Continue',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: fontFamily,
-                      color: Colors.white
+            BlocBuilder<ResetPasswordBloc, ResetPasswordState>(
+              builder: (BuildContext context, ResetPasswordState state) {
+                if(state is ResetPasswordSuccess){
+
+                  WidgetsBinding.instance.addPostFrameCallback((_){
+                    GoRouter.of(context).pushReplacementNamed('signupPage');
+                  });
+
+                }
+                return ElevatedButton(
+                  onPressed: () {
+                    String password = _passwordController.text;
+                    String confirmPassword = _confirmPasswordController.text;
+                    String token = _tokenController.text;
+
+                    context.read<ResetPasswordBloc>().add(ResetPasswordRequest(
+                      email: widget.email,
+                      newPassword: password,
+                        confirmPassword: confirmPassword,
+                      token: token
+                    ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-              ),
+                  child: const Center(
+                    child: Text(
+                      'Continue',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: fontFamily,
+                          color: Colors.white
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),

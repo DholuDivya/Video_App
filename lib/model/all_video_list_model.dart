@@ -41,7 +41,7 @@ class Data {
 
   Data({
     this.currentPage,
-    this.videos,  // Changed variable name to match JSON response
+    this.videos,
     this.firstPageUrl,
     this.from,
     this.lastPage,

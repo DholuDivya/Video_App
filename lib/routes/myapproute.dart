@@ -78,9 +78,9 @@ import '../screens/edit_video_detail/edit_video_detail_page.dart';
 
         GoRoute(
           name: 'resetPasswordPage',
-          path: '/resetPasswordPage',
-          pageBuilder: (context, state) => const CupertinoPage (
-            child: ResetPasswordPage(),
+          path: '/resetPasswordPage/:email',
+          builder: (context, state) => ResetPasswordPage(
+              email: state.pathParameters['email']!
           ),
         ),
 

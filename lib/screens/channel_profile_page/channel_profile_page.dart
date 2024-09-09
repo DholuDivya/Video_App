@@ -138,7 +138,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            '${channelData.channel!.name}',
+                                            '${channelData.channel.name}',
                                             style: TextStyle(
                                               fontFamily: fontFamily,
                                               fontSize: 20,

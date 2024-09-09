@@ -291,12 +291,12 @@ class _SignupPageState extends State<SignupPage> {
                               GoRouter.of(context).pushNamed(
                                   'forgotPasswordPage');
                             },
-                            child: const Text(
+                            child: Text(
                               'Forgot Password',
                               style: TextStyle(
                                   fontFamily: fontFamily,
                                   fontSize: 11,
-                                  color: Colors.black54
+                                  color: greyShade600
                               ),
                             ),
                           ),

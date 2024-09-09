@@ -240,6 +240,47 @@ class ApiBaseHelper {
 
 
 
+  Future<dynamic> forgotPasswordAPICall(String url, dynamic params) async {
+    var responseJson;
+    // var timeOut = 10;
+    final dio_.Dio dio = dio_.Dio();
+    print('#@###########   ${params}');
+    // print('%%%print%%%%%%%%%%%      ${headers}');
+    print('faihfiahihihif    ${url}');
+    try {
+      final response =
+      await dio.post(
+        url,
+        // queryParameters: params,
+        data: params.isNotEmpty ? params : [],
+        options: dio_.Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      if (kDebugMode) {
+        print(
+            'response api****$url***************${response.statusCode}*********${response.data}');
+      }
+
+      // responseJson = _response(response);
+      responseJson = response;
+    } on SocketException {
+      throw ApiException('No Internet connection');
+    } on TimeoutException {
+      throw ApiException('Something went wrong, Server not Responding');
+    } on Exception catch (e) {
+      // print('------Error  ${e}');
+      throw ApiException('Something Went wrong with ${e.toString()}');
+    }
+    return responseJson;
+  }
+
+
+
   Future<dynamic> getAPICall(String url, dynamic params) async {
     var responseJson;
     final dio_.Dio dio = dio_.Dio();

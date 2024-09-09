@@ -6,21 +6,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_state.dart';
-import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
-import 'package:vimeo_clone/bloc/get_comments/get_comments_event.dart';
 import 'package:vimeo_clone/bloc/get_plans/get_plans_bloc.dart';
 import 'package:vimeo_clone/bloc/get_plans/get_plans_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_state.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_bloc.dart';
-import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_state.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_event.dart';
@@ -38,17 +34,14 @@ import 'package:vimeo_clone/bloc/video_list/video_list_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/screens/ShortsScreen/shorts_page.dart';
-import 'package:vimeo_clone/screens/upload_shorts/crop_shorts_page.dart';
 import 'package:vimeo_clone/utils/widgets/custom_bottom_sheet_button.dart';
 import 'package:vimeo_clone/utils/widgets/custom_popup_menu.dart';
-import 'package:vimeo_clone/utils/widgets/custom_shorts_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_shorts_preview_homepage.dart';
 import '../../Utils/Widgets/bottom_nav_bar.dart';
 import '../../bloc/video_category/video_category_event.dart';
 import '../../bloc/video_list/video_list_bloc.dart';
 import '../../bloc/video_list/video_list_event.dart';
 import '../../config/colors.dart';
-import '../../model/all_video_list_model.dart';
 import '../../utils/widgets/customBottomSheet.dart';
 import '../../utils/widgets/video_container.dart';
 import '../user_page/user_page.dart';
@@ -469,7 +462,7 @@ class _HomePageContentState extends State<HomePageContent> {
                         final videoLength = state.videoList.length;
                         return ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           padding: EdgeInsets.only(top: ScreenSize.screenHeight(context) * 0.02),
                           itemCount: videoLength + 1, // Add 1 to account for the inserted container
                           itemBuilder: (BuildContext context, int index) {
@@ -494,6 +487,7 @@ class _HomePageContentState extends State<HomePageContent> {
                             //     ],
                             //   );
                             // }
+
 
                             // Adjust the index to access the correct video item
                             final adjustedIndex = index > 2 ? index - 1 : index;
@@ -850,47 +844,47 @@ class _HomePageContentState extends State<HomePageContent> {
 
 
 
-  Widget _buildLoadingShimmer() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AspectRatio(
-          aspectRatio: 16 / 9,
-          child: ShimmerWidget.rectangular(
-            isBorder: false,
-            height: 50,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          children: [
-            const SizedBox(width: 8),
-            const ShimmerWidget.circular(width: 40, height: 40, isBorder: true),
-            const SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ShimmerWidget.rectangular(
-                  height: 16,
-                  width: 120,
-                  isBorder: true,
-                ),
-                const SizedBox(height: 8),
-                ShimmerWidget.rectangular(
-                  height: 16,
-                  width: 200,
-                  isBorder: true,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+  // Widget _buildLoadingShimmer() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       AspectRatio(
+  //         aspectRatio: 16 / 9,
+  //         child: ShimmerWidget.rectangular(
+  //           isBorder: false,
+  //           height: 50,
+  //         ),
+  //       ),
+  //       const SizedBox(height: 4),
+  //       Row(
+  //         children: [
+  //           const SizedBox(width: 8),
+  //           const ShimmerWidget.circular(width: 40, height: 40, isBorder: true),
+  //           const SizedBox(width: 8),
+  //           Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               ShimmerWidget.rectangular(
+  //                 height: 16,
+  //                 width: 120,
+  //                 isBorder: true,
+  //               ),
+  //               const SizedBox(height: 8),
+  //               ShimmerWidget.rectangular(
+  //                 height: 16,
+  //                 width: 200,
+  //                 isBorder: true,
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
 
 
-  //
+
   // Widget _buildVideoItem(VideoData video) {
   //   String formattedTime = formatDuration(video.duration!);
   //   return VideoListItem(
@@ -1046,7 +1040,7 @@ class _HomePageContentState extends State<HomePageContent> {
             // color: red,
             height: ScreenSize.screenHeight(context) * 0.04,
             child: ListView.builder(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: 10,
                 ),
                 // physics: NeverScrollableScrollPhysics(),

@@ -18,6 +18,7 @@ import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/delete_playlist/delete_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/edit_channel/edit_channel_bloc.dart';
+import 'package:vimeo_clone/bloc/forgot_password/forgot_password_bloc.dart';
 import 'package:vimeo_clone/bloc/generate_signature/generate_signature_bloc.dart';
 import 'package:vimeo_clone/bloc/get_channel_logo/get_channel_logo_bloc.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
@@ -38,6 +39,7 @@ import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
 import 'package:vimeo_clone/bloc/remove_video_from_history/remove_video_from_history_bloc.dart';
 import 'package:vimeo_clone/bloc/remove_video_from_playlist/remove_video_from_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/reset_password/reset_password_bloc.dart';
 import 'package:vimeo_clone/bloc/search_data/search_data_bloc.dart';
 import 'package:vimeo_clone/bloc/search_suggestion/search_suggestion_bloc.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';
@@ -133,7 +135,8 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => RemoveVideoFromHistoryBloc()),
         BlocProvider(create: (context) => RemoveVideoFromPlaylistBloc()),
         BlocProvider(create: (context) => DeletePlaylistBloc()),
-
+        BlocProvider(create: (context) => ForgotPasswordBloc()),
+        BlocProvider(create: (context) => ResetPasswordBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

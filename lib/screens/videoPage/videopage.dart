@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -65,6 +66,7 @@ class VideoPage extends StatefulWidget {
 
 class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMixin {
 
+  static const platform = MethodChannel('com.cineplex.app/pip');
   PodPlayerController? _podController;
   late bool _isSubscribed = false;
   // late bool local = false;
@@ -177,6 +179,14 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
     super.dispose();
   }
 
+
+  Future<void> enterPipMode() async {
+    try {
+      await platform.invokeMethod('enterPiP');
+    } on PlatformException catch (e) {
+      print("Failed to enter PiP mode: '${e.message}'.");
+    }
+  }
 
 
   @override
@@ -599,81 +609,86 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                               left: 10.w,
                               right: 10.w
                           ),
-                          child: Container(
-                            // height: ScreenSize.screenHeight(context) * 0.,
-                            width: ScreenSize.screenWidth(context) * 0.95,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surfaceDim,
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            padding: EdgeInsets.only(
-                              top: 8.h,
-                              right: 10.w,
-                              bottom: 8.h,
-                              left: 10.w
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                        'Comments',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold
-                                        )
-                                    ),
-                                    SizedBox(
-                                      width: ScreenSize.screenWidth(context) *
-                                          0.02,),
-                                    Text(
-                                      '0',
-                                      style: TextStyle(
-                                          color: Colors.grey.shade500
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: ScreenSize.screenHeight(context) *
-                                      0.01,),
-
-                                Container(
-                                  height: ScreenSize.screenHeight(context) * 0.05,
-                                  child: Row(
+                          child: InkWell(
+                            onTap: (){
+                              enterPipMode();
+                            },
+                            child: Container(
+                              // height: ScreenSize.screenHeight(context) * 0.,
+                              width: ScreenSize.screenWidth(context) * 0.95,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surfaceDim,
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              padding: EdgeInsets.only(
+                                top: 8.h,
+                                right: 10.w,
+                                bottom: 8.h,
+                                left: 10.w
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
                                     children: [
-                                      CircleAvatar(
-                                        radius: 15,
-                                        backgroundImage: NetworkImage(channelLogo),
+                                      Text(
+                                          'Comments',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold
+                                          )
                                       ),
-                                      SizedBox(width: ScreenSize.screenWidth(context) * 0.02,),
-
-                                      InkWell(
-                                        borderRadius: BorderRadius.circular(10),
-                                        onTap: (){
-                                          addCommentSheet(context);
-                                        },
-                                        child: Container(
-                                          height: 30.h,
-                                          width: 280.w,
-                                          decoration: BoxDecoration(
-                                              color: Theme.of(context).colorScheme.tertiaryFixedDim,
-                                              borderRadius: BorderRadius.circular(10)
-                                          ),
-                                          padding: EdgeInsets.only(
-                                              left: ScreenSize.screenWidth(context) * 0.02
-                                          ),
-                                          child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text('Add Comment...')
-                                          ),
+                                      SizedBox(
+                                        width: ScreenSize.screenWidth(context) *
+                                            0.02,),
+                                      Text(
+                                        '0',
+                                        style: TextStyle(
+                                            color: Colors.grey.shade500
                                         ),
-                                      ),
-
-
+                                      )
                                     ],
                                   ),
-                                ),
-                              ],
+                                  SizedBox(
+                                    height: ScreenSize.screenHeight(context) *
+                                        0.01,),
+
+                                  Container(
+                                    height: ScreenSize.screenHeight(context) * 0.05,
+                                    child: Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 15,
+                                          backgroundImage: NetworkImage(channelLogo),
+                                        ),
+                                        SizedBox(width: ScreenSize.screenWidth(context) * 0.02,),
+
+                                        InkWell(
+                                          borderRadius: BorderRadius.circular(10),
+                                          onTap: (){
+                                            addCommentSheet(context);
+                                          },
+                                          child: Container(
+                                            height: 30.h,
+                                            width: 280.w,
+                                            decoration: BoxDecoration(
+                                                color: Theme.of(context).colorScheme.tertiaryFixedDim,
+                                                borderRadius: BorderRadius.circular(10)
+                                            ),
+                                            padding: EdgeInsets.only(
+                                                left: ScreenSize.screenWidth(context) * 0.02
+                                            ),
+                                            child: Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text('Add Comment...')
+                                            ),
+                                          ),
+                                        ),
+
+
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

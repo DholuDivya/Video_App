@@ -237,9 +237,9 @@ class _EditChannelPageState extends State<EditChannelPage> {
       floatingActionButton: isEdit == true ? BlocBuilder<EditChannelBloc, EditChannelState>(
         builder: (BuildContext context, EditChannelState state) {
           if(state is EditChannelSuccess){
-            if(Navigator.canPop(context)){
-              Navigator.pop(context);
-            }
+            WidgetsBinding.instance.addPostFrameCallback((_){
+              GoRouter.of(context).pushReplacementNamed('homePage');
+            });
             ToastManager().showToast(
                 context: context,
                 message: 'Channel details is successfully updated!'
@@ -252,7 +252,14 @@ class _EditChannelPageState extends State<EditChannelPage> {
                 print('!!!!!!!!!!!!!!!!!!!     :::::   ${_nameController.text}');
                 Global.userData!.userName == _nameController.text
                     ? null : channelName = _nameController.text;
-                final channelLogo = finalChannelLogo;
+                CroppedFile? channelLogo;
+                if (finalChannelLogo is CroppedFile && finalChannelLogo!.path.isNotEmpty) {
+                  channelLogo = finalChannelLogo;
+                } else {
+                  channelLogo = null; // or provide a default CroppedFile if applicable
+                }
+
+
                 // final channelBanner = null;
 
                 print('popopopoopoppopopop    $channelName');

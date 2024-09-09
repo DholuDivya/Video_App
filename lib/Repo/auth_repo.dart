@@ -116,22 +116,24 @@ class AuthRepository{
     }
   }
 
-  Future<PhoneAuthCredential> loginWithPhoneNumber(String verificationId, String smsCode) async {
-    try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: smsCode,
-      );
-      return credential;
-      } catch (e) {
-      throw Exception('Failed to sign in with phone number: $e');
-    }
-  }
+  // Future<PhoneAuthCredential> loginWithPhoneNumber(String verificationId, String smsCode) async {
+  //   try {
+  //     PhoneAuthCredential credential = PhoneAuthProvider.credential(
+  //       verificationId: verificationId,
+  //       smsCode: smsCode,
+  //     );
+  //     return credential;
+  //     } catch (e) {
+  //     throw Exception('Failed to sign in with phone number: $e');
+  //   }
+  // }
 
 
   // VERIFY TOKEN FROM FIREBASE
   Future<String?> loginWithGoogle(String firebaseUserToken) async {
     try{
+      final fcmId = await NotificationService().getFcmToken();
+      print('FCM ID  ::::  $fcmId');
       final response = await apiHelper.firebaseLoginPostAPICall(loginWithGoogleUrl, {}, firebaseUserToken);
 
       if (response.statusCode == 200) {
@@ -194,11 +196,20 @@ class AuthRepository{
 
   Future<String?> loginWithPhone(String firebaseUserToken, String userName) async {
     try{
+      final fcmId = await NotificationService().getFcmToken();
+      print('FCM ID  ::::  $fcmId');
       print('11111111111111111111111111111111');
       print('MIIIIIIIIIIIIIIIIIII     $userName');
-      final response = await apiHelper.firebaseLoginPostAPICall(loginWithPhoneUrl, {'name': userName},firebaseUserToken);
+      final response = await apiHelper.firebaseLoginPostAPICall(loginWithPhoneUrl,
+          {
+            'name': userName,
+            'fcm_id': fcmId
+          },
+          firebaseUserToken
+      );
       print('ifgWRHNGOIERGOIRBNIORBIODIDDirdigjirdj');
       if (response.statusCode == 200) {
+
         // STORING THE TOKEN IN HIVE
         print('uiaejifasEionsiodvisfififibdf');
         print('user token ::::    ${response.data['token']}');
@@ -273,7 +284,12 @@ class AuthRepository{
       final fcmId = await NotificationService().getFcmToken();
       print('FCM ID  ::::  $fcmId');
       print('2000000000000000000');
-      final response = await apiHelper.loginUserEmail(loginUserUrl, {'email': email, 'password': password, 'fcm_id': fcmId});
+      final response = await apiHelper.loginUserEmail(loginUserUrl,
+          {
+            'email': email,
+            'password': password,
+            'fcm_id': fcmId,
+          });
       print('srbgirswugbhuswgbhusrhsbhvjuvjubhvujjuhvujhbd');
       print('${response.data}');
       if(response.statusCode == 200){

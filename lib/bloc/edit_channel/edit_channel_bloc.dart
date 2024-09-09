@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:vimeo_clone/Config/constants.dart';
 import 'package:vimeo_clone/bloc/edit_channel/edit_channel_event.dart';
 import 'package:vimeo_clone/bloc/edit_channel/edit_channel_state.dart';
@@ -20,7 +21,8 @@ class EditChannelBloc extends Bloc<EditChannelEvent, EditChannelState>{
       print('KKKKKKKKKKKKKK      ${event.channelBanner}');
 
       FormData formData;
-
+      CroppedFile? channelLogo = event.channelLogo;
+      String? channelLogoPath = channelLogo?.path;
       // if(event.channelName!.isEmpty){
       //   print('iiiiiiiiii');
       //   formData = FormData.fromMap({
@@ -44,12 +46,19 @@ class EditChannelBloc extends Bloc<EditChannelEvent, EditChannelState>{
       //   });
       // }
 
+      // formData = FormData.fromMap({
+      //   'name': event.channelName,
+      //   'logo': await MultipartFile.fromFile(event.channelLogo!.path),
+      //   // 'banner': await MultipartFile.fromFile(event.channelBanner!.path),
+      // });
+
       formData = FormData.fromMap({
         'name': event.channelName,
-        // 'logo': await MultipartFile.fromFile(event.channelLogo!.path),
-        // 'banner': await MultipartFile.fromFile(event.channelBanner!.path),
+        'logo': channelLogoPath != null && channelLogoPath.isNotEmpty
+            ? await MultipartFile.fromFile(channelLogoPath)
+            : MultipartFile.fromString(''), // Pass an empty string if logo is empty
+        // 'banner': event.channelBanner != null ? await MultipartFile.fromFile(event.channelBanner!.path) : null,
       });
-
 
 
       final response = await Dio().post('$editChannelUrl${Global.userData!.userChannelId}',
