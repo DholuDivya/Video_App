@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,7 @@ import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
 import '../../bloc/add_user_history/add_user_history_bloc.dart';
 import '../../bloc/add_user_history/add_user_history_event.dart';
+import 'package:floating/floating.dart';
 
 
 
@@ -66,6 +68,7 @@ class VideoPage extends StatefulWidget {
 
 class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMixin {
 
+  late Floating floating;
   static const platform = MethodChannel('com.cineplex.app/pip');
   PodPlayerController? _podController;
   late bool _isSubscribed = false;
@@ -93,6 +96,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
+    floating = Floating();
     context.read<PlayVideoBloc>().add(GetVideoSlugEvent(slug: widget.slug));
     context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
 
@@ -103,7 +107,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
       if(state is GetCommentsLoaded){
         commentLength = state.getCommentsList.first.data!.length;
-        userComment = state.getCommentsList.first.data!.first.comment!;
         commentData = state.getCommentsList.first.data;
         print('^^^^^^^^^^^^^    $commentLength');
         print('898898989889989898989898');
@@ -180,439 +183,484 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   }
 
 
-  Future<void> enterPipMode() async {
-    try {
-      await platform.invokeMethod('enterPiP');
-    } on PlatformException catch (e) {
-      print("Failed to enter PiP mode: '${e.message}'.");
-    }
-  }
+  // Future<void> enterPipMode() async {
+  //   try {
+  //     await platform.invokeMethod('enterPiP');
+  //   } on PlatformException catch (e) {
+  //     print("Failed to enter PiP mode: '${e.message}'.");
+  //   }
+  // }
 
+
+  // Future<void> enablePip(BuildContext context, {bool autoEnable = false}) async {
+  //   final rational = Rational.landscape();
+  //   final screenSize = MediaQuery.of(context).size * MediaQuery.of(context).devicePixelRatio;
+  //   final height = screenSize.width ~/ rational.aspectRatio;
+  //
+  //   final sourceRectHint = Rectangle<int>(
+  //     0,
+  //     (screenSize.height ~/ 2) - (height ~/ 2),
+  //     screenSize.width.toInt(),
+  //     height,
+  //   );
+  //
+  //   final arguments = autoEnable
+  //       ? OnLeavePiP(aspectRatio: rational, sourceRectHint: sourceRectHint)
+  //       : ImmediatePiP(aspectRatio: rational, sourceRectHint: sourceRectHint);
+  //
+  //   final status = await floating.enable(arguments);
+  //   debugPrint('PiP enabled? $status');
+  // }
+  //
+
+
+  // => enablePip(context),
 
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            BlocBuilder<PlayVideoBloc, PlayVideoState>(
-              builder: (BuildContext context, state) {
-                if(state is PlayVideoLoaded) {
-                  final data = state.playVideo[0].data!;
-                  _channelId = data.channel!.id!;
-                  channelLogo = state.playVideo[0].data!.channel!.logo!;
-                  // var _subscribeCount = data.channel!.subscriberCount;
-                  // _likeCount = data.likes!;
-                  // _isLiked = data.isLiked!;
-                  // _isDisLiked = data.isDisliked!;
-                  return SingleChildScrollView(
-                    padding: EdgeInsets.only(top: 180.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Title of the video, Views and Upload time
-                        InkWell(
-                          onTap: () {
-                            final desData = state.playVideo[0];
-                            videoDescriptionSheet(context, desData);
-                          },
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                top: ScreenSize.screenHeight(context) * 0.01,
-                                left: ScreenSize.screenWidth(context) * 0.03,
-                                right: ScreenSize.screenWidth(context) * 0.03,
-                                bottom: ScreenSize.screenWidth(context) * 0.015,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${state.playVideo[0].data!.title}',
-                                    style: const TextStyle(
-                                      fontFamily: fontFamily,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
+    return PiPSwitcher(
+      childWhenEnabled: BlocBuilder<PlayVideoBloc, PlayVideoState>(
+        builder: (BuildContext context, PlayVideoState state) {
+          if (state is PlayVideoLoaded) {
+            return Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: _podController == null
+                ? const Center(child: CircularProgressIndicator())
+                : PodVideoPlayer(
+                    controller: _podController!,
+                  ),
+              ),
+            );
+          }
+        return const Center(child: CircularProgressIndicator());
+      },
+      ),
+      childWhenDisabled: Scaffold(
+        body: SafeArea(
+          child: Stack(
+            children: [
+              BlocBuilder<PlayVideoBloc, PlayVideoState>(
+                builder: (BuildContext context, state) {
+                  if(state is PlayVideoLoaded) {
+                    final data = state.playVideo[0].data!;
+                    _channelId = data.channel!.id!;
+                    channelLogo = state.playVideo[0].data!.channel!.logo!;
+                    final isAssociated = state.playVideo[0].data!.channel!.isAssociated;
+                    // var _subscribeCount = data.channel!.subscriberCount;
+                    // _likeCount = data.likes!;
+                    // _isLiked = data.isLiked!;
+                    // _isDisLiked = data.isDisliked!;
+                    return SingleChildScrollView(
+                      padding: EdgeInsets.only(top: 180.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title of the video, Views and Upload time
+                          InkWell(
+                            onTap: () {
+                              final desData = state.playVideo[0];
+                              videoDescriptionSheet(context, desData);
+                            },
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  top: ScreenSize.screenHeight(context) * 0.01,
+                                  left: ScreenSize.screenWidth(context) * 0.03,
+                                  right: ScreenSize.screenWidth(context) * 0.03,
+                                  bottom: ScreenSize.screenWidth(context) * 0.015,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${state.playVideo[0].data!.title}',
+                                      style: const TextStyle(
+                                        fontFamily: fontFamily,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  AutoSizeText(
-                                    '${state.playVideo[0].data!.views} Views - ${state.playVideo[0].data!.createdAtHuman}',
-                                    style: TextStyle(
-                                      fontFamily: fontFamily,
-                                      fontSize: 12,
-                                      color: Colors.grey[700],
+                                    AutoSizeText(
+                                      '${state.playVideo[0].data!.views} Views - ${state.playVideo[0].data!.createdAtHuman}',
+                                      style: TextStyle(
+                                        fontFamily: fontFamily,
+                                        fontSize: 12,
+                                        color: Colors.grey[700],
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: ScreenSize.screenHeight(context) * 0.01),
-
-                        // Channel Photo, Channel Name, Subscriber, Subscribe Button
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: ScreenSize.screenWidth(context) * 0.03,
-                            right: ScreenSize.screenWidth(context) * 0.03,
-                          ),
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundImage: NetworkImage('${state.playVideo[0].data!.channel!.logo}'),
-                                // backgroundImage: NetworkImage('${state.playVideo[0].data!.channel!.logo}'),
-                                // child: Icon(Remix.user_3_line),
-                              ),
-                              SizedBox(width: ScreenSize.screenWidth(context) * 0.02),
-            
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    final String channelId = state.playVideo.first.data!.channel!.id.toString();
-                                    GoRouter.of(context).pushNamed(
-                                        'channelProfilePage',
-                                        pathParameters: {
-                                          'channelId': channelId
-                                        }
-                                    );
-                                    _podController?.pause();
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          '${state.playVideo[0].data!.channel!.name}',
-                                          style: const TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 14,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                          width: ScreenSize.screenWidth(context) * 0.03),
-                                              Text(
-                                                  _subscribeCount.toString(),
-                                                  style: TextStyle(
-                                                    fontFamily: fontFamily,
-                                                    fontSize: 12,
-                                                    color: Colors.grey[700],
-                                                  ),
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                              ),
-                                    ],
-                                  ),
+                          SizedBox(height: ScreenSize.screenHeight(context) * 0.01),
+      
+                          // Channel Photo, Channel Name, Subscriber, Subscribe Button
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: ScreenSize.screenWidth(context) * 0.03,
+                              right: ScreenSize.screenWidth(context) * 0.03,
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundImage: NetworkImage('${state.playVideo[0].data!.channel!.logo}'),
+                                  // backgroundImage: NetworkImage('${state.playVideo[0].data!.channel!.logo}'),
+                                  // child: Icon(Remix.user_3_line),
                                 ),
-                              ),
-                              SizedBox(width: ScreenSize.screenWidth(context) * 0.02),
-
-
-                              BlocBuilder<SubscribeChannelBloc, SubscribeChannelState>(
-                                builder: (BuildContext context, SubscribeChannelState state) {
-                                  if (state is SubscribeChannelSuccess) {
-                                    // _isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed!;
-                                  } else if (state is UnsubscribeChannelSuccess) {
-                                    // _isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed!;
-                                  }
-                                  return GestureDetector(
+                                SizedBox(width: ScreenSize.screenWidth(context) * 0.02),
+              
+                                Expanded(
+                                  child: GestureDetector(
                                     onTap: () {
-                                      if (_isSubscribed) {
-                                        ToastManager().showToast(
-                                            context: context,
-                                            message: 'Unsubscribed successfully'
-                                        );
-                                        context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
-                                      } else {
-                                        ToastManager().showToast(
-                                            context: context,
-                                            message: 'Subscribed successfully'
-                                        );
-                                        context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
-                                      }
-
-                                      setState(() {
-                                        print('  BEFORE    $_isSubscribed  ');
-                                        _isSubscribed = !_isSubscribed;
-                                        if(_isSubscribed){
-                                          _subscribeCount++;
-                                        }else{
-                                          _subscribeCount--;
-                                        }
-                                        print('  AFTER    $_isSubscribed  ');
-                                      });
+                                      final String channelId = state.playVideo.first.data!.channel!.id.toString();
+                                      GoRouter.of(context).pushNamed(
+                                          'channelProfilePage',
+                                          pathParameters: {
+                                            'channelId': channelId
+                                          }
+                                      );
+                                      _podController?.pause();
                                     },
-                                    child: Container(
-                                      height: ScreenSize.screenHeight(context) * 0.045,
-                                      width: _isSubscribed
-                                          ? ScreenSize.screenWidth(context) * 0.28
-                                          : ScreenSize.screenWidth(context) * 0.25,
-                                      decoration: BoxDecoration(
-                                        color: _isSubscribed ? Colors.grey.shade200 : Colors.red,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          _isSubscribed ? 'Unsubscribe' : 'Subscribe',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: _isSubscribed ? Colors.black : Colors.white,
-                                            fontFamily: fontFamily,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: ScreenSize.screenHeight(context) * 0.02),
-
-                        // Like, DisLike, Save, Download, Share, Report Buttons
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          padding: EdgeInsets.only(
-                            left: ScreenSize.screenWidth(context) * 0.03,
-                            right: ScreenSize.screenWidth(context) * 0.03,
-                          ),
-                          child: Row(
-                            children: [
-                              BlocBuilder<LikeDislikeVideoBloc, LikeDislikeVideoState>(
-                                  builder: (BuildContext context, LikeDislikeVideoState state){
-                                    if(state is LikeVideoSuccess){}
-                                    else if(state is DislikeVideoSuccess){}
-                                    return IntrinsicWidth(
-                                      child: IntrinsicHeight(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Theme.of(context).colorScheme.surfaceDim,
-                                            borderRadius: BorderRadius.circular(25),
-                                          ),
-                                          padding: EdgeInsets.only(
-                                            left: ScreenSize.screenWidth(context) * 0.03,
-                                            right: ScreenSize.screenWidth(context) * 0.03,
-                                            top: ScreenSize.screenHeight(context) * 0.009,
-                                            bottom: ScreenSize.screenHeight(context) * 0.009,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              InkWell(
-                                                onTap: (){
-                                                  context.read<LikeDislikeVideoBloc>().add(LikeVideoRequest(videoSlug: widget.slug));
-                                                  setState(() {
-                                                    print('((((  $_isDisLiked   )))) ');
-                                                    print('((((  $_isLiked  ))))');
-                                                    if (_isLiked) {
-                                                      _isLiked = false;
-                                                      _likeCount--;
-                                                    } else {
-                                                      ToastManager().showToast(
-                                                          context: context,
-                                                          message: 'Video liked!'
-                                                      );
-                                                      _isLiked = true;
-                                                      _likeCount++;
-                                                      if (_isDisLiked) {
-                                                        _isDisLiked = false;
-                                                      }
-                                                    }
-                                                    print('***********     $_isLiked');
-                                                    print('***********     $_isDisLiked');
-                                                  });
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    _isLiked == true
-                                                        ? const Icon(Remix.thumb_up_fill, size: 17)
-                                                        : const Icon(Remix.thumb_up_line, size: 17),
-                                                    SizedBox(
-                                                      width: MediaQuery.of(context).size.width * 0.02,
-                                                    ),
-                                                    Text(
-                                                      '$_likeCount',
-                                                      style: const TextStyle(
-                                                        fontFamily: fontFamily,
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: MediaQuery.of(context).size.width * 0.01,
-                                              ),
-                                              const VerticalDivider(thickness: 0.5),
-                                              SizedBox(
-                                                width: MediaQuery.of(context).size.width * 0.01,
-                                              ),
-                                              InkWell(
-                                                onTap: (){
-                                                  context.read<LikeDislikeVideoBloc>().add(DislikeVideoRequest(videoSlug: widget.slug));
-                                                  setState(() {
-                                                    if (_isDisLiked) {
-                                                      _isDisLiked = false;
-                                                    } else {
-                                                      ToastManager().showToast(
-                                                          context: context,
-                                                          message: 'Video disliked!'
-                                                      );
-                                                      _isDisLiked = true;
-                                                      if (_isLiked) {
-                                                        _isLiked = false;
-                                                        _likeCount--;
-                                                      }
-                                                    }
-                                                    print('***********     $_isDisLiked');
-                                                    print('***********     $_isLiked');
-                                                  });
-                                                },
-                                                child: _isDisLiked == true
-                                                    ? const Icon(Remix.thumb_down_fill, size: 17)
-                                                    : const Icon(Remix.thumb_down_line, size: 17),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  ),
-
-                              SizedBox(
-                                  width: ScreenSize.screenWidth(context) *
-                                      0.03),
-            
-                              const ShareButton(),
-                              SizedBox(
-                                  width: ScreenSize.screenWidth(context) *
-                                      0.03),
-            
-                              const DownloadButton(),
-                              SizedBox(
-                                  width: ScreenSize.screenWidth(context) *
-                                      0.03),
-
-                              InkWell(
-                                borderRadius: BorderRadius.circular(20),
-                                onTap: (){
-                                  context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
-                                  showPlaylistBottomSheet(state.playVideo);
-                                },
-                                  child: const SaveButton()
-                              ),
-                              SizedBox(
-                                  width: ScreenSize.screenWidth(context) *
-                                      0.03),
-            
-                              const ReportButton(),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: ScreenSize.screenHeight(context) * 0.02,),
-
-
-                        commentLength != 0 ? BlocBuilder<GetCommentsBloc, GetCommentsState>(
-                          builder: (BuildContext context, GetCommentsState state) {
-                            if(state is GetCommentsLoaded){
-                              final getComments = state.getCommentsList.first.data;
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    left: ScreenSize.screenWidth(context) * 0.03,
-                                    right: ScreenSize.screenWidth(context) * 0.03
-                                ),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(10),
-                                  onTap: () {
-                                    videoCommentSheet(context);
-                                  },
-                                  child: Container(
-                                    // height: ScreenSize.screenHeight(context) * 0.,
-                                    width: ScreenSize.screenWidth(context) * 0.95,
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context).colorScheme.surfaceDim,
-                                        borderRadius: BorderRadius.circular(10)
-                                    ),
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
+                                    child: Row(
                                       children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                                'Comments',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold
-                                                )
+                                        Flexible(
+                                          child: Text(
+                                            '${state.playVideo[0].data!.channel!.name}',
+                                            style: const TextStyle(
+                                              fontFamily: fontFamily,
+                                              fontSize: 14,
                                             ),
-                                            SizedBox(
-                                              width: ScreenSize.screenWidth(context) *
-                                                  0.02,),
-                                            Text(
-                                              getComments!.length.toString(),
-                                              style: TextStyle(
-                                                  color: Colors.grey.shade500
-                                              ),
-                                            )
-                                          ],
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                         SizedBox(
-                                          height: ScreenSize.screenHeight(context) *
-                                              0.01,),
-
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 10,
-                                              backgroundImage: NetworkImage(
-                                                  '${getComments.last.user!.profile}'),
-                                            ),
-                                            SizedBox(
-                                              width: ScreenSize.screenWidth(context) *
-                                                  0.02,),
-
-                                            Expanded(
-                                              child: Text(
-                                                getComments.last.comment!,
-                                                style: const TextStyle(
-                                                    fontFamily: fontFamily,
-                                                    fontSize: 12,
-                                                    overflow: TextOverflow.ellipsis
+                                            width: ScreenSize.screenWidth(context) * 0.03),
+                                                Text(
+                                                    _subscribeCount.toString(),
+                                                    style: TextStyle(
+                                                      fontFamily: fontFamily,
+                                                      fontSize: 12,
+                                                      color: Colors.grey[700],
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
                                                 ),
-                                                maxLines: 4,
-                                              ),
-                                            )
-                                          ],
-                                        )
                                       ],
                                     ),
                                   ),
                                 ),
-                              );
-                            }
-                            return Container(child: Text('NOOOO Commmmenntsss'),);
-                          },
-                        ) : Padding(
-                          padding: EdgeInsets.only(
-                              left: 10.w,
-                              right: 10.w
+                                SizedBox(width: ScreenSize.screenWidth(context) * 0.02),
+      
+      
+                                isAssociated == false ? BlocBuilder<SubscribeChannelBloc, SubscribeChannelState>(
+                                  builder: (BuildContext context, SubscribeChannelState state) {
+                                    if (state is SubscribeChannelSuccess) {
+                                      // _isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed!;
+                                    } else if (state is UnsubscribeChannelSuccess) {
+                                      // _isSubscribed = state.subscribeChannel.isNotEmpty && state.subscribeChannel[0].isSubscribed!;
+                                    }
+                                    return GestureDetector(
+                                      onTap: () {
+                                        if (_isSubscribed) {
+                                          ToastManager().showToast(
+                                              context: context,
+                                              message: 'Unsubscribed successfully'
+                                          );
+                                          context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
+                                        } else {
+                                          ToastManager().showToast(
+                                              context: context,
+                                              message: 'Subscribed successfully'
+                                          );
+                                          context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
+                                        }
+      
+                                        setState(() {
+                                          print('  BEFORE    $_isSubscribed  ');
+                                          _isSubscribed = !_isSubscribed;
+                                          if(_isSubscribed){
+                                            _subscribeCount++;
+                                          }else{
+                                            _subscribeCount--;
+                                          }
+                                          print('  AFTER    $_isSubscribed  ');
+                                        });
+                                      },
+                                      child: Container(
+                                        height: ScreenSize.screenHeight(context) * 0.045,
+                                        width: _isSubscribed
+                                            ? ScreenSize.screenWidth(context) * 0.28
+                                            : ScreenSize.screenWidth(context) * 0.25,
+                                        decoration: BoxDecoration(
+                                          color: _isSubscribed ? Colors.grey.shade200 : Colors.red,
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            _isSubscribed ? 'Unsubscribe' : 'Subscribe',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: _isSubscribed ? Colors.black : Colors.white,
+                                              fontFamily: fontFamily,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ) : Container(),
+                              ],
+                            ),
                           ),
-                          child: InkWell(
-                            onTap: (){
-                              enterPipMode();
+                          SizedBox(height: ScreenSize.screenHeight(context) * 0.02),
+      
+                          // Like, DisLike, Save, Download, Share, Report Buttons
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            padding: EdgeInsets.only(
+                              left: ScreenSize.screenWidth(context) * 0.03,
+                              right: ScreenSize.screenWidth(context) * 0.03,
+                            ),
+                            child: Row(
+                              children: [
+                                BlocBuilder<LikeDislikeVideoBloc, LikeDislikeVideoState>(
+                                    builder: (BuildContext context, LikeDislikeVideoState state){
+                                      if(state is LikeVideoSuccess){}
+                                      else if(state is DislikeVideoSuccess){}
+                                      return IntrinsicWidth(
+                                        child: IntrinsicHeight(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context).colorScheme.surfaceDim,
+                                              borderRadius: BorderRadius.circular(25),
+                                            ),
+                                            padding: EdgeInsets.only(
+                                              left: ScreenSize.screenWidth(context) * 0.03,
+                                              right: ScreenSize.screenWidth(context) * 0.03,
+                                              top: ScreenSize.screenHeight(context) * 0.009,
+                                              bottom: ScreenSize.screenHeight(context) * 0.009,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                InkWell(
+                                                  onTap: (){
+                                                    context.read<LikeDislikeVideoBloc>().add(LikeVideoRequest(videoSlug: widget.slug));
+                                                    setState(() {
+                                                      print('((((  $_isDisLiked   )))) ');
+                                                      print('((((  $_isLiked  ))))');
+                                                      if (_isLiked) {
+                                                        _isLiked = false;
+                                                        _likeCount--;
+                                                      } else {
+                                                        ToastManager().showToast(
+                                                            context: context,
+                                                            message: 'Video liked!'
+                                                        );
+                                                        _isLiked = true;
+                                                        _likeCount++;
+                                                        if (_isDisLiked) {
+                                                          _isDisLiked = false;
+                                                        }
+                                                      }
+                                                      print('***********     $_isLiked');
+                                                      print('***********     $_isDisLiked');
+                                                    });
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      _isLiked == true
+                                                          ? const Icon(Remix.thumb_up_fill, size: 17)
+                                                          : const Icon(Remix.thumb_up_line, size: 17),
+                                                      SizedBox(
+                                                        width: MediaQuery.of(context).size.width * 0.02,
+                                                      ),
+                                                      Text(
+                                                        '$_likeCount',
+                                                        style: const TextStyle(
+                                                          fontFamily: fontFamily,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: MediaQuery.of(context).size.width * 0.01,
+                                                ),
+                                                const VerticalDivider(thickness: 0.5),
+                                                SizedBox(
+                                                  width: MediaQuery.of(context).size.width * 0.01,
+                                                ),
+                                                InkWell(
+                                                  onTap: (){
+                                                    context.read<LikeDislikeVideoBloc>().add(DislikeVideoRequest(videoSlug: widget.slug));
+                                                    setState(() {
+                                                      if (_isDisLiked) {
+                                                        _isDisLiked = false;
+                                                      } else {
+                                                        ToastManager().showToast(
+                                                            context: context,
+                                                            message: 'Video disliked!'
+                                                        );
+                                                        _isDisLiked = true;
+                                                        if (_isLiked) {
+                                                          _isLiked = false;
+                                                          _likeCount--;
+                                                        }
+                                                      }
+                                                      print('***********     $_isDisLiked');
+                                                      print('***********     $_isLiked');
+                                                    });
+                                                  },
+                                                  child: _isDisLiked == true
+                                                      ? const Icon(Remix.thumb_down_fill, size: 17)
+                                                      : const Icon(Remix.thumb_down_line, size: 17),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    ),
+      
+                                SizedBox(
+                                    width: ScreenSize.screenWidth(context) *
+                                        0.03),
+              
+                                const ShareButton(),
+                                SizedBox(
+                                    width: ScreenSize.screenWidth(context) *
+                                        0.03),
+              
+                                const DownloadButton(),
+                                SizedBox(
+                                    width: ScreenSize.screenWidth(context) *
+                                        0.03),
+      
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: (){
+                                    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                                    showPlaylistBottomSheet(state.playVideo);
+                                  },
+                                    child: const SaveButton()
+                                ),
+                                SizedBox(
+                                    width: ScreenSize.screenWidth(context) *
+                                        0.03),
+              
+                                InkWell(
+                                    onTap: () {},
+                                      child: const ReportButton()
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: ScreenSize.screenHeight(context) * 0.02,),
+      
+      
+                          commentLength != 0 ? BlocBuilder<GetCommentsBloc, GetCommentsState>(
+                            builder: (BuildContext context, GetCommentsState state) {
+                              if(state is GetCommentsLoaded){
+                                final getComments = state.getCommentsList.first.data;
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      left: ScreenSize.screenWidth(context) * 0.03,
+                                      right: ScreenSize.screenWidth(context) * 0.03
+                                  ),
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(10),
+                                    onTap: () {
+                                      videoCommentSheet(context);
+                                    },
+                                    child: Container(
+                                      // height: ScreenSize.screenHeight(context) * 0.,
+                                      width: ScreenSize.screenWidth(context) * 0.95,
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context).colorScheme.surfaceDim,
+                                          borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      padding: EdgeInsets.all(10),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                  'Comments',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold
+                                                  )
+                                              ),
+                                              SizedBox(
+                                                width: ScreenSize.screenWidth(context) *
+                                                    0.02,),
+                                              Text(
+                                                getComments!.length.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.grey.shade500
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: ScreenSize.screenHeight(context) *
+                                                0.01,),
+
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment
+                                                .start,
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 10,
+                                                backgroundImage: NetworkImage(
+                                                    '${getComments.last.user!.profile}'),
+                                              ),
+                                              SizedBox(
+                                                width: ScreenSize.screenWidth(context) *
+                                                    0.02,),
+
+                                              Expanded(
+                                                child: Text(
+                                                  getComments.last.comment!,
+                                                  style: const TextStyle(
+                                                      fontFamily: fontFamily,
+                                                      fontSize: 12,
+                                                      overflow: TextOverflow.ellipsis
+                                                  ),
+                                                  maxLines: 4,
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              return Container(child: Text('NOOOO Commmmenntsss'),);
                             },
+                          ) : Padding(
+                            padding: EdgeInsets.only(
+                                left: 10.w,
+                                right: 10.w
+                            ),
                             child: Container(
                               // height: ScreenSize.screenHeight(context) * 0.,
                               width: ScreenSize.screenWidth(context) * 0.95,
@@ -691,30 +739,200 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                               ),
                             ),
                           ),
+              
+                          // Divider(thickness: 0.5, color: Colors.grey.shade300,),
+              
+                          Container(
+                            child: ListView.builder(
+                              padding: EdgeInsets.only(
+                                  top: ScreenSize.screenHeight(context) * 0.02
+                              ),
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: state.playVideo[0].data!.recommended!.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                if (state.playVideo[0].data!.recommended == null) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start,
+                                      children: [
+                                        ShimmerWidget.rectangular(
+                                            height: 200, isBorder: false),
+                                        SizedBox(height: 16),
+              
+                                        Row(
+                                          children: [
+                                            ShimmerWidget.circular(width: 50,
+                                                height: 50,
+                                                isBorder: true),
+                                            SizedBox(width: 8),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment
+                                                  .start,
+                                              children: [
+                                                ShimmerWidget.rectangular(
+                                                    height: 20,
+                                                    width: 120,
+                                                    isBorder: true),
+                                                SizedBox(height: 8),
+                                                ShimmerWidget.rectangular(
+                                                    height: 20,
+                                                    width: 200,
+                                                    isBorder: true),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  final recommendedVideos = state.playVideo[0].data!.recommended![index];
+                                  final videoDuration = recommendedVideos.duration;
+                                  final formattedDuration = formatDuration(videoDuration!);
+                                  return recommendedVideos.type == "video" ? VideoListItem(
+                                    onTap: (){
+                                      if(Navigator.canPop(context)){
+                                        Navigator.pop(context);
+                                        Future.delayed(
+                                            const Duration(milliseconds: 200), () {
+                                          GoRouter.of(context).pushNamed('videoPage',
+                                              pathParameters: {
+                                                "slug": recommendedVideos.slug!
+                                              });
+                                        });
+                                      }
+      
+                                    },
+                                    onTapChannel: (){
+                                      if(Navigator.canPop(context)){
+                                        Navigator.pop(context);
+                                        final String channelId = recommendedVideos.channel!.id.toString();
+                                        GoRouter.of(context).pushNamed(
+                                            'channelProfilePage',
+                                            pathParameters: {
+                                              'channelId': channelId
+                                            }
+                                        );
+                                      }
+                                    },
+                                    channelPhoto: '${recommendedVideos.channel!.logo}',
+                                    thumbnailUrl: '${recommendedVideos.thumbnail}',
+                                    duration: formattedDuration,
+                                    title: '${recommendedVideos.title}',
+                                    author: '${recommendedVideos.channel!.name}',
+                                    views: '${recommendedVideos.views}',
+                                    uploadTime: '${recommendedVideos.createdAtHuman}',
+                                    onMorePressed: () {
+                                      showPopupMenu();
+                                      },
+                                  ) : null;
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+      
+                  // VIDEO PAGE SHIMMER---------------------------------
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 16/9,
+                          child: ShimmerWidget.rectangular(isBorder: false),
                         ),
-            
-                        // Divider(thickness: 0.5, color: Colors.grey.shade300,),
-            
+      
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 10.h,
+                              left: 5.w, right: 5.w),
+                          // ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ShimmerWidget.rectangular(height: 40.h, isBorder: true),
+                              SizedBox(height: 2.h,),
+      
+                              ShimmerWidget.rectangular(height: 10.h, width: 150.w,isBorder: true),
+                              SizedBox(height: 10.h,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(width: 2.w,),
+                                      ShimmerWidget.circular(height: 40.h, width: 40.w, isBorder: true),
+                                      SizedBox(width: 5.w,),
+                                      ShimmerWidget.rectangular(height: 15.h, width: 150.w, isBorder: true),
+                                    ],
+                                  ),
+      
+                                  ShimmerWidget.rectangular(height: 30.h, width: 85.w, isBorder: true),
+                                ],
+                              ),
+                              SizedBox(height: 10.h,),
+                            ],
+                          ),
+                        ),
+      
+                        Container(
+                          height: ScreenSize.screenHeight(context) * 0.04,
+                          child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.only(
+                                left: 10.h,
+                              ),
+                              // physics: NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: 6,
+                              itemBuilder: (context, index){
+                                return Row(
+                                  children: [
+                                    ShimmerWidget.rectangular(
+                                        width: 100,
+                                        height: 40.h,
+                                        isBorder: true
+                                    ),
+                                    SizedBox(width: 10,)
+                                  ],
+                                );
+                              }
+                          ),
+                        ),
+                        SizedBox(height: 10.h,),
+      
+                        Container(
+                          padding: EdgeInsets.only(
+                            left: 5.w,
+                            right: 5.w
+                          ),
+                          child: ShimmerWidget.rectangular(
+                            height: 70.h,
+                              isBorder: true),
+                        ),
+                        SizedBox(height: 10.h,),
+      
                         Container(
                           child: ListView.builder(
-                            padding: EdgeInsets.only(
-                                top: ScreenSize.screenHeight(context) * 0.02
-                            ),
+                            physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: state.playVideo[0].data!.recommended!.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              if (state.playVideo[0].data!.recommended == null) {
+                            itemCount: 8,
+                              itemBuilder: (context, index){
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       ShimmerWidget.rectangular(
                                           height: 200, isBorder: false),
                                       SizedBox(height: 16),
-            
+      
                                       Row(
                                         children: [
                                           ShimmerWidget.circular(width: 50,
@@ -741,212 +959,39 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                     ],
                                   ),
                                 );
-                              } else {
-                                final recommendedVideos = state.playVideo[0].data!.recommended![index];
-                                final videoDuration = recommendedVideos.duration;
-                                final formattedDuration = formatDuration(videoDuration!);
-                                return recommendedVideos.type == "video" ? VideoListItem(
-                                  onTap: (){
-                                    if(Navigator.canPop(context)){
-                                      Navigator.pop(context);
-                                      Future.delayed(
-                                          const Duration(milliseconds: 200), () {
-                                        GoRouter.of(context).pushNamed('videoPage',
-                                            pathParameters: {
-                                              "slug": recommendedVideos.slug!
-                                            });
-                                      });
-                                    }
-
-                                  },
-                                  onTapChannel: (){
-                                    if(Navigator.canPop(context)){
-                                      Navigator.pop(context);
-                                      final String channelId = recommendedVideos.channel!.id.toString();
-                                      GoRouter.of(context).pushNamed(
-                                          'channelProfilePage',
-                                          pathParameters: {
-                                            'channelId': channelId
-                                          }
-                                      );
-                                    }
-
-
-
-                                  },
-                                  channelPhoto: '${recommendedVideos.channel!.logo}',
-                                  thumbnailUrl: '${recommendedVideos.thumbnail}',
-                                  duration: formattedDuration,
-                                  title: '${recommendedVideos.title}',
-                                  author: '${recommendedVideos.channel!.name}',
-                                  views: '${recommendedVideos.views}',
-                                  uploadTime: '${recommendedVideos.createdAtHuman}',
-                                  onMorePressed: () {
-                                    showPopupMenu();
-                                    },
-                                ) : null;
                               }
-                            },
                           ),
-                        ),
+                        )
                       ],
                     ),
                   );
                 }
-
-                // VIDEO PAGE SHIMMER---------------------------------
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      AspectRatio(
-                        aspectRatio: 16/9,
-                        child: ShimmerWidget.rectangular(isBorder: false),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 10.h,
-                            left: 5.w, right: 5.w),
-                        // ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ShimmerWidget.rectangular(height: 40.h, isBorder: true),
-                            SizedBox(height: 2.h,),
-
-                            ShimmerWidget.rectangular(height: 10.h, width: 150.w,isBorder: true),
-                            SizedBox(height: 10.h,),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(width: 2.w,),
-                                    ShimmerWidget.circular(height: 40.h, width: 40.w, isBorder: true),
-                                    SizedBox(width: 5.w,),
-                                    ShimmerWidget.rectangular(height: 15.h, width: 150.w, isBorder: true),
-                                  ],
-                                ),
-
-                                ShimmerWidget.rectangular(height: 30.h, width: 85.w, isBorder: true),
-                              ],
-                            ),
-                            SizedBox(height: 10.h,),
-                          ],
-                        ),
-                      ),
-
-                      Container(
-                        height: ScreenSize.screenHeight(context) * 0.04,
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.only(
-                              left: 10.h,
-                            ),
-                            // physics: NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemCount: 6,
-                            itemBuilder: (context, index){
-                              return Row(
-                                children: [
-                                  ShimmerWidget.rectangular(
-                                      width: 100,
-                                      height: 40.h,
-                                      isBorder: true
-                                  ),
-                                  SizedBox(width: 10,)
-                                ],
-                              );
-                            }
-                        ),
-                      ),
-                      SizedBox(height: 10.h,),
-
-                      Container(
-                        padding: EdgeInsets.only(
-                          left: 5.w,
-                          right: 5.w
-                        ),
-                        child: ShimmerWidget.rectangular(
-                          height: 70.h,
-                            isBorder: true),
-                      ),
-                      SizedBox(height: 10.h,),
-
-                      Container(
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: 8,
-                            itemBuilder: (context, index){
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ShimmerWidget.rectangular(
-                                        height: 200, isBorder: false),
-                                    SizedBox(height: 16),
-
-                                    Row(
-                                      children: [
-                                        ShimmerWidget.circular(width: 50,
-                                            height: 50,
-                                            isBorder: true),
-                                        SizedBox(width: 8),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            ShimmerWidget.rectangular(
-                                                height: 20,
-                                                width: 120,
-                                                isBorder: true),
-                                            SizedBox(height: 8),
-                                            ShimmerWidget.rectangular(
-                                                height: 20,
-                                                width: 200,
-                                                isBorder: true),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }
-            ),
-            
-            // Video
-            BlocBuilder<PlayVideoBloc, PlayVideoState>(
-              builder: (BuildContext context, PlayVideoState state) {
-                  if(state is PlayVideoLoaded){
-                    return Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      child:  AspectRatio(
-                            aspectRatio: 16/9,
-                        child: _podController == null
-                            ? const Center(child: CircularProgressIndicator())
-                            : PodVideoPlayer(
-                          controller: _podController!,
-                        ),
-                      )
-                    );
-                  }
-                return Container();
-              },
-            
-            ),
-          ],
+              ),
+              
+              // Video
+              BlocBuilder<PlayVideoBloc, PlayVideoState>(
+                builder: (BuildContext context, PlayVideoState state) {
+                    if(state is PlayVideoLoaded){
+                      return Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child:  AspectRatio(
+                              aspectRatio: 16/9,
+                          child: _podController == null
+                              ? const Center(child: CircularProgressIndicator())
+                              : PodVideoPlayer(
+                            controller: _podController!,
+                          ),
+                        )
+                      );
+                    }
+                  return Container();
+                },
+              
+              ),
+            ],
+          ),
         ),
       ),
     );

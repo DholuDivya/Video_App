@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
@@ -14,7 +13,6 @@ import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/config/security.dart';
-import 'package:vimeo_clone/model/user_history_model.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/custom_user_page_button.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_header_widget.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_history_widget.dart';
@@ -35,7 +33,7 @@ class _UserPageState extends State<UserPage> {
 
   @override
   void initState() {
-    print('88888888888888888888888   ');
+    print('88888888888888888888888');
 
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
 
@@ -51,6 +49,14 @@ class _UserPageState extends State<UserPage> {
 
   Future<void> refreshData() async {
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
+    final historyBloc = context.read<GetUserHistoryBloc>();
+    historyBloc.stream.listen((state){
+      if(state is GetUserHistorySuccess){
+        historyLength = state.userHistory.first.data!.length;
+        historyData = state.userHistory.first.data!;
+      }
+    });
+    print('========== = = =  = = = =$historyLength');
     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
   }
 
@@ -96,9 +102,7 @@ class _UserPageState extends State<UserPage> {
               // SizedBox(height: ScreenSize.screenHeight(context) * 0.00,),
 
 
-              // historyLength > 0
-                  const UserHistoryWidget(),
-                  // : Container(),
+              const UserHistoryWidget(),
 
               // SizedBox(height: 10.h,),
               UserPlaylistWidget(),

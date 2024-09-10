@@ -15,7 +15,7 @@ class PlayVideoRepo{
       if (response.statusCode == 200) {
 
         print('Response received successfully');
-         videoData.add(PlayVideoModel.fromJson(response.data));
+        videoData.add(PlayVideoModel.fromJson(response.data));
         print('###########   ${videoData}');
         return videoData;
       } else {

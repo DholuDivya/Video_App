@@ -8,10 +8,11 @@ class ChannelProfileRepo{
     try{
       final response = await ApiBaseHelper().getAPICall('${apiUrl}channels/${channelId}', {});
 
-      print('uuuuuuuuuuuuuuuuuuuuu');
+
       print('${response.data}');
 
       if(response.statusCode == 200){
+        print('uuuuuuuuuuuuuuuuuuuuu');
         List<GetChannelDetailModel> yourVideoData = [];
         yourVideoData.add(GetChannelDetailModel.fromJson(response.data['']));
         print('vvvvvvvvvvvvvvvvvvvv');

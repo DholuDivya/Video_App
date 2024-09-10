@@ -29,10 +29,30 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
   bool isSelectedNone = false;
   bool isSubscribed = false;
   int? mode;
+  var channelLength = 0;
 
  Future<void> refreshData() async {
    context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
  }
+
+
+ @override
+  void initState() {
+    // TODO: implement initState
+
+    context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
+    final subscriptionBloc = context.read<GetSubscribedChannelListBloc>();
+
+    subscriptionBloc.stream.listen((state){
+      if(state is GetSubscribedChannelListLoaded){
+        channelLength = state.channelList.first.data!.length;
+      }
+    });
+
+    super.initState();
+  }
+
+
  @override
   Widget build(BuildContext context) {
    mode = context.read<ThemeBloc>().mode;
@@ -87,11 +107,9 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
             SliverToBoxAdapter(
               child: BlocBuilder<GetSubscribedChannelListBloc, GetSubscribedChannelListState>(
                 builder: (BuildContext context, GetSubscribedChannelListState state) {
-                  var channelLength = 0;
                   int unsubscribeChannelId = 0 ;
                   if(state is GetSubscribedChannelListLoaded){
-
-                    print(''''''''''''''''''''''object'''''''''''''''''''''' ');
+                    print('''''''''''''''''''''' object '''''''''''''''''''''' ');
                     return channelLength != 0 ? ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,

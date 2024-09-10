@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
-
 import '../../config/constants.dart';
 
 class YourVideoPage extends StatelessWidget {
@@ -49,21 +49,31 @@ class YourVideoPage extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       final videoCount = state.videoData.first.videoCount;
                       final videoData = state.videoData.first.channel.videos[index];
+                      final videoType = videoData.type;
                       int? totalSeconds = state.videoData.first.channel.videos[index].duration;
                       String formattedTime = formatDuration(totalSeconds);
-                      return Padding(
-                          padding: EdgeInsets.only(
-                            top: 5.h,
-                            bottom: 5.h
+                      return videoType == 'video' ? InkWell(
+                        onTap: (){
+                          Future.delayed(const Duration(milliseconds: 200), () {
+                            GoRouter.of(context).pushNamed('videoPage', pathParameters: {
+                              "slug": videoData.slug
+                            });
+                          });
+                        },
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                              top: 5.h,
+                              bottom: 5.h
+                            ),
+                            child: CustomVideoPreview(
+                                imageUrl: videoData.thumbnails,
+                                videoTitle: videoData.title,
+                                videoViews: '${videoData.views}',
+                                uploadTime: videoData.createdAtHuman,
+                                videoDuration: formattedTime
+                            ),
                           ),
-                          child: CustomVideoPreview(
-                              imageUrl: videoData.thumbnails,
-                              videoTitle: videoData.title,
-                              videoViews: '${videoData.views}',
-                              uploadTime: videoData.createdAtHuman,
-                              videoDuration: formattedTime
-                          ),
-                        );
+                      ) : Container();
                     },
                   ) : Padding(
                     padding: EdgeInsets.only(top: 150.h),

@@ -1,3 +1,5 @@
+import 'package:flutter/physics.dart';
+
 class PlayVideoModel {
   String? status;
   String? message;
@@ -28,6 +30,7 @@ class Data {
   String? description;
   String? hashtag;
   int? likes;
+  int? dislikes; // New field for dislikes
   int? comments;
   int? views;
   String? uploadSourceType;
@@ -49,6 +52,7 @@ class Data {
     this.description,
     this.hashtag,
     this.likes,
+    this.dislikes, // Initialize dislikes
     this.comments,
     this.views,
     this.uploadSourceType,
@@ -71,6 +75,7 @@ class Data {
     description = json['description'];
     hashtag = json['hashtag'];
     likes = json['likes'];
+    dislikes = json['dislikes']; // Parsing dislikes
     comments = json['comments'];
     views = json['views'];
     uploadSourceType = json['upload_source_type'];
@@ -104,6 +109,7 @@ class Data {
     data['description'] = this.description;
     data['hashtag'] = this.hashtag;
     data['likes'] = this.likes;
+    data['dislikes'] = this.dislikes; // Serialize dislikes
     data['comments'] = this.comments;
     data['views'] = this.views;
     data['upload_source_type'] = this.uploadSourceType;
@@ -124,8 +130,10 @@ class Data {
     if (this.recommended != null) {
       data['recommended'] = this.recommended!.map((v) => v.toJson()).toList();
     }
+    // print('tytytytytytytytytyt   ${Data.fromJson()}');
     return data;
   }
+
 }
 
 class Channel {
@@ -135,7 +143,7 @@ class Channel {
   String? banner;
   int? subscriberCount;
   bool? isSubscribed;
-  bool? isAssociated;
+  bool? isAssociated; // Ensure this field is included
 
   Channel({
     this.id,
@@ -245,6 +253,7 @@ class Recommended {
   String? hashtag;
   int? views;
   int? likes;
+  int? dislikes; // Add dislikes for recommended videos
   String? type;
   Channel? channel;
   String? status;
@@ -265,6 +274,7 @@ class Recommended {
     this.hashtag,
     this.views,
     this.likes,
+    this.dislikes, // Initialize dislikes
     this.type,
     this.channel,
     this.status,
@@ -286,6 +296,7 @@ class Recommended {
     hashtag = json['hashtag'];
     views = json['views'];
     likes = json['likes'];
+    dislikes = json['dislikes']; // Parse dislikes
     type = json['type'];
     channel = json['channel'] != null ? Channel.fromJson(json['channel']) : null;
     status = json['status'];
@@ -313,6 +324,7 @@ class Recommended {
     data['hashtag'] = this.hashtag;
     data['views'] = this.views;
     data['likes'] = this.likes;
+    data['dislikes'] = this.dislikes; // Serialize dislikes
     data['type'] = this.type;
     if (this.channel != null) {
       data['channel'] = this.channel!.toJson();

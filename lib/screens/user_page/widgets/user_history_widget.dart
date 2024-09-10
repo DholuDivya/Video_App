@@ -23,7 +23,7 @@ class UserHistoryWidget extends StatefulWidget {
 
 class _UserHistoryWidgetState extends State<UserHistoryWidget> {
 
-  late int historyLength;
+  var historyLength = 0;
 
   @override
   void initState() {
