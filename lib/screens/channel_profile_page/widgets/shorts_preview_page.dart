@@ -198,7 +198,7 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
                     final shortsData = state.channelData.first.channelShorts[index];
                     final type = shortsData.type;
                     return CustomShortsPreview(
-                      thumbNailPath: shortsData.thumbnails,
+                      thumbNailPath: shortsData.thumbnails!,
                       views: shortsData.views.toString(),
                     );
                   },

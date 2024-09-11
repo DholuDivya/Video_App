@@ -37,8 +37,8 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
     final channelBloc = context.read<ChannelProfileBloc>();
     channelBloc.stream.listen((state){
       if(state is ChannelProfileLoaded){
-        // _isSubscribed = state.channelData.first.isSubscribed!;
-        // _subscribeCount = state.channelData.first.subscriberCount!;
+        _isSubscribed = state.channelData.first.isSubscribed;
+        _subscribeCount = state.channelData.first.subscriberCount;
       }
     });
     super.initState();
@@ -55,7 +55,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
             print('ighsirghishgishgisg    $state');
             if(state is ChannelProfileLoaded){
               final channelData = state.channelData.first;
-              _channelId = channelData.channel!.id!;
+              _channelId = channelData.channel.id;
 
               print('************      $_isSubscribed');
               return NestedScrollView(
@@ -74,7 +74,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                               height: 350,
                               width: double.infinity,
                               child: Image.network(
-                                channelData.channel?.bannerImage ?? "assets/images/travel.jpg",
+                                channelData.channel.bannerImage ?? "assets/images/travel.jpg",
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -129,7 +129,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                       CircleAvatar(
                                         radius: 30,
                                         backgroundImage:
-                                        NetworkImage('${channelData.channel!.logo}'),
+                                        NetworkImage('${channelData.channel.logo}'),
                                       ),
                                       SizedBox(
                                         width: ScreenSize.screenWidth(context) * 0.03,
@@ -153,17 +153,17 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                             height: ScreenSize.screenHeight(context) *
                                                 0.005,
                                           ),
-                                          // Text(
-                                          //   '$_subscribeCount subscribers - ${channelData.videoCount} videos',
-                                          //   style: TextStyle(
-                                          //     fontFamily: fontFamily,
-                                          //     fontSize: 12,
-                                          //     color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
-                                          //     // color: Theme.of(context)
-                                          //     //     .colorScheme
-                                          //     //     .tertiary,
-                                          //   ),
-                                          // ),
+                                          Text(
+                                            '$_subscribeCount subscribers - ${channelData.videoCount} videos',
+                                            style: TextStyle(
+                                              fontFamily: fontFamily,
+                                              fontSize: 12,
+                                              color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                                              // color: Theme.of(context)
+                                              //     .colorScheme
+                                              //     .tertiary,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ],
@@ -182,8 +182,16 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                     return InkWell(
                                       onTap: () {
                                         if (_isSubscribed) {
+                                          ToastManager().showToast(
+                                              context: context,
+                                              message: 'Unsubscribed successfully'
+                                          );
                                           context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
                                         } else {
+                                          ToastManager().showToast(
+                                              context: context,
+                                              message: 'Subscribed successfully'
+                                          );
                                           context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
                                         }
 
@@ -319,14 +327,16 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                   children: [
                     // HOME
                     HomePreviewPage(),
-
+                    // Container(),
 
                     // VIDEOS
                     VideosPreviewPage(),
+                    // Container(),
 
 
                     // SHORTS
                     ShortsPreviewPage(),
+                    // Container(),
 
 
                     // LIVE
@@ -335,6 +345,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
 
                     // PLAYLIST
                     PlaylistPreviewPage(),
+                    // Container(),
                   ],
                 ),
 

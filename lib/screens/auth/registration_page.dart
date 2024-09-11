@@ -220,8 +220,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         WidgetsBinding.instance.addPostFrameCallback((_){
                           GoRouter.of(context).pushReplacementNamed('signupPage');
                         });
+                        ToastManager().showToast(
+                            context: context,
+                            message: 'User created successfully'
+                        );
                       }else if(state is RegisterAuthFailure){
                         print('failure');
+                        ToastManager().showToast(
+                            context: context,
+                            message: 'Please try again later'
+                        );
                       }
                       return joinButton();
                     }

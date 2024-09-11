@@ -43,7 +43,7 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
   ];
 
   List<Map<String, dynamic>> sortedVideoList = [];
-  
+
   @override
   void initState() {
     super.initState();
@@ -134,10 +134,10 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
                       return Padding(
                         padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                         child: CustomVideoPreview(
-                            imageUrl: videoData.thumbnails,
-                            videoTitle: videoData.title,
+                            imageUrl: videoData.thumbnails!,
+                            videoTitle: videoData.title!,
                             videoViews: '${videoData.views}',
-                            uploadTime: videoData.createdAtHuman,
+                            uploadTime: videoData.createdAtHuman!,
                             videoDuration: formattedDuration,
                           onShowMorePressed: (){
                             customShowMoreBottomSheet(

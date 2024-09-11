@@ -56,8 +56,8 @@ class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
                         padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                         child: CustomPlaylistPreview(
                           imageUrl: '',
-                          playlistName: userPlaylist.title,
-                          channelName: userPlaylist.visibility,
+                          playlistName: userPlaylist.title!,
+                          channelName: userPlaylist.visibility!,
                           numberOfVideos: 0,),
                       ) : Container();
                     }

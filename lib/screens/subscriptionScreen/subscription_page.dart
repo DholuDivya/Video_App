@@ -48,7 +48,6 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
         channelLength = state.channelList.first.data!.length;
       }
     });
-
     super.initState();
   }
 
@@ -119,7 +118,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                           channelLength = state.channelList.first.data!.length;
                           unsubscribeChannelId = channelsList.channelId!;
                           // isSubscribed = channelsList.
-                          return SizedBox(
+                          return channelLength != 0 ? SizedBox(
                             height: 60,
                             child: InkWell(
                               onTap: (){
@@ -166,6 +165,14 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                                     : const SizedBox.shrink(),
                               ),
                             ),
+                          ) : Padding(
+                            padding: EdgeInsets.only(top: 150.h),
+                            child: Center(
+                                child: Image.asset(
+                                  'assets/images/no_data.png',
+                                  width: 200.w,
+                                  height: 200.h,
+                                )),
                           );
                       }
                     ) : Padding(

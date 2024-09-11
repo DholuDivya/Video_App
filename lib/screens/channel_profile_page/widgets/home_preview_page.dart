@@ -127,10 +127,10 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                     return Padding(
                       padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                       child: CustomVideoPreview(
-                        imageUrl: videoData.thumbnails,
-                        videoTitle: videoData.title,
+                        imageUrl: videoData.thumbnails!,
+                        videoTitle: videoData.title!,
                         videoViews: videoData.views.toString(),
-                        uploadTime: videoData.createdAtHuman,
+                        uploadTime: '${videoData.createdAtHuman}',
                         videoDuration: formattedTime,
                       ),
                     );

@@ -1,3 +1,18 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class GetChannelDetailModel {
   GetChannelDetailModel({
     required this.channel,
@@ -13,7 +28,7 @@ class GetChannelDetailModel {
   });
 
   final Channel channel;
-  final String createdAtHumanChannels;
+  final String? createdAtHumanChannels;
   final bool isAssociated;
   final bool isSubscribed;
   final int videoCount;
@@ -94,17 +109,17 @@ class Channel {
 
   factory Channel.fromJson(Map<String, dynamic> json) {
     return Channel(
-      id: json['id'],
-      name: json['name'],
-      slug: json['slug'],
-      description: json['description'],
-      logo: json['logo'],
-      bannerImage: json['banner_image'],
-      status: json['status'],
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      slug: json['slug'] ?? '',
+      description: json['description'] ?? '',
+      logo: json['logo'] ?? '',
+      bannerImage: json['banner_image'] ?? '',
+      status: json['status'] ?? '',
       deletedAt: json['deleted_at'], // Fixed key name
-      region: json['region'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      region: json['region']  ?? '',
+      createdAt: json['created_at'] ?? '',
+      updatedAt: json['updated_at'] ?? '',
       videos: (json['videos'] as List<dynamic>)
           .map((e) => Videos.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -167,32 +182,32 @@ class Videos {
     required this.categories,
   });
 
-  final int id;
+  final int? id;
   final String type;
   final String title;
   final String slug;
   final String description;
   final String? hashtag; // Nullable if it can be null
   final String watchHours;
-  final int videoType;
+  final int? videoType;
   final String? geoRegion; // Nullable if it can be null
   final String? metaKeywords; // Nullable if it can be null
   final String? metaDescription; // Nullable if it can be null
   final String source;
   final String sourceType;
-  final int duration;
+  final int? duration;
   final String thumbnails;
-  final int NSFW;
+  final int? NSFW;
   final String? scheduling; // Nullable if it can be null
-  final int scheduled;
-  final int commentsOnOff;
-  final int channelId;
+  final int? scheduled;
+  final int? commentsOnOff;
+  final int? channelId;
   final String status;
   final String? deletedAt; // Nullable if it can be null
-  final int views;
-  final int likes;
+  final int? views;
+  final int? likes;
   final String visibility;
-  final int comments;
+  final int? comments;
   final String createdAt;
   final String updatedAt;
   final String contentType;

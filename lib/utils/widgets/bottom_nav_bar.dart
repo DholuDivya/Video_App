@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gradient_icon/gradient_icon.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/Config/colors.dart';
@@ -43,11 +44,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
         children: [
           BottomBarIconButton(
             icon: currentIndex == 0 ? HeroiconsSolid.home : HeroiconsOutline.home,
+            label: currentIndex == 0 ? 'Home' : '',
             color: currentIndex == 0 ? primaryColor : greyShade600,
             onPressed: () { onTabTapped(0); },
           ),
           BottomBarIconButton(
             icon: currentIndex == 1 ? HeroiconsSolid.fire : HeroiconsOutline.fire,
+              label: currentIndex == 1 ? 'Shorts' : '',
               color: currentIndex == 1 ? primaryColor : greyShade600,
             onPressed: () { onTabTapped(1); }
           ),
@@ -80,11 +83,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
           BottomBarIconButton(
             icon: currentIndex == 2 ? HeroiconsSolid.playCircle : HeroiconsOutline.playCircle,
+              label: currentIndex == 2 ? 'Subscriptions' : '',
             color: currentIndex == 2 ? primaryColor : greyShade600,
             onPressed: () { onTabTapped(2); }
           ),
           BottomBarIconButton(
             icon: currentIndex == 3 ? HeroiconsSolid.user : HeroiconsOutline.user,
+              label: currentIndex == 3 ? 'User' : '',
             color: currentIndex == 3 ? primaryColor : greyShade600,
             onPressed: () { onTabTapped(3); }
           ),
@@ -97,21 +102,40 @@ class CustomBottomNavigationBar extends StatelessWidget {
 class BottomBarIconButton extends StatelessWidget {
   final IconData icon;
   final Color? color;
+  final String? label;
   final VoidCallback onPressed;
 
   const BottomBarIconButton({
     required this.icon,
     required this.onPressed,
-    this.color
+    this.color,
+    this.label
   });
 
   @override
   Widget build(BuildContext context) {
+
     return IconButton(
       icon: Icon(icon, color: color,),
       onPressed: onPressed,
     );
+
+
+    // return IconButton(
+    //   icon: Column(
+    //     mainAxisSize: MainAxisSize.min,
+    //     children: [
+    //       Icon(icon, color: color,),
+    //       Text(
+    //         label!,
+    //         style: TextStyle(
+    //             fontFamily: fontFamily,
+    //             fontSize: 8.sp
+    //         ),
+    //       )
+    //     ],
+    //   ),
+    //   onPressed: onPressed,
+    // );
   }
 }
-
-

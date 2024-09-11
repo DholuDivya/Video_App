@@ -171,7 +171,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   WidgetsBinding.instance.addPostFrameCallback((_){
                     GoRouter.of(context).pushReplacementNamed('signupPage');
                   });
-
+                  ToastManager().showToast(
+                      context: context,
+                      message: 'Reset password successfully'
+                  );
+                }else if(state is ResetPasswordFailure){
+                  ToastManager().showToast(
+                      context: context,
+                      message: 'Something went wrong'
+                  );
                 }
                 return ElevatedButton(
                   onPressed: () {

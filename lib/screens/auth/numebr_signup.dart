@@ -64,6 +64,8 @@ class _SignupWithPhoneNumberState extends State<SignupWithPhoneNumber> {
           } else if (state is AuthSuccess) {
             // Navigate to the home page or show a success message
             GoRouter.of(context).pushReplacementNamed('homePage');
+
+
           } else if (state is AuthFailure) {
             // Show error message
             ScaffoldMessenger.of(context).showSnackBar(

@@ -8,16 +8,10 @@ import 'package:vimeo_clone/Utils/Widgets/setting_page_btn.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_event.dart';
-import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/utils/widgets/CustomLogOutWidget.dart';
-import 'package:vimeo_clone/utils/widgets/custom_text_field_password.dart';
-import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
-
-
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
 import '../../config/constants.dart';
-import '../../config/security.dart';
 import '../../utils/widgets/custom_text_field_auth.dart';
 
 class SettingPage extends StatefulWidget {
@@ -287,8 +281,8 @@ class _SettingPageState extends State<SettingPage> {
 
                   // PICTURE IN PICTURE
                   CustomSettingButton(
-                      icon: Remix.picture_in_picture_2_line,
-                      btnName: ('Picture in picture'),
+                      icon: Remix.vip_crown_line,
+                      btnName: ('Your plans'),
                       onTap: () {
                         GoRouter.of(context).pushNamed('plansPage');
                       }

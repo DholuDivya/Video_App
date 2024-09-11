@@ -14,6 +14,7 @@ class CustomTextFieldUpload extends StatelessWidget {
   final bool? isEnabled;
   final Widget? suffix;
   final bool? readOnly;
+  final bool? autoFocus;
   final Function(String)? onChange;
 
   const CustomTextFieldUpload({
@@ -27,7 +28,8 @@ class CustomTextFieldUpload extends StatelessWidget {
     this.isEnabled,
     this.suffix,
     this.readOnly,
-    this.onChange
+    this.onChange,
+    this.autoFocus
   });
 
   @override
@@ -40,6 +42,7 @@ class CustomTextFieldUpload extends StatelessWidget {
       minLines: minLines,
       enabled: isEnabled,
       readOnly: readOnly!,
+      autofocus: autoFocus ?? false,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
         // hintText: ' Title... ',

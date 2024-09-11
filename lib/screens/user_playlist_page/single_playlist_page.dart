@@ -77,7 +77,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
               child: Column(
                 children: [
                   Container(
-                    height: 255.h,
+                    height: 260.h,
                     width: double.infinity,
                     decoration: BoxDecoration(
 
@@ -97,7 +97,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                               top: 20.h,
                               left: 20.w,
                               right: 20.w,
-                              bottom: 20.w
+                              bottom: 10.h
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

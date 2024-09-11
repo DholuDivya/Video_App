@@ -192,9 +192,10 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   BlocConsumer<GetVideoBloc, GetVideoState>(
                       builder: (BuildContext context, state) {
-                    if (state is GetVideoLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                    if (state is GetVideoFailure) {
+                      ToastManager().showToast(
+                          context: context,
+                          message: 'Fail to pick video'
                       );
                     }
                     return BottomSheetButton(
@@ -204,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                         // }
                         context.read<GetVideoBloc>().add(OpenFilesToGetVideo());
                       },
-                      buttonName: 'From Files',
+                      buttonName: 'From files',
                       buttonIcon: HeroiconsOutline.folder,
                     );
                   }, listener: (context, state) {
@@ -223,7 +224,7 @@ class _HomePageState extends State<HomePage> {
                       }
                       GoRouter.of(context).pushNamed('uploadVideoFromUrl');
                     },
-                    buttonName: 'From Youtube',
+                    buttonName: 'From external sources',
                     buttonIcon: HeroiconsOutline.link,
                   ),
                 ],
@@ -728,14 +729,14 @@ class _HomePageContentState extends State<HomePageContent> {
             builder: (BuildContext context, GetShortsListState state) {
               if(state is GetShortsListLoaded){
                 return SizedBox(
-                  height: 420.h,
+                  height: 430.h,
                   child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 300,
+                      maxCrossAxisExtent: 220.h,
                       mainAxisSpacing: 5.h,
                       crossAxisSpacing: 5.h,
-                      childAspectRatio: 0.73,
+                      childAspectRatio: 0.71,
                     ),
                     semanticChildCount: 2,
                     shrinkWrap: true,

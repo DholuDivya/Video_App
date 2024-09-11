@@ -259,8 +259,10 @@ import '../screens/edit_video_detail/edit_video_detail_page.dart';
 
         GoRoute(
             name: 'editVideoDetailPage',
-            path: '/editVideoDetailPage',
-            pageBuilder: (context, state) => const CupertinoPage(child: EditVideoDetailPage())
+            path: '/editVideoDetailPage/:slug',
+          builder: (context, state) => EditVideoDetailPage(
+              videoSlug: state.pathParameters['slug']!
+          ),
         ),
 
         // GoRoute(

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
+import 'package:vimeo_clone/utils/widgets/customBottomSheet.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
 import '../../config/constants.dart';
 
@@ -13,6 +15,26 @@ class YourVideoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    List<Map<String, dynamic>> bottomSheetListTileField = [
+      {
+        'name': 'Edit',
+        'icon': HeroiconsOutline.pencil
+      },
+      {
+        'name': 'Download video',
+        'icon': HeroiconsOutline.arrowDownTray
+      },
+      {
+        'name': 'Share',
+        'icon': HeroiconsOutline.share
+      },
+      {
+        'name': 'Report',
+        'icon': HeroiconsOutline.chatBubbleBottomCenterText
+      },
+    ];
     return Scaffold(
         appBar: AppBar(
           title: const Text('Your Videos'),
@@ -70,7 +92,26 @@ class YourVideoPage extends StatelessWidget {
                                 videoTitle: videoData.title,
                                 videoViews: '${videoData.views}',
                                 uploadTime: videoData.createdAtHuman,
-                                videoDuration: formattedTime
+                                videoDuration: formattedTime,
+                              onShowMorePressed: (){
+                                  customShowMoreBottomSheet(
+                                      context,
+                                      bottomSheetListTileField,
+                                          (int index){
+                                        if(index == 0){
+                                          if(Navigator.canPop(context)){
+                                            Navigator.pop(context);
+                                          }
+                                          GoRouter.of(context).pushNamed(
+                                              'editVideoDetailPage',
+                                              pathParameters: {
+                                                'slug': videoData.slug
+                                              }
+                                          );
+                                        }
+                                      }
+                                  );
+                              },
                             ),
                           ),
                       ) : Container();

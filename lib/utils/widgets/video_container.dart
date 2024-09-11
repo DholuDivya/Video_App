@@ -32,9 +32,9 @@ class VideoListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: ScreenSize.screenHeight(context) * 0.025),
+      margin: EdgeInsets.only(bottom: ScreenSize.screenHeight(context) * 0.01),
       decoration: BoxDecoration(
-        // color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.surface,
       ),
       child: InkWell(
         onTap: onTap,

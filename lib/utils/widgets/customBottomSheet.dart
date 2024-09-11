@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heroicons_flutter/heroicons_flutter.dart';
 
 void customShowMoreBottomSheet(context, List<Map<String, dynamic>> list, Function(int) onTapTile){
   showModalBottomSheet(
@@ -9,8 +8,8 @@ void customShowMoreBottomSheet(context, List<Map<String, dynamic>> list, Functio
       builder: (BuildContext context){
         return Padding(
           padding: EdgeInsets.only(
-            left: 10.w,
-            right: 10.w,
+            left: 2.w,
+            right: 2.w,
           ),
           child: Card(
             child: Column(

@@ -13,13 +13,10 @@ class ChannelProfileRepo{
 
       if(response.statusCode == 200){
         print('uuuuuuuuuuuuuuuuuuuuu');
-        List<GetChannelDetailModel> yourVideoData = [];
-        yourVideoData.add(GetChannelDetailModel.fromJson(response.data['']));
-        print('vvvvvvvvvvvvvvvvvvvv');
-
-
-        print('Channel Profile Successfully Fetched  $yourVideoData');
-        // return yourVideoData;
+        List<GetChannelDetailModel> channelData = [];
+        channelData.add(GetChannelDetailModel.fromJson(response.data));
+        print('Channel Profile Successfully Fetched  $channelData');
+        return channelData;
       }else{
         return throw ApiException('Fail to Get Channel Profile ${response.statusCode}');
       }
