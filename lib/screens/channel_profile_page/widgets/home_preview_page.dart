@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
-
 import '../../../utils/widgets/custom_channel_video_preview.dart';
 import '../../../utils/widgets/custom_for_you_preview.dart';
 
@@ -73,10 +72,10 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                           final type = suggestedVideo.type;
                           print('sssssssssssssss    ${state.channelData.first.suggestedVideos.length}');
                             return  type == "video" ? ForYouPreview(
-                              videoThumbnail: suggestedVideo.thumbnails!,
-                              videoTitle: suggestedVideo.title!,
-                              channelName: state.channelData.first.channel!.name!,
-                              uploadTime: suggestedVideo.createdAtHuman!,
+                              videoThumbnail: suggestedVideo.thumbnails,
+                              videoTitle: suggestedVideo.title,
+                              channelName: state.channelData.first.channel.name,
+                              uploadTime: suggestedVideo.createdAtHuman,
                             ) : Container();
                       }),
                     ) : Container(),
@@ -127,11 +126,30 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                     return Padding(
                       padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                       child: CustomVideoPreview(
-                        imageUrl: videoData.thumbnails!,
-                        videoTitle: videoData.title!,
+                        imageUrl: videoData.thumbnails,
+                        videoTitle: videoData.title,
                         videoViews: videoData.views.toString(),
                         uploadTime: '${videoData.createdAtHuman}',
                         videoDuration: formattedTime,
+                        onShowMorePressed: (){
+                          // customShowMoreBottomSheet(
+                          //     context,
+                          //     bottomSheetListTileField,
+                          //         (int index){
+                          //       if(index == 0){
+                          //         if(Navigator.canPop(context)){
+                          //           Navigator.pop(context);
+                          //         }
+                          //         GoRouter.of(context).pushNamed(
+                          //             'editVideoDetailPage',
+                          //             pathParameters: {
+                          //               'slug': videoData.slug
+                          //             }
+                          //         );
+                          //       }
+                          //     }
+                          // );
+                        },
                       ),
                     );
                   },

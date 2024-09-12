@@ -101,6 +101,8 @@
 
 
 
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -126,8 +128,9 @@ class NotificationService {
 
     // Set up foreground message handling
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Foreground Message: ${message.notification?.title}, ${message.notification?.body}');
-      _showForegroundNotification(message);
+      print('Foreground Message: ${message.notification?.title}');
+      print('Foreground Message: ${message.notification?.body}');
+      _showForegroundNotification(message, );
     });
 
     // Handle messages when the app is opened from the background
@@ -186,49 +189,85 @@ class NotificationService {
 
   // Handle navigation when a notification is opened
   void _handleNavigation(RemoteMessage message, BuildContext context) {
-    String? route = message.data['notificationPage'];
-
-    if (route != null) {
-      Navigator.of(context).pushNamed(route);
-    }
+    // String? route = message.data['notificationPage'];
+    Navigator.of(context).pushNamed('notificationPage');
+    // showCustomNotification(message, context);
   }
 
   // Show a custom notification when needed
-  Future<void> showCustomNotification(String title, String body) async {
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'your_custom_channel_id',
-      'your_custom_channel_name',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
+  // void showCustomNotification(RemoteMessage message, BuildContext context) async {
+  //   // Display an Alert Dialog for notifications when the app is in the foreground
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(message.notification?.title ?? 'Notification'),
+  //         content: Text(message.notification?.body ?? 'You have a new notification'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               // Close the dialog
+  //               Navigator.of(context).pop();
+  //             },
+  //             child: const Text('Close'),
+  //           ),
+  //           TextButton(
+  //             onPressed: () {
+  //               // Handle navigation when user taps on the notification
+  //               Navigator.of(context).pop();
+  //               _handleNavigation(message, context);
+  //             },
+  //             child: const Text('View'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  //
+  //   // Optionally, still show a system notification
+  //   const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+  //     'your_channel_id',
+  //     'your_channel_name',
+  //     importance: Importance.max,
+  //     priority: Priority.high,
+  //   );
+  //
+  //   const NotificationDetails notificationDetails = NotificationDetails(
+  //     android: androidDetails,
+  //   );
+  //
+  //   await _flutterLocalNotificationsPlugin.show(
+  //     0,
+  //     message.notification?.title,
+  //     message.notification?.body,
+  //     notificationDetails,
+  //   );
+  // }
 
-    const NotificationDetails notificationDetails = NotificationDetails(
-      android: androidDetails,
-    );
-
-    await _flutterLocalNotificationsPlugin.show(
-      0,
-      title,
-      body,
-      notificationDetails,
-    );
-  }
-
-  // Cancel all notifications
-  Future<void> cancelAllNotifications() async {
-    await _flutterLocalNotificationsPlugin.cancelAll();
-  }
 
   // Set a specific notification channel for Android
-  Future<void> setupNotificationChannel(String channelId, String channelName) async {
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'high_importance_channel', // id
-      'High Importance Notifications', // name
-      importance: Importance.high,
-    );
-
-    await _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
-  }
+  // Future<void> setupNotificationChannel(String channelId, String channelName) async {
+  //   const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  //     'high_importance_channel', // id
+  //     'High Importance Notifications', // name
+  //     importance: Importance.high,
+  //   );
+  //
+  //   await _flutterLocalNotificationsPlugin
+  //       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+  //       ?.createNotificationChannel(channel);
+  // }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -23,34 +23,6 @@ class EditChannelBloc extends Bloc<EditChannelEvent, EditChannelState>{
       FormData formData;
       CroppedFile? channelLogo = event.channelLogo;
       String? channelLogoPath = channelLogo?.path;
-      // if(event.channelName!.isEmpty){
-      //   print('iiiiiiiiii');
-      //   formData = FormData.fromMap({
-      //     // 'name': event.channelName,
-      //     'logo': await MultipartFile.fromFile(event.channelLogo!.path),
-      //     // 'banner': await MultipartFile.fromFile(event.channelBanner!.path),
-      //   });
-      // }else if(event.channelLogo!.path.isNotEmpty){
-      //   print('ppppppppppp');
-      //   formData = FormData.fromMap({
-      //     'name': event.channelName,
-      //     // 'logo': await MultipartFile.fromFile(event.channelLogo!.path),
-      //     // 'banner': await MultipartFile.fromFile(event.channelBanner!.path),
-      //   });
-      // }else{
-      //   print('4444444444444');
-      //   formData = FormData.fromMap({
-      //     // 'name': event.channelName,
-      //     // 'logo': await MultipartFile.fromFile(event.channelLogo!.path),
-      //     // 'banner': await MultipartFile.fromFile(event.channelBanner!.path),
-      //   });
-      // }
-
-      // formData = FormData.fromMap({
-      //   'name': event.channelName,
-      //   'logo': await MultipartFile.fromFile(event.channelLogo!.path),
-      //   // 'banner': await MultipartFile.fromFile(event.channelBanner!.path),
-      // });
 
       formData = FormData.fromMap({
         'name': event.channelName,

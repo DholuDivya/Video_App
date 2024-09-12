@@ -1,10 +1,12 @@
 import 'dart:io';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
+import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/edit_video_detail/edit_video_detail_bloc.dart';
 import 'package:vimeo_clone/bloc/edit_video_detail/edit_video_detail_event.dart';
 import 'package:vimeo_clone/bloc/edit_video_detail/edit_video_detail_state.dart';
@@ -117,48 +119,22 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // leading: isEdit == true ? IconButton(
-        //     onPressed: (){
-        //       setState(() {
-        //         isEdit = false;
-        //       });
-        //     },
-        //     icon: const Icon(HeroiconsOutline.xMark)
-        // ) :
         centerTitle: true,
-        // leading: IconButton(
-        //     onPressed: (){
-        //       GoRouter.of(context).pop();
-        //     },
-        //     icon: const Icon(HeroiconsOutline.chevronLeft)
-        // ),
         title: const Text(
           'Edit video detail',
           style: TextStyle(
             fontFamily: fontFamily,
           ),
         ),
-        // actions: [
-        //   isEdit == false ? IconButton(
-        //       onPressed: (){
-        //         setState(() {
-        //           isEdit = true;
-        //         });
-        //       },
-        //       icon: const Icon(HeroiconsOutline.pencilSquare)
-        //   ) : Container()
-        // ],
       ),
       body: BlocBuilder<PlayVideoBloc, PlayVideoState>(
         builder: (BuildContext context, PlayVideoState state) {
           if(state is PlayVideoLoaded){
             final videoData = state.playVideo.first.data;
             thumbnail = state.playVideo.first.data!.thumbnail;
-
             _descriptionController = TextEditingController(
               text: videoData!.description
             );
-
             return SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.only(
@@ -168,13 +144,10 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                 ),
                 child: Column(
                   children: [
-
                     BlocBuilder<GetThumbnailBloc, GetThumbnailState>(
                         builder: (BuildContext context, state) {
-
                           if(state is GetThumbnailSuccess){
                             finalThumbnail = state.videoThumbnail!;
-
                             return AspectRatio(
                               aspectRatio: 16 / 9,
                               child: Stack(
@@ -382,120 +355,37 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                       ),
                     )
                         : Container(),
-
-
-                    // TextFormField(
-                    //   // readOnly: isEdit == false ? true : false,
-                    //   // enabled: isEdit == false ? false : true,
-                    //   readOnly: false,
-                    //   enabled: true,
-                    //   controller: _hashtagController,
-                    //   minLines: 1,
-                    //   maxLines: 5,
-                    //   maxLength: 50,
-                    //   keyboardType: TextInputType.multiline,
-                    //   cursorColor: Colors.grey,
-                    //   decoration: InputDecoration(
-                    //     labelText: 'Hashtag...',
-                    //     labelStyle: TextStyle(
-                    //       fontSize: 15,
-                    //       color: Theme.of(context).colorScheme.secondaryFixedDim,
-                    //     ),
-                    //     filled: true,
-                    //     fillColor: Theme.of(context).colorScheme.surfaceDim,
-                    //     focusedBorder: OutlineInputBorder(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //       borderSide: BorderSide(
-                    //         color: Colors.blue,
-                    //         width: 2.0,
-                    //       ),
-                    //     ),
-                    //     enabledBorder: OutlineInputBorder(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //       borderSide: BorderSide(
-                    //         color: Theme.of(context).colorScheme.secondary,
-                    //         width: 1.0,
-                    //       ),
-                    //     ),
-                    //     counterText: '',
-                    //     border: OutlineInputBorder(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //       borderSide: BorderSide(color: Colors.black12, width: 0.5),
-                    //     ),
-                    //   ),
-                    //   onChanged: _extractHashtags,
-                    // ),
-                    // _hashtags.isNotEmpty
-                    //     ? Padding(
-                    //       padding: EdgeInsets.only(
-                    //         top: 3.h
-                    //       ),
-                    //       child: Container(
-                    //                             padding: EdgeInsets.all(8),
-                    //                             width: double.infinity,
-                    //                             decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(15),
-                    //       color: Theme.of(context).colorScheme.tertiaryFixedDim,
-                    //                             ),
-                    //                             child: Wrap(
-                    //       spacing: 8.0,
-                    //       runSpacing: 4.0,
-                    //       children: _hashtags
-                    //           .map((hashtag) => Chip(
-                    //         backgroundColor: Theme.of(context)
-                    //             .colorScheme
-                    //             .surfaceDim,
-                    //         side: BorderSide(
-                    //             width: 0, color: Colors.grey.shade600),
-                    //         label: Text(
-                    //           hashtag,
-                    //           style: TextStyle(
-                    //               fontFamily: fontFamily,
-                    //               color: Colors.grey.shade600),
-                    //         ),
-                    //         deleteIconColor: Colors.grey.shade700,
-                    //         onDeleted: () {
-                    //           setState(() {
-                    //             _hashtags.remove(hashtag);
-                    //             _hashtagController.text =
-                    //                 _hashtags.join(' ') + ' ';
-                    //           });
-                    //         },
-                    //       ))
-                    //           .toList(),
-                    //                             ),
-                    //                           ),
-                    //     )
-                    //     : Container(),
                     SizedBox(height: 15.h,),
                     GestureDetector(
                       onTap: () {
                         showDialog(
                           context: context,
                           builder: (context) {
+
                             return AlertDialog(
-                              title: Center(
+                              title: const Center(
                                 child: Text(
-                                  'Select a visibility',
+                                  'Select Visibility',
                                   style: TextStyle(
-                                      fontFamily: fontFamily,
-                                      fontSize: 22
+                                    fontFamily: fontFamily,
+                                    fontSize: 22,
                                   ),
                                 ),
                               ),
-                              content: SizedBox(
-                                width: double.infinity,
+                              content: Container(
+                                width: 400.w,
                                 child: ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: visibility.length,
                                   itemBuilder: (context, index) {
-                                    return Container(
-                                      height: 40.h,
+                                    final currentVisibility = visibility[index]['type'];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 5), // Add padding between items
                                       child: InkWell(
                                         borderRadius: BorderRadius.circular(15),
                                         onTap: () {
                                           setState(() {
-                                            selectedVisibility = visibility[index]['type'];
+                                            selectedVisibility = currentVisibility;
                                           });
                                           Navigator.pop(context);
                                         },
@@ -505,12 +395,12 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                                           width: double.infinity,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(15),
-                                            color: selectedVisibility == visibility[index]['type']
+                                            color: selectedVisibility == currentVisibility
                                                 ? Theme.of(context).colorScheme.tertiaryFixedDim
-                                                : null,
+                                                : Colors.transparent, // Use transparent for default state
                                           ),
                                           child: Text(
-                                            visibility[index]['type'],
+                                            currentVisibility,
                                             style: TextStyle(
                                               fontFamily: fontFamily,
                                             ),
@@ -556,15 +446,15 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                         ),
                       ),
                     ),
-
-
-
                     SizedBox(height: 15.h),
-
-
                     BlocBuilder<EditVideoDetailBloc, EditVideoDetailState>(
                       builder: (BuildContext context, EditVideoDetailState state) {
                         if(state is EditVideoDetailSuccess){
+                          context.read<AllVideoListBloc>().add(GetAllVideoListEvent());
+                          WidgetsBinding.instance.addPostFrameCallback((_){
+                            GoRouter.of(context).goNamed('homePage');
+                          });
+
                           ToastManager().showToast(
                               context: context,
                               message: 'Channel details is successfully updated!'
@@ -575,24 +465,21 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                           height: 50.h,
                           child: ElevatedButton(
                               onPressed: (){
-                                String channelName = '';
-
                                 final videoTitle = _titleController.text.trim().isEmpty ? '' : _titleController.text;
                                 final videoDescription = _descriptionController.text.trim().isEmpty ? '' : _descriptionController.text;
-
-                                print('!!!!!!!!!!!!!!!!!!!     :::::   ${videoTitle}');
-                                print('!!!!!!!!!!!!!!!!!!!     :::::   ${videoDescription}');
-                                print('!!!!!!!!!!!!!!!!!!!     :::::   ${_hashtags}');
-                                print('!!!!!!!!!!!!!!!!!!!     :::::   ${finalThumbnail}');
-                                print('!!!!!!!!!!!!!!!!!!!     :::::   ${selectedVisibility}');
+                                print('!!!!!!!!!!!!!!!!!!!     :::::   $videoTitle');
+                                print('!!!!!!!!!!!!!!!!!!!     :::::   $videoDescription');
+                                print('!!!!!!!!!!!!!!!!!!!     :::::   $_hashtags');
+                                print('!!!!!!!!!!!!!!!!!!!     :::::   $finalThumbnail');
+                                print('!!!!!!!!!!!!!!!!!!!     :::::   $selectedVisibility');
                                 context.read<EditVideoDetailBloc>().add(EditVideoDetailRequest(
+                                  videoSlug: widget.videoSlug!,
                                     videoTitle: videoTitle,
                                     videoDescription: videoDescription,
                                     videoHashtag: _hashtags,
-                                    videoThumbnail: finalThumbnail!,
+                                    videoThumbnail: finalThumbnail,
                                     videoVisibility: selectedVisibility
                                 ));
-
                               },
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.symmetric(
@@ -613,20 +500,15 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                         );
                       },
                     ),
-
-
                     SizedBox(height: 20.h),
                   ],
                 ),
               ),
             );
           }
-          return Center(child: CircularProgressIndicator(),);
+          return const Center(child: CircularProgressIndicator(),);
         },
       ),
-
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: isEdit == true ?  : Container(),
     );
   }
 }

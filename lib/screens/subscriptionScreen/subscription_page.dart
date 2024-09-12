@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/Config/colors.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
@@ -104,105 +105,134 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
             ),
 
             SliverToBoxAdapter(
-              child: BlocBuilder<GetSubscribedChannelListBloc, GetSubscribedChannelListState>(
-                builder: (BuildContext context, GetSubscribedChannelListState state) {
-                  int unsubscribeChannelId = 0 ;
-                  if(state is GetSubscribedChannelListLoaded){
-                    print('''''''''''''''''''''' object '''''''''''''''''''''' ');
-                    return channelLength != 0 ? ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: state.channelList.first.data!.length,
-                        itemBuilder: (context, index){
-                          final channelsList = state.channelList.first.data![index];
-                          channelLength = state.channelList.first.data!.length;
-                          unsubscribeChannelId = channelsList.channelId!;
-                          // isSubscribed = channelsList.
-                          return channelLength != 0 ? SizedBox(
-                            height: 60,
-                            child: InkWell(
-                              onTap: (){
-                                final String channelId = state.channelList.first.data![index].channelId.toString();
-                                print('00000000000000000000   $channelId');
-                                context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId));
-                                GoRouter.of(context).pushNamed(
-                                  'channelProfilePage',
-                                  pathParameters: {
-                                    'channelId': channelId
-                                  }
-                                );
-                              },
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  radius: 22,
-                                  backgroundImage: NetworkImage(channelsList.channelLogo!),
-                                ),
-                                title: Text('${channelsList.channelName}'),
-                                trailing: isSubscribed
-                                    ? SizedBox(
-                                  width: 60, // Adjust this width as needed
-                                  child: Container(
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Theme.of(context).colorScheme.secondary,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10.h,),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 15.w,
+                      // right: 10.w
+                    ),
+                    child: Text(
+                      'Subscriptions',
+                      style: TextStyle(
+                        fontFamily: fontFamily,
+                        fontSize: 25.sp,
+                        fontWeight: FontWeight.w600
+                      ),
+                    ),
+                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.only(
+                  //     left: 15.w,
+                  //     right: 15.w
+                  //   ),
+                  //   child: Divider(thickness: 0.5, color: greyShade500,),
+                  // ),
+                  SizedBox(height: 5.h,),
+                  BlocBuilder<GetSubscribedChannelListBloc, GetSubscribedChannelListState>(
+                    builder: (BuildContext context, GetSubscribedChannelListState state) {
+                      int unsubscribeChannelId = 0 ;
+                      if(state is GetSubscribedChannelListLoaded){
+                        print('''''''''''''''''''''' object '''''''''''''''''''''' ');
+                        return channelLength != 0 ? ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.channelList.first.data!.length,
+                            itemBuilder: (context, index){
+                              final channelsList = state.channelList.first.data![index];
+                              channelLength = state.channelList.first.data!.length;
+                              unsubscribeChannelId = channelsList.channelId!;
+                              // isSubscribed = channelsList.
+                              return channelLength != 0 ? SizedBox(
+                                height: 60,
+                                child: InkWell(
+                                  onTap: (){
+                                    final String channelId = state.channelList.first.data![index].channelId.toString();
+                                    print('00000000000000000000   $channelId');
+                                    context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId));
+                                    GoRouter.of(context).pushNamed(
+                                      'channelProfilePage',
+                                      pathParameters: {
+                                        'channelId': channelId
+                                      }
+                                    );
+                                  },
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      radius: 22,
+                                      backgroundImage: NetworkImage(channelsList.channelLogo!),
                                     ),
-                                    child: InkWell(
-                                      onTap: () {
-                                        _showNotificationDialog(unsubscribeChannelId);
-                                      },
-                                      child: const Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(HeroiconsOutline.bell, size: 16),
-                                          Icon(HeroiconsOutline.chevronDown, size: 16),
-                                        ],
+                                    title: Text('${channelsList.channelName}'),
+                                    trailing: isSubscribed
+                                        ? SizedBox(
+                                      width: 60, // Adjust this width as needed
+                                      child: Container(
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          color: Theme.of(context).colorScheme.secondary,
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            _showNotificationDialog(unsubscribeChannelId);
+                                          },
+                                          child: const Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(HeroiconsOutline.bell, size: 16),
+                                              Icon(HeroiconsOutline.chevronDown, size: 16),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    )
+                                        : const SizedBox.shrink(),
                                   ),
-                                )
-                                    : const SizedBox.shrink(),
-                              ),
-                            ),
-                          ) : Padding(
-                            padding: EdgeInsets.only(top: 150.h),
-                            child: Center(
-                                child: Image.asset(
-                                  'assets/images/no_data.png',
-                                  width: 200.w,
-                                  height: 200.h,
-                                )),
-                          );
-                      }
-                    ) : Padding(
-                      padding: EdgeInsets.only(top: 150.h),
-                      child: Center(
-                          child: Image.asset(
-                            'assets/images/no_data.png',
-                            width: 200.w,
-                            height: 200.h,
-                          )),
-                    );
-                  }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 15,
-                      itemBuilder: (context, index){
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            top: 5.h,
-                            bottom: 5.h
-                          ),
-                          child: ShimmerWidget.rectangular(
-                            height: 30.h,
-                              width: 100.w,
-                              isBorder: true
-                          ),
+                                ),
+                              ) : Padding(
+                                padding: EdgeInsets.only(top: 150.h),
+                                child: Center(
+                                    child: Image.asset(
+                                      'assets/images/no_data.png',
+                                      width: 200.w,
+                                      height: 200.h,
+                                    )),
+                              );
+                          }
+                        ) : Padding(
+                          padding: EdgeInsets.only(top: 150.h),
+                          child: Center(
+                              child: Image.asset(
+                                'assets/images/no_data.png',
+                                width: 200.w,
+                                height: 200.h,
+                              )),
                         );
                       }
-                  );
-                },
+                      return Container();
+                      // return ListView.builder(
+                      //   shrinkWrap: true,
+                      //   itemCount: 15,
+                      //     itemBuilder: (context, index){
+                      //       return Padding(
+                      //         padding: EdgeInsets.only(
+                      //           top: 5.h,
+                      //           bottom: 5.h
+                      //         ),
+                      //         child: ShimmerWidget.rectangular(
+                      //           height: 30.h,
+                      //             width: 100.w,
+                      //             isBorder: true
+                      //         ),
+                      //       );
+                      //     }
+                      // );
+                    },
+                  ),
+                ],
               ),
             )
 

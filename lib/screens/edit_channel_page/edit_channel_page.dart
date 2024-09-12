@@ -30,17 +30,21 @@ class _EditChannelPageState extends State<EditChannelPage> {
   late TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-
-  late bool isEdit = false;
+  String channelLogo = '';
+  // late bool isEdit = false;
   CroppedFile? finalChannelLogo;
 
   @override
   void initState() {
-    if(isEdit == false){
-      _nameController = TextEditingController(text: Global.userData!.userName);
-    }else{
-      _nameController = TextEditingController();
-    }
+    // if(isEdit == false){
+    //   _nameController = TextEditingController(text: Global.userData!.userName);
+    // }else{
+    //   _nameController = TextEditingController();
+    // }
+    _nameController = TextEditingController(
+      text: Global.userData!.userName
+    );
+    channelLogo = Global.userData!.userProfilePhoto!;
     super.initState();
   }
 
@@ -48,43 +52,20 @@ class _EditChannelPageState extends State<EditChannelPage> {
   Widget build(BuildContext context) {
 
     print('IIIIIIIIIIIIIiiii  :::  ${Global.userData!.userNumber}');
-    if(isEdit == false){
-      _nameController = TextEditingController(text: Global.userData!.userName);
-    }
+    // if(isEdit == false){
+    //   _nameController = TextEditingController(text: Global.userData!.userName);
+    // }
 
-    String channelLogo = Global.userData!.userProfilePhoto!;
+
 
     return Scaffold(
       appBar: AppBar(
-        leading: isEdit == true ? IconButton(
-            onPressed: (){
-              setState(() {
-                isEdit = false;
-              });
-            },
-            icon: const Icon(HeroiconsOutline.xMark)
-        ) : IconButton(
-            onPressed: (){
-              GoRouter.of(context).pop();
-            },
-            icon: const Icon(HeroiconsOutline.chevronLeft)
-        ),
         title: const Text(
             'Update channel',
           style: TextStyle(
             fontFamily: fontFamily,
           ),
         ),
-        actions: [
-          isEdit == false ? IconButton(
-              onPressed: (){
-                setState(() {
-                  isEdit = true;
-                });
-              },
-              icon: const Icon(HeroiconsOutline.pencilSquare)
-          ) : Container()
-        ],
       ),
 
       body: SingleChildScrollView(
@@ -112,7 +93,6 @@ class _EditChannelPageState extends State<EditChannelPage> {
                               : FileImage(File(channelLogo)),
                         ),
                       ),
-                      if (isEdit)
                         Positioned(
                           bottom: 8.h,
                           right: 15.w,
@@ -143,7 +123,6 @@ class _EditChannelPageState extends State<EditChannelPage> {
                         backgroundImage: NetworkImage(channelLogo),
                       ),
                     ),
-                    if (isEdit)
                       Positioned(
                         bottom: 8.h,
                         right: 15.w,
@@ -172,8 +151,8 @@ class _EditChannelPageState extends State<EditChannelPage> {
               ),
 
               CustomTextFieldUpload(
-                readOnly: isEdit == false ? true : false,
-                  isEnabled: isEdit == false ? false : true,
+                readOnly: false,
+                  isEnabled: true,
                   controller: _nameController,
                   fieldLabel: 'Name',
                 onChange: (value){
@@ -234,7 +213,7 @@ class _EditChannelPageState extends State<EditChannelPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: isEdit == true ? BlocBuilder<EditChannelBloc, EditChannelState>(
+      floatingActionButton: BlocBuilder<EditChannelBloc, EditChannelState>(
         builder: (BuildContext context, EditChannelState state) {
           if(state is EditChannelSuccess){
             WidgetsBinding.instance.addPostFrameCallback((_){
@@ -266,7 +245,6 @@ class _EditChannelPageState extends State<EditChannelPage> {
                 context.read<EditChannelBloc>().add(EditChannelRequest(
                   channelName: channelName.isEmpty ? null : channelName,
                   channelLogo: channelLogo,
-
                 ));
 
               },
@@ -287,7 +265,7 @@ class _EditChannelPageState extends State<EditChannelPage> {
               )
           );
         },
-      ) : Container(),
+      ),
     );
   }
 }
