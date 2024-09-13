@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
@@ -32,6 +33,7 @@ import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_state.dart';
 import 'package:vimeo_clone/bloc/video_list/video_list_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/config/notification_service.dart';
 import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/screens/ShortsScreen/shorts_page.dart';
 import 'package:vimeo_clone/utils/widgets/custom_bottom_sheet_button.dart';
@@ -44,7 +46,9 @@ import '../../bloc/video_list/video_list_event.dart';
 import '../../config/colors.dart';
 import '../../utils/widgets/customBottomSheet.dart';
 import '../../utils/widgets/video_container.dart';
+import '../download_video/download_video_page.dart';
 import '../user_page/user_page.dart';
+import 'package:dio/dio.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -79,6 +83,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+
+
+
+    NotificationService(context: context);
+
+
     context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
@@ -249,6 +259,15 @@ class _HomePageContentState extends State<HomePageContent> {
   int? mode;
   late final GlobalKey _menuKey;
 
+
+
+  final imgUrl = "https://videoapp.taskhub.company//storage/videos/jrfl6hqTvf44wcdERD3gYPEHM7o08xEyp06MvXNj.mp4";
+  bool downloading = false;
+  var progressString = "";
+  String localFilePath = "";
+
+
+
   @override
   void initState() {
     super.initState();
@@ -311,8 +330,49 @@ class _HomePageContentState extends State<HomePageContent> {
   ];
 
 
+
+
+  // DOWNLOAD VIDEO ________________________________________________________
+  Future<void> downloadFile() async {
+    Dio dio = Dio();
+
+    try {
+      var dir = await getApplicationDocumentsDirectory();
+      print("path: ${dir.path}");
+      String filePath = "${dir.path}/demo.mp4";
+
+      await dio.download(
+        imgUrl, filePath,
+        onReceiveProgress: (rec, total) {
+          print("Rec: $rec , Total: $total");
+
+          setState(() {
+            downloading = true;
+            progressString = ((rec / total) * 100).toStringAsFixed(0) + "%";
+          });
+        },
+      );
+
+      setState(() {
+        downloading = false;
+        progressString = "Completed";
+        localFilePath = filePath; // Save local file path for video player
+      });
+
+      print("Download completed to $filePath");
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
+
+
     mode = context.read<ThemeBloc>().mode;
     print('$mode   222222');
     return Scaffold(
@@ -526,7 +586,36 @@ class _HomePageContentState extends State<HomePageContent> {
                                     context,
                                     bottomSheetListTileField,
                                     (int index){
-                                      if(index == 2){
+                                      if(index == 1){
+                                        downloadFile();
+                                        downloading
+                                            ? Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            CircularProgressIndicator(),
+                                            SizedBox(height: 20),
+                                            Text("Downloading: $progressString"),
+                                          ],
+                                        )
+                                            : localFilePath.isNotEmpty
+                                            ? Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text("Download complete, file saved at:"),
+                                            Text(localFilePath),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).push(MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OfflineVideoPlayer(localFilePath)));
+                                              },
+                                              child: Text("Play Video"),
+                                            ),
+                                          ],
+                                        )
+                                            : Text("Click button to download video");
+                                      }
+                                      else if(index == 2){
                                         GoRouter.of(context).pushNamed('settingPage');
                                       }
                                     }

@@ -9,6 +9,7 @@ import 'package:vimeo_clone/Screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/Screens/ShortsScreen/shorts_page.dart';
 import 'package:vimeo_clone/Screens/Auth/signup.dart';
 import 'package:vimeo_clone/Screens/VideoPage/videopage.dart';
+import 'package:vimeo_clone/config/global_keys.dart';
 import 'package:vimeo_clone/screens/auth/forgot_password_page.dart';
 import 'package:vimeo_clone/screens/auth/registration_page.dart';
 import 'package:vimeo_clone/screens/auth/numebr_signup.dart';
@@ -34,6 +35,7 @@ import '../screens/edit_video_detail/edit_video_detail_page.dart';
 // class MyAppRoute {
   final GoRouter router = GoRouter(
     // initialLocation: '/cropShortsPage',
+      navigatorKey: GlobalKeys.navigatorKey,
       routes: [
         GoRoute(
           name: 'splashScreen',

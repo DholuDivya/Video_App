@@ -126,6 +126,7 @@ class AuthRepository{
   // }
 
 
+
   // VERIFY TOKEN FROM FIREBASE
   Future<String?> loginWithGoogle(String firebaseUserToken) async {
     try{
@@ -255,8 +256,6 @@ class AuthRepository{
       throw ApiException('Failed to verify token: $e');
     }
   }
-
-
 
 
 

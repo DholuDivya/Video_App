@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/Config/constants.dart';
 import 'package:vimeo_clone/Screens/NotificationPage/Widgets/notification_card.dart';
@@ -16,6 +17,12 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: (){
+              Navigator.pop(context);
+            },
+            icon: Icon(HeroiconsOutline.chevronLeft)
+        ),
         title: Text('Notifications',
           style: TextStyle(
             // fontFamily: fontFamily

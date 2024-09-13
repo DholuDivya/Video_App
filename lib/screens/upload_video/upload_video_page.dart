@@ -115,7 +115,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
         _showCustomDialog('Description is required');
         return;
       }
-      if (selectedVisibility == null || selectedVisibility!.isEmpty) {
+      if (selectedVisibility == null || selectedVisibility.isEmpty) {
         _showCustomDialog('Visibility is required');
         return;
       }
@@ -433,7 +433,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                                     ),
                                   ),
                                   content: SizedBox(
-                                    width: double.infinity,
+                                    width: 400.w,
                                     child: ListView.builder(
                                       shrinkWrap: true,
                                       itemCount: state.categories.length,
@@ -620,7 +620,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                             ),
                           ),
                           content: SizedBox(
-                            width: double.infinity,
+                            width: 400.w,
                             child: ListView.builder(
                               shrinkWrap: true,
                               itemCount: visibility.length,
@@ -749,11 +749,16 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                   child: BlocBuilder<UploadVideoBloc, UploadVideoState>(
                     builder: (context, state){
                       if(state is UploadVideoSuccess){
+                        ToastManager().showToast(
+                            context: context,
+                            message: 'Video uploaded successfully'
+                        );
                         WidgetsBinding.instance.addPostFrameCallback((_) {
-                          GoRouter.of(context).pushReplacementNamed('homePage');
+                          GoRouter.of(context).goNamed('homePage');
                         });
+
                       }else if(state is UploadVideoLoading){
-                        return Center(child: CircularProgressIndicator(),);
+                        return const Center(child: CircularProgressIndicator(),);
                       }
                     return BlocBuilder<GetVideoBloc, GetVideoState>(
                       builder: (BuildContext context, state) {

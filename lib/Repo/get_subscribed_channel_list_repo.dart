@@ -9,6 +9,7 @@ class GetAllChannelsRepo{
       if(response.statusCode == 200){
         List<GetSubscribedChannelListModel> channelsList = [];
         channelsList.add(GetSubscribedChannelListModel.fromJson(response.data));
+        print('Message ::: ${channelsList.first.message}');
         return channelsList;
       }
     }catch(e){

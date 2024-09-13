@@ -166,13 +166,14 @@ class _ContentScreenState extends State<ContentScreen> {
                           child: Row(
                             children: [
                               CircleAvatar(
-                                radius: 16,
+                                radius: 15.r,
                                 backgroundImage: NetworkImage(
                                     widget.shortsData.channel!.logo!),
                               ),
-                              const SizedBox(width: 6),
-                              Expanded(
+                              SizedBox(width: 6.w),
+                              Flexible(
                                 child: Text(
+                                  // 'rgtrewgtresw',
                                   widget.shortsData.channel!.name!,
                                   style: const TextStyle(
                                       color: Colors.white,
@@ -181,10 +182,7 @@ class _ContentScreenState extends State<ContentScreen> {
                                       overflow: TextOverflow.ellipsis),
                                 ),
                               ),
-                              // const SizedBox(width: 2),
-                              // const Icon(Icons.verified,
-                              //     size: 15, color: Colors.white),
-                              // const SizedBox(width: 6),
+                              SizedBox(width: 15.h,),
                               BlocBuilder<SubscribeChannelBloc, SubscribeChannelState>(
                                 builder: (BuildContext context, SubscribeChannelState state) {
                                   return GestureDetector(
@@ -202,7 +200,6 @@ class _ContentScreenState extends State<ContentScreen> {
                                         );
                                         context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: widget.shortsData.id!));
                                       }
-
                                       setState(() {
                                         print('  BEFORE    $_isSubscribed  ');
                                         _isSubscribed = !_isSubscribed;
@@ -211,10 +208,10 @@ class _ContentScreenState extends State<ContentScreen> {
                                     },
                                     child: Container(
                                       height:
-                                      ScreenSize.screenHeight(context) * 0.045,
+                                      ScreenSize.screenHeight(context) * 0.038,
                                       width: _isSubscribed
-                                          ? ScreenSize.screenWidth(context) * 0.28
-                                          : ScreenSize.screenWidth(context) * 0.25,
+                                          ? ScreenSize.screenWidth(context) * 0.25
+                                          : ScreenSize.screenWidth(context) * 0.22,
                                       decoration: BoxDecoration(
                                         color: _isSubscribed
                                             ? Colors.grey.shade200
@@ -227,7 +224,7 @@ class _ContentScreenState extends State<ContentScreen> {
                                               ? 'Unsubscribe'
                                               : 'Subscribe',
                                           style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 11.sp,
                                             color: _isSubscribed
                                                 ? Colors.black
                                                 : Colors.white,
@@ -322,7 +319,7 @@ class _ContentScreenState extends State<ContentScreen> {
                           },
                         ),
 
-                        SizedBox(height: 20),
+                        SizedBox(height: 15.h),
 
                         BlocBuilder<LikeDislikeVideoBloc, LikeDislikeVideoState>(
                           builder: (BuildContext context, LikeDislikeVideoState state) {
@@ -356,15 +353,9 @@ class _ContentScreenState extends State<ContentScreen> {
                             );
                           },
                         ),
-                        const SizedBox(height: 8),
-                        // Text(
-                        //   '601k',
-                        //   style: TextStyle(
-                        //     color: Colors.white,
-                        //     fontFamily: fontFamily,
-                        //   ),
-                        // ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 6.h),
+
+                        SizedBox(height: 15.h),
                         GestureDetector(
                           onTap: (){
                             videoCommentSheet(context);
@@ -390,11 +381,11 @@ class _ContentScreenState extends State<ContentScreen> {
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(height: 50),
-                        Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
-                        ),
+                        SizedBox(height: 20.h),
+                        // Icon(
+                        //   Icons.more_vert,
+                        //   color: Colors.white,
+                        // ),
                       ],
                     ),
                   ),

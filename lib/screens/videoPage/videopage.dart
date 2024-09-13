@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:readmore/readmore.dart';
 import 'package:remixicon/remixicon.dart';
@@ -54,7 +55,7 @@ import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
 import '../../bloc/add_user_history/add_user_history_bloc.dart';
 import '../../bloc/add_user_history/add_user_history_event.dart';
 import 'package:floating/floating.dart';
-
+import 'package:dio/dio.dart';
 
 
 class VideoPage extends StatefulWidget {
@@ -93,6 +94,13 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   late bool isCommentDisliked = false;
   Timer? _timer;
 
+
+
+
+
+
+
+
   @override
   void initState() {
     super.initState();
@@ -112,6 +120,12 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
         print('898898989889989898989898');
       }
     });
+
+
+
+
+
+
 
 
 
@@ -218,6 +232,32 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
+
+    // downloading
+    //     ? Container(
+    //   height: 120.0,
+    //   width: 200.0,
+    //   child: Card(
+    //     color: Colors.black,
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: <Widget>[
+    //         CircularProgressIndicator(),
+    //         SizedBox(
+    //           height: 20.0,
+    //         ),
+    //         Text(
+    //           "Downloading File: $progressString",
+    //           style: TextStyle(
+    //             color: Colors.white,
+    //           ),
+    //         )
+    //       ],
+    //     ),
+    //   ),
+    // )
+    //     : Text("No Data");
+
 
     return PiPSwitcher(
       childWhenEnabled: BlocBuilder<PlayVideoBloc, PlayVideoState>(
