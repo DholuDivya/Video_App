@@ -36,6 +36,7 @@ class _UserPageState extends State<UserPage> {
     print('88888888888888888888888');
 
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
+    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
 
     final historyBloc = context.read<GetUserHistoryBloc>();
     historyBloc.stream.listen((state){

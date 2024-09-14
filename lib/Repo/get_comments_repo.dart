@@ -5,6 +5,7 @@ import 'package:vimeo_clone/model/get_comments_model.dart';
 class GetCommentsRepo{
   Future<List<GetCommentsModel>?> getComments(String videoSlug) async {
     try{
+      print('RRREPO');
       final response = await ApiBaseHelper().getAPICall('${apiUrl}videos/$videoSlug/comments', {});
       if(response.statusCode == 200){
         final List<GetCommentsModel> getCommentsList = [];

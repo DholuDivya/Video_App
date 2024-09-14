@@ -165,16 +165,16 @@ class _HomePageState extends State<HomePage> {
                     buttonName: 'Upload a Video',
                     buttonIcon: HeroiconsOutline.arrowUpOnSquare,
                   ),
-                  BottomSheetButton(
-                    onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     CupertinoPageRoute(builder: (context) => CropShortsPage())
-                      // );
-                    },
-                    buttonName: 'Go Live',
-                    buttonIcon: HeroiconsOutline.tv,
-                  ),
+                  // BottomSheetButton(
+                  //   onTap: () {
+                  //     // Navigator.push(
+                  //     //     context,
+                  //     //     CupertinoPageRoute(builder: (context) => CropShortsPage())
+                  //     // );
+                  //   },
+                  //   buttonName: 'Go Live',
+                  //   buttonIcon: HeroiconsOutline.tv,
+                  // ),
                 ],
               ),
             ),

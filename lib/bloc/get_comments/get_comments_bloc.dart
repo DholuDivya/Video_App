@@ -13,6 +13,7 @@ class GetCommentsBloc extends Bloc<GetCommentsEvent, GetCommentsState>{
 
   Future<void> _onGetCommentsRequest(GetCommentsRequest event, Emitter<GetCommentsState> emit) async {
     try{
+      print('Blocccc');
       final List<GetCommentsModel>? getCommentsList = await GetCommentsRepo().getComments(event.videoSlug);
       log('CCCOOOMMMEEENNNTTTSSS   :::   $getCommentsList');
       emit(GetCommentsLoaded(getCommentsList: getCommentsList!));

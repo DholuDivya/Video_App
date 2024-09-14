@@ -43,7 +43,6 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
 
     context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
     final subscriptionBloc = context.read<GetSubscribedChannelListBloc>();
-
     subscriptionBloc.stream.listen((state){
       if(state is GetSubscribedChannelListLoaded){
         channelLength = state.channelList.first.data!.length;
@@ -136,7 +135,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                       int unsubscribeChannelId = 0 ;
                       if(state is GetSubscribedChannelListLoaded){
                         print('''''''''''''''''''''' object '''''''''''''''''''''' ');
-                        return channelLength != 0 ? ListView.builder(
+                        return ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: state.channelList.first.data!.length,
@@ -145,7 +144,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                               channelLength = state.channelList.first.data!.length;
                               unsubscribeChannelId = channelsList.channelId!;
                               // isSubscribed = channelsList.
-                              return channelLength != 0 ? SizedBox(
+                              return channelLength > 0 ? SizedBox(
                                 height: 60,
                                 child: InkWell(
                                   onTap: (){
@@ -202,14 +201,6 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                                     )),
                               );
                           }
-                        ) : Padding(
-                          padding: EdgeInsets.only(top: 150.h),
-                          child: Center(
-                              child: Image.asset(
-                                'assets/images/no_data.png',
-                                width: 200.w,
-                                height: 200.h,
-                              )),
                         );
                       }
                       return Container();

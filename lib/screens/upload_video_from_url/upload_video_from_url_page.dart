@@ -19,13 +19,9 @@ import 'package:vimeo_clone/config/colors.dart';
 import '../../bloc/select_cat_for_video_detail/category_selection_bloc.dart';
 import '../../bloc/select_cat_for_video_detail/category_selection_event.dart';
 import '../../bloc/select_cat_for_video_detail/category_selection_state.dart';
-import '../../bloc/upload_video/upload_video_bloc.dart';
-import '../../bloc/upload_video/upload_video_event.dart';
-import '../../bloc/upload_video/upload_video_state.dart';
 import '../../bloc/video_category/video_category_bloc.dart';
 import '../../bloc/video_category/video_category_state.dart';
 import '../../config/constants.dart';
-import '../../model/video_categories_model.dart';
 import '../../utils/widgets/toggle_button.dart';
 
 class UploadVideoFromUrlPage extends StatefulWidget {
@@ -445,9 +441,9 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
                                       ),
                                     ),
                                     content: SizedBox(
-                                      width: double.infinity,
+                                      width: 400.w,
                                       child: ListView.builder(
-                                        shrinkWrap: false,
+                                        shrinkWrap: true,
                                         itemCount: state.categories.length,
                                         itemBuilder: (context, index) {
                                           final category = state.categories[index];
@@ -749,7 +745,7 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
                             ),
                           ),
                           content: SizedBox(
-                            width: double.infinity,
+                            width: 400.w,
                             child: ListView.builder(
                               shrinkWrap: true,
                               itemCount: visibility.length,
@@ -776,7 +772,7 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
                                         ),
 
                                         child: Text(
-                                          visibility[index]['type'],
+                                          visibility[index]['type'] == "public" ? 'Public' : 'Private',
                                           style: TextStyle(
                                             fontFamily: fontFamily,
                                           ),
@@ -825,7 +821,7 @@ class _UploadVideoFromUrlPageState extends State<UploadVideoFromUrlPage> {
                         suffixIcon: const Icon(Icons.arrow_drop_down),
                       ),
                       controller: TextEditingController(
-                        text: selectedVisibility ?? '',
+                        text: selectedVisibility == "public" ? 'Public' : 'Private',
                       ),
                     ),
                   ),

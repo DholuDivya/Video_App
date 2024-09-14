@@ -24,6 +24,7 @@ class UploadVideoBloc extends Bloc<UploadVideoEvent, UploadVideoState>{
       print('lllllllllllllll     ${event.video.path}');
       print('lllllllllllllll     ${event.videoThumbnail}');
       print('lllllllllllllll     ${event.videoCategory.single}');
+      print('lllllllllllllll     ${event.videoHashtag}');
 
 
       String fileName = event.video.path!.split('/').last;
@@ -33,6 +34,7 @@ class UploadVideoBloc extends Bloc<UploadVideoEvent, UploadVideoState>{
         'title': event.videoTitle,
         'description': event.videoDescription,
         'categories[]': event.videoCategory,
+        'hashtag': event.videoHashtag,
         'visibility': event.videoVisibility,
       });
 

@@ -116,6 +116,7 @@ class _SearchDataPageState extends State<SearchDataPage> {
                       BlocBuilder<SearchDataBloc, SearchDataState>(
                         builder: (BuildContext context, SearchDataState state) {
                           if(state is SearchDataLoaded){
+                            print('sejhsehhsehioewsgvrsg');
                             return Column(
                               children: [
                                 state.searchData.first.data!.videos!.isNotEmpty ? ListView.builder(
@@ -126,6 +127,7 @@ class _SearchDataPageState extends State<SearchDataPage> {
                                     final searchData = state.searchData.first.data!.videos![index];
                                     final totalSeconds = searchData.duration;
                                     final formattedDuration = formatDuration(totalSeconds!);
+                                    print('ijrijirjgrjgirg:::"""""::":":":"{');
                                     return VideoListItem(
                                         onTap: () {
                                           Future.delayed(

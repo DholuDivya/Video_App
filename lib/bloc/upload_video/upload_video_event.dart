@@ -12,7 +12,7 @@ class UploadVideoRequestEvent extends UploadVideoEvent{
   final String videoTitle;
   final String videoDescription;
   final List<int> videoCategory;
-  final String? videoHashtag;
+  final List<String>? videoHashtag;
   final String videoVisibility;
 
   UploadVideoRequestEvent({

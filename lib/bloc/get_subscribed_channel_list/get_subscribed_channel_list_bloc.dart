@@ -10,7 +10,6 @@ class GetSubscribedChannelListBloc extends Bloc<GetSubscribedChannelListEvent, G
   }
 
   Future<void> _onGetAllChannelsRequest(GetSubscribedChannelListRequest event, Emitter<GetSubscribedChannelListState> emit) async {
-    emit(GetSubscribedChannelListLoading());
     try{
       final List<GetSubscribedChannelListModel>? channelList = await GetAllChannelsRepo().getAllChannelsList();
       print('@@@@@@@@    $channelList');

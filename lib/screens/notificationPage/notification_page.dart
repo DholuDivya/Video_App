@@ -107,7 +107,7 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
             SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
 
-            NotificationCard(
+             NotificationCard(
               // userProfile: null,
               videoTitle: 'Tarak Mehta ka Ooltha Chashma - Episode 260',
               uploadTime: '4 months',

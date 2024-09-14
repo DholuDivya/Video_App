@@ -24,15 +24,22 @@ class SearchDataModel {
 
 class Data {
   List<Videos>? videos;
+  List<RelatedVideos>? relatedVideos;
   List<Channels>? channels;
 
-  Data({this.videos, this.channels});
+  Data({this.videos, this.relatedVideos, this.channels});
 
   Data.fromJson(Map<String, dynamic> json) {
     if (json['videos'] != null) {
       videos = <Videos>[];
       json['videos'].forEach((v) {
         videos!.add(new Videos.fromJson(v));
+      });
+    }
+    if (json['related_videos'] != null) {
+      relatedVideos = <RelatedVideos>[];
+      json['related_videos'].forEach((v) {
+        relatedVideos!.add(new RelatedVideos.fromJson(v));
       });
     }
     if (json['channels'] != null) {
@@ -48,6 +55,10 @@ class Data {
     if (this.videos != null) {
       data['videos'] = this.videos!.map((v) => v.toJson()).toList();
     }
+    if (this.relatedVideos != null) {
+      data['related_videos'] =
+          this.relatedVideos!.map((v) => v.toJson()).toList();
+    }
     if (this.channels != null) {
       data['channels'] = this.channels!.map((v) => v.toJson()).toList();
     }
@@ -59,60 +70,46 @@ class Videos {
   int? id;
   String? slug;
   String? title;
+  int? duration;
   String? description;
+  Channel? channel;
   String? hashtag;
   int? views;
   int? likes;
   String? type;
-  Channel? channel;
-  String? status;
-  String? visibility;
-  int? duration;
   String? video;
   String? thumbnail;
-  List<Categories>? categories;
   String? createdAtHuman;
 
   Videos(
       {this.id,
         this.slug,
         this.title,
+        this.duration,
         this.description,
+        this.channel,
         this.hashtag,
         this.views,
         this.likes,
         this.type,
-        this.channel,
-        this.status,
-        this.visibility,
-        this.duration,
         this.video,
         this.thumbnail,
-        this.categories,
         this.createdAtHuman});
 
   Videos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     slug = json['slug'];
     title = json['title'];
+    duration = json['duration'];
     description = json['description'];
+    channel =
+    json['channel'] != null ? new Channel.fromJson(json['channel']) : null;
     hashtag = json['hashtag'];
     views = json['views'];
     likes = json['likes'];
     type = json['type'];
-    channel =
-    json['channel'] != null ? new Channel.fromJson(json['channel']) : null;
-    status = json['status'];
-    visibility = json['visibility'];
-    duration = json['duration'];
     video = json['video'];
     thumbnail = json['thumbnail'];
-    if (json['categories'] != null) {
-      categories = <Categories>[];
-      json['categories'].forEach((v) {
-        categories!.add(new Categories.fromJson(v));
-      });
-    }
     createdAtHuman = json['created_at_human'];
   }
 
@@ -121,22 +118,17 @@ class Videos {
     data['id'] = this.id;
     data['slug'] = this.slug;
     data['title'] = this.title;
+    data['duration'] = this.duration;
     data['description'] = this.description;
+    if (this.channel != null) {
+      data['channel'] = this.channel!.toJson();
+    }
     data['hashtag'] = this.hashtag;
     data['views'] = this.views;
     data['likes'] = this.likes;
     data['type'] = this.type;
-    if (this.channel != null) {
-      data['channel'] = this.channel!.toJson();
-    }
-    data['status'] = this.status;
-    data['visibility'] = this.visibility;
-    data['duration'] = this.duration;
     data['video'] = this.video;
     data['thumbnail'] = this.thumbnail;
-    if (this.categories != null) {
-      data['categories'] = this.categories!.map((v) => v.toJson()).toList();
-    }
     data['created_at_human'] = this.createdAtHuman;
     return data;
   }
@@ -146,8 +138,8 @@ class Channel {
   int? id;
   String? name;
   String? logo;
-  Null? banner;
-  Null? subscriberCount;
+  String? banner;
+  int? subscriberCount;
 
   Channel({this.id, this.name, this.logo, this.banner, this.subscriberCount});
 
@@ -170,24 +162,55 @@ class Channel {
   }
 }
 
-class Categories {
+class RelatedVideos {
   int? id;
-  String? name;
-  String? url;
+  String? slug;
+  String? title;
+  String? description;
+  String? hashtag;
+  int? views;
+  int? likes;
+  String? type;
+  String? video;
+  String? thumbnail;
 
-  Categories({this.id, this.name, this.url});
+  RelatedVideos(
+      {this.id,
+        this.slug,
+        this.title,
+        this.description,
+        this.hashtag,
+        this.views,
+        this.likes,
+        this.type,
+        this.video,
+        this.thumbnail});
 
-  Categories.fromJson(Map<String, dynamic> json) {
+  RelatedVideos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
-    url = json['url'];
+    slug = json['slug'];
+    title = json['title'];
+    description = json['description'];
+    hashtag = json['hashtag'];
+    views = json['views'];
+    likes = json['likes'];
+    type = json['type'];
+    video = json['video'];
+    thumbnail = json['thumbnail'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['name'] = this.name;
-    data['url'] = this.url;
+    data['slug'] = this.slug;
+    data['title'] = this.title;
+    data['description'] = this.description;
+    data['hashtag'] = this.hashtag;
+    data['views'] = this.views;
+    data['likes'] = this.likes;
+    data['type'] = this.type;
+    data['video'] = this.video;
+    data['thumbnail'] = this.thumbnail;
     return data;
   }
 }
@@ -198,8 +221,8 @@ class Channels {
   String? description;
   String? logo;
   String? banner;
+  Null? subscribersCount;
   String? url;
-  List<Videos>? videos;
 
   Channels(
       {this.id,
@@ -207,8 +230,8 @@ class Channels {
         this.description,
         this.logo,
         this.banner,
-        this.url,
-        this.videos});
+        this.subscribersCount,
+        this.url});
 
   Channels.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -216,13 +239,8 @@ class Channels {
     description = json['description'];
     logo = json['logo'];
     banner = json['banner'];
+    subscribersCount = json['subscribers_count'];
     url = json['url'];
-    if (json['videos'] != null) {
-      videos = <Videos>[];
-      json['videos'].forEach((v) {
-        videos!.add(new Videos.fromJson(v));
-      });
-    }
   }
 
   Map<String, dynamic> toJson() {
@@ -232,31 +250,7 @@ class Channels {
     data['description'] = this.description;
     data['logo'] = this.logo;
     data['banner'] = this.banner;
-    data['url'] = this.url;
-    if (this.videos != null) {
-      data['videos'] = this.videos!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class VideoData {
-  int? id;
-  String? title;
-  String? url;
-
-  VideoData({this.id, this.title, this.url});
-
-  VideoData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    url = json['url'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
+    data['subscribers_count'] = this.subscribersCount;
     data['url'] = this.url;
     return data;
   }

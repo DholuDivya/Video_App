@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:readmore/readmore.dart';
 import 'package:remixicon/remixicon.dart';
@@ -16,6 +14,7 @@ import 'package:vimeo_clone/bloc/add_comment/add_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/add_comment/add_comment_event.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_event.dart';
+import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_state.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
@@ -55,7 +54,6 @@ import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
 import '../../bloc/add_user_history/add_user_history_bloc.dart';
 import '../../bloc/add_user_history/add_user_history_event.dart';
 import 'package:floating/floating.dart';
-import 'package:dio/dio.dart';
 
 
 class VideoPage extends StatefulWidget {
@@ -197,35 +195,35 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   }
 
 
-  // Future<void> enterPipMode() async {
-  //   try {
-  //     await platform.invokeMethod('enterPiP');
-  //   } on PlatformException catch (e) {
-  //     print("Failed to enter PiP mode: '${e.message}'.");
-  //   }
-  // }
+  Future<void> enterPipMode() async {
+    try {
+      await platform.invokeMethod('enterPiP');
+    } on PlatformException catch (e) {
+      print("Failed to enter PiP mode: '${e.message}'.");
+    }
+  }
 
 
-  // Future<void> enablePip(BuildContext context, {bool autoEnable = false}) async {
-  //   final rational = Rational.landscape();
-  //   final screenSize = MediaQuery.of(context).size * MediaQuery.of(context).devicePixelRatio;
-  //   final height = screenSize.width ~/ rational.aspectRatio;
-  //
-  //   final sourceRectHint = Rectangle<int>(
-  //     0,
-  //     (screenSize.height ~/ 2) - (height ~/ 2),
-  //     screenSize.width.toInt(),
-  //     height,
-  //   );
-  //
-  //   final arguments = autoEnable
-  //       ? OnLeavePiP(aspectRatio: rational, sourceRectHint: sourceRectHint)
-  //       : ImmediatePiP(aspectRatio: rational, sourceRectHint: sourceRectHint);
-  //
-  //   final status = await floating.enable(arguments);
-  //   debugPrint('PiP enabled? $status');
-  // }
-  //
+  Future<void> enablePip(BuildContext context, {bool autoEnable = false}) async {
+    final rational = Rational.landscape();
+    final screenSize = MediaQuery.of(context).size * MediaQuery.of(context).devicePixelRatio;
+    final height = screenSize.width ~/ rational.aspectRatio;
+
+    final sourceRectHint = Rectangle<int>(
+      0,
+      (screenSize.height ~/ 2) - (height ~/ 2),
+      screenSize.width.toInt(),
+      height,
+    );
+
+    final arguments = autoEnable
+        ? OnLeavePiP(aspectRatio: rational, sourceRectHint: sourceRectHint)
+        : ImmediatePiP(aspectRatio: rational, sourceRectHint: sourceRectHint);
+
+    final status = await floating.enable(arguments);
+    debugPrint('PiP enabled? $status');
+  }
+
 
 
   // => enablePip(context),
@@ -604,7 +602,10 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                         0.03),
               
                                 InkWell(
-                                    onTap: () {},
+                                    borderRadius: BorderRadius.circular(20),
+                                    onTap: () {
+
+                                    },
                                       child: const ReportButton()
                                 ),
                               ],
@@ -1276,180 +1277,204 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
 
 
+  late int playlistLength = 0;
   void showPlaylistBottomSheet(List<PlayVideoModel> videoData){
+    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+    final playlistBloc = context.read<GetUserPlaylistBloc>();
+    playlistBloc.stream.listen((state){
+      if(state is GetUserPlaylistSuccess){
+        playlistLength = state.userPlaylist.first.playlists!.length;
+      }
+    });
+
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
         context: context,
         builder: (context){
-          return SizedBox(
-            height: 200.h,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  height: 25.h,
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 25.h,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      width: 1.0,
+                      color: greyShade300
+                    )
+                  )
+                ),
+                padding: EdgeInsets.only(
+                  top: 5.h,
+                  left: 10.w,
+                  right: 10.w,
+                  bottom: 2.h
+                ),
+                // color: Colors.red,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                        'Save to...',
+                      style: TextStyle(
+                        fontFamily: fontFamily,
+                        fontSize: 16
+                      ),
+                    ),
+
+                    MaterialButton(
+                        onPressed: (){
+                          createPlaylistAlertDialog();
+                        },
+                      child: Text(
+                        '+ Create playlist',
+                        style: TextStyle(
+                            fontFamily: fontFamily,
+                          color: primaryColor
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+
+              BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
+                builder: (BuildContext context, GetUserPlaylistState state) {
+                  if(state is GetUserPlaylistSuccess){
+                    final playlistLength = state.userPlaylist.first.playlists!.length;
+                    final playlist = state.userPlaylist.first.playlists;
+                    return BlocBuilder<PlaylistSelectionBloc, PlaylistSelectionState>(
+                      builder: (BuildContext context, PlaylistSelectionState state) {
+                        print('SSTTAATTEE :::   $state');
+                        if(state is PlaylistSelected){
+                          selectedPlaylistIds = state.selectedPlaylistIds;
+                          selectedPlaylist = selectedPlaylistIds.first;
+                        }
+                        return Container(
+                          height: 120.h,
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: playlistLength,
+                            itemBuilder: (context, index) {
+                              final userPlaylist = playlist![index];
+                              final isSelected =  selectedPlaylistIds.contains(userPlaylist.id);
+                              return Container(
+                                padding: EdgeInsets.only(
+                                  // top: 2.h,
+                                    left: 10.w,
+                                    right: 10.w,
+                                    bottom: 4.h
+                                ),
+                                width: double.infinity,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(15),
+                                  onTap: () {
+                                    if(isSelected){
+                                      context.read<PlaylistSelectionBloc>().add(DeselectPlaylistRequest(playlistId: userPlaylist.id!));
+                                    } else {
+                                      context.read<PlaylistSelectionBloc>().add(SelectPlaylistRequest(playlistId: userPlaylist.id!));
+                                    }
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: 30.h,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: isSelected
+                                          ? blue
+                                          : Theme.of(context).colorScheme.tertiaryFixedDim,
+                                    ),
+                                    padding: EdgeInsets.only(left: 20.w, right: 20.w),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '${userPlaylist.title}',
+                                          style: TextStyle(
+                                            fontFamily: fontFamily,
+                                            color: isSelected ? Colors.white : Colors.black
+                                          ),
+                                        ),
+
+                                        Text(
+                                          '${userPlaylist.videos!.length}',
+                                          style: TextStyle(
+                                            fontFamily: fontFamily,
+                                              color: isSelected ? Colors.white : Colors.black
+                                          ),
+                                        ),
+
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                        //     : Container(
+                        //   alignment: Alignment.center,
+                        //   height: 100.h,
+                        //   width: double.infinity,
+                        //   child: Text(
+                        //       'Playlist is not created'
+                        //   ),
+                        // );
+                      },
+                    );
+                  }
+                  return const Center(child: CircularProgressIndicator(),);
+                },
+              ),
+
+
+              InkWell(
+                onTap: (){
+                  context.read<AddVideoToPlaylistBloc>().add(AddVideoToPlaylistRequest(
+                      videoId: videoData.first.data!.id!,
+                      playlistId: selectedPlaylist
+                  ));
+                  final addedToVideoPlaylist = context.read<AddVideoToPlaylistBloc>();
+                  addedToVideoPlaylist.stream.listen((state){
+                    if(state is AddVideoToPlaylistSuccess){
+                      ToastManager().showToast(
+                          context: context,
+                          message: 'Video added to playlist'
+                      );
+                    }
+                  });
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  height: 40.h,
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(
+                      top: BorderSide(
                         width: 1.0,
                         color: greyShade300
                       )
                     )
                   ),
-                  padding: EdgeInsets.only(
-                    top: 5.h,
-                    left: 10.w,
-                    right: 10.w,
-                    bottom: 2.h
-                  ),
-                  // color: Colors.red,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                          'Save to...',
-                        style: TextStyle(
-                          fontFamily: fontFamily,
-                          fontSize: 16
-                        ),
-                      ),
-
-                      MaterialButton(
-                          onPressed: (){
-                            createPlaylistAlertDialog();
-                          },
-                        child: Text(
-                          '+ Create playlist',
-                          style: TextStyle(
-                              fontFamily: fontFamily,
-                            color: primaryColor
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-
-
-                BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
-                  builder: (BuildContext context, GetUserPlaylistState state) {
-                    if(state is GetUserPlaylistSuccess){
-                      final playlistLength = state.userPlaylist.first.playlists!.length;
-                      final playlist = state.userPlaylist.first.playlists;
-                      return BlocBuilder<PlaylistSelectionBloc, PlaylistSelectionState>(
-                        builder: (BuildContext context, PlaylistSelectionState state) {
-                          if(state is PlaylistSelected){
-                            selectedPlaylistIds = state.selectedPlaylistIds;
-                            selectedPlaylist = selectedPlaylistIds.first;
-                          }
-                          return Container(
-                            height: 120.h,
-                            child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              itemCount: playlistLength,
-                              itemBuilder: (context, index) {
-                                final userPlaylist = playlist![index];
-                                final isSelected =  selectedPlaylistIds.contains(userPlaylist.id);
-                                return Container(
-                                  padding: EdgeInsets.only(
-                                    // top: 2.h,
-                                      left: 10.w,
-                                      right: 10.w,
-                                      bottom: 4.h
-                                  ),
-                                  width: double.infinity,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(15),
-                                    onTap: () {
-                                      if(isSelected){
-
-                                        context.read<PlaylistSelectionBloc>().add(DeselectPlaylistRequest(playlistId: userPlaylist.id!));
-                                      } else {
-                                        context.read<PlaylistSelectionBloc>().add(SelectPlaylistRequest(playlistId: userPlaylist.id!));
-                                      }
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: 30.h,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: isSelected
-                                            ? blue
-                                            : Theme.of(context).colorScheme.tertiaryFixedDim,
-                                      ),
-                                      padding: EdgeInsets.only(left: 20.w, right: 20.w),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            '${userPlaylist.title}',
-                                            style: TextStyle(
-                                              fontFamily: fontFamily,
-                                              color: isSelected ? Colors.white : Colors.black
-                                            ),
-                                          ),
-
-                                          Text(
-                                            '${userPlaylist.videos!.length}',
-                                            style: TextStyle(
-                                              fontFamily: fontFamily,
-                                                color: isSelected ? Colors.white : Colors.black
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      );
-                    }
-                    return const Center(child: CircularProgressIndicator(),);
-                  },
-                ),
-
-
-                InkWell(
-                  onTap: (){
-                    context.read<AddVideoToPlaylistBloc>().add(AddVideoToPlaylistRequest(
-                        videoId: videoData.first.data!.id!,
-                        playlistId: selectedPlaylist
-                    ));
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    height: 40.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          width: 1.0,
-                          color: greyShade300
-                        )
-                      )
-                    ),
-                    child: const Center(
-                      child: Text(
-                          'Done',
-                        style: TextStyle(
-                          fontFamily: fontFamily,
-                          fontSize: 15
-                        ),
+                  child: const Center(
+                    child: Text(
+                        'Done',
+                      style: TextStyle(
+                        fontFamily: fontFamily,
+                        fontSize: 15
                       ),
                     ),
                   ),
-                )
+                ),
+              )
 
-              ],
-            ),
+            ],
           );
         }
     );
@@ -1460,7 +1485,9 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   late String playlistStatus = 'public';
   late bool isPublic = true;
 
+
   void createPlaylistAlertDialog(){
+
     showDialog(
         context: context,
         builder: (BuildContext context){
@@ -1476,96 +1503,103 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                         ),
                       )
                   ),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(height: 8.h,),
-                      CustomTextFieldUpload(
-                        maxLines: 1,
-                        controller: playlistTitleController,
-                        fieldLabel: 'title',
-                      ),
-                      SizedBox(height: 10.h,),
-
-                      CustomTextFieldUpload(
-                        maxLines: 3,
-                        minLines: 1,
-                        controller: playlistDescriptionController,
-                        fieldLabel: 'description',
-                      ),
-                      SizedBox(height: 10.h,),
-
-                      Material(
-                        child: Container(
-                          height: 70,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Theme.of(context).colorScheme.tertiaryFixedDim,
-                          ),
-                          // padding: EdgeInsets.all(0),
-                          child: CustomToggleButton(
-                              borderRadius: 15.0,
-                              onTap: () {
-                                setState(() {
-                                  isPublic = !isPublic;
-                                  if(isPublic){
-                                    playlistStatus = 'public';
-                                  }else{
-                                    playlistStatus = 'private';
-                                  }
-                                  print('STATUSSSSSSSSS   :::::::    $playlistStatus');
-                                });
-                              },
-                              toggleName: 'Privacy',
-                              toggleValue: isPublic,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  isPublic = value;
-                                  print('STATUSSSSSSSSS   :::::::    $isPublic');
-                                });
-                              },
-                              toggleState: isPublic ? 'Public' : 'Private'),
+                  content: SizedBox(
+                    width: 400.w,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(height: 8.h,),
+                        CustomTextFieldUpload(
+                          readOnly: false,
+                          isEnabled: true,
+                          maxLines: 1,
+                          controller: playlistTitleController,
+                          fieldLabel: 'title',
                         ),
-                      ),
-                      SizedBox(height: 10.h,),
+                        SizedBox(height: 10.h,),
 
-                      InkWell(
-                        borderRadius: BorderRadius.circular(10),
-                        onTap: (){
-                          final playlistTitle = playlistTitleController.text;
-                          final playlistDescription = playlistDescriptionController.text;
+                        CustomTextFieldUpload(
+                          readOnly: false,
+                          isEnabled: true,
+                          maxLines: 3,
+                          minLines: 1,
+                          controller: playlistDescriptionController,
+                          fieldLabel: 'description',
+                        ),
+                        SizedBox(height: 10.h,),
 
-                          context.read<CreatePlaylistBloc>().add(CreatePlaylistRequest(
-                              playlistTitle: playlistTitle,
-                              playlistDescription: playlistDescription,
-                              playlistStatus: playlistStatus
-                          ));
-
-                          context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          height: 40.h,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: primaryColor
+                        Material(
+                          child: Container(
+                            height: 70,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Theme.of(context).colorScheme.tertiaryFixedDim,
+                            ),
+                            // padding: EdgeInsets.all(0),
+                            child: CustomToggleButton(
+                                borderRadius: 15.0,
+                                onTap: () {
+                                  setState(() {
+                                    isPublic = !isPublic;
+                                    if(isPublic){
+                                      playlistStatus = 'public';
+                                    }else{
+                                      playlistStatus = 'private';
+                                    }
+                                    print('STATUSSSSSSSSS   :::::::    $playlistStatus');
+                                  });
+                                },
+                                toggleName: 'Privacy',
+                                toggleValue: isPublic,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    isPublic = value;
+                                    print('STATUSSSSSSSSS   :::::::    $isPublic');
+                                  });
+                                },
+                                toggleState: isPublic ? 'Public' : 'Private'),
                           ),
-                          child: Center(
-                            child: Text(
-                              'Create',
-                              style: TextStyle(
-                                  fontFamily: fontFamily,
-                                  fontSize: 15,
-                                  color: Colors.white
+                        ),
+                        SizedBox(height: 10.h,),
+
+                        InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          onTap: (){
+                            final playlistTitle = playlistTitleController.text;
+                            final playlistDescription = playlistDescriptionController.text;
+
+                            context.read<CreatePlaylistBloc>().add(CreatePlaylistRequest(
+                                playlistTitle: playlistTitle,
+                                playlistDescription: playlistDescription,
+                                playlistStatus: playlistStatus
+                            ));
+
+                            Navigator.pop(context);
+                            context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                          },
+                          child: Container(
+                            height: 40.h,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: primaryColor
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Create',
+                                style: TextStyle(
+                                    fontFamily: fontFamily,
+                                    fontSize: 15,
+                                    color: Colors.white
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      )
+                        )
 
-                    ],
+                      ],
+                    ),
                   ),
 
                 );

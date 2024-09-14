@@ -1,4 +1,3 @@
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,8 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:pod_player/pod_player.dart';
-import 'package:remixicon/remixicon.dart';
-import 'package:video_player/video_player.dart';
 import 'package:vimeo_clone/bloc/add_comment/add_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/add_comment/add_comment_event.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
@@ -22,8 +19,6 @@ import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/model/get_shorts_list_model.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
 import '../../bloc/like_dislike/like_dislike_state.dart';
 
 class ContentScreen extends StatefulWidget {
@@ -43,7 +38,7 @@ class _ContentScreenState extends State<ContentScreen> {
   bool _isLiked = false;
   bool _isDisliked = false;
   int _likeCount = 0;
-
+  int initialCommentLength = 0;
   int commentLikeCount = 0;
   bool isCommentLiked = false;
   bool isCommentDisliked = false;
@@ -53,6 +48,14 @@ class _ContentScreenState extends State<ContentScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.shortsData.slug!));
+    final commentBloc = context.read<GetCommentsBloc>();
+    commentBloc.stream.listen((state){
+      if(state is GetCommentsLoaded){
+        initialCommentLength = state.getCommentsList.first.data!.length;
+      }
+    });
+
     _sliderValueNotifier = ValueNotifier(0.0);
     initializePlayer();
     _likeCount = widget.shortsData.likes!;
@@ -358,6 +361,7 @@ class _ContentScreenState extends State<ContentScreen> {
                         SizedBox(height: 15.h),
                         GestureDetector(
                           onTap: (){
+                            context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.shortsData.slug!));
                             videoCommentSheet(context);
                           },
                           child: const Icon(
@@ -381,7 +385,7 @@ class _ContentScreenState extends State<ContentScreen> {
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(height: 20.h),
+                        // SizedBox(height: 20.h),
                         // Icon(
                         //   Icons.more_vert,
                         //   color: Colors.white,
@@ -412,6 +416,7 @@ class _ContentScreenState extends State<ContentScreen> {
             return FractionallySizedBox(
               heightFactor: 0.500.h,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // Top fixed container with comments text and close button
@@ -426,11 +431,11 @@ class _ContentScreenState extends State<ContentScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             'Comments',
                             style: TextStyle(
                               fontFamily: fontFamily,
-                              fontSize: 22,
+                              fontSize: 15.sp,
                             ),
                           ),
                           IconButton(
@@ -449,18 +454,20 @@ class _ContentScreenState extends State<ContentScreen> {
 
                   BlocBuilder<GetCommentsBloc, GetCommentsState>(
                     builder: (BuildContext context, GetCommentsState state) {
+                      print('Comment State :::  $state');
                       if(state is GetCommentsLoaded){
                         return SizedBox(
                           height: 320.h,
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                commentLikeCount != 0 ? ListView.builder(
+                                ListView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
                                   // scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
                                   itemCount: state.getCommentsList.first.data!.length,
                                   itemBuilder: (BuildContext context, int index) {
+                                    final commentData = state.getCommentsList.first.data!;
                                     final getComments = state.getCommentsList.first.data![index];
                                     // commentLikeCount = getComments.likesCount!;
                                     // isCommentLiked = getComments.isLiked!;
@@ -471,7 +478,7 @@ class _ContentScreenState extends State<ContentScreen> {
                                     // print('((((((((((((((((((((     $isCommentLiked');
                                     // print('((((((((((((((((((((     $isCommentDisliked');
 
-                                    return Container(
+                                    return initialCommentLength > 0 ? Container(
                                       // color: Colors.yellow,
                                       width: double.infinity,
                                       padding: EdgeInsets.symmetric(vertical: ScreenSize.screenHeight(context) * 0.015),
@@ -590,9 +597,9 @@ class _ContentScreenState extends State<ContentScreen> {
                                           ),
                                         ],
                                       ),
-                                    );
+                                    ) : Container(color: red,child: Text('No comment found!!!!!'),);
                                   },
-                                ) : const Center(child: Text('No comment found!!'),),
+                                ),
                               ],
                             ),
                           ),
@@ -771,9 +778,4 @@ class _ContentScreenState extends State<ContentScreen> {
       },
     );
   }
-
-
-
-
-
 }

@@ -58,6 +58,7 @@ class NotificationService {
       await Firebase.initializeApp();
       print('Background Message: ${message.notification?.title}, ${message
           .notification?.body}');
+
     }
 
     void _showForegroundNotification(RemoteMessage message) async {
@@ -83,9 +84,11 @@ class NotificationService {
     void _handleNavigation(BuildContext context, RemoteMessage message) {
       // final router = GoRouter.of(context);
       // router.goNamed('notificationPage');
+      print('MESSSSAAGEE ::::::::::::       ${message.data['extra_data']}');
+      final videoSlug = message.data['extra_data'];
       final context = GlobalKeys.navigatorKey.currentContext;
       if (context != null) {
-        GoRouter.of(context).pushNamed('/notificationPage');
+        GoRouter.of(context).pushNamed('videoPage', pathParameters: {'slug': videoSlug});
       }
       // if (message.data.isNotEmpty) {
       //

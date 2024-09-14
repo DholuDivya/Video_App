@@ -80,7 +80,8 @@ ThemeData darkTheme = ThemeData(
 
 
       primary: Colors.grey.shade500,
-      surface: Color(0xFF000c19),
+      surface: greyShade900,
+      // surface: Color(0xFF000c19),
       secondary: Colors.grey.shade800,
       tertiary: Colors.white,
 

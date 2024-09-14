@@ -10,6 +10,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
+import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/get_thumbnail_from_user/get_thumbnail_bloc.dart';
 import 'package:vimeo_clone/bloc/get_thumbnail_from_user/get_thumbnail_event.dart';
 import 'package:vimeo_clone/bloc/get_thumbnail_from_user/get_thumbnail_state.dart';
@@ -136,6 +138,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
           videoTitle: videoTitle,
           videoDescription: videoDescription,
           videoCategory: selectedCategoryIds,
+          videoHashtag: videoHashtag,
           videoVisibility: selectedVisibility
       ));
 
@@ -753,6 +756,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                             context: context,
                             message: 'Video uploaded successfully'
                         );
+                        context.read<AllVideoListBloc>().add(GetAllVideoListEvent());
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           GoRouter.of(context).goNamed('homePage');
                         });
