@@ -120,8 +120,8 @@ class _VerificationPageState extends State<VerificationPage> {
                 if(state is AuthSuccess){
                   log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${Global.userData}');
                   // log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${Global.userName}');
-                  // GoRouter.of(context).pushReplacementNamed('homePage');
-                  router.goNamed('homePage');
+                  GoRouter.of(context).pushReplacementNamed('homePage');
+                  // router.goNamed('homePage');
                 }else if(state is AuthFailure){
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid OTP')));
                 }

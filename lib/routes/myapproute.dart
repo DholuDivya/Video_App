@@ -277,3 +277,227 @@ import '../screens/edit_video_detail/edit_video_detail_page.dart';
       ]
   );
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+// class AppRoutes {
+//   static final GoRouter router = GoRouter(
+//     navigatorKey: GlobalKeys.navigatorKey,
+//     routes: [
+//       GoRoute(
+//         name: 'splashScreen',
+//         path: '/',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: SplashScreen(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'signupPage',
+//         path: '/signupPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: SignupPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'emailSignup',
+//         path: '/emailSignup',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: RegistrationPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'verificationPage',
+//         path: '/verificationPage/:verificationId',
+//         builder: (context, state) {
+//           final verificationId = state.pathParameters['verificationId']!;
+//           return VerificationPage(verificationId: verificationId);
+//         },
+//       ),
+//       GoRoute(
+//         name: 'forgotPasswordPage',
+//         path: '/forgotPasswordPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: ForgotPasswordPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'resetPasswordPage',
+//         path: '/resetPasswordPage/:email',
+//         builder: (context, state) => ResetPasswordPage(
+//           email: state.pathParameters['email']!,
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'numberSignup',
+//         path: '/numberSignup',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: SignupWithPhoneNumber(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'homePage',
+//         path: '/homePage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: HomePage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'libraryPage',
+//         path: '/libraryPage',
+//         pageBuilder: (context, state) => CupertinoPage(
+//           child: ShortsPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'analyticsPage',
+//         path: '/analyticsPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: SubscriptionsPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'userPage',
+//         path: '/userPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: UserPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'notificationPage',
+//         path: '/notificationPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: NotificationPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'searchSuggestionPage',
+//         path: '/searchSuggestionPage',
+//         pageBuilder: (context, state) => const MaterialPage(
+//           child: SearchScreen(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'searchDataPage',
+//         path: '/searchDataPage/:searchQuery',
+//         builder: (context, state) => SearchDataPage(
+//           searchQuery: state.pathParameters['searchQuery']!,
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'settingPage',
+//         path: '/settingPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: SettingPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'channelProfilePage',
+//         path: '/channelProfilePage/:channelId',
+//         builder: (context, state) => ChannelProfilePage(
+//           channelId: state.pathParameters['channelId']!,
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'videoPage',
+//         path: '/videoPage/:slug',
+//         builder: (context, state) => VideoPage(
+//           slug: state.pathParameters['slug']!,
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'uploadVideoPage',
+//         path: '/uploadVideoPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: UploadVideoPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'uploadVideoFromUrl',
+//         path: '/uploadVideoFromUrl',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: UploadVideoFromUrlPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'yourVideoPage',
+//         path: '/yourVideoPage',
+//         builder: (context, state) => YourVideoPage(),
+//       ),
+//       GoRoute(
+//         name: 'getShortsThumbnailPage',
+//         path: '/getShortsThumbnailPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: GetShortsThumbnailPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'uploadShortsPage',
+//         path: '/uploadShortsPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: UploadShortsPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'cropShortsPage',
+//         path: '/cropShortsPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: CropShortsPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'allHistoryPage',
+//         path: '/allHistoryPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: AllHistoryPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'userPlaylistPage',
+//         path: '/userPlaylistPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: UserPlaylistPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'singlePlaylistPage',
+//         path: '/singlePlaylistPage/:playlistId',
+//         builder: (context, state) => SinglePlaylistPage(
+//           playlistId: int.parse(state.pathParameters['playlistId']!),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'editChannelPage',
+//         path: '/editChannelPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: EditChannelPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'plansPage',
+//         path: '/plansPage',
+//         pageBuilder: (context, state) => const CupertinoPage(
+//           child: PlansPage(),
+//         ),
+//       ),
+//       GoRoute(
+//         name: 'editVideoDetailPage',
+//         path: '/editVideoDetailPage/:slug',
+//         builder: (context, state) => EditVideoDetailPage(
+//           videoSlug: state.pathParameters['slug']!,
+//         ),
+//       ),
+//     ],
+//   );
+// }

@@ -160,6 +160,9 @@ class _MyAppState extends State<MyApp> {
                 Locale('hi'), // Hindi
               ],
               builder: FToastBuilder(),
+              // routerConfig: router,
+              // routerDelegate: AppRoutes.router.routerDelegate,
+              // routeInformationParser: AppRoutes.router.routeInformationParser,
               routerConfig: router,
               scaffoldMessengerKey: GlobalKeys.scaffoldMessengerKey,
 

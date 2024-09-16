@@ -56,6 +56,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -68,11 +69,18 @@ import 'model/user_data_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  var devices = ["72F1F8AC829C59E59B0462B951137364"];
+  MobileAds.instance.initialize();
+
+  RequestConfiguration requestConfiguration = RequestConfiguration(
+    testDeviceIds: devices
+  );
+  MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
 
-  Hive.registerAdapter(UserDataModelAdapter());
+  Hive.registerAdapter(UserDataModelAdapter(), );
   await Hive.openBox('themebox');
 
   await Global.initialize();

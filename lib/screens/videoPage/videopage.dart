@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:readmore/readmore.dart';
@@ -92,8 +93,8 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   late bool isCommentDisliked = false;
   Timer? _timer;
 
-
-
+  late BannerAd bannerAd;
+  bool isAdLoaded = false;
 
 
 
@@ -106,6 +107,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
     context.read<PlayVideoBloc>().add(GetVideoSlugEvent(slug: widget.slug));
     context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
 
+    initBannerAd();
     print('-------------------    $commentLength');
     final commentBloc = context.read<GetCommentsBloc>();
     commentBloc.stream.listen((state){
@@ -118,12 +120,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
         print('898898989889989898989898');
       }
     });
-
-
-
-
-
-
 
 
 
@@ -170,6 +166,30 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
       }
     });
   }
+
+
+  initBannerAd(){
+    bannerAd = BannerAd(
+        size: AdSize.banner,
+        adUnitId: "ca-app-pub-2734509756038446/1670883979",
+        listener: BannerAdListener(
+          onAdLoaded: (ad){
+            setState(() {
+              isAdLoaded = true;
+            });
+          },
+          onAdFailedToLoad: (ad, error){
+            ad.dispose();
+            print(error);
+          }
+        ),
+        request: const AdRequest()
+    );
+
+    bannerAd.load();
+  }
+
+
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 15), (timer) {
@@ -1013,7 +1033,12 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
               BlocBuilder<PlayVideoBloc, PlayVideoState>(
                 builder: (BuildContext context, PlayVideoState state) {
                     if(state is PlayVideoLoaded){
-                      return Positioned(
+                      return isAdLoaded ? SizedBox(
+                        height: bannerAd.size.height.toDouble(),
+                        width: bannerAd.size.width.toDouble(),
+                        child: AdWidget(ad: bannerAd),
+                      )
+                          : Positioned(
                         top: 0,
                         left: 0,
                         right: 0,
@@ -1034,8 +1059,14 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
             ],
           ),
         ),
+        floatingActionButton: isAdLoaded ? SizedBox(
+          height: bannerAd.size.height.toDouble(),
+          width: bannerAd.size.width.toDouble(),
+          child: AdWidget(ad: bannerAd),
+        ) : SizedBox(),
       ),
     );
+
   }
 
 

@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
@@ -18,6 +19,7 @@ import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_state.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_bloc.dart';
+import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_state.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_event.dart';
@@ -37,7 +39,6 @@ import 'package:vimeo_clone/config/notification_service.dart';
 import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/screens/ShortsScreen/shorts_page.dart';
 import 'package:vimeo_clone/utils/widgets/custom_bottom_sheet_button.dart';
-import 'package:vimeo_clone/utils/widgets/custom_popup_menu.dart';
 import 'package:vimeo_clone/utils/widgets/custom_shorts_preview_homepage.dart';
 import '../../Utils/Widgets/bottom_nav_bar.dart';
 import '../../bloc/video_category/video_category_event.dart';
@@ -84,10 +85,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
 
-
-
     NotificationService(context: context);
-
 
     context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
@@ -150,11 +148,18 @@ class _HomePageState extends State<HomePage> {
                     }
                   }, child: BlocBuilder<GetShortsBloc, GetShortsState>(
                           builder: (BuildContext context, GetShortsState state) {
+                            if(state is GetShortsSuccess){
+                              if(Navigator.canPop(context)){
+                                Navigator.pop(context);
+                              }
+                              WidgetsBinding.instance.addPostFrameCallback((_){
+                                GoRouter.of(context).pushNamed('getShortsThumbnailPage');
+                              });
+
+                            }
                     return BottomSheetButton(
                       onTap: () {
-                        context
-                            .read<GetShortsBloc>()
-                            .add(GetShortsFromFile());
+                        context.read<GetShortsBloc>().add(GetShortsFromFile(context: context));
                       },
                       buttonName: 'Create short',
                       buttonIcon: HeroiconsOutline.camera,
@@ -259,17 +264,25 @@ class _HomePageContentState extends State<HomePageContent> {
   int? mode;
   late final GlobalKey _menuKey;
 
-
-
-  final imgUrl = "https://videoapp.taskhub.company//storage/videos/jrfl6hqTvf44wcdERD3gYPEHM7o08xEyp06MvXNj.mp4";
+  final imgUrl = "https://videoapp.taskhub.company//storage/shorts/6A05pLVmYdLl6HN6zfGc4wCixHDrISmeiUGcucB0.mp4";
   bool downloading = false;
   var progressString = "";
   String localFilePath = "";
-
-
+  late var shortsLength = 0;
 
   @override
   void initState() {
+
+    context.read<GetShortsListBloc>().add(GetShortsListRequest());
+    final shortBloc = context.read<GetShortsListBloc>();
+
+    shortBloc.stream.listen((state){
+      if(state is GetShortsListLoaded){
+        shortsLength = state.shortsData.first.data!.data!.length;
+      }
+    });
+
+
     super.initState();
     _menuKey = GlobalKey();
     // getTheme();
@@ -301,7 +314,6 @@ class _HomePageContentState extends State<HomePageContent> {
 
 
 
-
   Future<void> _refreshVideosList() async {
     if (isAllCategorySelected) {
       context.read<AllVideoListBloc>().add(GetAllVideoListEvent());
@@ -330,40 +342,198 @@ class _HomePageContentState extends State<HomePageContent> {
   ];
 
 
-
-
   // DOWNLOAD VIDEO ________________________________________________________
-  Future<void> downloadFile() async {
+  // Future<void> downloadFile() async {
+  //   Dio dio = Dio();
+  //
+  //   try {
+  //     // Get the app's documents directory (internal storage)
+  //     var dir = await getApplicationDocumentsDirectory();
+  //     print("App Documents path: ${dir.path}");
+  //
+  //     // File path to save in the app's internal files folder
+  //     String filePath = "${dir.path}/demo.mp4";
+  //
+  //     // Start downloading the file
+  //     await dio.download(
+  //       imgUrl, filePath,
+  //       onReceiveProgress: (rec, total) {
+  //         print("Rec: $rec , Total: $total");
+  //
+  //         setState(() {
+  //           downloading = true;
+  //           progressString = ((rec / total) * 100).toStringAsFixed(0) + "%";
+  //         });
+  //       },
+  //     );
+  //
+  //     // After download completion
+  //     setState(() {
+  //       downloading = false;
+  //       progressString = "Completed";
+  //       localFilePath = filePath;
+  //     });
+  //
+  //     // The video is now saved only in the app's files folder
+  //     print("Video saved to app's files folder: $filePath");
+  //
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
+
+
+
+
+  Future<void> downloadFile(BuildContext context) async {
     Dio dio = Dio();
 
     try {
-      var dir = await getApplicationDocumentsDirectory();
-      print("path: ${dir.path}");
-      String filePath = "${dir.path}/demo.mp4";
+      // Request storage permission
+      bool hasPermission = await requestStoragePermission(context);
+      if (!hasPermission) return;
 
+      // Get the app's Documents directory
+      var dir = await getApplicationDocumentsDirectory();
+      String filePath = "${dir.path}/test_shorts.mp4";
+
+      // Start downloading the file
       await dio.download(
         imgUrl, filePath,
         onReceiveProgress: (rec, total) {
           print("Rec: $rec , Total: $total");
 
-          setState(() {
-            downloading = true;
-            progressString = ((rec / total) * 100).toStringAsFixed(0) + "%";
-          });
+          // Update UI with download progress
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(content: Text('Download progress: ${((rec / total) * 100).toStringAsFixed(0)}%')),
+          // );
         },
       );
 
-      setState(() {
-        downloading = false;
-        progressString = "Completed";
-        localFilePath = filePath; // Save local file path for video player
-      });
+      // After download completion
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text('Download completed')),
+      // );
 
-      print("Download completed to $filePath");
+      if (Platform.isAndroid) {
+        // Move the file to Downloads folder on Android
+        final externalDir = Directory('/storage/emulated/0/Download');
+        if (!await externalDir.exists()) {
+          await externalDir.create(recursive: true);
+        }
+        String newFilePath = "${externalDir.path}/test_shorts.mp4";
+        final file = File(filePath);
+        await file.copy(newFilePath);
+        print("Video saved to Downloads folder: $newFilePath");
+
+        // Optionally, delete the original file from internal storage
+        await file.delete();
+
+      } else if (Platform.isIOS) {
+        // Save the video to the Photos library on iOS
+        final asset = await PhotoManager.editor.saveVideo(filePath as File);
+        print('Video saved to photo library: $filePath');
+      }
+
     } catch (e) {
       print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred while downloading the file.')),
+      );
     }
   }
+
+// Request permission to access storage
+  Future<bool> requestStoragePermission(BuildContext context) async {
+    if (Platform.isAndroid) {
+      final status = await Permission.storage.request();
+      if (status.isGranted) {
+        return true;
+      } else if (status.isDenied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Storage permission is required to save the file.')),
+        );
+        return false;
+      } else if (status.isPermanentlyDenied) {
+        await openAppSettings();
+        return false;
+      }
+    } else if (Platform.isIOS) {
+      final status = await Permission.photos.request();
+      if (status.isGranted) {
+        return true;
+      } else if (status.isDenied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Photo library permission is required to save the file.')),
+        );
+        return false;
+      } else if (status.isPermanentlyDenied) {
+        await openAppSettings();
+        return false;
+      }
+    }
+    return false;
+  }
+
+
+
+  // Future<bool> requestStoragePermission(BuildContext context) async {
+  //   if (Platform.isAndroid) {
+  //     final status = await Permission.storage.status;
+  //
+  //     if (status.isGranted) {
+  //       // Permission already granted
+  //       return true;
+  //     } else if (status.isDenied) {
+  //       // Request permission
+  //       final newStatus = await Permission.storage.request();
+  //       if (newStatus.isGranted) {
+  //         return true;
+  //       } else {
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(content: Text('Storage permission is required to save the file.')),
+  //         );
+  //         return false;
+  //       }
+  //     } else if (status.isPermanentlyDenied) {
+  //       // Redirect to app settings
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Please enable storage permission in settings.')),
+  //       );
+  //       await Future.delayed(Duration(seconds: 3)); // Optional delay
+  //       await openAppSettings();
+  //       return false;
+  //     }
+  //   } else if (Platform.isIOS) {
+  //     final status = await Permission.photos.status;
+  //
+  //     if (status.isGranted) {
+  //       // Permission already granted
+  //       return true;
+  //     } else if (status.isDenied) {
+  //       // Request permission
+  //       final newStatus = await Permission.photos.request();
+  //       if (newStatus.isGranted) {
+  //         return true;
+  //       } else {
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(content: Text('Photo library permission is required to save the file.')),
+  //         );
+  //         return false;
+  //       }
+  //     } else if (status.isPermanentlyDenied) {
+  //       // Redirect to app settings
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Please enable photo library access in settings.')),
+  //       );
+  //       await Future.delayed(Duration(seconds: 3)); // Optional delay
+  //       await openAppSettings();
+  //       return false;
+  //     }
+  //   }
+  //   return false;
+  // }
 
 
 
@@ -371,6 +541,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
   @override
   Widget build(BuildContext context) {
+
 
 
     mode = context.read<ThemeBloc>().mode;
@@ -530,7 +701,7 @@ class _HomePageContentState extends State<HomePageContent> {
                             if (index == 2) { // Insert the container between index 2 and 3
                               return Column(
                                 children: [
-                                  _shortsView(),
+                                  shortsLength == 4 ? _shortsView() : Container(),
                                   SizedBox(
                                     height: 15.h,
                                   )
@@ -587,7 +758,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                     bottomSheetListTileField,
                                     (int index){
                                       if(index == 1){
-                                        downloadFile();
+                                        downloadFile(context);
                                         downloading
                                             ? Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -690,8 +861,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   padding: EdgeInsets.only(
-                                      top: ScreenSize.screenHeight(context) *
-                                          0.02),
+                                      top: ScreenSize.screenHeight(context) * 0.02),
                                   itemCount: state.videoList.length,
                                   itemBuilder: (BuildContext context, int index) {
                                     final type = state.videoList[index].type;
@@ -712,9 +882,6 @@ class _HomePageContentState extends State<HomePageContent> {
                                                 "slug":
                                                     state.videoList[index].slug!
                                               });
-
-
-
                                         });
                                       },
                                       channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
@@ -735,15 +902,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                             }
                                         );
                                       },
-                                    ) : Padding(
-                                      padding: EdgeInsets.only(top: 150.h),
-                                      child: Center(
-                                          child: Image.asset(
-                                            'assets/images/no_data.png',
-                                            width: 200.w,
-                                            height: 200.h,
-                                          )),
-                                    );
+                                    ) : null;
                                   })
                               : Padding(
                                   padding: EdgeInsets.only(top: 150.h),
@@ -765,8 +924,6 @@ class _HomePageContentState extends State<HomePageContent> {
       ),
     );
   }
-
-
 
 
 
@@ -870,255 +1027,6 @@ class _HomePageContentState extends State<HomePageContent> {
       ),
     );
   }
-
-  
-  Widget videoPopupMenu() {
-    return CustomPopupMenu(
-        menuItems: [
-          PopupMenuItem(child: Text('Save'), value: 'save',),
-          PopupMenuItem(child: Text('block'), value: 'block',)
-        ],
-        onSelected: (value){}
-    );
-  }
-
-
-
-  // Widget _shortsView(){
-  //   return Padding(
-  //     padding: EdgeInsets.only(
-  //       left: 10.w,
-  //       right: 10.w
-  //     ),
-  //     child: Column(
-  //       children: [
-  //         Row(
-  //           children: [
-  //             Text(
-  //                 'Shorts',
-  //               style: TextStyle(
-  //                 fontFamily: fontFamily,
-  //                 fontWeight: FontWeight.w700,
-  //                 fontSize: 20
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         Container(
-  //           // height: 350.h,
-  //           color: red,
-  //           child: GridView.builder(
-  //             physics: const NeverScrollableScrollPhysics(),
-  //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //                 crossAxisCount: 2,
-  //               mainAxisSpacing: 8.h,
-  //               crossAxisSpacing: 8.h,
-  //               // childAspectRatio: 9/16
-  //             ),
-  //             // scrollDirection: Axis.horizontal,
-  //             shrinkWrap: true,
-  //             itemCount: 4,
-  //               itemBuilder: (BuildContext context, int index){
-  //                 return Container(
-  //                   height: 280,
-  //                   // width: 120,
-  //                   color: blue,
-  //                 );
-  //               },
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-
-
-  // Widget _buildLoadingShimmer() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       AspectRatio(
-  //         aspectRatio: 16 / 9,
-  //         child: ShimmerWidget.rectangular(
-  //           isBorder: false,
-  //           height: 50,
-  //         ),
-  //       ),
-  //       const SizedBox(height: 4),
-  //       Row(
-  //         children: [
-  //           const SizedBox(width: 8),
-  //           const ShimmerWidget.circular(width: 40, height: 40, isBorder: true),
-  //           const SizedBox(width: 8),
-  //           Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               ShimmerWidget.rectangular(
-  //                 height: 16,
-  //                 width: 120,
-  //                 isBorder: true,
-  //               ),
-  //               const SizedBox(height: 8),
-  //               ShimmerWidget.rectangular(
-  //                 height: 16,
-  //                 width: 200,
-  //                 isBorder: true,
-  //               ),
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
-
-
-
-  // Widget _buildVideoItem(VideoData video) {
-  //   String formattedTime = formatDuration(video.duration!);
-  //   return VideoListItem(
-  //     onTap: () {
-  //       Future.delayed(const Duration(milliseconds: 200), () {
-  //         GoRouter.of(context).pushNamed('videoPage', pathParameters: {
-  //           "slug": video.slug!,
-  //         });
-  //       });
-  //     },
-  //     onTapChannel: () {
-  //       final String channelId = video.channel!.id.toString();
-  //       GoRouter.of(context).pushNamed('channelProfilePage', pathParameters: {
-  //         'channelId': channelId,
-  //       });
-  //     },
-  //     channelPhoto: video.channel?.logo ?? 'assets/images/sonysab.jpg',
-  //     thumbnailUrl: video.thumbnail!,
-  //     duration: formattedTime,
-  //     title: video.title!,
-  //     author: video.channel!.name!,
-  //     views: video.views!.toString(),
-  //     uploadTime: video.createdAtHuman!,
-  //     onMorePressed: (){
-  //       customShowMoreBottomSheet(context, bottomSheetListTileField);
-  //     },
-  //   );
-  // }
-
-
-
-
-  // void showMoreOptionSheet(){
-  //   showModalBottomSheet(
-  //     backgroundColor: Colors.transparent,
-  //       context: context,
-  //       builder: (BuildContext context){
-  //         return Padding(
-  //           padding: EdgeInsets.only(
-  //               left: 10.w,
-  //               right: 10.w,
-  //           ),
-  //           child: Card(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //
-  //                 SizedBox(height: 10.h,),
-  //                 ListView.builder(
-  //                   physics: NeverScrollableScrollPhysics(),
-  //                   shrinkWrap: true,
-  //                   itemCount: 4,
-  //                     itemBuilder: (BuildContext context, int index){
-  //                       return InkWell(
-  //                         onTap: (){},
-  //                         child: ListTile(
-  //                           leading: const Icon(HeroiconsOutline.plus),
-  //                           title: Text(bottomSheetListTileField[index]['name']),
-  //                         ),
-  //                       );
-  //                     }
-  //                 )
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       }
-  //   );
-  // }
-
-
-  // void showPopupMenu(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         content: MenuAnchor(
-  //           builder: (BuildContext context, MenuController controller, Widget? child) {
-  //             return IconButton(
-  //               onPressed: () {
-  //                 if (controller.isOpen) {
-  //                   controller.close();
-  //                 } else {
-  //                   controller.open();
-  //                 }
-  //               },
-  //               icon: const Icon(Icons.more_horiz),
-  //               tooltip: 'Show menu',
-  //             );
-  //           },
-  //           menuChildren: List<MenuItemButton>.generate(3, (int index) {
-  //             return MenuItemButton(
-  //               onPressed: () {
-  //                 // Add your action here
-  //                 Navigator.of(context).pop(); // Close the menu after selection
-  //               },
-  //               child: Text('Item ${index + 1}'),
-  //             );
-  //           }),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-
-
-
-
-
-  // void showPopupMenu(BuildContext context, Offset offset) async {
-  //   final RenderBox renderBox = context.findRenderObject() as RenderBox;
-  //   final Offset buttonOffset = renderBox.localToGlobal(Offset.zero);
-  //
-  //   await showMenu<int>(
-  //     context: context,
-  //     position: RelativeRect.fromLTRB(
-  //       buttonOffset.dx,
-  //       buttonOffset.dy,
-  //       MediaQuery.of(context).size.width - buttonOffset.dx,
-  //       MediaQuery.of(context).size.height - buttonOffset.dy,
-  //     ),
-  //     items: [
-  //       PopupMenuItem<int>(
-  //         value: 0,
-  //         child: Text('Item 1'),
-  //       ),
-  //       PopupMenuItem<int>(
-  //         value: 1,
-  //         child: Text('Item 2'),
-  //       ),
-  //       PopupMenuItem<int>(
-  //         value: 2,
-  //         child: Text('Item 3'),
-  //       ),
-  //     ],
-  //   ).then((int? result) {
-  //     if (result != null) {
-  //       // Handle menu item selection
-  //       print("Item $result clicked");
-  //     }
-  //   });
-  // }
 
 
 

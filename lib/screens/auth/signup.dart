@@ -307,7 +307,8 @@ class _SignupPageState extends State<SignupPage> {
                                     print('Login success with email and password');
 
                                     Future.delayed(const Duration(seconds: 1),(){
-                                      router.goNamed('homePage');
+                                      GoRouter.of(context).pushReplacementNamed('homePage');
+                                      // router.goNamed('homePage');
                                     });
 
                                   }else if(state is LoginAuthFailure){
@@ -379,7 +380,8 @@ class _SignupPageState extends State<SignupPage> {
                                         );
 
                                         Future.delayed(const Duration(seconds: 1),(){
-                                          router.goNamed('homePage');
+                                          GoRouter.of(context).pushReplacementNamed('homePage');
+                                          // router.goNamed('homePage');
                                         });
                                       } else if (state is AuthFailure) {
                                         ScaffoldMessenger.of(context).showSnackBar(

@@ -8,6 +8,7 @@ class SearchSuggestionBloc
     extends Bloc<SearchSuggestionEvent, SearchSuggestionState> {
   SearchSuggestionBloc() : super(SearchSuggestionInitial()) {
     on<SearchSuggestionRequest>(_onSearchSuggestionRequest);
+    on<ClearSearchSuggestions>(_onClearSearchSuggestion);
   }
 
   Future<void> _onSearchSuggestionRequest(SearchSuggestionRequest event,
@@ -20,5 +21,9 @@ class SearchSuggestionBloc
     } catch (e) {
       emit(SearchSuggestionFailure(error: e.toString()));
     }
+  }
+
+  Future<void> _onClearSearchSuggestion(ClearSearchSuggestions event, Emitter<SearchSuggestionState> emit) async {
+      emit(SearchSuggestionInitial());
   }
 }

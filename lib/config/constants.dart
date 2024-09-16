@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 const String appName = "Cineplex";
 const String apiUrl = "https://videoapp.taskhub.company/api/";
 const String firebase = "";
+const String adUnitId = "ca-app-pub-2734509756038446/1670883979";
 
 
 // FONT FAMILY

@@ -10,3 +10,8 @@ class SearchSuggestionRequest extends SearchSuggestionEvent{
   @override
   List<Object?> get props => [searchQuery];
 }
+
+class ClearSearchSuggestions extends SearchSuggestionEvent{
+  @override
+  List<Object?> get props => [];
+}

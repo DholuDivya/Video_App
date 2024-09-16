@@ -277,14 +277,14 @@ class AuthRepository{
   // LOGIN USER
   Future<dynamic> loginUser(String email, String password) async {
     try{
-      final fcmId = await NotificationService().getFcmToken();
-      print('FCM ID  ::::  $fcmId');
-      print('2000000000000000000');
+      // final fcmId = await NotificationService().getFcmToken();
+      // print('FCM ID  ::::  $fcmId');
+      // print('2000000000000000000');
       final response = await apiHelper.loginUserEmail(loginUserUrl,
           {
             'email': email,
             'password': password,
-            'fcm_id': fcmId,
+            'fcm_id': 'dOoZ78WFQCm1404gK_kXKR:APA91bFNbTtenfrpQTn8bFsAFmv_6aKfJtJu6hOYLbJKxmKcXtlU9evHRFnN5vSQU8RlNB-3xu4TJclbCgtCTRG_xvo_LCYaINXnOTaewIUC3kLIMvGJBkGCx8V4UN5kYvZJTmz-vLiL',
           });
       print('srbgirswugbhuswgbhusrhsbhvjuvjubhvujjuhvujhbd');
       print('${response.data}');
