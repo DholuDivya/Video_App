@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class GetShortsState extends Equatable{}
@@ -13,8 +14,9 @@ class GetShortsLoading extends GetShortsState{
   List<Object?> get props => [];
 }
 
+
 class GetShortsSuccess extends GetShortsState{
-  final XFile userShorts;
+  final PlatformFile userShorts;
 
   GetShortsSuccess({required this.userShorts});
 

@@ -63,24 +63,25 @@ import 'package:path_provider/path_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:vimeo_clone/App/MyApp.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
-import 'package:vimeo_clone/config/notification_service.dart';
 import 'package:vimeo_clone/firebase_options.dart';
-import 'model/user_data_model.dart';
+import 'package:vimeo_clone/model/hive_model/downloaded_video_model/downloaded_video_model.dart';
+
+import 'model/hive_model/user_data_model/user_data_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var devices = ["72F1F8AC829C59E59B0462B951137364"];
   MobileAds.instance.initialize();
 
-  RequestConfiguration requestConfiguration = RequestConfiguration(
-    testDeviceIds: devices
-  );
+  RequestConfiguration requestConfiguration = RequestConfiguration(testDeviceIds: ['72F1F8AC829C59E59B0462B951137364']);
   MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
 
-  Hive.registerAdapter(UserDataModelAdapter(), );
+  Hive.registerAdapter(UserDataModelAdapter());
+  Hive.registerAdapter(DownloadedVideoModelAdapter());
+
   await Hive.openBox('themebox');
 
   await Global.initialize();

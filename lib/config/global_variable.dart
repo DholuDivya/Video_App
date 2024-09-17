@@ -1,7 +1,7 @@
 // global.dart
 
 import 'package:hive/hive.dart';
-import '../model/user_data_model.dart';
+import 'package:vimeo_clone/model/hive_model/user_data_model/user_data_model.dart';
 
 class Global {
   static UserDataModel? _userData;

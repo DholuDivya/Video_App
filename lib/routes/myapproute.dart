@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:vimeo_clone/Screens/NotificationPage/notification_page.dart';
 import 'package:vimeo_clone/Screens/SearchScreen/search_screen.dart';
 import 'package:vimeo_clone/Screens/SettingPage/setting_page.dart';
@@ -31,6 +34,8 @@ import 'package:vimeo_clone/screens/your_videos/your_video_page.dart';
 import '../Screens/HomePage/homepage.dart';
 import '../screens/channel_profile_page/channel_profile_page.dart';
 import '../screens/edit_video_detail/edit_video_detail_page.dart';
+
+final navigatorContext = GlobalKeys.navigatorKey.currentContext;
 
 // class MyAppRoute {
   final GoRouter router = GoRouter(
@@ -216,16 +221,20 @@ import '../screens/edit_video_detail/edit_video_detail_page.dart';
         GoRoute(
           name: 'uploadShortsPage',
           path: '/uploadShortsPage',
-          pageBuilder: (context, state) => const CupertinoPage (
-            child: UploadShortsPage(),
-          ),
+          builder: (context, state) {
+            // Expect the File to be passed as an extra argument
+            final file = state.extra as CroppedFile;
+            return UploadShortsPage(
+              thumbnail: file,
+            );
+          },
         ),
 
-        GoRoute(
-          name: 'cropShortsPage',
-            path: '/cropShortsPage',
-          pageBuilder: (context, state) => const CupertinoPage(child: CropShortsPage())
-        ),
+        // GoRoute(
+        //   name: 'cropShortsPage',
+        //     path: '/cropShortsPage',
+        //   pageBuilder: (context, state) => const CupertinoPage(child: CropShortsPage())
+        // ),
 
         GoRoute(
           name: 'allHistoryPage',

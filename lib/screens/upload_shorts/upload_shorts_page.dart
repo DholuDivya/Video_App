@@ -1,12 +1,20 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
+import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_state.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_event.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_state.dart';
+import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_bloc.dart';
+import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_event.dart';
+import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_state.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
@@ -24,7 +32,8 @@ import '../../utils/widgets/custom_text_field_upload.dart';
 import '../../utils/widgets/toggle_button.dart';
 
 class UploadShortsPage extends StatefulWidget {
-  const UploadShortsPage({super.key});
+  final CroppedFile thumbnail;
+  const UploadShortsPage({super.key, required this.thumbnail});
 
   @override
   State<UploadShortsPage> createState() => _UploadShortsPageState();
@@ -59,6 +68,9 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
 
 
   void _validateAndSubmit() {
+
+    finalThumbnail = widget.thumbnail;
+
     // Check if the form is valid first
     if (_formKey.currentState!.validate()) {
       // Perform additional validation after form validation
@@ -103,8 +115,8 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
       print("Selected Visibility::::::::      $selectedVisibility");
       print("Comments Enabled:::::::::      $isCommentOn");
 
-      context.read<UploadVideoBloc>().add(UploadVideoRequestEvent(
-          video: selectedVideo,
+      context.read<UploadShortsBloc>().add(UploadShortsRequest(
+          video: selectedVideo!,
           videoThumbnail: finalThumbnail!,
           videoTitle: videoTitle,
           videoDescription: videoDescription,
@@ -140,12 +152,14 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
 
 
   CroppedFile? finalThumbnail;
-  late PlatformFile selectedVideo;
+  PlatformFile? selectedVideo;
   List<int> selectedCategoryIds = [];
   late String selectedCategoryNames;
 
   @override
   Widget build(BuildContext context) {
+    print('Shorts thumbnail by arguments:: ${widget.thumbnail.path} ');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Details'),
@@ -531,25 +545,30 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
         ),
       ),
 
-      floatingActionButton: BlocBuilder<UploadVideoBloc, UploadVideoState>(
+      floatingActionButton: BlocBuilder<UploadShortsBloc, UploadShortsState>(
           builder: (context, state){
-            if(state is UploadVideoSuccess){
+            if(state is UploadShortsSuccess){
               ToastManager().showToast(
                   context: context,
-                  message: 'Video uploaded successfully'
+                  message: 'Shorts uploaded successfully'
               );
               context.read<AllVideoListBloc>().add(GetAllVideoListEvent());
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 GoRouter.of(context).goNamed('homePage');
               });
 
-            }else if(state is UploadVideoLoading){
+            }else if(state is UploadShortsLoading){
               return const Center(child: CircularProgressIndicator(),);
+            }else if(state is UploadShortsFailure){
+              ToastManager().showToast(
+                  context: context,
+                  message: 'Failed to upload shorts'
+              );
             }
-            return BlocBuilder<GetVideoBloc, GetVideoState>(
+            return BlocBuilder<GetShortsBloc, GetShortsState>(
               builder: (BuildContext context, state) {
-                if(state is GetVideoSuccess){
-                  selectedVideo = state.userVideo!;
+                if(state is GetShortsSuccess){
+                  selectedVideo = state.userShorts;
                 }
                 return ElevatedButton(
                   onPressed: () {

@@ -277,7 +277,7 @@ class _GetShortsThumbnailPageState extends State<GetShortsThumbnailPage> {
                   ),
                   onPressed: () {
                     if(shortThumbnail != null){
-                      GoRouter.of(context).pushNamed('uploadShortsPage');
+                      GoRouter.of(context).pushNamed('uploadShortsPage', extra: shortThumbnail);
                     }else{
                       print('THUMBNAIL IS NOT SELECTED FROM USER ');
                     }

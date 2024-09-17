@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:vimeo_clone/Screens/download_video/download_video_page.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
@@ -131,7 +132,13 @@ class _UserPageState extends State<UserPage> {
               ),
 
 
-              const UserPageButton(
+              UserPageButton(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OfflineVideoPlayer())
+                  );
+                },
                   buttonName: 'Downloads',
                   buttonIcon: HeroiconsOutline.arrowDownTray
               ),

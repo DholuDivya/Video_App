@@ -1,9 +1,8 @@
 import 'package:hive/hive.dart';
-
-// part 'downloaded_video_model.g.dart';
+part 'downloaded_video_model.g.dart';
 
 @HiveType(typeId: 1)
-class UserDataModel{
+class DownloadedVideoModel{
   @HiveField(0)
   String? videoId;
 
@@ -55,7 +54,7 @@ class UserDataModel{
   @HiveField(16)
   String? contentType;
 
-  UserDataModel({
+  DownloadedVideoModel({
     this.videoId,
     this.videoSlug,
     this.videoType,

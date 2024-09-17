@@ -284,7 +284,7 @@ class AuthRepository{
           {
             'email': email,
             'password': password,
-            'fcm_id': 'dOoZ78WFQCm1404gK_kXKR:APA91bFNbTtenfrpQTn8bFsAFmv_6aKfJtJu6hOYLbJKxmKcXtlU9evHRFnN5vSQU8RlNB-3xu4TJclbCgtCTRG_xvo_LCYaINXnOTaewIUC3kLIMvGJBkGCx8V4UN5kYvZJTmz-vLiL',
+            'fcm_id': 'c5X1eG26RBSOATeCLt8CKL:APA91bEQaashdO5Gh81HkZSQbD_Qho56p37WQmkriJRg2wiAuLEHgNa9HWb6E1t2yNoTqY6-c83rtlXeRiX3uKsVQqze3bqgZMRGxyJvmYWm1NfyEax-DYUOphCM6HMd6GIT0WQ76Vlm',
           });
       print('srbgirswugbhuswgbhusrhsbhvjuvjubhvujjuhvujhbd');
       print('${response.data}');

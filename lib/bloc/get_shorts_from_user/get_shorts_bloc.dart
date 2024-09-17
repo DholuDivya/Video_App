@@ -21,7 +21,7 @@ class GetShortsBloc extends Bloc<GetShortsEvent, GetShortsState>{
     emit(GetShortsLoading());
     try{
       final ImagePicker _picker = ImagePicker();
-      XFile? _videoFile;
+      // XFile? _videoFile;
 
       final result = await _picker.pickVideo(
         source: ImageSource.camera,
@@ -38,7 +38,7 @@ class GetShortsBloc extends Bloc<GetShortsEvent, GetShortsState>{
         // final thumbnailFile = await _generateThumbnail(file.path);
 
 
-        emit(GetShortsSuccess(userShorts: userShorts));
+        // emit(GetShortsSuccess(userShorts: userShorts));
       } else {
         print('No video selected from camera.');
       }
@@ -53,18 +53,19 @@ class GetShortsBloc extends Bloc<GetShortsEvent, GetShortsState>{
       final ImagePicker _picker = ImagePicker();
       XFile? _videoFile;
 
-      final result = await _picker.pickVideo(
-        source: ImageSource.gallery,
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.video, // Specify that only video files should be picked
       );
 
       if (result != null) {
-        XFile userShorts = result;
+        PlatformFile userShorts;
+        userShorts = result.files.first;
         print('................   ${userShorts}');
 
         print('++++++  ${userShorts.path}');
 
 
-        final videoPlayerController = VideoPlayerController.file(File(userShorts.path));
+        final videoPlayerController = VideoPlayerController.file(File(userShorts.path!));
         // await videoPlayerController.initialize();
         final videoDuration = videoPlayerController.value.duration;
 

@@ -1,13 +1,17 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vimeo_clone/Config/theme_data.dart';
 import 'package:vimeo_clone/Repo/auth_repo.dart';
 import 'package:vimeo_clone/Repo/video_category_repo.dart';
 import 'package:vimeo_clone/Repo/video_list_repo.dart';
+import 'package:vimeo_clone/Screens/SettingPage/setting_page.dart';
 import 'package:vimeo_clone/appLinks.dart';
 import 'package:vimeo_clone/bloc/add_comment/add_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
@@ -46,6 +50,7 @@ import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
+import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_video/upload_video_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_video_external/upload_video_external_bloc.dart';
 import 'package:vimeo_clone/bloc/add_user_history/add_user_history_bloc.dart';
@@ -59,6 +64,8 @@ import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/global_keys.dart';
 import 'package:vimeo_clone/routes/myapproute.dart';
+import 'package:vimeo_clone/screens/videoPage/videopage.dart';
+import '../bloc/download_video/download_video_bloc.dart';
 import '../bloc/edit_video_detail/edit_video_detail_bloc.dart';
 import '../bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
 import '../config/notification_service.dart';
@@ -83,6 +90,34 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _initializeNotification();
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        // App was launched via a notification
+        // final videoSlug = message.data['extra_data'] ; // Extract slug or provide a default
+        final videoSlug = 'sajan';
+        // Navigate directly to the videoPage
+        _handleDirectNavigation(videoSlug);
+      }
+    });
+
+  }
+
+  void _handleDirectNavigation(String videoSlug) {
+    final navigatorContext = GlobalKeys.navigatorKey.currentContext;
+    if (navigatorContext != null) {
+
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(
+            navigatorContext,
+            CupertinoPageRoute(builder: (navigatorContext) => VideoPage(slug: videoSlug))
+        );
+        // Navigator.pushNamed(
+        //     navigatorContext,
+        //     MaterialPageRoute(builder: (navigatorContext) => )
+        // );
+      });
+    }
   }
 
   Future<void> _initializeNotification() async {
@@ -140,6 +175,8 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => DeletePlaylistBloc()),
         BlocProvider(create: (context) => ForgotPasswordBloc()),
         BlocProvider(create: (context) => ResetPasswordBloc()),
+        BlocProvider(create: (context) => UploadShortsBloc()),
+        BlocProvider(create: (context) => DownloadVideoBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {
@@ -164,6 +201,7 @@ class _MyAppState extends State<MyApp> {
               // routerDelegate: AppRoutes.router.routerDelegate,
               // routeInformationParser: AppRoutes.router.routeInformationParser,
               routerConfig: router,
+
               scaffoldMessengerKey: GlobalKeys.scaffoldMessengerKey,
 
             ),

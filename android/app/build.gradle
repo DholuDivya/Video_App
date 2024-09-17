@@ -76,5 +76,6 @@ flutter {
 
 dependencies {
     implementation 'com.razorpay:checkout:1.6.41' // Or the latest version
+    implementation 'com.google.android.gms:play-services-ads:23.3.0'
 }
 

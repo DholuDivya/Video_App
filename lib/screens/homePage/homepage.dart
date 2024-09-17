@@ -13,6 +13,8 @@ import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_state.dart';
+import 'package:vimeo_clone/bloc/download_video/download_video_bloc.dart';
+import 'package:vimeo_clone/bloc/download_video/download_video_state.dart';
 import 'package:vimeo_clone/bloc/get_plans/get_plans_bloc.dart';
 import 'package:vimeo_clone/bloc/get_plans/get_plans_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
@@ -39,8 +41,10 @@ import 'package:vimeo_clone/config/notification_service.dart';
 import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/screens/ShortsScreen/shorts_page.dart';
 import 'package:vimeo_clone/utils/widgets/custom_bottom_sheet_button.dart';
+import 'package:vimeo_clone/utils/widgets/custom_download_progress_dialog.dart';
 import 'package:vimeo_clone/utils/widgets/custom_shorts_preview_homepage.dart';
 import '../../Utils/Widgets/bottom_nav_bar.dart';
+import '../../bloc/download_video/download_video_event.dart';
 import '../../bloc/video_category/video_category_event.dart';
 import '../../bloc/video_list/video_list_bloc.dart';
 import '../../bloc/video_list/video_list_event.dart';
@@ -724,75 +728,81 @@ class _HomePageContentState extends State<HomePageContent> {
                             // Adjust the index to access the correct video item
                             final adjustedIndex = index > 2 ? index - 1 : index;
                             final type = state.videoList[adjustedIndex].type;
-
                             print('!!!!!!!!!!!!!!!!!!!!      ${state.videoList[adjustedIndex].duration}');
                             int totalSeconds = state.videoList[adjustedIndex].duration!;
                             String formattedTime = formatDuration(totalSeconds);
+                            final videoData = state.videoList[adjustedIndex];
+                            return type == "video" ? BlocListener<DownloadVideoBloc, DownloadVideoState>(
+                              listener: (context, state) {
+                                if (state is DownloadVideoInProgress) {
 
-                            return type == "video"
-                                ? VideoListItem(
-                              onTap: () {
-                                Future.delayed(const Duration(milliseconds: 200), () {
-                                  GoRouter.of(context).pushNamed('videoPage', pathParameters: {
-                                    "slug": state.videoList[adjustedIndex].slug!
-                                  });
-                                });
+                                  int progressPercentage = (state.progress * 100).toInt();
+                                  DownloadVideoAlertDialog().showDownloadProgressDialog(context, progressPercentage);
+
+                                } else if (state is DownloadVideoSuccess) {
+
+                                  DownloadVideoAlertDialog().showSuccessDialog(context, "Download complete!");
+                                } else if (state is DownloadVideoFailure) {
+                                  // Show error dialog
+                                  DownloadVideoAlertDialog().showErrorDialog(context, state.error);
+                                }
                               },
-                              onTapChannel: () {
-                                final String channelId =
-                                state.videoList[adjustedIndex].channel!.id.toString();
-                                GoRouter.of(context).pushNamed('channelProfilePage',
-                                    pathParameters: {'channelId': channelId});
-                              },
-                              channelPhoto: state.videoList[adjustedIndex].channel?.logo ??
-                                  'assets/images/sonysab.jpg',
-                              thumbnailUrl: '${state.videoList[adjustedIndex].thumbnail}',
-                              duration: formattedTime,
-                              title: '${state.videoList[adjustedIndex].title}',
-                              author: '${state.videoList[adjustedIndex].channel?.name}',
-                              views: '${state.videoList[adjustedIndex].views}',
-                              uploadTime: '${state.videoList[adjustedIndex].createdAtHuman}',
-                              onMorePressed: (){
-                                customShowMoreBottomSheet(
-                                    context,
-                                    bottomSheetListTileField,
-                                    (int index){
-                                      if(index == 1){
-                                        downloadFile(context);
-                                        downloading
-                                            ? Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            CircularProgressIndicator(),
-                                            SizedBox(height: 20),
-                                            Text("Downloading: $progressString"),
-                                          ],
-                                        )
-                                            : localFilePath.isNotEmpty
-                                            ? Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Text("Download complete, file saved at:"),
-                                            Text(localFilePath),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.of(context).push(MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OfflineVideoPlayer(localFilePath)));
-                                              },
-                                              child: Text("Play Video"),
-                                            ),
-                                          ],
-                                        )
-                                            : Text("Click button to download video");
-                                      }
-                                      else if(index == 2){
-                                        GoRouter.of(context).pushNamed('settingPage');
-                                      }
-                                    }
-                                );
-                              },
-                            )
+                                  child: VideoListItem(
+                                    onTap: () {
+                                      Future.delayed(const Duration(milliseconds: 200), () {
+                                      GoRouter.of(context).pushNamed('videoPage', pathParameters: {
+                                        "slug": state.videoList[adjustedIndex].slug!
+                                      });
+                                    });
+                                    },
+                                    onTapChannel: () {
+                                      final String channelId =
+                                      state.videoList[adjustedIndex].channel!.id.toString();
+                                      GoRouter.of(context).pushNamed('channelProfilePage',
+                                        pathParameters: {'channelId': channelId});
+                                      },
+                                      channelPhoto: state.videoList[adjustedIndex].channel?.logo ??
+                                      'assets/images/sonysab.jpg',
+                                      thumbnailUrl: '${state.videoList[adjustedIndex].thumbnail}',
+                                      duration: formattedTime,
+                                      title: '${state.videoList[adjustedIndex].title}',
+                                      author: '${state.videoList[adjustedIndex].channel?.name}',
+                                      views: '${state.videoList[adjustedIndex].views}',
+                                      uploadTime: '${state.videoList[adjustedIndex].createdAtHuman}',
+                                      onMorePressed: (){
+                                      customShowMoreBottomSheet(
+                                        context,
+                                        bottomSheetListTileField,
+                                        (int index){
+                                          if(index == 1){
+                                            context.read<DownloadVideoBloc>().add(DownloadVideoRequest(
+                                              videoId: videoData.id.toString(),
+                                              videoSlug: videoData.slug!,
+                                              videoType: videoData.type!,
+                                              videoSource: videoData.video!,
+                                              videoThumbnail: videoData.thumbnail!,
+                                              videoTitle: videoData.title!,
+                                              videoDescription: videoData.description!,
+                                              videoHashtag: videoData.hashtag!,
+                                              videoCreateAtHuman: videoData.createdAtHuman!,
+                                              videoDuration: videoData.duration.toString(),
+                                              videoViews: videoData.views.toString(),
+                                              videoCategory: videoData.categories.toString(),
+                                              videoComments: "0",
+                                              videoLikes: videoData.likes.toString(),
+                                              channelLogo: videoData.channel!.logo!,
+                                              channelName: videoData.channel!.name!,
+                                              contentType: "content-type",
+                                            ));
+                                          }
+                                          else if(index == 2){
+                                            GoRouter.of(context).pushNamed('settingPage');
+                                          }
+                                        }
+                                      );
+                                      },
+                                  ),
+                                )
                                 : null;
                           },
                         );

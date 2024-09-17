@@ -8,6 +8,7 @@ import 'package:vimeo_clone/Utils/Widgets/setting_page_btn.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_event.dart';
+import 'package:vimeo_clone/config/global_keys.dart';
 import 'package:vimeo_clone/utils/widgets/CustomLogOutWidget.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
@@ -159,6 +160,12 @@ class _SettingPageState extends State<SettingPage> {
     Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              onPressed: (){
+                Navigator.pop(GlobalKeys.navigatorKey.currentContext!);
+              },
+              icon: Icon(HeroiconsOutline.backward)
+          ),
           title: Text('Settings', style: TextStyle(fontFamily: fontFamily),),
         ),
         body: BlocConsumer<AuthBloc, AuthState>(

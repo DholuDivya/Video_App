@@ -33,7 +33,7 @@ class NotificationService {
 
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         print('Message opened app: ${message.notification?.title}');
-        _handleNavigation(context, message);
+        _handleNavigation(message);
       });
 
       _firebaseMessaging.onTokenRefresh.listen((String newToken) {
@@ -81,36 +81,46 @@ class NotificationService {
       );
     }
 
-    void _handleNavigation(BuildContext context, RemoteMessage message) {
-      // final router = GoRouter.of(context);
-      // router.goNamed('notificationPage');
-      print('MESSSSAAGEE ::::::::::::       ${message.data['extra_data']}');
-      final videoSlug = message.data['extra_data'];
-      final context = GlobalKeys.navigatorKey.currentContext;
-      if (context != null) {
-        GoRouter.of(context).pushNamed('videoPage', pathParameters: {'slug': videoSlug});
-      }
-      // if (message.data.isNotEmpty) {
-      //
-      //
-      //   if (page != null) {
-      //     print('ghrghh');
-      //     // Using GoRouter for navigation
-      //       // Navigates to the page specified in the notification data
-      //   }
-      // } else {
-      //   print('No page found in notification data');
-      // }
 
+  void _handleNavigation(RemoteMessage message) {
+    // Extract videoSlug from message data
+    print('MESSAGE ::::::::::::       ${message.data['extra_data']}');
+    // final videoSlug = message.data['extra_data'];
 
-      // final navigator = GlobalKeys.navigatorKey.currentState;
-      // if (navigator != null && message.data.isNotEmpty) {
-      //   final page = message.data['notificationPage'];
-      //   if (page != null) {
-      //     navigator.pushNamed('notificationPage');
-      //   }
-      // }
+    final videoSlug = 'sajan';
+    // Get the current navigator context using GlobalKeys.navigatorKey
+    final navigatorContext = GlobalKeys.navigatorKey.currentContext;
+
+    // Check if the context is available
+    if (navigatorContext != null) {
+      // Use WidgetsBinding to ensure we are navigating at the right time
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Navigate to the notification page using GoRouter
+        navigatorContext.pushNamed('notificationPage');
+        // GoRouter.of(navigatorContext).pushNamed(
+        //   'videoPage',
+        //   pathParameters: {
+        //     'slug': videoSlug,  // Pass videoSlug if needed
+        //   },
+        // );
+      });
     }
+  }
+
+
+
+
+    // void _handleNavigation(BuildContext context, RemoteMessage message) {
+    //   // final router = GoRouter.of(context);
+    //   // router.goNamed('notificationPage');
+    //   print('MESSSSAAGEE ::::::::::::       ${message.data['extra_data']}');
+    //   final videoSlug = message.data['extra_data'];
+    //   router.pushNamed('notificationPage');
+    //   final context = GlobalKeys.navigatorKey.currentContext;
+    //   if (context != null) {
+    //
+    //   }
+    // }
 }
 
 
