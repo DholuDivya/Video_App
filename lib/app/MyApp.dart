@@ -26,6 +26,7 @@ import 'package:vimeo_clone/bloc/forgot_password/forgot_password_bloc.dart';
 import 'package:vimeo_clone/bloc/generate_signature/generate_signature_bloc.dart';
 import 'package:vimeo_clone/bloc/get_channel_logo/get_channel_logo_bloc.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
+import 'package:vimeo_clone/bloc/get_notification/get_notification_bloc.dart';
 import 'package:vimeo_clone/bloc/get_plans/get_plans_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_bloc.dart';
@@ -89,16 +90,16 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _initializeNotification();
-    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
-      if (message != null) {
-        // App was launched via a notification
-        // final videoSlug = message.data['extra_data'] ; // Extract slug or provide a default
-        final videoSlug = 'sajan';
-        // Navigate directly to the videoPage
-        _handleDirectNavigation(videoSlug);
-      }
-    });
+    // _initializeNotification();
+    // FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+    //   if (message != null) {
+    //     // App was launched via a notification
+    //     final videoSlug = message.data['extra_data']; // Extract slug or provide a default
+    //     // final videoSlug = 'sajan';
+    //     // Navigate directly to the videoPage
+    //     _handleDirectNavigation(videoSlug);
+    //   }
+    // });
 
   }
 
@@ -177,6 +178,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => ResetPasswordBloc()),
         BlocProvider(create: (context) => UploadShortsBloc()),
         BlocProvider(create: (context) => DownloadVideoBloc()),
+        BlocProvider(create: (context) => GetNotificationBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 const String appName = "Cineplex";
-const String apiUrl = "https://videoapp.taskhub.company/api/";
+const String apiUrl = "https://cineplex.infinitietech.com/api/";
 const String firebase = "";
 const String adUnitId = "ca-app-pub-2734509756038446/1670883979";
 

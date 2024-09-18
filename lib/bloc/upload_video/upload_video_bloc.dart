@@ -1,6 +1,7 @@
 import 'package:file_picker/src/platform_file.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:vimeo_clone/Config/constants.dart';
 import 'package:vimeo_clone/Repo/upload_video_repo.dart';
 import 'package:vimeo_clone/bloc/upload_video/upload_video_event.dart';
 import 'package:vimeo_clone/bloc/upload_video/upload_video_state.dart';
@@ -38,7 +39,7 @@ class UploadVideoBloc extends Bloc<UploadVideoEvent, UploadVideoState>{
         'visibility': event.videoVisibility,
       });
 
-      final response = await Dio().post('https://videoapp.taskhub.company/api/video',
+      final response = await Dio().post('${apiUrl}video',
         data: formData,
         options: Options(
           headers: headers

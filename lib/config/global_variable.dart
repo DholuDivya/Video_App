@@ -50,7 +50,6 @@ class Global {
 
 
 
-
 // import 'package:hive/hive.dart';
 //
 // class Global {

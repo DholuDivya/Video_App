@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_video_external/upload_video_external_event.dart';
 import 'package:vimeo_clone/bloc/upload_video_external/upload_video_external_state.dart';
+import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:dio/dio.dart';
 import 'package:vimeo_clone/config/security.dart';
@@ -28,7 +29,7 @@ class UploadVideoExternalBloc extends Bloc<UploadVideoExternalEvent, UploadVideo
         'visibility': event.videoVisibility,
       });
       print('$formData');
-      final response = await Dio().post('https://videoapp.taskhub.company/api/store-external',
+      final response = await Dio().post('${apiUrl}store-external',
           data: formData,
           options: Options(
               headers: headers

@@ -32,3 +32,4 @@ const String removeVideoFromPlaylistUrl = "${apiUrl}playlists";
 const String deletePlaylistUrl = "${apiUrl}playlists/";
 const String forgotPasswordUrl = "${apiUrl}forgot-password";
 const String resetPasswordUrl = "${apiUrl}reset-password";
+const String getNotificationUrl = "${apiUrl}notificationsuser";

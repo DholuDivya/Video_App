@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_event.dart';
 import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_state.dart';
 import 'package:dio/dio.dart';
+import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/security.dart';
 
 class UploadShortsBloc extends Bloc<UploadShortsEvent, UploadShortsState>{
@@ -23,7 +24,7 @@ class UploadShortsBloc extends Bloc<UploadShortsEvent, UploadShortsState>{
         'status': 'published'
       });
 
-      final response = await Dio().post('https://videoapp.taskhub.company/api/shorts',
+      final response = await Dio().post('${apiUrl}shorts',
           data: formData,
           options: Options(
               headers: headers

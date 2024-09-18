@@ -1,71 +1,68 @@
 import 'package:flutter/material.dart';
 
-class DownloadVideoAlertDialog {
-  void showDownloadProgressDialog(BuildContext context, int progress) {
-    showDialog(
-      context: context,
-      // barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Downloading Video'),
-          // content: Column(
-          //   mainAxisSize: MainAxisSize.min,
-          //   children: <Widget>[
-          //     LinearProgressIndicator(
-          //       value: progress / 100.0,
-          //       backgroundColor: Colors.grey[200],
-          //       color: Colors.blue,
-          //     ),
-          //     SizedBox(height: 10),
-          //     Text('$progress%'),
-          //   ],
-          // ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
-            ),
+class DownloadVideoSnackbar {
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _snackBarController;
+
+  void showDownloadProgressSnackbar(BuildContext context, int progress) {
+    // Check if a snackbar is already showing and dismiss it before showing a new one
+    _snackBarController?.close();
+
+    _snackBarController = ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Downloading Video'),
+            Text('$progress%'),
           ],
-        );
-      },
+        ),
+        duration: const Duration(days: 1), // Long duration so it stays visible until dismissed
+      ),
     );
   }
 
-  void showSuccessDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Success'),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
+  void updateProgressSnackbar(BuildContext context, int progress) {
+    // Update the snackbar with the new progress
+    if (_snackBarController != null) {
+      _snackBarController!.close(); // Close the old one
+    }
+    _snackBarController = ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Downloading Video'),
+            Text('$progress%'),
           ],
-        );
-      },
+        ),
+        duration: const Duration(days: 1), // Keep it open
+      ),
     );
   }
 
-  void showErrorDialog(BuildContext context, String error) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text(error),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
+  void dismissSnackbar(BuildContext context) {
+    if (_snackBarController != null) {
+      _snackBarController!.close();
+    }
+  }
+
+  void showSuccessSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+  void showErrorSnackbar(BuildContext context, String error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(error),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+      ),
     );
   }
 }

@@ -45,6 +45,8 @@ import 'package:vimeo_clone/utils/widgets/custom_download_progress_dialog.dart';
 import 'package:vimeo_clone/utils/widgets/custom_shorts_preview_homepage.dart';
 import '../../Utils/Widgets/bottom_nav_bar.dart';
 import '../../bloc/download_video/download_video_event.dart';
+import '../../bloc/get_notification/get_notification_bloc.dart';
+import '../../bloc/get_notification/get_notification_event.dart';
 import '../../bloc/video_category/video_category_event.dart';
 import '../../bloc/video_list/video_list_bloc.dart';
 import '../../bloc/video_list/video_list_event.dart';
@@ -95,6 +97,7 @@ class _HomePageState extends State<HomePage> {
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
     context.read<GetPlansBloc>().add(GetPlansRequest());
+    context.read<GetNotificationBloc>().add(GetNotificationRequest());
     super.initState();
   }
   List screens = [
@@ -395,8 +398,8 @@ class _HomePageContentState extends State<HomePageContent> {
 
     try {
       // Request storage permission
-      bool hasPermission = await requestStoragePermission(context);
-      if (!hasPermission) return;
+      // bool hasPermission = await requestStoragePermission(context);
+      // if (!hasPermission) return;
 
       // Get the app's Documents directory
       var dir = await getApplicationDocumentsDirectory();
@@ -415,10 +418,7 @@ class _HomePageContentState extends State<HomePageContent> {
         },
       );
 
-      // After download completion
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text('Download completed')),
-      // );
+
 
       if (Platform.isAndroid) {
         // Move the file to Downloads folder on Android
@@ -449,36 +449,7 @@ class _HomePageContentState extends State<HomePageContent> {
   }
 
 // Request permission to access storage
-  Future<bool> requestStoragePermission(BuildContext context) async {
-    if (Platform.isAndroid) {
-      final status = await Permission.storage.request();
-      if (status.isGranted) {
-        return true;
-      } else if (status.isDenied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Storage permission is required to save the file.')),
-        );
-        return false;
-      } else if (status.isPermanentlyDenied) {
-        await openAppSettings();
-        return false;
-      }
-    } else if (Platform.isIOS) {
-      final status = await Permission.photos.request();
-      if (status.isGranted) {
-        return true;
-      } else if (status.isDenied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Photo library permission is required to save the file.')),
-        );
-        return false;
-      } else if (status.isPermanentlyDenied) {
-        await openAppSettings();
-        return false;
-      }
-    }
-    return false;
-  }
+
 
 
 
@@ -735,17 +706,30 @@ class _HomePageContentState extends State<HomePageContent> {
                             return type == "video" ? BlocListener<DownloadVideoBloc, DownloadVideoState>(
                               listener: (context, state) {
                                 if (state is DownloadVideoInProgress) {
-
-                                  int progressPercentage = (state.progress * 100).toInt();
-                                  DownloadVideoAlertDialog().showDownloadProgressDialog(context, progressPercentage);
+                                  // int progressPercentage = (state.progress * 100).toInt();
+                                  //
+                                  // // Show or update the snackbar with the current progress
+                                  // DownloadVideoSnackbar().updateProgressSnackbar(context, progressPercentage);
 
                                 } else if (state is DownloadVideoSuccess) {
 
-                                  DownloadVideoAlertDialog().showSuccessDialog(context, "Download complete!");
+                                  // Dismiss the progress snackbar and show a success snackbar
+                                  // DownloadVideoSnackbar().dismissSnackbar(context);
+                                  // DownloadVideoSnackbar().showSuccessSnackbar(context, "Download complete!");
+                                  ToastManager().showToast(
+                                      context: context,
+                                      message: 'Video downloaded successfully'
+                                  );
                                 } else if (state is DownloadVideoFailure) {
-                                  // Show error dialog
-                                  DownloadVideoAlertDialog().showErrorDialog(context, state.error);
+                                  ToastManager().showToast(
+                                      context: context,
+                                      message: 'Errrrroorr in Hive'
+                                  );
+                                  // Dismiss the progress snackbar and show an error snackbar
+                                  // DownloadVideoSnackbar().dismissSnackbar(context);
+                                  // DownloadVideoSnackbar().showErrorSnackbar(context, state.error);
                                 }
+
                               },
                                   child: VideoListItem(
                                     onTap: () {
@@ -788,12 +772,13 @@ class _HomePageContentState extends State<HomePageContent> {
                                               videoDuration: videoData.duration.toString(),
                                               videoViews: videoData.views.toString(),
                                               videoCategory: videoData.categories.toString(),
-                                              videoComments: "0",
+                                              videoComments: "hey",
                                               videoLikes: videoData.likes.toString(),
                                               channelLogo: videoData.channel!.logo!,
                                               channelName: videoData.channel!.name!,
                                               contentType: "content-type",
                                             ));
+                                            Navigator.pop(context);
                                           }
                                           else if(index == 2){
                                             GoRouter.of(context).pushNamed('settingPage');

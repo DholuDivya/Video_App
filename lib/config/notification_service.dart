@@ -3,10 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
-import 'package:path/path.dart';
 import 'package:vimeo_clone/config/global_keys.dart';
-import 'package:vimeo_clone/routes/myapproute.dart';
-import 'package:vimeo_clone/screens/notificationPage/notification_page.dart';
 
 class NotificationService {
   late BuildContext? context;
@@ -85,42 +82,20 @@ class NotificationService {
   void _handleNavigation(RemoteMessage message) {
     // Extract videoSlug from message data
     print('MESSAGE ::::::::::::       ${message.data['extra_data']}');
-    // final videoSlug = message.data['extra_data'];
-
-    final videoSlug = 'sajan';
-    // Get the current navigator context using GlobalKeys.navigatorKey
+    final videoSlug = message.data['extra_data'];
     final navigatorContext = GlobalKeys.navigatorKey.currentContext;
 
-    // Check if the context is available
     if (navigatorContext != null) {
-      // Use WidgetsBinding to ensure we are navigating at the right time
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        // Navigate to the notification page using GoRouter
+
         navigatorContext.pushNamed('notificationPage');
-        // GoRouter.of(navigatorContext).pushNamed(
-        //   'videoPage',
-        //   pathParameters: {
-        //     'slug': videoSlug,  // Pass videoSlug if needed
-        //   },
-        // );
+
+        // navigatorContext.pushNamed('videoPage', pathParameters: {
+        //   'slug': videoSlug
+        // });
       });
     }
   }
-
-
-
-
-    // void _handleNavigation(BuildContext context, RemoteMessage message) {
-    //   // final router = GoRouter.of(context);
-    //   // router.goNamed('notificationPage');
-    //   print('MESSSSAAGEE ::::::::::::       ${message.data['extra_data']}');
-    //   final videoSlug = message.data['extra_data'];
-    //   router.pushNamed('notificationPage');
-    //   final context = GlobalKeys.navigatorKey.currentContext;
-    //   if (context != null) {
-    //
-    //   }
-    // }
 }
 
 
