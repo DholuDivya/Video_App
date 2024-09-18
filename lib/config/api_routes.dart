@@ -33,3 +33,4 @@ const String deletePlaylistUrl = "${apiUrl}playlists/";
 const String forgotPasswordUrl = "${apiUrl}forgot-password";
 const String resetPasswordUrl = "${apiUrl}reset-password";
 const String getNotificationUrl = "${apiUrl}notificationsuser";
+const String appPrivacyContentUrl = "${apiUrl}fetch-page-content";
