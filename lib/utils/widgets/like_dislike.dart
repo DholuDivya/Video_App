@@ -3,9 +3,9 @@ import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/config/constants.dart';
 
 class LikeDislikeButton extends StatefulWidget {
-  final int initialLikeCount;
-  final bool initialIsLiked;
-  final bool initialIsDisliked;
+  final int? initialLikeCount;
+  final bool? initialIsLiked;
+  final bool? initialIsDisliked;
   final void toggleLike;
   final void toggleDislike;
 
@@ -30,9 +30,9 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
   @override
   void initState() {
     super.initState();
-    _isLiked = widget.initialIsLiked;
-    _isDisLiked = widget.initialIsDisliked;
-    _likeCount = widget.initialLikeCount;
+    _isLiked = widget.initialIsLiked!;
+    _isDisLiked = widget.initialIsDisliked!;
+    _likeCount = widget.initialLikeCount!;
   }
 
   void _toggleLike() {

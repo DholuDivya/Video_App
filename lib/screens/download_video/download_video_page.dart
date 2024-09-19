@@ -1,97 +1,80 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:chewie/chewie.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:video_player/video_player.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
+import 'package:vimeo_clone/utils/widgets/custom_download_video_preview.dart';
+import '../../model/hive_model/downloaded_video_model/downloaded_video_model.dart';
 
-class OfflineVideoPlayer extends StatefulWidget {
-
-  const OfflineVideoPlayer({super.key});
+class DownloadedVideosPage extends StatefulWidget {
+  const DownloadedVideosPage({super.key});
 
   @override
-  _OfflineVideoPlayerState createState() => _OfflineVideoPlayerState();
+  _DownloadedVideosPageState createState() => _DownloadedVideosPageState();
 }
 
-class _OfflineVideoPlayerState extends State<OfflineVideoPlayer> {
-  late VideoPlayerController _controller;
-  ChewieController? _chewieController;
-
-  late BannerAd bannerAd;
-  bool isAdLoaded = false;
-
-
-
-
-
+class _DownloadedVideosPageState extends State<DownloadedVideosPage> {
+  late Box<DownloadedVideoModel> videoBox;
 
   @override
   void initState() {
     super.initState();
-    initBannerAd();
-    // _controller = VideoPlayerController.file(File(widget.filePath))
-    //   ..initialize().then((_) {
-    //     setState(() {
-    //       _chewieController = ChewieController(
-    //         videoPlayerController: _controller,
-    //         autoPlay: false,
-    //         looping: false,
-    //       );
-    //     });
-    //   });
+    openVideoBox();
   }
 
-
-  initBannerAd(){
-    print('sgnhsfujgs');
-    bannerAd = BannerAd(
-        size: AdSize.banner,
-        adUnitId: 'ca-app-pub-2734509756038446/1670883979',
-        listener: BannerAdListener(
-            onAdLoaded: (ad){
-              setState(() {
-                isAdLoaded = true;
-              });
-            },
-            onAdFailedToLoad: (ad, error){
-              ad.dispose();
-              print(error);
-            }
-        ),
-        request: const AdRequest()
-    );
-
-    bannerAd.load();
-  }
-
-
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _chewieController?.dispose();
-    super.dispose();
+  Future<void> openVideoBox() async {
+    videoBox = await Hive.openBox<DownloadedVideoModel>('videos');
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Play Video')),
+      appBar: AppBar(
+        title: const Text('Downloads'),
+      ),
+      body: videoBox == null
+          ? Center(child: CircularProgressIndicator())
+          : ValueListenableBuilder(
+        valueListenable: videoBox.listenable(),
+        builder: (context, Box<DownloadedVideoModel> box, _) {
+          if (box.isEmpty) {
+            return Center(
+              child: Text('No videos downloaded yet'),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: box.length,
+              itemBuilder: (context, index) {
+                DownloadedVideoModel video = box.getAt(index)!;
 
-      body: isAdLoaded ? SizedBox(
-        height: bannerAd.size.height.toDouble(),
-        width: bannerAd.size.width.toDouble(),
-        child: AdWidget(ad: bannerAd),
-      ) : SizedBox(),
 
+                return Padding(
+                  padding: EdgeInsets.only(
+                    // top: 10.h
+                  ),
+                  child: CustomDownloadVideoPreview(
+                    onTap: (){
+                      Future.delayed(const Duration(milliseconds: 200), () {
+                        GoRouter.of(context).pushNamed('playDownloadedVideo', extra: video);
+                      });
+                    },
+                      onShowMorePressed: () async {
+                        await box.deleteAt(index);
+                      },
+                      imageUrl: video.videoThumbnail!,
+                      videoTitle: video.videoTitle!,
+                      videoViews: video.videoViews!,
+                      uploadTime: video.videoCreateAtHuman!,
+                      videoDuration: video.videoDuration!
+                  ),
+                );
 
-      // body: Center(
-      //   child: _controller.value.isInitialized
-      //       ? Chewie(
-      //     controller: _chewieController!,
-      //   )
-      //       : CircularProgressIndicator(),
-      // ),
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }

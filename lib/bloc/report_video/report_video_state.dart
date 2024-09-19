@@ -9,7 +9,14 @@ class ReportVideoInitial extends ReportVideoState{}
 
 class ReportVideoLoading extends ReportVideoState{}
 
-class ReportVideoLoaded extends ReportVideoState{}
+class ReportVideoSuccess extends ReportVideoState{
+  final String reportApiMessage;
+
+  ReportVideoSuccess({required this.reportApiMessage});
+
+  @override
+  List<Object?> get props => [reportApiMessage];
+}
 
 class ReportVideoFailure extends ReportVideoState{
   final String error;

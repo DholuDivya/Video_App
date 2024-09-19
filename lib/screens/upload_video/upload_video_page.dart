@@ -47,26 +47,6 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
   List<String> _hashtags = [];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // File? _thumbnail;
-
-  // Future<void> getThumbnail() async {
-  //   try {
-  //     FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //       type: FileType.image, // Specify the file type to image
-  //     );
-  //
-  //     if (result != null && result.files.single.path != null) {
-  //       setState(() {
-  //         _thumbnail = File(result.files.single.path!);
-  //       });
-  //       // Print the image path to the console
-  //       print('Image path to be stored in database: ${_thumbnail!.path}');
-  //     }
-  //   } catch (e) {
-  //     print("Error picking file: $e");
-  //   }
-  // }
-
   void _extractHashtags(String text) {
     final RegExp hashtagRegExp = RegExp(r'(#\w+|\b\w{3,}\b)');
     final Iterable<RegExpMatch> matches = hashtagRegExp.allMatches(text);
@@ -82,6 +62,10 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
   void dispose() {
     _hashtagController.dispose();
     finalThumbnail = null;
+    _hashtagController.clear();
+    _titleController.clear();
+    _descriptionController.clear();
+    _hashtagController.clear();
     super.dispose();
   }
 
@@ -256,12 +240,51 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                       ),
                     );
                   }
-                  else if(state is GetThumbnailLoading){
-                    return Center(child: CircularProgressIndicator(),);
-                  }
+
                   return AspectRatio(
                       aspectRatio: 16 / 9,
-                      child: InkWell(
+
+                      child: finalThumbnail != null ? Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                image: DecorationImage(
+                                    image: FileImage(File(finalThumbnail!.path))
+                                )
+                            ),
+                          ),
+                          Positioned(
+                            top: 10.h,
+                            left: 10.h,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(100),
+                              onTap: () {
+                                // getThumbnail();
+                                context
+                                    .read<GetThumbnailBloc>()
+                                    .add(OpenFilesToGetThumbnail());
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondary
+                                      .withOpacity(0.7),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Icon(
+                                  HeroiconsOutline.folderPlus,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ) : InkWell(
                         borderRadius: BorderRadius.circular(15),
                         onTap: (){
                           context.read<GetThumbnailBloc>().add(OpenFilesToGetThumbnail());
@@ -401,21 +424,148 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                 SizedBox(height: 15.h),
 
 
+              // BlocBuilder<VideoCategoriesBloc, VideoCategoryState>(
+              //   builder: (context, state) {
+              //     if (state is VideoCategoriesLoading) {
+              //       return const Center(child: CircularProgressIndicator());
+              //     } else if (state is VideoCategoriesLoaded) {
+              //       return BlocBuilder<CategorySelectionBloc, CategorySelectionState>(
+              //         builder: (context, selectionState) {
+              //           final selectedCategoryIds = selectionState is CategorySelected
+              //               ? selectionState.selectedCategoryIds
+              //               : [];
+              //
+              //           // Get names of the selected categories
+              //           final selectedCategoryNames = state.categories
+              //               .where((category) => selectedCategoryIds.contains(category.id))
+              //               .map((category) => category.name)
+              //               .join(', ');
+              //
+              //           return GestureDetector(
+              //             onTap: () {
+              //               showDialog(
+              //                 context: context,
+              //                 builder: (context) {
+              //                   return AlertDialog(
+              //                     title: const Center(
+              //                       child: Text(
+              //                         'Select Categories',
+              //                         style: TextStyle(fontSize: 22),
+              //                       ),
+              //                     ),
+              //                     content: SizedBox(
+              //                       width: 400,
+              //                       child: StatefulBuilder(
+              //                         builder: (context, setState) {
+              //                           return ListView.builder(
+              //                             shrinkWrap: true,
+              //                             itemCount: state.categories.length,
+              //                             itemBuilder: (context, index) {
+              //                               final category = state.categories[index];
+              //                               final isSelected = selectedCategoryIds.contains(category.id);
+              //
+              //                               return InkWell(
+              //                                 onTap: () {
+              //                                   // Toggle selection state in the Bloc
+              //                                   if (isSelected) {
+              //                                     context.read<CategorySelectionBloc>().add(
+              //                                       DeselectCategoryEvent(categoryId: category.id!),
+              //                                     );
+              //                                   } else {
+              //                                     context.read<CategorySelectionBloc>().add(
+              //                                       SelectCategoryEvent(categoryId: category.id!),
+              //                                     );
+              //                                   }
+              //                                   setState(() {}); // Update UI to reflect changes
+              //                                 },
+              //                                 child: Container(
+              //                                   alignment: Alignment.center,
+              //                                   height: 40,
+              //                                   margin: const EdgeInsets.symmetric(vertical: 5),
+              //                                   decoration: BoxDecoration(
+              //                                     borderRadius: BorderRadius.circular(15),
+              //                                     color: isSelected
+              //                                         ? Theme.of(context).colorScheme.primary.withOpacity(0.5)
+              //                                         : Theme.of(context).colorScheme.surface,
+              //                                   ),
+              //                                   child: Text(
+              //                                     category.name ?? '',
+              //                                     style: TextStyle(
+              //                                       color: isSelected ? Colors.white : Colors.black,
+              //                                     ),
+              //                                   ),
+              //                                 ),
+              //                               );
+              //                             },
+              //                           );
+              //                         },
+              //                       ),
+              //                     ),
+              //                     actions: [
+              //                       TextButton(
+              //                         onPressed: () => Navigator.pop(context), // Close dialog after selection
+              //                         child: const Text('Done'),
+              //                       ),
+              //                     ],
+              //                   );
+              //                 },
+              //               );
+              //             },
+              //             child: AbsorbPointer(
+              //               child: TextFormField(
+              //                 decoration: InputDecoration(
+              //                   filled: true,
+              //                   fillColor: Theme.of(context).colorScheme.surfaceDim,
+              //                   focusedBorder: OutlineInputBorder(
+              //                     borderRadius: BorderRadius.circular(10),
+              //                     borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
+              //                   ),
+              //                   enabledBorder: OutlineInputBorder(
+              //                     borderRadius: BorderRadius.circular(10),
+              //                     borderSide: BorderSide(
+              //                       color: Theme.of(context).colorScheme.secondary,
+              //                       width: 1.0,
+              //                     ),
+              //                   ),
+              //                   labelText: 'Select Categories',
+              //                   labelStyle: TextStyle(
+              //                     fontSize: 15,
+              //                     color: Colors.grey.shade500,
+              //                   ),
+              //                   suffixIcon: const Icon(Icons.arrow_drop_down),
+              //                 ),
+              //                 controller: TextEditingController(
+              //                   text: selectedCategoryNames.isNotEmpty
+              //                       ? selectedCategoryNames
+              //                       : 'Select Categories', // Fallback to default if no categories selected
+              //                 ),
+              //               ),
+              //             ),
+              //           );
+              //         },
+              //       );
+              //     } else if (state is VideoCategoriesFailure) {
+              //       return const Text('Failed to load categories');
+              //     } else {
+              //       return const Text('No categories available');
+              //     }
+              //   },
+              // ),
 
               BlocBuilder<VideoCategoriesBloc, VideoCategoryState>(
                 builder: (context, state) {
                   if (state is VideoCategoriesLoading) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (state is VideoCategoriesLoaded) {
                     return BlocBuilder<CategorySelectionBloc, CategorySelectionState>(
                       builder: (context, selectionState) {
-
-                        if (selectionState is CategorySelected) {
-                          selectedCategoryIds = selectionState.selectedCategoryIds;
-                        }
+                        // Initialize empty selectedCategoryIds if none
+                        final selectedCategoryIds = selectionState is CategorySelected
+                            ? selectionState.selectedCategoryIds
+                            : [];
 
                         // Get the names of the selected categories
-                        selectedCategoryNames = state.categories
+                        final selectedCategoryNames = state.categories
                             .where((category) => selectedCategoryIds.contains(category.id))
                             .map((category) => category.name)
                             .join(', ');
@@ -428,15 +578,12 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                                 return AlertDialog(
                                   title: const Center(
                                     child: Text(
-                                      'Select a category',
-                                      style: TextStyle(
-                                        fontFamily: fontFamily,
-                                        fontSize: 22,
-                                      ),
+                                      'Select Categories',
+                                      style: TextStyle(fontSize: 22),
                                     ),
                                   ),
                                   content: SizedBox(
-                                    width: 400.w,
+                                    width: 400,
                                     child: ListView.builder(
                                       shrinkWrap: true,
                                       itemCount: state.categories.length,
@@ -444,33 +591,37 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                                         final category = state.categories[index];
                                         final isSelected = selectedCategoryIds.contains(category.id);
 
-                                        return Container(
-                                          width: double.infinity,
-                                          child: InkWell(
-                                            borderRadius: BorderRadius.circular(15),
-                                            onTap: () {
-                                              if (isSelected) {
-                                                context.read<CategorySelectionBloc>().add(DeselectCategoryEvent(categoryId: category.id!));
-                                              } else {
-                                                context.read<CategorySelectionBloc>().add(SelectCategoryEvent(categoryId: category.id!));
-                                              }
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              height: 40.h,
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(15),
-                                                color: isSelected
-                                                    ? Theme.of(context).colorScheme.tertiaryFixedDim
-                                                    : null,
-                                              ),
-                                              child: Text(
-                                                '${category.name}',
-                                                style: TextStyle(
-                                                  fontFamily: fontFamily,
-                                                ),
+                                        return InkWell(
+                                          borderRadius: BorderRadius.circular(15),
+                                          onTap: () {
+                                            // Update the selection state in Bloc
+                                            if (isSelected) {
+                                              context.read<CategorySelectionBloc>().add(
+                                                DeselectCategoryEvent(categoryId: category.id!),
+                                              );
+                                            } else {
+                                              context.read<CategorySelectionBloc>().add(
+                                                SelectCategoryEvent(categoryId: category.id!),
+                                              );
+                                            }
+                                          },
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            height: 40,
+                                            margin: const EdgeInsets.symmetric(vertical: 5),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(15),
+                                              color: isSelected
+                                                  ? Theme.of(context).colorScheme.tertiaryFixedDim
+                                                  : Theme.of(context).colorScheme.surface,
+                                              border: isSelected
+                                                  ? Border.all(color: Theme.of(context).primaryColor, width: 2)
+                                                  : Border.all(color: Colors.grey.shade300, width: 1),
+                                            ),
+                                            child: Text(
+                                              category.name!,
+                                              style: TextStyle(
+                                                color: isSelected ? Colors.white : Colors.black,
                                               ),
                                             ),
                                           ),
@@ -484,13 +635,12 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                           },
                           child: AbsorbPointer(
                             child: TextFormField(
-                              // validator: _validateCategory,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Theme.of(context).colorScheme.surfaceDim,
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: blue, width: 2.0),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -499,19 +649,12 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                                     width: 1.0,
                                   ),
                                 ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).colorScheme.secondary,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                labelText: 'Select a category',
+                                labelText: 'Select Categories',
                                 labelStyle: TextStyle(
                                   fontSize: 15,
                                   color: Colors.grey.shade500,
                                 ),
-                                suffixIcon: Icon(Icons.arrow_drop_down),
+                                suffixIcon: const Icon(Icons.arrow_drop_down),
                               ),
                               controller: TextEditingController(
                                 text: selectedCategoryNames,
@@ -522,14 +665,14 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                       },
                     );
                   } else if (state is VideoCategoriesFailure) {
-                    return Text('Failed to get categories');
+                    return const Text('Failed to load categories');
                   } else {
-                    return Text('No categories available');
+                    return const Text('No categories available');
                   }
                 },
               ),
 
-                SizedBox(height: 15.h),
+              SizedBox(height: 15.h),
 
                 TextFormField(
                   controller: _hashtagController,

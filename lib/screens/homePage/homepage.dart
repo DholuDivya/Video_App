@@ -32,11 +32,15 @@ import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart'
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_bloc.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_event.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_state.dart';
+import 'package:vimeo_clone/bloc/report_video/report_video_bloc.dart';
+import 'package:vimeo_clone/bloc/report_video/report_video_event.dart';
+import 'package:vimeo_clone/bloc/report_video/report_video_state.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_state.dart';
 import 'package:vimeo_clone/bloc/video_list/video_list_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/config/notification_service.dart';
 import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/screens/ShortsScreen/shorts_page.dart';
@@ -52,6 +56,7 @@ import '../../bloc/video_list/video_list_bloc.dart';
 import '../../bloc/video_list/video_list_event.dart';
 import '../../config/colors.dart';
 import '../../utils/widgets/customBottomSheet.dart';
+import '../../utils/widgets/custom_radio_button_list.dart';
 import '../../utils/widgets/video_container.dart';
 import '../download_video/download_video_page.dart';
 import '../user_page/user_page.dart';
@@ -514,6 +519,24 @@ class _HomePageContentState extends State<HomePageContent> {
 
 
 
+
+
+  void showReportDialog(BuildContext context, int videoId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ReportDialog(videoId: videoId,);
+      },
+    );
+  }
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -782,6 +805,12 @@ class _HomePageContentState extends State<HomePageContent> {
                                           }
                                           else if(index == 2){
                                             GoRouter.of(context).pushNamed('settingPage');
+                                          }
+                                          else if(index == 3){
+                                            if(Navigator.canPop(context)){
+                                              Navigator.pop(context);
+                                            }
+                                            showReportDialog(context, videoData.id!);
                                           }
                                         }
                                       );
@@ -1174,6 +1203,90 @@ class _HomePageContentState extends State<HomePageContent> {
 
         return Container();
       },
+    );
+  }
+}
+
+
+
+class ReportDialog extends StatefulWidget {
+  final int videoId;
+  const ReportDialog({super.key, required this.videoId});
+
+  @override
+  _ReportDialogState createState() => _ReportDialogState();
+}
+
+class _ReportDialogState extends State<ReportDialog> {
+  String _selectedValue = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15)
+      ),
+      title: Text('Report Content'),
+      content: RadioButtonList<String>(
+        options: const [
+          'Violent Content',
+          'Hateful Content',
+          'Harmful Content',
+          'Spam',
+          'Child Abuse'
+        ],
+        selectedValue: _selectedValue,
+        onChanged: (String newValue) {
+          setState(() {
+            _selectedValue = newValue;
+          });
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Cancel',
+            style: TextStyle(
+              fontFamily: fontFamily,
+              color: greyShade500
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            // Handle the selected value here
+            final userId = int.parse(Global.userData!.userId!);
+            print('Selected value: $_selectedValue');
+            context.read<ReportVideoBloc>().add(ReportVideoRequest(
+                userId: userId,
+                videoId: widget.videoId,
+                reportContent: _selectedValue
+            ));
+            Navigator.of(context).pop();
+            final reportBloc = context.read<ReportVideoBloc>();
+            reportBloc.stream.listen((state){
+              if(state is ReportVideoSuccess){
+                if(mounted){
+                  ToastManager().showToast(
+                      context: context,
+                      message: state.reportApiMessage
+                  );
+                }
+              }
+            });
+
+          },
+          child: Text(
+              'Report',
+            style: TextStyle(
+              fontFamily: fontFamily,
+              color: primaryColor
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

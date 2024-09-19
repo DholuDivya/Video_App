@@ -7,6 +7,7 @@ import 'package:vimeo_clone/model/get_shorts_list_model.dart';
 class GetShortsListBloc extends Bloc<GetShortsListEvent, GetShortsListState>{
   GetShortsListBloc() : super(GetShortsListInitial()){
     on<GetShortsListRequest>(_onGetShortsListRequest);
+    on<GetShortsBySlug>(_onGetShortsBySlug);
   }
 
   Future<void> _onGetShortsListRequest(GetShortsListRequest event, Emitter<GetShortsListState> emit) async {
@@ -17,6 +18,14 @@ class GetShortsListBloc extends Bloc<GetShortsListEvent, GetShortsListState>{
       emit(GetShortsListLoaded(shortsData: shortsData!));
     }catch(e){
       emit(GetShortsListFailure(error: e.toString()));
+    }
+  }
+
+  Future<void> _onGetShortsBySlug(GetShortsBySlug event, Emitter<GetShortsListState> emit) async {
+    try{
+
+    }catch(e){
+      emit(GetShortsBySlugFailure(error: e.toString()));
     }
   }
 

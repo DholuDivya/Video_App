@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -28,6 +28,8 @@ class DownloadVideoBloc extends Bloc<DownloadVideoEvent, DownloadVideoState> {
 
       var dir = await getApplicationDocumentsDirectory();
       String filePath = "${dir.path}/${event.videoTitle}.mp4";
+      String thumbnailPath = await _downloadAndSaveThumbnail(event.videoThumbnail, dir);
+
 
       await dio.download(
         event.videoSource,
@@ -41,6 +43,8 @@ class DownloadVideoBloc extends Bloc<DownloadVideoEvent, DownloadVideoState> {
         },
       );
 
+
+      print('sgfbseugbg  :: ::    $thumbnailPath');
       if (Platform.isAndroid) {
         final externalDir = Directory('/storage/emulated/0/Download');
         if (!await externalDir.exists()) {
@@ -64,12 +68,13 @@ class DownloadVideoBloc extends Bloc<DownloadVideoEvent, DownloadVideoState> {
       }
 
 
+
       print('Downloaded file :::   $filePath');
       print('Downloaded Video videoId ::  ${event.videoId}');
       print('Downloaded Video videoSlug ::  ${event.videoSlug}');
       print('Downloaded Video videoType ::  ${event.videoType}');
-      print('Downloaded Video filePath ::  ${filePath}');
-      print('Downloaded Video videoThumbnail ::  ${event.videoThumbnail}');
+      print('Downloaded Video filePath ::  $filePath');
+      print('Downloaded Video videoThumbnail ::  ${thumbnailPath}');
       print('Downloaded Video videoTitle ::  ${event.videoTitle}');
       print('Downloaded Video videoDescription ::  ${event.videoDescription}');
       print('Downloaded Video videoHashtag ::  ${event.videoHashtag}');
@@ -83,13 +88,17 @@ class DownloadVideoBloc extends Bloc<DownloadVideoEvent, DownloadVideoState> {
       print('Downloaded Video channelName ::  ${event.channelName}');
       print('Downloaded Video contentType ::  ${event.contentType}');
 
+
+
+
+
       var box = await Hive.openBox<DownloadedVideoModel>('videos');
       var video = DownloadedVideoModel(
         videoId: event.videoId,
         videoSlug: event.videoSlug,
         videoType: event.videoType,
         videoSource: filePath, // Save the local file path
-        videoThumbnail: event.videoThumbnail,
+        videoThumbnail: thumbnailPath,
         videoTitle: event.videoTitle,
         videoDescription: event.videoDescription,
         videoHashtag: event.videoHashtag,
@@ -112,7 +121,13 @@ class DownloadVideoBloc extends Bloc<DownloadVideoEvent, DownloadVideoState> {
     }
   }
 
+  Future<String> _downloadAndSaveThumbnail(String thumbnailUrl, Directory dir) async {
+    final thumbnailResponse = await Dio().get(thumbnailUrl, options: Options(responseType: ResponseType.bytes));
+    final thumbnailFile = File('${dir.path}/${basename(thumbnailUrl)}');
+    await thumbnailFile.writeAsBytes(thumbnailResponse.data);
 
+    return thumbnailFile.path;
+  }
 
   Future<bool> requestStoragePermission(BuildContext context) async {
     if (Platform.isAndroid) {

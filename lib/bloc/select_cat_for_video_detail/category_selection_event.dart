@@ -21,3 +21,9 @@ class DeselectCategoryEvent extends CategorySelectionEvent {
   @override
   List<Object?> get props => [categoryId];
 }
+
+class ClearCategorySelectionEvent extends CategorySelectionEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}

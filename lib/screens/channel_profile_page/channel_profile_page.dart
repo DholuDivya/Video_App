@@ -75,7 +75,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                               width: double.infinity,
                               child: Image.network(
                                 channelData.channel.bannerImage ?? "assets/images/travel.jpg",
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             Container(

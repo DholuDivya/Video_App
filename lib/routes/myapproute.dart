@@ -13,12 +13,17 @@ import 'package:vimeo_clone/Screens/ShortsScreen/shorts_page.dart';
 import 'package:vimeo_clone/Screens/Auth/signup.dart';
 import 'package:vimeo_clone/Screens/VideoPage/videopage.dart';
 import 'package:vimeo_clone/config/global_keys.dart';
+import 'package:vimeo_clone/screens/app_privacy_content_pages/about_us_page.dart';
+import 'package:vimeo_clone/screens/app_privacy_content_pages/privacy_policy_page.dart';
+import 'package:vimeo_clone/screens/app_privacy_content_pages/terms_and_condition_page.dart';
 import 'package:vimeo_clone/screens/auth/forgot_password_page.dart';
 import 'package:vimeo_clone/screens/auth/registration_page.dart';
 import 'package:vimeo_clone/screens/auth/numebr_signup.dart';
 import 'package:vimeo_clone/screens/auth/reset_password.dart';
 import 'package:vimeo_clone/screens/auth/verification_page.dart';
+import 'package:vimeo_clone/screens/download_video/play_downloaded_video_page.dart';
 import 'package:vimeo_clone/screens/edit_channel_page/edit_channel_page.dart';
+import 'package:vimeo_clone/screens/help_and_support/help_and_support_page.dart';
 import 'package:vimeo_clone/screens/history_page/all_history_page.dart';
 import 'package:vimeo_clone/screens/plans_page/plans_page.dart';
 import 'package:vimeo_clone/screens/searchScreen/search_data_page.dart';
@@ -32,7 +37,9 @@ import 'package:vimeo_clone/screens/user_playlist_page/single_playlist_page.dart
 import 'package:vimeo_clone/screens/user_playlist_page/user_playlist_page.dart';
 import 'package:vimeo_clone/screens/your_videos/your_video_page.dart';
 import '../Screens/HomePage/homepage.dart';
+import '../model/hive_model/downloaded_video_model/downloaded_video_model.dart';
 import '../screens/channel_profile_page/channel_profile_page.dart';
+import '../screens/download_video/download_video_page.dart';
 import '../screens/edit_video_detail/edit_video_detail_page.dart';
 
 final navigatorContext = GlobalKeys.navigatorKey.currentContext;
@@ -276,13 +283,49 @@ final navigatorContext = GlobalKeys.navigatorKey.currentContext;
           ),
         ),
 
-        // GoRoute(
-        //     name: 'editVideoDetailPage',
-        //     path: '/editVideoDetailPage/:videoSlug',
-        //   builder: (context, state) => EditVideoDetailPage(
-        //     videoSlug: state.pathParameters['videoSlug']!
-        //   ),
-        // ),
+
+        GoRoute(
+          name: 'downloadedVideoPage',
+          path: '/downloadedVideoPage',
+            pageBuilder: (context, state) => const CupertinoPage(child: DownloadedVideosPage())
+        ),
+
+        GoRoute(
+            name: 'playDownloadedVideo',
+            path: '/playDownloadedVideo',
+            builder: (context, state) {
+            // Extract the DownloadedVideoModel from the state.extra
+              final downloadedVideo = state.extra as DownloadedVideoModel;
+              return PlayDownloadedVideoPage(downloadedVideo: downloadedVideo);
+          },
+        ),
+
+
+        GoRoute(
+            name: 'aboutUsPage',
+            path: '/aboutUsPage',
+            pageBuilder: (context, state) => const CupertinoPage(child: AboutUsPage())
+        ),
+
+        GoRoute(
+            name: 'termsAndConditionsPage',
+            path: '/termsAndConditionsPage',
+            pageBuilder: (context, state) => const CupertinoPage(child: TermsAndConditionPage())
+        ),
+
+        GoRoute(
+            name: 'privacyPolicyPage',
+            path: '/privacyPolicyPage',
+            pageBuilder: (context, state) => const CupertinoPage(child: PrivacyPolicyPage())
+        ),
+
+        GoRoute(
+            name: 'helpAndSupportPage',
+            path: '/helpAndSupportPage',
+            pageBuilder: (context, state) => const CupertinoPage(child: HelpAndSupportPage())
+        ),
+
+
       ]
   );
 // }

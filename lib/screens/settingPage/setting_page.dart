@@ -5,7 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/Utils/Widgets/setting_page_btn.dart';
+import 'package:vimeo_clone/bloc/about_us/about_us_bloc.dart';
+import 'package:vimeo_clone/bloc/about_us/about_us_event.dart';
+import 'package:vimeo_clone/bloc/about_us/about_us_state.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
+import 'package:vimeo_clone/bloc/terms_and_conditions/terms_and_conditions_bloc.dart';
+import 'package:vimeo_clone/bloc/terms_and_conditions/terms_and_conditions_event.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_event.dart';
 import 'package:vimeo_clone/config/global_keys.dart';
@@ -13,6 +18,7 @@ import 'package:vimeo_clone/utils/widgets/CustomLogOutWidget.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
 import '../../config/constants.dart';
+import '../../routes/myapproute.dart';
 import '../../utils/widgets/custom_text_field_auth.dart';
 
 class SettingPage extends StatefulWidget {
@@ -160,12 +166,6 @@ class _SettingPageState extends State<SettingPage> {
     Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-              onPressed: (){
-                Navigator.pop(GlobalKeys.navigatorKey.currentContext!);
-              },
-              icon: Icon(HeroiconsOutline.backward)
-          ),
           title: Text('Settings', style: TextStyle(fontFamily: fontFamily),),
         ),
         body: BlocConsumer<AuthBloc, AuthState>(
@@ -346,22 +346,30 @@ class _SettingPageState extends State<SettingPage> {
                   CustomSettingButton(
                       icon: HeroiconsOutline.informationCircle,
                       btnName: ('About us'),
-                      onTap: () {}
+                      onTap: () {
+                        GoRouter.of(context).pushNamed('aboutUsPage');
+
+                      }
                   ),
 
                   // TERMS OF USE
                   CustomSettingButton(
                       icon: HeroiconsOutline.clipboardDocumentList,
-                      btnName: ('Terms of use '),
-                      onTap: () {}
+                      btnName: ('Terms & conditions'),
+                      onTap: () {
+                        GoRouter.of(context).pushNamed('termsAndConditionsPage');
+
+                      }
                   ),
 
 
                   // HELP
                   CustomSettingButton(
                       icon: HeroiconsOutline.questionMarkCircle,
-                      btnName: ('Help'),
-                      onTap: () {}
+                      btnName: ('Help & support'),
+                      onTap: () {
+                        router.pushNamed('helpAndSupportPage');
+                      }
                   ),
 
                   const SizedBox(height: 10,),

@@ -331,11 +331,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
           onPressed: (){
             if (_formkey.currentState!.validate()) {
               print("Form is Valid");
-              final String name = _nameController.text;
-              final String email = _emailController.text;
-              final String password = _passwordController.text;
-              print('${name}     ${email}   ${password}');
-              context.read<AuthBloc>().add(OnUserRegisterRequestEvent(name: name, email: email, password: password));
+              if(isChecked == true){
+                final String name = _nameController.text;
+                final String email = _emailController.text;
+                final String password = _passwordController.text;
+
+                print('${name}     ${email}   ${password}');
+                context.read<AuthBloc>().add(OnUserRegisterRequestEvent(name: name, email: email, password: password));
+              }else{
+                ToastManager().showToast(
+                    context: context,
+                    message: 'Please agree to our privacy policy first !!'
+                );
+              }
+
 
             }
             else{

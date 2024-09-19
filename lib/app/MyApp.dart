@@ -13,6 +13,8 @@ import 'package:vimeo_clone/Repo/video_category_repo.dart';
 import 'package:vimeo_clone/Repo/video_list_repo.dart';
 import 'package:vimeo_clone/Screens/SettingPage/setting_page.dart';
 import 'package:vimeo_clone/appLinks.dart';
+import 'package:vimeo_clone/bloc/about_us/about_us_bloc.dart';
+import 'package:vimeo_clone/bloc/about_us/about_us_event.dart';
 import 'package:vimeo_clone/bloc/add_comment/add_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
@@ -38,18 +40,24 @@ import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_video_from_user/get_video_bloc.dart';
+import 'package:vimeo_clone/bloc/help_and_support/help_and_support_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike_comment/like_dislike_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_bloc.dart';
 import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
+import 'package:vimeo_clone/bloc/privacy_policy/privacy_policy_bloc.dart';
+import 'package:vimeo_clone/bloc/privacy_policy/privacy_policy_event.dart';
 import 'package:vimeo_clone/bloc/remove_video_from_history/remove_video_from_history_bloc.dart';
 import 'package:vimeo_clone/bloc/remove_video_from_playlist/remove_video_from_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/report_video/report_video_bloc.dart';
 import 'package:vimeo_clone/bloc/reset_password/reset_password_bloc.dart';
 import 'package:vimeo_clone/bloc/search_data/search_data_bloc.dart';
 import 'package:vimeo_clone/bloc/search_suggestion/search_suggestion_bloc.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
+import 'package:vimeo_clone/bloc/terms_and_conditions/terms_and_conditions_bloc.dart';
+import 'package:vimeo_clone/bloc/terms_and_conditions/terms_and_conditions_event.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_video/upload_video_bloc.dart';
@@ -179,6 +187,11 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => UploadShortsBloc()),
         BlocProvider(create: (context) => DownloadVideoBloc()),
         BlocProvider(create: (context) => GetNotificationBloc()),
+        BlocProvider(create: (context) => AboutUsBloc()..add(AboutUsRequest())),
+        BlocProvider(create: (context) => TermsAndConditionsBloc()..add(TermsAndConditionsRequest())),
+        BlocProvider(create: (context) => PrivacyPolicyBloc()..add(PrivacyPolicyRequest())),
+        BlocProvider(create: (context) => ReportVideoBloc()),
+        BlocProvider(create: (context) => HelpAndSupportBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

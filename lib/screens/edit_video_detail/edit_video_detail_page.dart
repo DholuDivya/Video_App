@@ -66,28 +66,10 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
             }
           });
         }
-
-        // _hashtagController = TextEditingController(text: videoData.hashtag);
-        //
-        // // Extract the initial hashtags and set them in the list
-        // _extractHashtags(videoData.hashtag!);
-        // if (_hashtags.isEmpty && videoData.hashtag != null) {
-        //   WidgetsBinding.instance.addPostFrameCallback((_) {
-        //     _hashtagController.text = videoData.hashtag!;
-        //     _extractHashtags(_hashtagController.text);
-        //   });
-        // }
       }
     });
     super.initState();
   }
-  // void _initializeHashtagsFromAPI(String? initialHashtags) {
-  //   if (initialHashtags != null) {
-  //     // Split the initial hashtags (assuming space or comma-separated)
-  //     _hashtags = initialHashtags.split(' ');
-  //     _hashtagController.text = _hashtags.join(' ') + ' ';
-  //   }
-  // }
 
   void _extractHashtags(String text) {
     final RegExp hashtagRegExp = RegExp(r'(#\w+|\b\w{1,}\b)');

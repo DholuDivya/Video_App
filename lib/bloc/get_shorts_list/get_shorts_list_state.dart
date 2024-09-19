@@ -30,3 +30,23 @@ class GetShortsListFailure extends GetShortsListState{
   @override
   List<Object?> get props => [error];
 }
+
+
+
+class GetShortsBySlugLoaded extends GetShortsListState{
+  final List<GetShortsListModel> shortsData;
+
+  GetShortsBySlugLoaded({required this.shortsData});
+
+  @override
+  List<Object?> get props => [shortsData];
+}
+
+class GetShortsBySlugFailure extends GetShortsListState{
+  final String error;
+
+  GetShortsBySlugFailure({required this.error});
+
+  @override
+  List<Object?> get props => [error];
+}
