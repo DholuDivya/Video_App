@@ -6,3 +6,8 @@ class GetAllVideoListEvent extends AllVideoListEvent{
   @override
   List<Object?> get props => [];
 }
+
+class LoadMoreVideoList extends AllVideoListEvent{
+  @override
+  List<Object?> get props => [];
+}

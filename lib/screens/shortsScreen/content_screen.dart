@@ -84,9 +84,7 @@ class _ContentScreenState extends State<ContentScreen> {
       // )..initialise();
 
       _podPlayerController = PodPlayerController(
-        playVideoFrom: widget.shortsData.uploadedBy == "external"
-            ? PlayVideoFrom.youtube(widget.shortsData.video!,)
-            : PlayVideoFrom.network(widget.shortsData.video!,),
+        playVideoFrom: PlayVideoFrom.network(widget.shortsData.video!,),
         podPlayerConfig: const PodPlayerConfig(
           isLooping: true,
           autoPlay: true,
@@ -115,6 +113,7 @@ class _ContentScreenState extends State<ContentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('igfhsriuhgiushghg   ${widget.shortsData.slug}');
     return Stack(
       fit: StackFit.expand,
       children: [

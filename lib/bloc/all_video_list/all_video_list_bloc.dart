@@ -7,18 +7,63 @@ import '../../model/all_video_list_model.dart';
 
 class AllVideoListBloc extends Bloc<AllVideoListEvent, AllVideoListState>{
 
+  int _offset = 0;
+  final int _limit = 3;
+  bool _hasReachedMax = false;
+
   AllVideoListBloc() : super(AllVideoListInitial()){
     on<GetAllVideoListEvent>(_onGetAllVideoListEvent);
+    on<LoadMoreVideoList>(_onLoadMoreVideoList);
   }
 
   Future<void> _onGetAllVideoListEvent(GetAllVideoListEvent event, Emitter<AllVideoListState> emit) async {
     emit(AllVideoListLoading());
     try{
-      final List<VideoData>? videoList = await AllVideoListRepo().getAllVideoList();
+      List<Data>? videoList = [];
+      _offset = 0;
+      _hasReachedMax = false;
+      Map<String, dynamic> video = await AllVideoListRepo().getAllVideoList(_limit, _offset);
+      print('&&&&&&    ${video['data']}');
+      videoList = List<Data>.from(video['data'].map((data) => Data.fromJson(data)));
+      _offset += _limit;
+      _hasReachedMax = videoList.length < _limit;
+      print('_haseReachedMax $_hasReachedMax');
       print('++++++++  $videoList');
-      emit(AllVideoListLoaded(videoList: videoList!));
+
+      emit(AllVideoListLoaded(videoList: videoList, hasReachedMax: _hasReachedMax));
     }catch(e){
       emit(AllVideoListFailure(error: e.toString()));
+    }
+  }
+
+
+  Future<void> _onLoadMoreVideoList(
+      LoadMoreVideoList event, Emitter<AllVideoListState> emit) async {
+    if (state is AllVideoListLoaded && !_hasReachedMax) {
+      try {
+        print('MaxRechedHase_ $_hasReachedMax');
+        List<Data>? videoList = [];
+        print('vihsigbhxfibghixfb');
+        final currentState = state as AllVideoListLoaded;
+        print('[][]][][][][[]');
+        final updatedNotes = List<Data>.from(currentState.videoList);
+        print('sdgjsirgb');
+        Map<String, dynamic> video = await AllVideoListRepo().getAllVideoList(_limit, _offset);
+        print('&&&&&&    ${video['data']}');
+        videoList = List<Data>.from(video['data'].map((data) => Data.fromJson(data)));
+          _offset += _limit;
+
+          if(videoList.length < _limit){
+            _hasReachedMax = true;
+          }else{
+            _hasReachedMax = false;
+          }
+
+        print('rgsdrhgusdrhsef $_hasReachedMax');
+          updatedNotes.addAll(videoList);
+          emit(AllVideoListLoaded(
+              videoList: updatedNotes, hasReachedMax: _hasReachedMax));
+      } catch(e){}
     }
   }
 

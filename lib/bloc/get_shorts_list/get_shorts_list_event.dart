@@ -7,7 +7,11 @@ class GetShortsListRequest extends GetShortsListEvent{
   List<Object?> get props => [];
 }
 
-class GetShortsBySlug extends GetShortsListEvent{
+class GetShortsBySlugRequest extends GetShortsListEvent{
+  final String shortsSlug;
+
+  GetShortsBySlugRequest({required this.shortsSlug});
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [shortsSlug];
 }

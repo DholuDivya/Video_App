@@ -1,106 +1,33 @@
 class AllVideoListModel {
   String? status;
   String? message;
-  Data? data;
+  List<Data>? data;
 
   AllVideoListModel({this.status, this.message, this.data});
 
-  factory AllVideoListModel.fromJson(Map<String, dynamic> json) {
-    return AllVideoListModel(
-      status: json['status'],
-      message: json['message'],
-      data: json['data'] != null ? Data.fromJson(json['data']) : null,
-    );
+  AllVideoListModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data!.toJson();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Data {
-  int? currentPage;
-  List<VideoData>? videos;  // Changed variable name to match JSON response
-  String? firstPageUrl;
-  int? from;
-  int? lastPage;
-  String? lastPageUrl;
-  List<Links>? links;
-  String? nextPageUrl;
-  String? path;
-  int? perPage;
-  String? prevPageUrl;
-  int? to;
-  int? total;
-
-  Data({
-    this.currentPage,
-    this.videos,
-    this.firstPageUrl,
-    this.from,
-    this.lastPage,
-    this.lastPageUrl,
-    this.links,
-    this.nextPageUrl,
-    this.path,
-    this.perPage,
-    this.prevPageUrl,
-    this.to,
-    this.total,
-  });
-
-  factory Data.fromJson(Map<String, dynamic> json) {
-    return Data(
-      currentPage: json['current_page'],
-      videos: json['videos'] != null  // Changed key to match JSON response
-          ? (json['videos'] as List).map((i) => VideoData.fromJson(i)).toList()
-          : null,
-      firstPageUrl: json['first_page_url'],
-      from: json['from'],
-      lastPage: json['last_page'],
-      lastPageUrl: json['last_page_url'],
-      links: json['links'] != null
-          ? (json['links'] as List).map((i) => Links.fromJson(i)).toList()
-          : null,
-      nextPageUrl: json['next_page_url'],
-      path: json['path'],
-      perPage: json['per_page'],
-      prevPageUrl: json['prev_page_url'],
-      to: json['to'],
-      total: json['total'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['current_page'] = this.currentPage;
-    if (this.videos != null) {
-      data['videos'] = this.videos!.map((v) => v.toJson()).toList();  // Changed key to match JSON response
-    }
-    data['first_page_url'] = this.firstPageUrl;
-    data['from'] = this.from;
-    data['last_page'] = this.lastPage;
-    data['last_page_url'] = this.lastPageUrl;
-    if (this.links != null) {
-      data['links'] = this.links!.map((v) => v.toJson()).toList();
-    }
-    data['next_page_url'] = this.nextPageUrl;
-    data['path'] = this.path;
-    data['per_page'] = this.perPage;
-    data['prev_page_url'] = this.prevPageUrl;
-    data['to'] = this.to;
-    data['total'] = this.total;
-    return data;
-  }
-}
-
-class VideoData {
   int? id;
   String? slug;
   String? title;
@@ -118,50 +45,51 @@ class VideoData {
   List<Categories>? categories;
   String? createdAtHuman;
 
-  VideoData({
-    this.id,
-    this.slug,
-    this.title,
-    this.description,
-    this.hashtag,
-    this.views,
-    this.likes,
-    this.type,
-    this.channel,
-    this.status,
-    this.visibility,
-    this.duration,
-    this.video,
-    this.thumbnail,
-    this.categories,
-    this.createdAtHuman,
-  });
+  Data(
+      {this.id,
+        this.slug,
+        this.title,
+        this.description,
+        this.hashtag,
+        this.views,
+        this.likes,
+        this.type,
+        this.channel,
+        this.status,
+        this.visibility,
+        this.duration,
+        this.video,
+        this.thumbnail,
+        this.categories,
+        this.createdAtHuman});
 
-  factory VideoData.fromJson(Map<String, dynamic> json) {
-    return VideoData(
-      id: json['id'],
-      slug: json['slug'],
-      title: json['title'],
-      description: json['description'],
-      hashtag: json['hashtag'],
-      views: json['views'],
-      likes: json['likes'],
-      type: json['type'],
-      channel: json['channel'] != null ? Channel.fromJson(json['channel']) : null,
-      status: json['status'],
-      visibility: json['visibility'],
-      duration: json['duration'],
-      video: json['video'],
-      thumbnail: json['thumbnail'],
-      categories: json['categories'] != null
-          ? (json['categories'] as List).map((i) => Categories.fromJson(i)).toList()
-          : null,
-      createdAtHuman: json['created_at_human'],
-    );
+  Data.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    slug = json['slug'];
+    title = json['title'];
+    description = json['description'];
+    hashtag = json['hashtag'];
+    views = json['views'];
+    likes = json['likes'];
+    type = json['type'];
+    channel =
+    json['channel'] != null ? new Channel.fromJson(json['channel']) : null;
+    status = json['status'];
+    visibility = json['visibility'];
+    duration = json['duration'];
+    video = json['video'];
+    thumbnail = json['thumbnail'];
+    if (json['categories'] != null) {
+      categories = <Categories>[];
+      json['categories'].forEach((v) {
+        categories!.add(new Categories.fromJson(v));
+      });
+    }
+    createdAtHuman = json['created_at_human'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['slug'] = this.slug;
     data['title'] = this.title;
@@ -191,24 +119,25 @@ class Channel {
   String? name;
   String? logo;
   String? banner;
+  int? subscriberCount;
 
-  Channel({this.id, this.name, this.logo, this.banner});
+  Channel({this.id, this.name, this.logo, this.banner, this.subscriberCount});
 
-  factory Channel.fromJson(Map<String, dynamic> json) {
-    return Channel(
-      id: json['id'],
-      name: json['name'],
-      logo: json['logo'],
-      banner: json['banner'],
-    );
+  Channel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    logo = json['logo'];
+    banner = json['banner'];
+    subscriberCount = json['subscriber_count'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['logo'] = this.logo;
     data['banner'] = this.banner;
+    data['subscriber_count'] = this.subscriberCount;
     return data;
   }
 }
@@ -216,50 +145,47 @@ class Channel {
 class Categories {
   int? id;
   String? name;
-  int? parentId;  // Changed type from String to int
-  String? description;
-  String? image;
-  String? type;
+  Null? parentId;
+  Null? description;
+  Null? image;
   String? createdAt;
   String? updatedAt;
+  int? status;
   Pivot? pivot;
 
-  Categories({
-    this.id,
-    this.name,
-    this.parentId,  // Changed type from String to int
-    this.description,
-    this.image,
-    this.type,
-    this.createdAt,
-    this.updatedAt,
-    this.pivot,
-  });
+  Categories(
+      {this.id,
+        this.name,
+        this.parentId,
+        this.description,
+        this.image,
+        this.createdAt,
+        this.updatedAt,
+        this.status,
+        this.pivot});
 
-  factory Categories.fromJson(Map<String, dynamic> json) {
-    return Categories(
-      id: json['id'],
-      name: json['name'],
-      parentId: json['parent_id'],  // Changed type from String to int
-      description: json['description'],
-      image: json['image'],
-      type: json['type'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      pivot: json['pivot'] != null ? Pivot.fromJson(json['pivot']) : null,
-    );
+  Categories.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    parentId = json['parent_id'];
+    description = json['description'];
+    image = json['image'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    status = json['status'];
+    pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    data['parent_id'] = this.parentId;  // Changed type from String to int
+    data['parent_id'] = this.parentId;
     data['description'] = this.description;
     data['image'] = this.image;
-    data['type'] = this.type;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['status'] = this.status;
     if (this.pivot != null) {
       data['pivot'] = this.pivot!.toJson();
     }
@@ -273,41 +199,15 @@ class Pivot {
 
   Pivot({this.videoId, this.categoryId});
 
-  factory Pivot.fromJson(Map<String, dynamic> json) {
-    return Pivot(
-      videoId: json['video_id'],
-      categoryId: json['category_id'],
-    );
+  Pivot.fromJson(Map<String, dynamic> json) {
+    videoId = json['video_id'];
+    categoryId = json['category_id'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['video_id'] = this.videoId;
     data['category_id'] = this.categoryId;
-    return data;
-  }
-}
-
-class Links {
-  String? url;
-  String? label;
-  bool? active;
-
-  Links({this.url, this.label, this.active});
-
-  factory Links.fromJson(Map<String, dynamic> json) {
-    return Links(
-      url: json['url'],
-      label: json['label'],
-      active: json['active'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['url'] = this.url;
-    data['label'] = this.label;
-    data['active'] = this.active;
     return data;
   }
 }

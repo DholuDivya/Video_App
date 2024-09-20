@@ -1,13 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vimeo_clone/Repo/get_shorts_by_slug_repo.dart';
 import 'package:vimeo_clone/Repo/get_shorts_list_repo.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_state.dart';
+import 'package:vimeo_clone/model/get_shorts_by_slug_model.dart';
 import 'package:vimeo_clone/model/get_shorts_list_model.dart';
 
 class GetShortsListBloc extends Bloc<GetShortsListEvent, GetShortsListState>{
   GetShortsListBloc() : super(GetShortsListInitial()){
     on<GetShortsListRequest>(_onGetShortsListRequest);
-    on<GetShortsBySlug>(_onGetShortsBySlug);
+    on<GetShortsBySlugRequest>(_onGetShortsBySlug);
   }
 
   Future<void> _onGetShortsListRequest(GetShortsListRequest event, Emitter<GetShortsListState> emit) async {
@@ -21,12 +23,15 @@ class GetShortsListBloc extends Bloc<GetShortsListEvent, GetShortsListState>{
     }
   }
 
-  Future<void> _onGetShortsBySlug(GetShortsBySlug event, Emitter<GetShortsListState> emit) async {
+  Future<void> _onGetShortsBySlug(GetShortsBySlugRequest event, Emitter<GetShortsListState> emit) async {
     try{
-
+      final List<GetShortsListModel>? shortsData = await GetShortsBySlugRepo().getShortsBySlug(event.shortsSlug);
+      print('>>>>>>>>>>>>>>>>>>    $shortsData');
+      emit(GetShortsBySlugLoaded(shortsData: shortsData!));
     }catch(e){
       emit(GetShortsBySlugFailure(error: e.toString()));
     }
   }
+
 
 }

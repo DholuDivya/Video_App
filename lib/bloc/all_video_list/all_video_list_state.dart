@@ -16,12 +16,13 @@ class AllVideoListLoading extends AllVideoListState {
 }
 
 class AllVideoListLoaded extends AllVideoListState {
-  final List<VideoData> videoList;
+  final List<Data> videoList;
+  final bool hasReachedMax;
 
-  AllVideoListLoaded({required this.videoList});
+  AllVideoListLoaded({required this.videoList, required this.hasReachedMax});
 
   @override
-  List<Object?> get props => [videoList];
+  List<Object?> get props => [videoList, hasReachedMax];
 }
 
 class AllVideoListFailure extends AllVideoListState {

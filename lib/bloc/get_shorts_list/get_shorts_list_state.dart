@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:vimeo_clone/model/get_shorts_list_model.dart';
 
+
 abstract class GetShortsListState extends Equatable{}
 
 class GetShortsListInitial extends GetShortsListState{

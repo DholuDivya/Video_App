@@ -41,10 +41,10 @@ class _ShortsPageState extends State<ShortsPage> {
                 child: Swiper(
                   loop: false,
                   scrollDirection: Axis.vertical,
-                  itemCount: shortsData!.data!.length,
+                  itemCount: shortsData!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ContentScreen(
-                      shortsData: shortsData.data![index],
+                      shortsData: shortsData[index],
                     );
                   },
                 ),

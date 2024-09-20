@@ -54,6 +54,7 @@ import 'package:vimeo_clone/bloc/reset_password/reset_password_bloc.dart';
 import 'package:vimeo_clone/bloc/search_data/search_data_bloc.dart';
 import 'package:vimeo_clone/bloc/search_suggestion/search_suggestion_bloc.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';
+import 'package:vimeo_clone/bloc/shorts_visible/shorts_visible_bloc.dart';
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/terms_and_conditions/terms_and_conditions_bloc.dart';
@@ -192,6 +193,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => PrivacyPolicyBloc()..add(PrivacyPolicyRequest())),
         BlocProvider(create: (context) => ReportVideoBloc()),
         BlocProvider(create: (context) => HelpAndSupportBloc()),
+        BlocProvider(create: (context) => ShortsVisibleBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

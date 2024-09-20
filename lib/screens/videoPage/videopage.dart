@@ -136,7 +136,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
         if (mounted) {
           setState(() {
             _podController = PodPlayerController(
-              playVideoFrom: videoData.uploadSourceType == "external"
+              playVideoFrom: videoData.uploadSourceType == "youtube"
                   ? PlayVideoFrom.youtube(videoData.video!)
                   : PlayVideoFrom.network(videoData.video!),
             )..initialise().then((_) {
