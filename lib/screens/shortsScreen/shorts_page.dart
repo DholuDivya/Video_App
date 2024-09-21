@@ -35,13 +35,13 @@ class _ShortsPageState extends State<ShortsPage> {
           BlocBuilder<GetShortsListBloc, GetShortsListState>(
           builder: (BuildContext context, state) {
             if(state is GetShortsListLoaded){
-              final shortsData = state.shortsData.first.data;
+              final shortsData = state.shortsList;
               return RefreshIndicator(
                 onRefresh: refreshList,
                 child: Swiper(
                   loop: false,
                   scrollDirection: Axis.vertical,
-                  itemCount: shortsData!.length,
+                  itemCount: shortsData.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ContentScreen(
                       shortsData: shortsData[index],

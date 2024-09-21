@@ -24,7 +24,9 @@ class AllVideoListBloc extends Bloc<AllVideoListEvent, AllVideoListState>{
       _hasReachedMax = false;
       Map<String, dynamic> video = await AllVideoListRepo().getAllVideoList(_limit, _offset);
       print('&&&&&&    ${video['data']}');
+      print('iiiiiiiiiiiiiii   ');
       videoList = List<Data>.from(video['data'].map((data) => Data.fromJson(data)));
+      print('99999999999      $videoList');
       _offset += _limit;
       _hasReachedMax = videoList.length < _limit;
       print('_haseReachedMax $_hasReachedMax');
@@ -41,15 +43,10 @@ class AllVideoListBloc extends Bloc<AllVideoListEvent, AllVideoListState>{
       LoadMoreVideoList event, Emitter<AllVideoListState> emit) async {
     if (state is AllVideoListLoaded && !_hasReachedMax) {
       try {
-        print('MaxRechedHase_ $_hasReachedMax');
         List<Data>? videoList = [];
-        print('vihsigbhxfibghixfb');
         final currentState = state as AllVideoListLoaded;
-        print('[][]][][][][[]');
         final updatedNotes = List<Data>.from(currentState.videoList);
-        print('sdgjsirgb');
         Map<String, dynamic> video = await AllVideoListRepo().getAllVideoList(_limit, _offset);
-        print('&&&&&&    ${video['data']}');
         videoList = List<Data>.from(video['data'].map((data) => Data.fromJson(data)));
           _offset += _limit;
 

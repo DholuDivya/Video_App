@@ -10,3 +10,8 @@ class GetVideoListEvent extends VideoListEvent {
   @override
   List<Object?> get props => throw UnimplementedError();
 }
+
+class LoadMoreVideoListCategory extends VideoListEvent{
+  @override
+  List<Object?> get props => [];
+}

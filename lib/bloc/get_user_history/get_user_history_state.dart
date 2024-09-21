@@ -15,12 +15,13 @@ class GetUserHistoryLoading extends GetUserHistoryState{
 }
 
 class GetUserHistorySuccess extends GetUserHistoryState{
-  final List<UserHistoryModel> userHistory;
+  final List<UserHistoryData> userHistory;
+  final bool hasReachedMax;
 
-  GetUserHistorySuccess({required this.userHistory});
+  GetUserHistorySuccess({required this.userHistory, required this.hasReachedMax});
 
   @override
-  List<Object?> get props => [userHistory];
+  List<Object?> get props => [userHistory, hasReachedMax];
 }
 
 class GetUserHistoryFailure extends GetUserHistoryState{

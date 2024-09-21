@@ -15,11 +15,12 @@ class ShowSinglePlaylistLoading extends ShowSinglePlaylistState{
 
 class ShowSinglePlaylistLoaded extends ShowSinglePlaylistState{
   final List<ShowSinglePlaylistModel> singlePlaylistData;
+  final bool hasReachedMax;
 
-  ShowSinglePlaylistLoaded({required this.singlePlaylistData});
+  ShowSinglePlaylistLoaded({required this.singlePlaylistData, required this.hasReachedMax});
 
   @override
-  List<Object?> get props => [singlePlaylistData];
+  List<Object?> get props => [singlePlaylistData, hasReachedMax];
 }
 
 class ShowSinglePlaylistFailure extends ShowSinglePlaylistState{

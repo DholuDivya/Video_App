@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:vimeo_clone/model/get_your_videos_model.dart';
 
 import '../../model/get_channel_detail_model.dart';
@@ -16,12 +17,13 @@ class YourVideosLoading extends YourVideosState{
 }
 
 class YourVideosLoaded extends YourVideosState{
-  final List<GetYourVideosModel> videoData;
+  final List<YourVideoData> yourVideoData;
+  final bool hasReachedMax;
 
-  YourVideosLoaded({required this.videoData});
+  YourVideosLoaded({required this.yourVideoData, required this.hasReachedMax});
 
   @override
-  List<Object?> get props => [videoData];
+  List<Object?> get props => [yourVideoData, hasReachedMax];
 }
 
 class YourVideosFailure extends YourVideosState{

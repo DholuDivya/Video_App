@@ -14,12 +14,13 @@ class GetSubscribedChannelListLoading extends GetSubscribedChannelListState{
 }
 
 class GetSubscribedChannelListLoaded extends GetSubscribedChannelListState{
-  final List<GetSubscribedChannelListModel> channelList;
+  final List<SubscriptionsListData> channelList;
+  final bool hasReachedMax;
 
-  GetSubscribedChannelListLoaded({required this.channelList});
+  GetSubscribedChannelListLoaded({required this.channelList, required this.hasReachedMax});
 
   @override
-  List<Object?> get props => [channelList];
+  List<Object?> get props => [channelList, hasReachedMax];
 }
 
 class GetSubscribedChannelListFailure extends GetSubscribedChannelListState{

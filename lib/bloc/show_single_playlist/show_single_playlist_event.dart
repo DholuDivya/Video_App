@@ -10,3 +10,8 @@ class ShowSinglePlaylistRequest extends ShowSinglePlaylistEvent{
   @override
   List<Object?> get props => [playlistId];
 }
+
+class LoadMoreSinglePlaylist extends ShowSinglePlaylistEvent{
+  @override
+  List<Object?> get props => [];
+}

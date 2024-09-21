@@ -16,8 +16,9 @@ class VideoListLoading extends VideoListState {
 
 class VideoListLoaded extends VideoListState {
   final List<Videos> videoList;
+  final bool hasReachedMax;
 
-  VideoListLoaded({required this.videoList});
+  VideoListLoaded({required this.videoList, required this.hasReachedMax});
 
   @override
   List<Object?> get props => [videoList];

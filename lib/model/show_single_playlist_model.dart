@@ -96,7 +96,7 @@ class Videos {
   int? commentsOnOff;
   int? channelId;
   String? status;
-  Null? deletedAt;
+  String? deletedAt;
   int? views;
   int? likes;
   String? visibility;

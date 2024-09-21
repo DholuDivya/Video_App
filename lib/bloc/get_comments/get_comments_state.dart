@@ -14,12 +14,13 @@ class GetCommentsLoading extends GetCommentsState{
 }
 
 class GetCommentsLoaded extends GetCommentsState{
-  final List<GetCommentsModel> getCommentsList;
+  final List<CommentData> getCommentsList;
+  final bool hasReachedMax;
 
-  GetCommentsLoaded({required this.getCommentsList});
+  GetCommentsLoaded({required this.getCommentsList, required this.hasReachedMax});
 
   @override
-  List<Object?> get props => [getCommentsList];
+  List<Object?> get props => [getCommentsList, hasReachedMax];
 }
 
 class GetCommentsFailure extends GetCommentsState{

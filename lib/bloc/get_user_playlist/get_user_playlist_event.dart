@@ -6,3 +6,8 @@ class GetUserPlaylistRequest extends GetUserPlaylistEvent{
   @override
   List<Object?> get props => [];
 }
+
+class LoadMoreUserPlaylist extends GetUserPlaylistEvent{
+  @override
+  List<Object?> get props => [];
+}

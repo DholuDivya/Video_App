@@ -49,8 +49,8 @@ class _UserPageState extends State<UserPage> {
     final historyBloc = context.read<GetUserHistoryBloc>();
     historyBloc.stream.listen((state){
       if(state is GetUserHistorySuccess){
-        historyLength = state.userHistory.first.data!.length;
-        historyData = state.userHistory.first.data!;
+        historyLength = state.userHistory.length;
+        historyData = state.userHistory;
       }
     });
     print('========== = = =  = = = =$historyLength');
@@ -63,8 +63,8 @@ class _UserPageState extends State<UserPage> {
     final historyBloc = context.read<GetUserHistoryBloc>();
     historyBloc.stream.listen((state){
       if(state is GetUserHistorySuccess){
-        historyLength = state.userHistory.first.data!.length;
-        historyData = state.userHistory.first.data!;
+        historyLength = state.userHistory.length;
+        historyData = state.userHistory;
       }
     });
     return Scaffold(
@@ -117,7 +117,7 @@ class _UserPageState extends State<UserPage> {
                   print('pppppppppppppp   $state');
                   if(state is YourVideosLoaded){
 
-                    totalVideos = state.videoData.first.videoCount;
+                    totalVideos = state.yourVideoData.length;
                     print('&&&&&&&&&&&&&&&&&&   $totalVideos');
                   }
                   return UserPageButton(

@@ -85,7 +85,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
           builder: (BuildContext context, GetUserPlaylistState state) {
             if (state is GetUserPlaylistSuccess) {
               final userPlaylistLength =
-                  state.userPlaylist.first.playlists!.length;
+                  state.userPlaylist.length;
 
               return Container(
                 height: ScreenSize.screenHeight(context) * 0.21,
@@ -150,7 +150,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
 
                     // Fetch the user playlist data for the current index
                     final userPlaylist =
-                        state.userPlaylist.first.playlists![index];
+                        state.userPlaylist[index];
                     final playlistId = userPlaylist.id;
                     return Padding(
                       padding: EdgeInsets.only(
@@ -177,7 +177,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                               ? ''
                               : userPlaylist.videos!.first.thumbnails!,
                           playlistTitle: userPlaylist.title!,
-                          playlistVisibility: userPlaylist.visibility!,
+                          playlistVisibility: userPlaylist.status!,
                           onShowMorePressed: (){
                             customShowMoreBottomSheet(
                                 context,

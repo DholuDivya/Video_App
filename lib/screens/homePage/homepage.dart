@@ -315,7 +315,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
     shortBloc.stream.listen((state){
       if(state is GetShortsListLoaded){
-        shortsLength = state.shortsData.first.data!.length;
+        shortsLength = state.shortsList.length;
       }
     });
 
@@ -329,6 +329,14 @@ class _HomePageContentState extends State<HomePageContent> {
   Future<void> _refreshVideosList() async {
     if (isAllCategorySelected) {
       context.read<AllVideoListBloc>().add(GetAllVideoListEvent());
+      context.read<GetShortsListBloc>().add(GetShortsListRequest());
+      final shortBloc = context.read<GetShortsListBloc>();
+
+      shortBloc.stream.listen((state){
+        if(state is GetShortsListLoaded){
+          shortsLength = state.shortsList.length;
+        }
+      });
     } else {
       // context.read<VideoListBloc>().add(GetVideoListEvent(categoryId: categoryId));
     }
@@ -355,6 +363,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
 
   // DOWNLOAD VIDEO ________________________________________________________
+
   // Future<void> downloadFile() async {
   //   Dio dio = Dio();
   //
@@ -531,8 +540,37 @@ class _HomePageContentState extends State<HomePageContent> {
   }
 
 
+  int _calculateExtraItems(int videoLength, int shortsLength) {
+    if (shortsLength < 4) return 0; // If there are less than 4 shorts, don't show any shorts
+    return 1 + (videoLength ~/ 4); // Shorts after every 4 videos and one after 1st
+  }
+
+// Helper function to adjust the index for "shorts" inserted in the list
+  int _calculateShortsBeforeIndex(int index, int videoLength, int shortsLength) {
+    if (shortsLength < 4) return 0; // If there are less than 4 shorts, don't adjust the index
+    return (index == 1) ? 1 : (index ~/ 5); // 1st shorts at index 1, then every 5th position
+  }
 
 
+
+//   int _calculateExtraItems(int videoLength, int shortsLength) {
+//     if (shortsLength < 4) return 0; // If there are less than 4 shorts, don't show any shorts
+//     if (videoLength <= 3) {
+//       return 1; // Only one shorts if there are 3 or fewer videos
+//     } else {
+//       return (videoLength ~/ 4); // Shorts after every 4 videos when there are more than 5 videos
+//     }
+//   }
+//
+// // Helper function to adjust the index for "shorts" inserted in the list
+//   int _calculateShortsBeforeIndex(int index, int videoLength, int shortsLength) {
+//     if (shortsLength < 4) return 0; // If there are less than 4 shorts, don't adjust the index
+//     if (videoLength <= 3) {
+//       return (index > 1) ? 1 : 0;
+//     } else {
+//       return (index > 1) ? (index ~/ 5) : 0;
+//     }
+//   }
 
 
 
@@ -591,11 +629,11 @@ class _HomePageContentState extends State<HomePageContent> {
                           )
                         ],
                       )),
-      ),
-      body: RefreshIndicator(
-        onRefresh: _refreshVideosList,
-        child: Column(
-          children: [
+                  ),
+                  body: RefreshIndicator(
+                    onRefresh: _refreshVideosList,
+                    child: Column(
+                    children: [
                       isAllCategorySelected
                           ? Expanded(
                             child: BlocBuilder<AllVideoListBloc, AllVideoListState>(
@@ -710,41 +748,78 @@ class _HomePageContentState extends State<HomePageContent> {
                                       // physics: const AlwaysScrollableScrollPhysics(),
                                       padding: EdgeInsets.only(top: ScreenSize.screenHeight(context) * 0.02),
                                       itemCount: state.hasReachedMax
-                                          ? videoLength + (videoLength ~/ 2) // For shortsContainer after every 2 videos
-                                          : videoLength + (videoLength ~/ 2) + 1,
+                                          ? videoLength + _calculateExtraItems(videoLength, shortsLength) // Calculate extra items (shorts)
+                                          : videoLength + _calculateExtraItems(videoLength, shortsLength) + 1, // Extra one for progress indicator
                                       itemBuilder: (BuildContext context, int index) {
-                                        if(state.videoList.length >= 2){
-                                          if ((index+1) % 3 == 0) {
+
+                                        // if(state.videoList.isNotEmpty){
+                                        //   // if ((index+1) % 3 == 0) {
+                                        //   if (index == 1 || ((index > 1) && ((index - 1) % 5 == 0))) {
+                                        //     return Column(
+                                        //       children: [
+                                        //         _shortsView(),
+                                        //         SizedBox(
+                                        //           height: 15.h,
+                                        //         )
+                                        //       ],
+                                        //     );
+                                        //   }
+                                        // }
+
+
+                                        if (shortsLength >= 4) {
+                                          // Show shorts after 1st video, and then every 4 videos
+                                          if (index == 1 || ((index > 1) && ((index - 1) % 5 == 0))) {
                                             return Column(
                                               children: [
-                                                // shortsLength == 4 ?
-                                                _shortsView() ,
-                                                    // : Container(),
-                                                // state.videoList.length > 3 ? _shortsView() : Container(),
-                                                SizedBox(
-                                                  height: 15.h,
-                                                )
+                                                _shortsView(),
+                                                SizedBox(height: 15.h),
                                               ],
                                             );
                                           }
                                         }
-                            
-                            
-                            
-                                        // if (index == 6) {
-                                        //   return Column(
-                                        //     children: [
-                                        //       _shortsView(),
-                                        //       SizedBox(
-                                        //         height: 15.h,
-                                        //       )
-                                        //     ],
-                                        //   );
+
+                                        // Show Circular Progress Indicator when loading more data
+                                        if (index == videoLength + _calculateExtraItems(videoLength, shortsLength)) {
+                                          if (!state.hasReachedMax) {
+                                            return Center(child: CircularProgressIndicator());
+                                          }
+                                        }
+
+
+
+
+                                        // if (state.videoList.isNotEmpty) {
+                                        //   // Check if shortsList has at least 4 items before displaying shorts
+                                        //   if (shortsLength >= 4) {
+                                        //     // Show shorts logic based on video length
+                                        //     if (videoLength <= 3) {
+                                        //       // If there are 3 or fewer videos, show shorts only once after the first video
+                                        //       if (index == 1) {
+                                        //         return Column(
+                                        //           children: [
+                                        //             _shortsView(),
+                                        //             SizedBox(height: 15.h),
+                                        //           ],
+                                        //         );
+                                        //       }
+                                        //     } else {
+                                        //       // For more than 5 videos, show shorts after every 4 videos
+                                        //       if (index == 1 || ((index > 1) && ((index - 1) % 5 == 0))) {
+                                        //         return Column(
+                                        //           children: [
+                                        //             _shortsView(),
+                                        //             SizedBox(height: 15.h),
+                                        //           ],
+                                        //         );
+                                        //       }
+                                        //     }
+                                        //   }
                                         // }
                             
-                            
                                         // Adjust the index to access the correct video item
-                                        final adjustedIndex = index - (index ~/ 3);
+                                        // final adjustedIndex = index - ((index + 4) ~/ 5);
+                                        final adjustedIndex = index - _calculateShortsBeforeIndex(index, videoLength, shortsLength);
                                         // final adjustedIndex = index > 1 ? index - 1 : index;
                                         print('!!!!!!!!!!!!!!!!!!!!      ${state.videoList[adjustedIndex].duration}');
                                         int totalSeconds = state.videoList[adjustedIndex].duration!;
@@ -754,17 +829,8 @@ class _HomePageContentState extends State<HomePageContent> {
                                         if(adjustedIndex < videoLength){
                                           return BlocListener<DownloadVideoBloc, DownloadVideoState>(
                                             listener: (context, state) {
-                                              if (state is DownloadVideoInProgress) {
-                                                // int progressPercentage = (state.progress * 100).toInt();
-                                                //
-                                                // // Show or update the snackbar with the current progress
-                                                // DownloadVideoSnackbar().updateProgressSnackbar(context, progressPercentage);
-                            
-                                              } else if (state is DownloadVideoSuccess) {
-                            
-                                                // Dismiss the progress snackbar and show a success snackbar
-                                                // DownloadVideoSnackbar().dismissSnackbar(context);
-                                                // DownloadVideoSnackbar().showSuccessSnackbar(context, "Download complete!");
+                                              if (state is DownloadVideoInProgress) {}
+                                              else if (state is DownloadVideoSuccess) {
                                                 ToastManager().showToast(
                                                     context: context,
                                                     message: 'Video downloaded successfully'
@@ -774,9 +840,6 @@ class _HomePageContentState extends State<HomePageContent> {
                                                     context: context,
                                                     message: 'Errrrroorr in Hive'
                                                 );
-                                                // Dismiss the progress snackbar and show an error snackbar
-                                                // DownloadVideoSnackbar().dismissSnackbar(context);
-                                                // DownloadVideoSnackbar().showErrorSnackbar(context, state.error);
                                               }
                             
                                             },
@@ -915,53 +978,71 @@ class _HomePageContentState extends State<HomePageContent> {
                                 } else if (state is VideoListLoaded) {
                                   return state.videoList.isNotEmpty
                                       ? Expanded(
-                                        child: ListView.builder(
-                                            shrinkWrap: true,
-                                            physics: const AlwaysScrollableScrollPhysics(),
-                                            padding: EdgeInsets.only(
-                                                top: ScreenSize.screenHeight(context) * 0.02),
-                                            itemCount: state.videoList.length,
-                                            itemBuilder: (BuildContext context, int index) {
-                                              final type = state.videoList[index].type;
-                                                  int totalSeconds = state.videoList[index].duration!;
-                                              String formattedTime =
-                                                  formatDuration(totalSeconds);
-                                        
-                                              return type == "video" ? VideoListItem(
-                                                onTap: () {
-                                                  print(
-                                                      '***************    ${state.videoList[index].slug}');
-                                                  Future.delayed(
-                                                      const Duration(milliseconds: 200),
-                                                      () {
-                                                        print('Video clicked>>>>>>>>>>>>>.');
-                                                    GoRouter.of(context).pushNamed('videoPage',
-                                                        pathParameters: {
-                                                          "slug":
-                                                              state.videoList[index].slug!
+                                        child: NotificationListener<ScrollNotification>(
+                                          onNotification: (scrollInfo) {
+                                            // Check if the user has scrolled to the end and load more notes if needed
+                                            if (!state.hasReachedMax &&
+                                                scrollInfo.metrics.pixels ==
+                                                    scrollInfo.metrics.maxScrollExtent) {
+                                              context.read<VideoListBloc>().add(LoadMoreVideoListCategory());
+                                            }
+                                            return false;
+                                          },
+                                          child: ListView.builder(
+                                              shrinkWrap: true,
+                                              physics: const AlwaysScrollableScrollPhysics(),
+                                              padding: EdgeInsets.only(
+                                                  top: ScreenSize.screenHeight(context) * 0.02),
+                                              itemCount: state.hasReachedMax
+                                                  ? state.videoList.length
+                                                  : state.videoList.length + 1,
+                                              itemBuilder: (BuildContext context, int index) {
+                                                if (index == state.videoList.length) {
+                                                  return Center(child: CircularProgressIndicator());
+                                                }
+                                                int totalSeconds = state.videoList[index].duration!;
+                                                String formattedTime = formatDuration(totalSeconds);
+                                                return VideoListItem(
+                                                  onTap: () {
+                                                    print('***************    ${state.videoList[index].slug}');
+                                                    Future.delayed(
+                                                        const Duration(milliseconds: 200),
+                                                        () {
+                                                          print('Video clicked>>>>>>>>>>>>>.');
+                                                          GoRouter.of(context).pushNamed('videoPage',
+                                                            pathParameters: {
+                                                              "slug":
+                                                                state.videoList[index].slug!
+                                                            });
                                                         });
-                                                  });
-                                                },
-                                                channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
-                                                thumbnailUrl: '${state.videoList[index].thumbnails}',
-                                                duration: formattedTime,
-                                                title: '${state.videoList[index].title}',
-                                                author: '${state.videoList[index].channel?.name}',
-                                                views: '${state.videoList[index].views}',
-                                                uploadTime: '${state.videoList[index].createdAtHuman}',
-                                                onMorePressed: (){
-                                                  customShowMoreBottomSheet(
-                                                      context,
-                                                      bottomSheetListTileField,
-                                                          (int index){
-                                                        if(index == 2){
-                                                          GoRouter.of(context).pushNamed('settingPage');
+                                                  },
+
+
+
+
+
+                                                  channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
+                                                  thumbnailUrl: '${state.videoList[index].thumbnails}',
+                                                  duration: formattedTime,
+                                                  title: '${state.videoList[index].title}',
+                                                  author: '${state.videoList[index].channel?.name}',
+                                                  views: '${state.videoList[index].views}',
+                                                  // uploadTime: '${state.videoList[index].createdAtHuman}',
+                                                  uploadTime: 'll',
+                                                  onMorePressed: (){
+                                                    customShowMoreBottomSheet(
+                                                        context,
+                                                        bottomSheetListTileField,
+                                                            (int index){
+                                                          if(index == 2){
+                                                            GoRouter.of(context).pushNamed('settingPage');
+                                                          }
                                                         }
-                                                      }
-                                                  );
-                                                },
-                                              ) : null;
-                                            }),
+                                                    );
+                                                  },
+                                                );
+                                              }),
+                                        ),
                                       )
                                       : Padding(
                                           padding: EdgeInsets.only(top: 150.h),
@@ -1438,6 +1519,9 @@ class _HomePageContentState extends State<HomePageContent> {
     }
   ];
 
+
+
+
   Widget _shortsView(){
     return Padding(
       padding: EdgeInsets.only(
@@ -1479,7 +1563,7 @@ class _HomePageContentState extends State<HomePageContent> {
                     shrinkWrap: true,
                     itemCount: 4,
                     itemBuilder: (BuildContext context, int index) {
-                      final shortsData = state.shortsData.first.data![index];
+                      final shortsData = state.shortsList[index];
                       return CustomShortsPreviewHomepage(
                         onTap: (){
 

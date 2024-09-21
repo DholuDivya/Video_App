@@ -15,12 +15,13 @@ class GetShortsListLoading extends GetShortsListState{
 }
 
 class GetShortsListLoaded extends GetShortsListState{
-  final List<GetShortsListModel> shortsData;
+  final List<ShortsListData> shortsList;
+  final bool hasReachedMax;
 
-  GetShortsListLoaded({required this.shortsData});
+  GetShortsListLoaded({required this.shortsList, required this.hasReachedMax});
 
   @override
-  List<Object?> get props => [shortsData];
+  List<Object?> get props => [shortsList, hasReachedMax];
 }
 
 class GetShortsListFailure extends GetShortsListState{

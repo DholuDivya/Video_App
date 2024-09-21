@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gradient_icon/gradient_icon.dart';
-import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/Config/colors.dart';
 import 'package:vimeo_clone/Config/constants.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';

@@ -15,3 +15,9 @@ class GetShortsBySlugRequest extends GetShortsListEvent{
   @override
   List<Object?> get props => [shortsSlug];
 }
+
+
+class LoadMoreShortsList extends GetShortsListEvent{
+  @override
+  List<Object?> get props => [];
+}

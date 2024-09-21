@@ -16,11 +16,13 @@ class CustomTextFieldUpload extends StatelessWidget {
   final bool? readOnly;
   final bool? autoFocus;
   final Function(String)? onChange;
+  final String? Function(String?)? validator;
 
   const CustomTextFieldUpload({
     super.key,
     required this.controller,
     required this.fieldLabel,
+    this.validator,
     this.maxLength,
     this.maxLines,
     this.minLines,

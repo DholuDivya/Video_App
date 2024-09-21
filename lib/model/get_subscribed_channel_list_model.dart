@@ -1,15 +1,15 @@
 class GetSubscribedChannelListModel {
   String? message;
-  List<Data>? data;
+  List<SubscriptionsListData>? data;
 
   GetSubscribedChannelListModel({this.message, this.data});
 
   GetSubscribedChannelListModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <SubscriptionsListData>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(new SubscriptionsListData.fromJson(v));
       });
     }
   }
@@ -24,7 +24,7 @@ class GetSubscribedChannelListModel {
   }
 }
 
-class Data {
+class SubscriptionsListData {
   int? channelId;
   String? channelName;
   String? channelLogo;
@@ -33,7 +33,7 @@ class Data {
   String? description;
   String? createdAt;
 
-  Data(
+  SubscriptionsListData(
       {this.channelId,
         this.channelName,
         this.channelLogo,
@@ -42,7 +42,7 @@ class Data {
         this.description,
         this.createdAt});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  SubscriptionsListData.fromJson(Map<String, dynamic> json) {
     channelId = json['channel_id'];
     channelName = json['channel_name'];
     channelLogo = json['channel_logo'];

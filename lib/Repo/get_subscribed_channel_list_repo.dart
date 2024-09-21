@@ -3,18 +3,16 @@ import 'package:vimeo_clone/config/api_routes.dart';
 import 'package:vimeo_clone/model/get_subscribed_channel_list_model.dart';
 
 class GetAllChannelsRepo{
-  Future<List<GetSubscribedChannelListModel>?> getAllChannelsList() async {
+  Future<Map<String, dynamic>> getAllChannelsList(int limit, int offset) async {
     try{
-      final response = await ApiBaseHelper().getAPICall(getSubscribedChannelListUrl, {});
-      if(response.statusCode == 200){
-        List<GetSubscribedChannelListModel> channelsList = [];
-        channelsList.add(GetSubscribedChannelListModel.fromJson(response.data));
-        print('Message ::: ${channelsList.first.message}');
-        return channelsList;
-      }
+      final response = await ApiBaseHelper().getAPICall(getSubscribedChannelListUrl, {
+        'limit': limit,
+        'offset': offset
+      });
+      return response.data as Map<String, dynamic>;
+
     }catch(e){
       throw ApiException('Failed to call get all channels list API');
     }
-    return null;
   }
 }

@@ -5,17 +5,52 @@ import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart'
 import 'package:vimeo_clone/model/get_user_playlist_model.dart';
 
 class GetUserPlaylistBloc extends Bloc<GetUserPlaylistEvent, GetUserPlaylistState>{
+
+  int _offset = 0;
+  final int _limit = 3;
+  bool _hasReachedMax = false;
+
   GetUserPlaylistBloc() : super(GetUserPlaylistInitial()){
     on<GetUserPlaylistRequest>(_onGetUserPlaylistRequest);
+    on<LoadMoreUserPlaylist>(_onLoadMoreUserPlaylist);
   }
 
   Future<void> _onGetUserPlaylistRequest(GetUserPlaylistEvent event, Emitter<GetUserPlaylistState> emit) async {
     try{
-      final List<GetUserPlaylistModel>? userPlaylist = await GetUserPlaylistRepo().getUserPlaylist();
-      print('Fetched successfully ::::::::::::       $userPlaylist');
-      emit(GetUserPlaylistSuccess(userPlaylist: userPlaylist!));
+      List<Playlist>? userPlaylistList = [];
+      _offset = 0;
+      _hasReachedMax = false;
+      Map<String, dynamic> playlistData = await GetUserPlaylistRepo().getUserPlaylist(_limit, _offset);
+      userPlaylistList = List<Playlist>.from(playlistData['playlist'].map((data) => Playlist.fromJson(data)));
+      _offset += _limit;
+      _hasReachedMax = userPlaylistList.length < _limit;
+      print('Fetched successfully ::::::::::::       $userPlaylistList');
+      emit(GetUserPlaylistSuccess(userPlaylist: userPlaylistList, hasReachedMax: _hasReachedMax));
     }catch(e){
       emit(GetUserPlaylistFailure(error: e.toString()));
+    }
+  }
+
+  Future<void> _onLoadMoreUserPlaylist(LoadMoreUserPlaylist event, Emitter<GetUserPlaylistState> emit) async {
+    if (state is GetUserPlaylistSuccess && !_hasReachedMax) {
+      try {
+        List<Playlist>? userPlaylistList = [];
+        final currentState = state as GetUserPlaylistSuccess;
+        final updatedPlaylist = List<Playlist>.from(currentState.userPlaylist);
+        Map<String, dynamic> playlistData = await GetUserPlaylistRepo().getUserPlaylist(_limit, _offset);
+        userPlaylistList = List<Playlist>.from(playlistData['playlist'].map((data) => Playlist.fromJson(data)));
+        _offset += _limit;
+        if(userPlaylistList.length < _limit){
+          _hasReachedMax = true;
+        }else{
+          _hasReachedMax = false;
+        }
+        print('rgsdrhgusdrhsef $_hasReachedMax');
+        updatedPlaylist.addAll(userPlaylistList);
+        emit(GetUserPlaylistSuccess(userPlaylist: userPlaylistList, hasReachedMax: _hasReachedMax));
+      } catch(e){
+        emit(GetUserPlaylistFailure(error: e.toString()));
+      }
     }
   }
 

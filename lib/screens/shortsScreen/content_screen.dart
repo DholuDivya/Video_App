@@ -22,7 +22,7 @@ import 'package:vimeo_clone/model/get_shorts_list_model.dart';
 import '../../bloc/like_dislike/like_dislike_state.dart';
 
 class ContentScreen extends StatefulWidget {
-  final Data shortsData;
+  final ShortsListData shortsData;
 
   const ContentScreen({super.key, required this.shortsData});
 
@@ -52,7 +52,7 @@ class _ContentScreenState extends State<ContentScreen> {
     final commentBloc = context.read<GetCommentsBloc>();
     commentBloc.stream.listen((state){
       if(state is GetCommentsLoaded){
-        initialCommentLength = state.getCommentsList.first.data!.length;
+        initialCommentLength = state.getCommentsList.length;
       }
     });
 
@@ -464,10 +464,10 @@ class _ContentScreenState extends State<ContentScreen> {
                                   physics: const NeverScrollableScrollPhysics(),
                                   // scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
-                                  itemCount: state.getCommentsList.first.data!.length,
+                                  itemCount: state.getCommentsList.length,
                                   itemBuilder: (BuildContext context, int index) {
-                                    final commentData = state.getCommentsList.first.data!;
-                                    final getComments = state.getCommentsList.first.data![index];
+                                    final commentData = state.getCommentsList;
+                                    final getComments = state.getCommentsList[index];
                                     // commentLikeCount = getComments.likesCount!;
                                     // isCommentLiked = getComments.isLiked!;
                                     // isCommentDisliked = getComments.isDisliked!;

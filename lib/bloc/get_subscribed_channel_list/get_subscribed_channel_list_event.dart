@@ -6,3 +6,8 @@ class GetSubscribedChannelListRequest extends GetSubscribedChannelListEvent{
   @override
   List<Object?> get props => [];
 }
+
+class LoadMoreSubscriptionsList extends GetSubscribedChannelListEvent{
+  @override
+  List<Object?> get props => [];
+}

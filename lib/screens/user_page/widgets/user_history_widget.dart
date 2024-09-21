@@ -114,7 +114,7 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
           BlocBuilder<GetUserHistoryBloc, GetUserHistoryState>(
             builder: (BuildContext context, GetUserHistoryState state) {
               if (state is GetUserHistorySuccess) {
-                final reversedUserHistory = state.userHistory.first.data!.reversed.toList(); // Reversing the data list
+                final reversedUserHistory = state.userHistory.reversed.toList(); // Reversing the data list
 
                 return Container(
                   height: ScreenSize.screenHeight(context) * 0.21,

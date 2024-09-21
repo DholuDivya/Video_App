@@ -1,7 +1,7 @@
 class UserHistoryModel {
   bool? error;
   String? message;
-  List<Data>? data;
+  List<UserHistoryData>? data;
   List<String>? watchedDuration;
 
   UserHistoryModel({this.error, this.message, this.data, this.watchedDuration});
@@ -10,9 +10,9 @@ class UserHistoryModel {
     error = json['error'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <UserHistoryData>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(new UserHistoryData.fromJson(v));
       });
     }
     watchedDuration = json['watched_duration'].cast<String>();
@@ -30,7 +30,7 @@ class UserHistoryModel {
   }
 }
 
-class Data {
+class UserHistoryData {
   int? id;
   String? slug;
   String? title;
@@ -48,7 +48,7 @@ class Data {
   List<Categories>? categories;
   String? createdAtHuman;
 
-  Data(
+  UserHistoryData(
       {this.id,
         this.slug,
         this.title,
@@ -66,7 +66,7 @@ class Data {
         this.categories,
         this.createdAtHuman});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  UserHistoryData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     slug = json['slug'];
     title = json['title'];

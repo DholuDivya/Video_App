@@ -329,7 +329,7 @@
 class GetShortsListModel {
   String? status;
   String? message;
-  List<Data>? data;
+  List<ShortsListData>? data;
 
   GetShortsListModel({this.status, this.message, this.data});
 
@@ -337,9 +337,9 @@ class GetShortsListModel {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <ShortsListData>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(new ShortsListData.fromJson(v));
       });
     }
   }
@@ -355,7 +355,7 @@ class GetShortsListModel {
   }
 }
 
-class Data {
+class ShortsListData {
   int? id;
   String? slug;
   String? title;
@@ -376,7 +376,7 @@ class Data {
   bool? isDisliked;
   int? comments;
 
-  Data(
+  ShortsListData(
       {this.id,
         this.slug,
         this.title,
@@ -397,7 +397,7 @@ class Data {
         this.isDisliked,
         this.comments});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  ShortsListData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     slug = json['slug'];
     title = json['title'];
@@ -485,9 +485,9 @@ class Channel {
 class Categories {
   int? id;
   String? name;
-  Null? parentId;
-  Null? description;
-  Null? image;
+  String? parentId;
+  String? description;
+  String? image;
   String? createdAt;
   String? updatedAt;
   int? status;

@@ -332,7 +332,9 @@ class _SettingPageState extends State<SettingPage> {
                   CustomSettingButton(
                       icon: HeroiconsOutline.star,
                       btnName: ('Rate our app'),
-                      onTap: () {}
+                      onTap: () {
+                        launchAppStoreOrPlayStore('com.pubg.imobile');
+                      }
                   ),
 
                   // INVITE FRIENDS

@@ -4,21 +4,54 @@ import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_event
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_state.dart';
 import 'package:vimeo_clone/model/show_single_playlist_model.dart';
 
-class ShowSinglePlaylistBloc
-    extends Bloc<ShowSinglePlaylistEvent, ShowSinglePlaylistState> {
+class ShowSinglePlaylistBloc extends Bloc<ShowSinglePlaylistEvent, ShowSinglePlaylistState> {
+
+  int _offset = 0;
+  final int _limit = 3;
+  bool _hasReachedMax = false;
+
   ShowSinglePlaylistBloc() : super(ShowSinglePlaylistInitial()) {
     on<ShowSinglePlaylistRequest>(_onShowSinglePlaylistRequest);
+    // on<LoadMoreSinglePlaylist>(_onLoadMoreSinglePlaylist);
   }
 
   Future<void> _onShowSinglePlaylistRequest(ShowSinglePlaylistRequest event,
       Emitter<ShowSinglePlaylistState> emit) async {
     try {
-      final List<ShowSinglePlaylistModel>? singlePlaylistData =
-          await ShowSinglePlaylistRepo().showSinglePlaylist(event.playlistId);
-
-      emit(ShowSinglePlaylistLoaded(singlePlaylistData: singlePlaylistData!));
+      List<ShowSinglePlaylistModel>? singlePlaylistData = [];
+      _offset = 0;
+      _hasReachedMax = false;
+      Map<String, dynamic> playlistData = await ShowSinglePlaylistRepo().showSinglePlaylist(event.playlistId, _limit, _offset);
+      singlePlaylistData = List<ShowSinglePlaylistModel>.from(playlistData['data'].map((data) => ShowSinglePlaylistModel.fromJson(data)));
+      _offset += _limit;
+      _hasReachedMax = singlePlaylistData.length < _limit;
+      emit(ShowSinglePlaylistLoaded(singlePlaylistData: singlePlaylistData, hasReachedMax: _hasReachedMax));
     } catch (e) {
       emit(ShowSinglePlaylistFailure(error: e.toString()));
     }
   }
+
+
+  // Future<void> _onLoadMoreSinglePlaylist(LoadMoreSinglePlaylist event, Emitter<ShowSinglePlaylistState> emit) async {
+  //   if (state is ShowSinglePlaylistLoaded && !_hasReachedMax) {
+  //     try {
+  //       List<ShowSinglePlaylistState>? yourVideoList = [];
+  //       final currentState = state as ShowSinglePlaylistLoaded;
+  //       final updatedVideoList = List<ShowSinglePlaylistState>.from(currentState.yourVideoData);
+  //       Map<String, dynamic> yourVideo = await YourVideosRepo().getYourVideos(_limit, _offset);
+  //       yourVideoList = List<GetYourVideosModel>.from(yourVideo['data'].map((data) => GetYourVideosModel.fromJson(data)));
+  //       _offset += _limit;
+  //       if(yourVideoList.length < _limit){
+  //         _hasReachedMax = true;
+  //       }else{
+  //         _hasReachedMax = false;
+  //       }
+  //       updatedVideoList.addAll(yourVideoList);
+  //       emit(YourVideosLoaded(yourVideoData: yourVideoList, hasReachedMax: _hasReachedMax));
+  //     } catch(e){
+  //       emit(YourVideosFailure(error: e.toString()));
+  //     }
+  //   }
+  // }
+
 }

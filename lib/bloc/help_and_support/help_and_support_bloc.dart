@@ -13,9 +13,10 @@ class HelpAndSupportBloc extends Bloc<HelpAndSupportEvent, HelpAndSupportState>{
       final helpAndSupportApiMessage = await HelpAndSupportRepo().helpAndSupport(
           event.userId,
           event.userEmail,
-          event.helpMessage
+          event.helpMessage,
+        event.subject
       );
-      print('hfugiug');
+      print('tttttttt    $helpAndSupportApiMessage');
       emit(HelpAndSupportSuccess(helpAndSupportApiMessage: helpAndSupportApiMessage));
     }catch(e){
       emit(HelpAndSupportFailure(error: e.toString()));

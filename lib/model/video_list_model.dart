@@ -1,10 +1,12 @@
 class VideoListModel {
+  bool? error;
   String? message;
   Category? category;
 
-  VideoListModel({this.message, this.category});
+  VideoListModel({this.error, this.message, this.category});
 
   VideoListModel.fromJson(Map<String, dynamic> json) {
+    error = json['error'];
     message = json['message'];
     category = json['category'] != null
         ? new Category.fromJson(json['category'])
@@ -13,6 +15,7 @@ class VideoListModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['error'] = this.error;
     data['message'] = this.message;
     if (this.category != null) {
       data['category'] = this.category!.toJson();
@@ -24,9 +27,9 @@ class VideoListModel {
 class Category {
   int? id;
   String? name;
-  String? parentId;
-  String? description;
-  String? image;
+  Null? parentId;
+  Null? description;
+  Null? image;
   String? createdAt;
   String? updatedAt;
   int? status;
@@ -86,20 +89,20 @@ class Videos {
   String? hashtag;
   String? watchHours;
   int? videoType;
-  String? geoRegion;
-  String? metaKeywords;
-  String? metaDescription;
+  Null? geoRegion;
+  Null? metaKeywords;
+  Null? metaDescription;
   String? source;
   String? sourceType;
   int? duration;
   String? thumbnails;
   int? nSFW;
-  String? scheduling;
+  Null? scheduling;
   int? scheduled;
   int? commentsOnOff;
   int? channelId;
   String? status;
-  String? deletedAt;
+  Null? deletedAt;
   int? views;
   int? likes;
   String? visibility;
@@ -107,7 +110,7 @@ class Videos {
   String? createdAt;
   String? updatedAt;
   String? contentType;
-  String? createdAtHuman;
+  Null? reasonForDeactivation;
   Pivot? pivot;
   Channel? channel;
 
@@ -141,7 +144,7 @@ class Videos {
         this.createdAt,
         this.updatedAt,
         this.contentType,
-        this.createdAtHuman,
+        this.reasonForDeactivation,
         this.pivot,
         this.channel});
 
@@ -175,7 +178,7 @@ class Videos {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     contentType = json['content_type'];
-    createdAtHuman = json['created_at_human'];
+    reasonForDeactivation = json['reason_for_deactivation'];
     pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
     channel =
     json['channel'] != null ? new Channel.fromJson(json['channel']) : null;
@@ -212,7 +215,7 @@ class Videos {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['content_type'] = this.contentType;
-    data['created_at_human'] = this.createdAtHuman;
+    data['reason_for_deactivation'] = this.reasonForDeactivation;
     if (this.pivot != null) {
       data['pivot'] = this.pivot!.toJson();
     }
@@ -250,11 +253,10 @@ class Channel {
   String? logo;
   String? bannerImage;
   String? status;
-  String? deletedAt;
-  String? region;
+  Null? deletedAt;
+  Null? region;
   String? createdAt;
   String? updatedAt;
-  String? banner;
 
   Channel(
       {this.id,
@@ -267,8 +269,7 @@ class Channel {
         this.deletedAt,
         this.region,
         this.createdAt,
-        this.updatedAt,
-        this.banner});
+        this.updatedAt});
 
   Channel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -282,7 +283,6 @@ class Channel {
     region = json['region'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    banner = json['banner'];
   }
 
   Map<String, dynamic> toJson() {
@@ -298,7 +298,6 @@ class Channel {
     data['region'] = this.region;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    data['banner'] = this.banner;
     return data;
   }
 }

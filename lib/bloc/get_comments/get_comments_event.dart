@@ -10,3 +10,9 @@ class GetCommentsRequest extends GetCommentsEvent{
   @override
   List<Object?> get props => [videoSlug];
 }
+
+
+class LoadMoreGetComments extends GetCommentsEvent{
+  @override
+  List<Object?> get props => [];
+}

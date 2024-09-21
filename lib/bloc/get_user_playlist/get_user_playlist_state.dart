@@ -14,9 +14,10 @@ class GetUserPlaylistLoading extends GetUserPlaylistState{
 }
 
 class GetUserPlaylistSuccess extends GetUserPlaylistState{
-  final List<GetUserPlaylistModel> userPlaylist;
+  final List<Playlist> userPlaylist;
+  final bool hasReachedMax;
 
-  GetUserPlaylistSuccess({required this.userPlaylist});
+  GetUserPlaylistSuccess({required this.userPlaylist, required this.hasReachedMax});
 
   @override
   List<Object?> get props => [];

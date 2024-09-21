@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
-import 'package:vimeo_clone/Config/colors.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
@@ -12,10 +11,8 @@ import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_chan
 import 'package:vimeo_clone/bloc/get_subscribed_channel_list/get_subscribed_channel_list_state.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
-import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/utils/widgets/shimmer.dart';
 
 class SubscriptionsPage extends StatefulWidget {
   const SubscriptionsPage({super.key});
@@ -45,7 +42,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
     final subscriptionBloc = context.read<GetSubscribedChannelListBloc>();
     subscriptionBloc.stream.listen((state){
       if(state is GetSubscribedChannelListLoaded){
-        channelLength = state.channelList.first.data!.length;
+        channelLength = state.channelList.length;
       }
     });
     super.initState();
@@ -138,17 +135,17 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                         return ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: state.channelList.first.data!.length,
+                          itemCount: state.channelList.length,
                             itemBuilder: (context, index){
-                              final channelsList = state.channelList.first.data![index];
-                              channelLength = state.channelList.first.data!.length;
+                              final channelsList = state.channelList[index];
+                              channelLength = state.channelList.length;
                               unsubscribeChannelId = channelsList.channelId!;
                               // isSubscribed = channelsList.
                               return channelLength > 0 ? SizedBox(
                                 height: 60,
                                 child: InkWell(
                                   onTap: (){
-                                    final String channelId = state.channelList.first.data![index].channelId.toString();
+                                    final String channelId = state.channelList[index].channelId.toString();
                                     print('00000000000000000000   $channelId');
                                     context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: channelId));
                                     GoRouter.of(context).pushNamed(

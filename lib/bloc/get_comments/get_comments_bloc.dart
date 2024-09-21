@@ -7,18 +7,54 @@ import 'package:vimeo_clone/bloc/get_comments/get_comments_state.dart';
 import 'package:vimeo_clone/model/get_comments_model.dart';
 
 class GetCommentsBloc extends Bloc<GetCommentsEvent, GetCommentsState>{
+
+  int _offset = 0;
+  final int _limit = 3;
+  bool _hasReachedMax = false;
+  String slug = '';
+
   GetCommentsBloc() : super(GetCommentsInitial()){
     on<GetCommentsRequest>(_onGetCommentsRequest);
+    on<LoadMoreGetComments>(_onLoadMoreGetComments);
   }
 
   Future<void> _onGetCommentsRequest(GetCommentsRequest event, Emitter<GetCommentsState> emit) async {
     try{
       print('Blocccc');
-      final List<GetCommentsModel>? getCommentsList = await GetCommentsRepo().getComments(event.videoSlug);
+      List<CommentData> getCommentsList = [];
+      _offset = 0;
+      _hasReachedMax = false;
+      Map<String, dynamic> comment = await GetCommentsRepo().getComments(event.videoSlug, _limit, _offset);
+      getCommentsList = List<CommentData>.from(comment['data'].map((data) => CommentData.fromJson(data)));
+      _offset += _limit;
+      _hasReachedMax = getCommentsList.length < _limit;
       log('CCCOOOMMMEEENNNTTTSSS   :::   $getCommentsList');
-      emit(GetCommentsLoaded(getCommentsList: getCommentsList!));
+      emit(GetCommentsLoaded(getCommentsList: getCommentsList, hasReachedMax: _hasReachedMax));
     }catch(e){
       emit(GetCommentsFailure(error: e.toString()));
+    }
+  }
+
+  Future<void> _onLoadMoreGetComments(LoadMoreGetComments event, Emitter<GetCommentsState> emit) async {
+    if (state is GetCommentsLoaded && !_hasReachedMax) {
+      try {
+        List<CommentData> getCommentsList = [];
+        final currentState = state as GetCommentsLoaded;
+        final updatedShortsList = List<CommentData>.from(currentState.getCommentsList);
+        Map<String, dynamic> comment = await GetCommentsRepo().getComments(slug, _limit, _offset);
+        getCommentsList = List<CommentData>.from(comment['data'].map((data) => CommentData.fromJson(data)));
+        _offset += _limit;
+        if(getCommentsList.length < _limit){
+          _hasReachedMax = true;
+        }else{
+          _hasReachedMax = false;
+        }
+        print('rgsdrhgusdrhsef $_hasReachedMax');
+        updatedShortsList.addAll(getCommentsList);
+        emit(GetCommentsLoaded(getCommentsList: getCommentsList, hasReachedMax: _hasReachedMax));
+      } catch(e){
+        emit(GetCommentsFailure(error: e.toString()));
+      }
     }
   }
 

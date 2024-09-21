@@ -60,25 +60,25 @@ class YourVideoPage extends StatelessWidget {
               },
             );
           }else if(state is YourVideosLoaded){
-            final length = state.videoData.first.channel.videos.length;
+            final yourVideoLength = state.yourVideoData.length;
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  length != 0 ? ListView.builder(
+                  yourVideoLength != 0 ? ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: state.videoData.first.channel.videos.length,
+                    itemCount: state.yourVideoData.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final videoCount = state.videoData.first.videoCount;
-                      final videoData = state.videoData.first.channel.videos[index];
+                      final videoCount = state.yourVideoData.length;
+                      final videoData = state.yourVideoData[index];
                       final videoType = videoData.type;
-                      int? totalSeconds = state.videoData.first.channel.videos[index].duration;
-                      String formattedTime = formatDuration(totalSeconds);
+                      int? totalSeconds = state.yourVideoData[index].duration;
+                      String formattedTime = formatDuration(totalSeconds!);
                       return videoType == 'video' ? InkWell(
                         onTap: (){
                           Future.delayed(const Duration(milliseconds: 200), () {
                             GoRouter.of(context).pushNamed('videoPage', pathParameters: {
-                              "slug": videoData.slug
+                              "slug": videoData.slug!
                             });
                           });
                         },
@@ -88,10 +88,10 @@ class YourVideoPage extends StatelessWidget {
                               bottom: 5.h
                             ),
                             child: CustomVideoPreview(
-                                imageUrl: videoData.thumbnails,
-                                videoTitle: videoData.title,
+                                imageUrl: videoData.thumbnail!,
+                                videoTitle: videoData.title!,
                                 videoViews: '${videoData.views}',
-                                uploadTime: videoData.createdAtHuman,
+                                uploadTime: videoData.createdAtHuman!,
                                 videoDuration: formattedTime,
                               onShowMorePressed: (){
                                   customShowMoreBottomSheet(
@@ -105,7 +105,7 @@ class YourVideoPage extends StatelessWidget {
                                           GoRouter.of(context).pushNamed(
                                               'editVideoDetailPage',
                                               pathParameters: {
-                                                'slug': videoData.slug
+                                                'slug': videoData.slug!
                                               }
                                           );
                                         }

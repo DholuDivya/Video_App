@@ -9,7 +9,6 @@ import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_state.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/routes/myapproute.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_auth.dart';
 
 import '../../bloc/auth/auth_bloc.dart';

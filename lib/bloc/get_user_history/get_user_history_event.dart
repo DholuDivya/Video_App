@@ -6,3 +6,8 @@ class GetUserHistoryRequest extends GetUserHistoryEvent{
   @override
   List<Object?> get props => [];
 }
+
+class LoadMoreUserHistory extends GetUserHistoryEvent{
+  @override
+  List<Object?> get props => [];
+}

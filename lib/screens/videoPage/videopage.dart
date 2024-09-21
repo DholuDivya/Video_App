@@ -114,8 +114,8 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
       print('kgsrbhjodsjnbdjnboidjjdodinb');
 
       if(state is GetCommentsLoaded){
-        commentLength = state.getCommentsList.first.data!.length;
-        commentData = state.getCommentsList.first.data;
+        commentLength = state.getCommentsList.length;
+        commentData = state.getCommentsList;
         print('^^^^^^^^^^^^^    $commentLength');
         print('898898989889989898989898');
       }
@@ -638,7 +638,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                           commentLength != 0 ? BlocBuilder<GetCommentsBloc, GetCommentsState>(
                             builder: (BuildContext context, GetCommentsState state) {
                               if(state is GetCommentsLoaded){
-                                final getComments = state.getCommentsList.first.data;
+                                final getComments = state.getCommentsList;
                                 return Padding(
                                   padding: EdgeInsets.only(
                                       left: ScreenSize.screenWidth(context) * 0.03,
@@ -1314,7 +1314,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
     final playlistBloc = context.read<GetUserPlaylistBloc>();
     playlistBloc.stream.listen((state){
       if(state is GetUserPlaylistSuccess){
-        playlistLength = state.userPlaylist.first.playlists!.length;
+        playlistLength = state.userPlaylist.length;
       }
     });
 
@@ -1376,8 +1376,8 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
               BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
                 builder: (BuildContext context, GetUserPlaylistState state) {
                   if(state is GetUserPlaylistSuccess){
-                    final playlistLength = state.userPlaylist.first.playlists!.length;
-                    final playlist = state.userPlaylist.first.playlists;
+                    final playlistLength = state.userPlaylist.length;
+                    final playlist = state.userPlaylist;
                     return BlocBuilder<PlaylistSelectionBloc, PlaylistSelectionState>(
                       builder: (BuildContext context, PlaylistSelectionState state) {
                         print('SSTTAATTEE :::   $state');
@@ -1387,66 +1387,71 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                         }
                         return Container(
                           height: 120.h,
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            itemCount: playlistLength,
-                            itemBuilder: (context, index) {
-                              final userPlaylist = playlist![index];
-                              final isSelected =  selectedPlaylistIds.contains(userPlaylist.id);
-                              return Container(
-                                padding: EdgeInsets.only(
-                                  // top: 2.h,
-                                    left: 10.w,
-                                    right: 10.w,
-                                    bottom: 4.h
-                                ),
-                                width: double.infinity,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(15),
-                                  onTap: () {
-                                    if(isSelected){
-                                      context.read<PlaylistSelectionBloc>().add(DeselectPlaylistRequest(playlistId: userPlaylist.id!));
-                                    } else {
-                                      context.read<PlaylistSelectionBloc>().add(SelectPlaylistRequest(playlistId: userPlaylist.id!));
-                                    }
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    height: 30.h,
+                          child: Expanded(
+                            child: NotificationListener<ScrollNotification>(
+
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                itemCount: playlistLength,
+                                itemBuilder: (context, index) {
+                                  final userPlaylist = playlist[index];
+                                  final isSelected =  selectedPlaylistIds.contains(userPlaylist.id);
+                                  return Container(
+                                    padding: EdgeInsets.only(
+                                      // top: 2.h,
+                                        left: 10.w,
+                                        right: 10.w,
+                                        bottom: 4.h
+                                    ),
                                     width: double.infinity,
-                                    decoration: BoxDecoration(
+                                    child: InkWell(
                                       borderRadius: BorderRadius.circular(15),
-                                      color: isSelected
-                                          ? blue
-                                          : Theme.of(context).colorScheme.tertiaryFixedDim,
-                                    ),
-                                    padding: EdgeInsets.only(left: 20.w, right: 20.w),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          '${userPlaylist.title}',
-                                          style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            color: isSelected ? Colors.white : Colors.black
-                                          ),
+                                      onTap: () {
+                                        if(isSelected){
+                                          context.read<PlaylistSelectionBloc>().add(DeselectPlaylistRequest(playlistId: userPlaylist.id!));
+                                        } else {
+                                          context.read<PlaylistSelectionBloc>().add(SelectPlaylistRequest(playlistId: userPlaylist.id!));
+                                        }
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        height: 30.h,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          color: isSelected
+                                              ? blue
+                                              : Theme.of(context).colorScheme.tertiaryFixedDim,
                                         ),
+                                        padding: EdgeInsets.only(left: 20.w, right: 20.w),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              '${userPlaylist.title}',
+                                              style: TextStyle(
+                                                fontFamily: fontFamily,
+                                                color: isSelected ? Colors.white : Colors.black
+                                              ),
+                                            ),
 
-                                        Text(
-                                          '${userPlaylist.videos!.length}',
-                                          style: TextStyle(
-                                            fontFamily: fontFamily,
-                                              color: isSelected ? Colors.white : Colors.black
-                                          ),
+                                            Text(
+                                              '${userPlaylist.videos!.length}',
+                                              style: TextStyle(
+                                                fontFamily: fontFamily,
+                                                  color: isSelected ? Colors.white : Colors.black
+                                              ),
+                                            ),
+
+                                          ],
                                         ),
-
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         );
                         //     : Container(
@@ -1709,9 +1714,9 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                   physics: const NeverScrollableScrollPhysics(),
                                   // scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
-                                  itemCount: state.getCommentsList.first.data!.length,
+                                  itemCount: state.getCommentsList.length,
                                   itemBuilder: (BuildContext context, int index) {
-                                    final getComments = state.getCommentsList.first.data![index];
+                                    final getComments = state.getCommentsList[index];
                                     commentLikeCount = getComments.likesCount!;
                                     isCommentLiked = getComments.isLiked!;
                                     isCommentDisliked = getComments.isDisliked!;

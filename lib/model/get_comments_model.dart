@@ -1,7 +1,7 @@
 class GetCommentsModel {
   bool? error;
   String? message;
-  List<Data>? data;
+  List<CommentData>? data;
 
   GetCommentsModel({this.error, this.message, this.data});
 
@@ -9,9 +9,9 @@ class GetCommentsModel {
     error = json['error'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <CommentData>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(new CommentData.fromJson(v));
       });
     }
   }
@@ -27,7 +27,7 @@ class GetCommentsModel {
   }
 }
 
-class Data {
+class CommentData {
   int? id;
   int? videosId;
   int? userId;
@@ -42,7 +42,7 @@ class Data {
   String? createdAtHuman;
   User? user;
 
-  Data(
+  CommentData(
       {this.id,
         this.videosId,
         this.userId,
@@ -57,7 +57,7 @@ class Data {
         this.createdAtHuman,
         this.user});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  CommentData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     videosId = json['videos_id'];
     userId = json['user_id'];
