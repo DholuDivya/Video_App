@@ -96,6 +96,7 @@ dependencies:
   google_mobile_ads: ^5.1.0
   url_launcher: ^6.3.0
   flutter_html: ^3.0.0-beta.2
+  google_fonts: ^6.2.1
 
 
 
@@ -155,11 +156,31 @@ flutter:
             weight: 700
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
+    - family: Inter
+      fonts:
+         - asset: assets/fonts/inter/Inter_28pt-Regular.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
+
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/lato/Lato-Regular.ttf
+
+
+    - family: NotoSans
+      fonts:
+        - asset: assets/fonts/noto_sans/NotoSans-Regular.ttf
+
+
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans-Regular.ttf
+
+
+
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/roboto/Roboto-Regular.ttf
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -1,18 +1,15 @@
 import 'dart:ui';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
-import 'package:vimeo_clone/Screens/HomePage/homepage.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/routes/myapproute.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_auth.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../config/colors.dart';
@@ -224,7 +221,7 @@ class _SignupPageState extends State<SignupPage> {
                                   style: TextStyle(
                                     fontFamily: fontFamily,
                                     fontSize: 24.sp,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
@@ -242,6 +239,7 @@ class _SignupPageState extends State<SignupPage> {
                                         style: TextStyle(
                                           fontFamily: fontFamily,
                                           fontSize: 14.sp,
+                                          color: Theme.of(context).colorScheme.primaryFixedDim
                                           // color: Colors.blue,
                                         ),
                                       ),
@@ -279,7 +277,8 @@ class _SignupPageState extends State<SignupPage> {
                                       });
                                     },
                                     icon: Icon(
-                                        isPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash
+                                        isPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash,
+                                      color: greyShade600,
                                     )
                                 ),
                               ),
@@ -304,15 +303,20 @@ class _SignupPageState extends State<SignupPage> {
                               BlocBuilder<AuthBloc, AuthState>(
                                 builder: (BuildContext context, state) {
                                    if(state is LoginAuthSuccess) {
-                                    print('Login success with email and password');
-
+                                    ToastManager().showToast(
+                                        context: context,
+                                        message: 'Login successfully'
+                                    );
                                     Future.delayed(const Duration(seconds: 1),(){
                                       GoRouter.of(context).pushReplacementNamed('homePage');
                                       // router.goNamed('homePage');
                                     });
 
                                   }else if(state is LoginAuthFailure){
-                                    print('Login Fail');
+                                     ToastManager().showToast(
+                                         context: context,
+                                         message: 'Login failed'
+                                     );
                                   }else if(state is LoginAuthLoading){
                                      return const Center(child: CircularProgressIndicator());
                                    }
@@ -348,44 +352,46 @@ class _SignupPageState extends State<SignupPage> {
                                   );
                                 }
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 20.h),
 
-                              const SizedBox(height: 24),
-                              const Center(
+                              // const SizedBox(height: 24),
+                              Center(
                                 child: Row(
                                   children: [
-                                    Expanded(child: Divider(thickness: 0.5,)),
-                                    SizedBox(width: 5,),
+                                    Expanded(child: Divider(thickness: 0.5.r, color: Theme.of(context).colorScheme.secondaryFixedDim,)),
+                                    SizedBox(width: 20.w,),
                                     Text(
-                                      'or sign up with',
+                                      'or',
                                       style: TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 14.sp,
                                         fontFamily: fontFamily,
+                                        color: Theme.of(context).colorScheme.primaryFixedDim
                                       ),
                                     ),
-                                    SizedBox(width: 5,),
-                                    Expanded(child: Divider(thickness: 0.5,)),
+                                    SizedBox(width: 20.w,),
+                                    Expanded(child: Divider(thickness: 0.5.r, color: Theme.of(context).colorScheme.secondaryFixedDim,)),
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 16),
+                              SizedBox(height: 20.h),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   BlocConsumer<AuthBloc, AuthState>(
                                     listener: (BuildContext context, state) {
                                       if(state is AuthSuccess){
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Login Successful')),
+                                        ToastManager().showToast(
+                                            context: context,
+                                            message: 'Login successfully'
                                         );
-
                                         Future.delayed(const Duration(seconds: 1),(){
                                           GoRouter.of(context).pushReplacementNamed('homePage');
                                           // router.goNamed('homePage');
                                         });
                                       } else if (state is AuthFailure) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Login Failed')),
+                                        ToastManager().showToast(
+                                            context: context,
+                                            message: 'Login failed'
                                         );
                                       }
                                     },
@@ -401,10 +407,7 @@ class _SignupPageState extends State<SignupPage> {
                                             borderRadius: BorderRadius.circular(
                                                 10),
                                             border: Border.all(
-                                                color: Theme
-                                                    .of(context)
-                                                    .colorScheme
-                                                    .tertiary,
+                                                color: greyShade400,
                                                 width: 0.5
                                             )
                                         ),
@@ -431,7 +434,7 @@ class _SignupPageState extends State<SignupPage> {
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
                                             color: Theme.of(context).colorScheme.tertiary,
-                                            width: 0.5
+                                            width: 0.5.r
                                         )
                                     ),
                                     child: IconButton(
@@ -440,8 +443,8 @@ class _SignupPageState extends State<SignupPage> {
                                           borderRadius: BorderRadius.circular(10)
                                         ))
                                       ),
-                                      icon:  const Icon(Remix.apple_fill),
-                                      iconSize: 30,
+                                      icon: Icon(Remix.apple_fill, color: greyShade800,),
+                                      iconSize: 28,
                                       onPressed: () {
                                         loginWithApple();
                                       },
@@ -455,7 +458,7 @@ class _SignupPageState extends State<SignupPage> {
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
                                             color: Theme.of(context).colorScheme.tertiary,
-                                            width: 0.5
+                                            width: 0.5.r
                                         )
                                     ),
                                     child: IconButton(
@@ -474,14 +477,54 @@ class _SignupPageState extends State<SignupPage> {
                                 ],
                               ),
                               SizedBox(height: 25.h),
-                              const Center(
+                              Center(
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Text(
-                                    'By clicking Create account you agree to our Terms of use and Privacy policy',
+                                  child: RichText(
                                     textAlign: TextAlign.center,
-                                    style:TextStyle(
-                                      fontSize: 12,
+                                    text: TextSpan(
+                                      text: 'By clicking Create account you agree to our ',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: fontFamily,
+                                        color: Theme.of(context).colorScheme.primaryFixedDim,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: 'Terms of use',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: fontFamily,
+                                            color: blue,
+                                            decoration: TextDecoration.underline,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              // Navigate to Terms of Use screen
+                                              GoRouter.of(context).pushNamed('termsAndConditionsPage');
+                                            },
+                                        ),
+                                        TextSpan(
+                                          text: ' and ',
+                                        ),
+                                        TextSpan(
+                                          text: 'Privacy policy',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: fontFamily,
+                                            color: blue, // Make this a link color
+                                            decoration: TextDecoration.underline,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              // Navigate to Privacy Policy screen
+                                              GoRouter.of(context).pushNamed('privacyPolicyPage');
+                                            },
+                                        ),
+                                        TextSpan(
+                                          text: '.',
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),

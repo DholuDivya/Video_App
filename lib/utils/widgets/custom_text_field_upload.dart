@@ -3,6 +3,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:vimeo_clone/config/colors.dart';
+import 'package:vimeo_clone/config/constants.dart';
 
 class CustomTextFieldUpload extends StatelessWidget {
   final TextEditingController controller;
@@ -42,25 +43,22 @@ class CustomTextFieldUpload extends StatelessWidget {
       maxLength: maxLength,
       maxLines: maxLines,
       minLines: minLines,
-      enabled: isEnabled,
-      readOnly: readOnly!,
+      enabled: isEnabled ?? true,
+      readOnly: readOnly ?? false,
       autofocus: autoFocus ?? false,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
         // hintText: ' Title... ',
-          labelText: '${fieldLabel}',
+          labelText: fieldLabel,
           labelStyle: TextStyle(
+            fontFamily: fontFamily,
               fontSize: 15,
               color: Theme.of(context).colorScheme.secondaryFixedDim),
-
-          // floatingLabelStyle: TextStyle(
-          //
-          // ),
           filled: true,
           fillColor: Theme.of(context).colorScheme.surfaceDim,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: blue, width: 2.0),
+            borderSide: BorderSide(color: primaryColor, width: 2.0),
           ),
           suffix: suffix,
           enabledBorder: OutlineInputBorder(

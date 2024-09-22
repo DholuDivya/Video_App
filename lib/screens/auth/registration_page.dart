@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
@@ -177,7 +179,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         });
                       },
                       icon: Icon(
-                          isPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash
+                          isPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash,
+                        color: greyShade600,
                       )
                   ),
                 ),
@@ -196,7 +199,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         });
                       },
                       icon: Icon(
-                          isConfirmPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash
+                          isConfirmPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash,
+                        color: greyShade600,
                       )
                   ),
                 ),
@@ -281,35 +285,77 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
 
-  Widget termsAndCondition(){
+  Widget termsAndCondition() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Checkbox(
-          activeColor: Colors.blue,
+        Transform.scale(
+          scale: 0.8.r,
+          child: Checkbox(
+            activeColor: Colors.blue,
             value: isChecked,
-            onChanged: (value){
+            onChanged: (value) {
               setState(() {
                 isChecked = value!;
               });
-            }
+            },
+          ),
         ),
-        const Expanded(
-            child: AutoSizeText(""
-                "By $appName, you agree to our Terms of Service and "
-                "acknowledge our Privacy Policy and Cookie Policy.",
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              text: 'By $appName, you agree to our ',
               style: TextStyle(
-                fontSize: 5,
-                fontFamily: fontFamily
+                fontSize: 10.sp,
+                fontFamily: fontFamily,
+                color: Theme.of(context).colorScheme.secondaryFixedDim,
               ),
-            )
+              children: [
+                TextSpan(
+                  text: 'terms of service',
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontFamily: fontFamily,
+                    color: blue, // Link color
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      // Navigate to Terms of Service page
+                      GoRouter.of(context).pushNamed('termsAndConditionsPage');
+                    },
+                ),
+                TextSpan(
+                  text: ' and acknowledge our ',
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontFamily: fontFamily,
+                    color: Theme.of(context).colorScheme.secondaryFixedDim,
+                  ),
+                ),
+                TextSpan(
+                  text: 'privacy policy',
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontFamily: fontFamily,
+                    color: blue, // Link color
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      // Navigate to Privacy Policy page
+                      GoRouter.of(context).pushNamed('privacyPolicyPage');
+                    },
+                ),
+              ],
+            ),
+          ),
         ),
-
-
       ],
     );
   }
+
 
   Widget joinButton(){
     return Container(

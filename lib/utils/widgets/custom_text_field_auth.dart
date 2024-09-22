@@ -40,13 +40,22 @@ class CustomTextField extends StatelessWidget {
               width: 1.0
             ),
           ),
+        filled: true,
+        fillColor: Theme.of(context).colorScheme.surfaceDim,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            // color: Colors.grey.shade900,
+            color: Theme.of(context).colorScheme.secondary,
+            width: 1.0,
+          ),
+        ),
           suffixIcon: suffixIcon,
           labelText: label,
-          labelStyle: TextStyle(
-              fontFamily: fontFamily,
-              color: Theme.of(context).colorScheme.primaryFixedDim,
-              fontSize: 13
-          ),
+        labelStyle: TextStyle(
+            fontFamily: fontFamily,
+            fontSize: 15,
+            color: Theme.of(context).colorScheme.secondaryFixedDim),
           // helperText: ''
       ),
     );

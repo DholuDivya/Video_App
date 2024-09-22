@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,7 +14,7 @@ const String adUnitId = "ca-app-pub-2734509756038446/1670883979";
 
 
 // FONT FAMILY
-const String fontFamily = 'Poppins';
+const String fontFamily = 'Roboto';
 
 
 

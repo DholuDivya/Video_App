@@ -1710,143 +1710,161 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  // scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: state.getCommentsList.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    final getComments = state.getCommentsList[index];
-                                    commentLikeCount = getComments.likesCount!;
-                                    isCommentLiked = getComments.isLiked!;
-                                    isCommentDisliked = getComments.isDisliked!;
+                                Expanded(
+                                  child: NotificationListener<ScrollNotification>(
+                                    onNotification: (scrollInfo) {
+                                      // Check if the user has scrolled to the end and load more notes if needed
+                                      if (!state.hasReachedMax &&
+                                          scrollInfo.metrics.pixels ==
+                                              scrollInfo.metrics.maxScrollExtent) {
+                                        context.read<GetCommentsBloc>().add(
+                                            LoadMoreGetComments());
+                                      }
+                                      return false;
+                                    },
+                                    child: ListView.builder(
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      // scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      itemCount: state.getCommentsList.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        final getComments = state.getCommentsList[index];
+                                        commentLikeCount = getComments.likesCount!;
+                                        isCommentLiked = getComments.isLiked!;
+                                        isCommentDisliked = getComments.isDisliked!;
 
 
-                                    print('((((((((((((((((((((     $commentLikeCount');
-                                    print('((((((((((((((((((((     $isCommentLiked');
-                                    print('((((((((((((((((((((     $isCommentDisliked');
+                                        print('((((((((((((((((((((     $commentLikeCount');
+                                        print('((((((((((((((((((((     $isCommentLiked');
+                                        print('((((((((((((((((((((     $isCommentDisliked');
 
-                                    return Container(
-                                      // color: Colors.yellow,
-                                      width: double.infinity,
-                                      padding: EdgeInsets.symmetric(vertical: ScreenSize.screenHeight(context) * 0.015),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              left: ScreenSize.screenWidth(context) * 0.03,
-                                            ),
-                                            child: CircleAvatar(
-                                              radius: 14,
-                                              backgroundImage: NetworkImage('${getComments.user!.profile}'),
-                                            ),
-                                          ),
-                                          SizedBox(width: ScreenSize.screenWidth(context) * 0.015),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  child: Text(
-                                                    '${getComments.user!.name} - ${getComments.createdAtHuman}',
-                                                    style: TextStyle(
-                                                      fontFamily: fontFamily,
-                                                      fontSize: 12,
-                                                      color: Colors.grey.shade700,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    ),
-                                                    maxLines: 1,
-                                                  ),
+                                        if (index == state.getCommentsList.length) {
+                                          return Center(child: CircularProgressIndicator());
+                                        }
+
+                                        return Container(
+                                          // color: Colors.yellow,
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(vertical: ScreenSize.screenHeight(context) * 0.015),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: ScreenSize.screenWidth(context) * 0.03,
                                                 ),
-                                                SizedBox(height: ScreenSize.screenHeight(context) * 0.005),
-                                                Text(
-                                                  getComments.comment!,
-                                                  style: const TextStyle(
-                                                    fontFamily: fontFamily,
-                                                    fontSize: 14,
-                                                    overflow: TextOverflow.visible,
-                                                  ),
+                                                child: CircleAvatar(
+                                                  radius: 14,
+                                                  backgroundImage: NetworkImage('${getComments.user!.profile}'),
                                                 ),
-
-                                                SizedBox(height: ScreenSize.screenHeight(context) * 0.025),
-                                                Row(
+                                              ),
+                                              SizedBox(width: ScreenSize.screenWidth(context) * 0.015),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    GestureDetector(
-                                                        onTap: (){
-                                                          context.read<LikeDislikeCommentBloc>().add(LikeCommentRequest(commentId: getComments.id!));
-                                                          setState(() {
-                                                            if (isCommentLiked){
-                                                              isCommentLiked = false;
-                                                              commentLikeCount--;
-                                                            } else {
-                                                              ToastManager().showToast(
-                                                                  context: context,
-                                                                  message: 'Comment liked!'
-                                                              );
-                                                              isCommentLiked = true;
-                                                              commentLikeCount++;
-                                                              if (isCommentDisliked){
-                                                                isCommentDisliked = false;
-                                                              }
-                                                            }
-                                                          });
-                                                          print('LLLIIIKKKEEE');
-                                                          print('88888888888888888888888    comment count ::  $commentLength');
-                                                          print('88888888888888888888888    comment isLiked ::  $isCommentLiked');
-                                                          print('88888888888888888888888    comment isDisliked ::  $isCommentDisliked');
-                                                        },
-                                                        child: isCommentLiked
-                                                            ? const Icon(HeroiconsSolid.handThumbUp, size: 20)
-                                                            : const Icon(HeroiconsOutline.handThumbUp, size: 20)
+                                                    SizedBox(
+                                                      width: double.infinity,
+                                                      child: Text(
+                                                        '${getComments.user!.name} - ${getComments.createdAtHuman}',
+                                                        style: TextStyle(
+                                                          fontFamily: fontFamily,
+                                                          fontSize: 12,
+                                                          color: Colors.grey.shade700,
+                                                          overflow: TextOverflow.ellipsis,
+                                                        ),
+                                                        maxLines: 1,
+                                                      ),
                                                     ),
-                                                    SizedBox(width: ScreenSize.screenWidth(context) * 0.01),
-                                                    Text('$commentLikeCount'),
-                                                    SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
-                                                    GestureDetector(
-                                                        onTap: (){
-                                                          context.read<LikeDislikeCommentBloc>().add(DislikeCommentRequest(commentId: getComments.id!));
-                                                          setState(() {
-                                                            if (isCommentDisliked) {
-                                                              isCommentDisliked = false;
-                                                            } else {
-                                                              ToastManager().showToast(
-                                                                  context: context,
-                                                                  message: 'Comment disliked!'
-                                                              );
-                                                              isCommentDisliked = true;
-                                                              if (isCommentLiked) {
-                                                                isCommentLiked = false;
-                                                                commentLikeCount--;
-                                                              }
-                                                            }
-                                                          });
+                                                    SizedBox(height: ScreenSize.screenHeight(context) * 0.005),
+                                                    Text(
+                                                      getComments.comment!,
+                                                      style: const TextStyle(
+                                                        fontFamily: fontFamily,
+                                                        fontSize: 14,
+                                                        overflow: TextOverflow.visible,
+                                                      ),
+                                                    ),
 
-                                                          print('77777777777777777777777    comment count ::  $commentLength');
-                                                          print('77777777777777777777777    comment isLiked ::  $isCommentLiked');
-                                                          print('77777777777777777777777    comment isDisliked ::  $isCommentDisliked');
-                                                        },
-                                                        child: isCommentDisliked
-                                                            ? const Icon(HeroiconsSolid.handThumbDown, size: 20)
-                                                            : const Icon(HeroiconsOutline.handThumbDown, size: 20)
+                                                    SizedBox(height: ScreenSize.screenHeight(context) * 0.025),
+                                                    Row(
+                                                      children: [
+                                                        GestureDetector(
+                                                            onTap: (){
+                                                              context.read<LikeDislikeCommentBloc>().add(LikeCommentRequest(commentId: getComments.id!));
+                                                              setState(() {
+                                                                if (isCommentLiked){
+                                                                  isCommentLiked = false;
+                                                                  commentLikeCount--;
+                                                                } else {
+                                                                  ToastManager().showToast(
+                                                                      context: context,
+                                                                      message: 'Comment liked!'
+                                                                  );
+                                                                  isCommentLiked = true;
+                                                                  commentLikeCount++;
+                                                                  if (isCommentDisliked){
+                                                                    isCommentDisliked = false;
+                                                                  }
+                                                                }
+                                                              });
+                                                              print('LLLIIIKKKEEE');
+                                                              print('88888888888888888888888    comment count ::  $commentLength');
+                                                              print('88888888888888888888888    comment isLiked ::  $isCommentLiked');
+                                                              print('88888888888888888888888    comment isDisliked ::  $isCommentDisliked');
+                                                            },
+                                                            child: isCommentLiked
+                                                                ? const Icon(HeroiconsSolid.handThumbUp, size: 20)
+                                                                : const Icon(HeroiconsOutline.handThumbUp, size: 20)
+                                                        ),
+                                                        SizedBox(width: ScreenSize.screenWidth(context) * 0.01),
+                                                        Text('$commentLikeCount'),
+                                                        SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
+                                                        GestureDetector(
+                                                            onTap: (){
+                                                              context.read<LikeDislikeCommentBloc>().add(DislikeCommentRequest(commentId: getComments.id!));
+                                                              setState(() {
+                                                                if (isCommentDisliked) {
+                                                                  isCommentDisliked = false;
+                                                                } else {
+                                                                  ToastManager().showToast(
+                                                                      context: context,
+                                                                      message: 'Comment disliked!'
+                                                                  );
+                                                                  isCommentDisliked = true;
+                                                                  if (isCommentLiked) {
+                                                                    isCommentLiked = false;
+                                                                    commentLikeCount--;
+                                                                  }
+                                                                }
+                                                              });
+
+                                                              print('77777777777777777777777    comment count ::  $commentLength');
+                                                              print('77777777777777777777777    comment isLiked ::  $isCommentLiked');
+                                                              print('77777777777777777777777    comment isDisliked ::  $isCommentDisliked');
+                                                            },
+                                                            child: isCommentDisliked
+                                                                ? const Icon(HeroiconsSolid.handThumbDown, size: 20)
+                                                                : const Icon(HeroiconsOutline.handThumbDown, size: 20)
+                                                        ),
+                                                        // SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
+                                                        // Icon(HeroiconsOutline.chatBubbleBottomCenterText, size: 20),
+                                                      ],
                                                     ),
-                                                    // SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
-                                                    // Icon(HeroiconsOutline.chatBubbleBottomCenterText, size: 20),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {},
+                                                icon: const Icon(HeroiconsOutline.ellipsisVertical, size: 18),
+                                              ),
+                                            ],
                                           ),
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(HeroiconsOutline.ellipsisVertical, size: 18),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
+                                        );
+                                      },
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2026,41 +2044,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
       },
     );
   }
-
-
-
-
-// void addCommentSheet(context){
-  //   showModalBottomSheet(
-  //       context: context,
-  //       builder: (context){
-  //         return TextField(
-  //           autofocus: true,
-  //           controller: _commentController,
-  //           focusNode: _focusNode,
-  //           decoration: InputDecoration(
-  //             hintText: 'Add Comment...',
-  //             border: OutlineInputBorder(
-  //               borderRadius: BorderRadius.circular(10),
-  //               borderSide: BorderSide.none,
-  //             ),
-  //             filled: true,
-  //             fillColor: Colors.grey.shade300,
-  //           ),
-  //           onTap: () {
-  //             final userComment = _commentController.text;
-  //             _focusNode.requestFocus();
-  //             context.read<AddCommentBloc>().add(AddCommentRequest(userComment: userComment, videoSlug: widget.slug));
-  //             ToastManager().showToast(
-  //                 context: context,
-  //                 message: 'Comment added successfully'
-  //             );
-  //           },
-  //         );
-  //       }
-  //   );
-  // }
-
 }
 
 
