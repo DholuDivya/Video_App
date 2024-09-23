@@ -1,18 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class GetChannelDetailModel {
   GetChannelDetailModel({
     required this.channel,

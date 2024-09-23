@@ -1,24 +1,27 @@
 class GetUserPlaylistModel {
   bool? error;
   String? message;
-  Playlist? playlist;
+  List<Playlist>? data;
 
-  GetUserPlaylistModel({this.error, this.message, this.playlist});
+  GetUserPlaylistModel({this.error, this.message, this.data});
 
   GetUserPlaylistModel.fromJson(Map<String, dynamic> json) {
     error = json['error'];
     message = json['message'];
-    playlist = json['playlist'] != null
-        ? new Playlist.fromJson(json['playlist'])
-        : null;
+    if (json['data'] != null) {
+      data = <Playlist>[];
+      json['data'].forEach((v) {
+        data!.add(new Playlist.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['error'] = this.error;
     data['message'] = this.message;
-    if (this.playlist != null) {
-      data['playlist'] = this.playlist!.toJson();
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -28,28 +31,37 @@ class Playlist {
   int? id;
   String? title;
   String? description;
-  String? status;
+  int? userId;
+  String? visibility;
+  String? createdAt;
+  String? updatedAt;
   String? createdAtHuman;
-  List<PlaylistVideos>? videos;
+  List<Videos>? videos;
 
   Playlist(
       {this.id,
         this.title,
         this.description,
-        this.status,
+        this.userId,
+        this.visibility,
+        this.createdAt,
+        this.updatedAt,
         this.createdAtHuman,
         this.videos});
 
-  Playlist.fromJson(Map<String, dynamic> json) {
+  Playlist .fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     description = json['description'];
-    status = json['status'];
+    userId = json['user_id'];
+    visibility = json['visibility'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
     createdAtHuman = json['created_at_human'];
     if (json['videos'] != null) {
-      videos = <PlaylistVideos>[];
+      videos = <Videos>[];
       json['videos'].forEach((v) {
-        videos!.add(new PlaylistVideos.fromJson(v));
+        videos!.add(new Videos.fromJson(v));
       });
     }
   }
@@ -59,7 +71,10 @@ class Playlist {
     data['id'] = this.id;
     data['title'] = this.title;
     data['description'] = this.description;
-    data['status'] = this.status;
+    data['user_id'] = this.userId;
+    data['visibility'] = this.visibility;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     data['created_at_human'] = this.createdAtHuman;
     if (this.videos != null) {
       data['videos'] = this.videos!.map((v) => v.toJson()).toList();
@@ -68,7 +83,7 @@ class Playlist {
   }
 }
 
-class PlaylistVideos {
+class Videos {
   int? id;
   String? type;
   String? title;
@@ -77,20 +92,20 @@ class PlaylistVideos {
   String? hashtag;
   String? watchHours;
   int? videoType;
-  String? geoRegion;
-  String? metaKeywords;
-  String? metaDescription;
+  Null? geoRegion;
+  Null? metaKeywords;
+  Null? metaDescription;
   String? source;
   String? sourceType;
   int? duration;
   String? thumbnails;
   int? nSFW;
-  String? scheduling;
+  Null? scheduling;
   int? scheduled;
   int? commentsOnOff;
   int? channelId;
   String? status;
-  String? deletedAt;
+  Null? deletedAt;
   int? views;
   int? likes;
   String? visibility;
@@ -98,12 +113,12 @@ class PlaylistVideos {
   String? createdAt;
   String? updatedAt;
   String? contentType;
-  String? reasonForDeactivation;
+  Null? reasonForDeactivation;
   String? videoUrl;
   String? createdAtHuman;
   Pivot? pivot;
 
-  PlaylistVideos(
+  Videos(
       {this.id,
         this.type,
         this.title,
@@ -138,7 +153,7 @@ class PlaylistVideos {
         this.createdAtHuman,
         this.pivot});
 
-  PlaylistVideos.fromJson(Map<String, dynamic> json) {
+  Videos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     type = json['type'];
     title = json['title'];

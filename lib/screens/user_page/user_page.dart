@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
@@ -89,7 +90,7 @@ class _UserPageState extends State<UserPage> {
             icon: const Icon(HeroiconsOutline.cog8Tooth),
             onPressed: () {
               print('Next Setting Page $headers');
-              log('***********************${Global.userData}*********************');
+              log('***********************${Global.userData!.userChannelId}*********************');
               GoRouter.of(context).pushNamed('settingPage');
             },
 
@@ -106,7 +107,7 @@ class _UserPageState extends State<UserPage> {
               // SizedBox(height: ScreenSize.screenHeight(context) * 0.00,),
 
 
-              historyData.isEmpty ? SizedBox.shrink() : UserHistoryWidget(),
+              UserHistoryWidget(),
 
               // SizedBox(height: 10.h,),
               UserPlaylistWidget(),
@@ -116,13 +117,11 @@ class _UserPageState extends State<UserPage> {
                   int? totalVideos;
                   print('pppppppppppppp   $state');
                   if(state is YourVideosLoaded){
-
                     totalVideos = state.yourVideoData.length;
                     print('&&&&&&&&&&&&&&&&&&   $totalVideos');
                   }
                   return UserPageButton(
-                    buttonName: 'Your Videos',
-                    subTitle: '$totalVideos videos',
+                    buttonName: 'Your videos',
                     buttonIcon: HeroiconsOutline.play,
                     onTap: (){
                       Future.delayed(const Duration(milliseconds: 220),(){
@@ -152,7 +151,7 @@ class _UserPageState extends State<UserPage> {
                     GoRouter.of(context).pushNamed('plansPage');
                   },
                   buttonName: 'Get $appName Premium',
-                  appLogo: HeroiconsOutline.arrowUpRight,
+                  buttonIcon: Remix.vip_crown_line,
               ),
 
               // const Divider(thickness: 0.2, color: Colors.grey,),

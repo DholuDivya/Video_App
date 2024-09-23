@@ -177,7 +177,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                               ? ''
                               : userPlaylist.videos!.first.thumbnails!,
                           playlistTitle: userPlaylist.title!,
-                          playlistVisibility: userPlaylist.status!,
+                          playlistVisibility: userPlaylist.visibility!,
                           onShowMorePressed: (){
                             customShowMoreBottomSheet(
                                 context,

@@ -56,6 +56,8 @@ import '../../bloc/add_user_history/add_user_history_bloc.dart';
 import '../../bloc/add_user_history/add_user_history_event.dart';
 import 'package:floating/floating.dart';
 
+import '../../utils/widgets/custom_report_dialog.dart';
+
 
 class VideoPage extends StatefulWidget {
   final String slug;
@@ -338,24 +340,76 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                   children: [
                                     Text(
                                       '${state.playVideo[0].data!.title}',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontFamily: fontFamily,
-                                        fontSize: 18,
+                                        fontSize: 18.sp,
                                         fontWeight: FontWeight.w500,
                                       ),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    AutoSizeText(
-                                      '${state.playVideo[0].data!.views} Views - ${state.playVideo[0].data!.createdAtHuman}',
-                                      style: TextStyle(
-                                        fontFamily: fontFamily,
-                                        fontSize: 12,
-                                        color: Colors.grey[700],
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${state.playVideo[0].data!.views} Views - ',
+                                          style: TextStyle(
+                                            fontFamily: fontFamily,
+                                            fontSize: 12.sp,
+                                            color: Colors.grey[700],
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+
+                                        Text(
+                                          '${state.playVideo[0].data!.createdAtHuman}',
+                                          style: TextStyle(
+                                            fontFamily: fontFamily,
+                                            fontSize: 12.sp,
+                                            color: Colors.grey[700],
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+
+
+                                        Text(
+                                          ' -  ${state.playVideo[0].data!.description}',
+                                          style: TextStyle(
+                                            fontFamily: fontFamily,
+                                            fontSize: 12.sp,
+                                            color: Colors.grey[700],
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+
+                                        Text(
+                                          ' ${state.playVideo[0].data!.hashtag}',
+                                          style: TextStyle(
+                                            fontFamily: fontFamily,
+                                            fontSize: 12.sp,
+                                            color: Colors.grey[700],
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+
+                                        Text(
+                                          '...more',
+                                          style: TextStyle(
+                                            fontFamily: fontFamily,
+                                            fontSize: 12.sp,
+                                            color: Colors.grey[700],
+                                          ),
+                                          maxLines: 1,
+                                        ),
+
+                                      ],
                                     ),
+
+
                                   ],
                                 ),
                               ),
@@ -624,7 +678,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                 InkWell(
                                     borderRadius: BorderRadius.circular(20),
                                     onTap: () {
-
+                                      showReportDialog(context, state.playVideo.first.data!.id!);
                                     },
                                       child: const ReportButton()
                                 ),
@@ -671,7 +725,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                 width: ScreenSize.screenWidth(context) *
                                                     0.02,),
                                               Text(
-                                                getComments!.length.toString(),
+                                                getComments.length.toString(),
                                                 style: TextStyle(
                                                     color: Colors.grey.shade500
                                                 ),
@@ -715,7 +769,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                   ),
                                 );
                               }
-                              return Container(child: Text('NOOOO Commmmenntsss'),);
+                              return Container();
                             },
                           ) : Padding(
                             padding: EdgeInsets.only(
@@ -1076,7 +1130,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   void videoDescriptionSheet(BuildContext context, PlayVideoModel descriptionData ) {
 
     final videoCreatedDate = descriptionData.data!.categories?[0].createdAt;
-
+    final hashtag = descriptionData.data!.hashtag;
     final String formattedDate = formatDate(videoCreatedDate!);
 
     showModalBottomSheet(
@@ -1096,16 +1150,17 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
               bottom: ScreenSize.screenHeight(context) * 0.02
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'Description',
                         style: TextStyle(
                           fontFamily: fontFamily,
-                          fontSize: 22
+                          fontSize: 18.sp
                         ),
                       ),
                       IconButton(
@@ -1143,7 +1198,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     top: ScreenSize.screenHeight(context) * 0.018
                   ),
                   child: Container(
-                    height: ScreenSize.screenHeight(context) * 0.055,
+                    height: ScreenSize.screenHeight(context) * 0.06,
                     width: ScreenSize.screenWidth(context) * 0.9,
                     // color: yellow,
                     child: Row(
@@ -1155,51 +1210,41 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                 descriptionData.data!.likes.toString(),
                                 style: TextStyle(
                                   fontFamily: fontFamily,
-                                  fontSize: 15
+                                  fontSize: 15.sp
                                 ),
                               ),
-                              Text(
-                                  'likes',
-                                style: TextStyle(
-                                  fontFamily: fontFamily,
-                                ),
-                              )
+                              SizedBox(height: 5.h,),
+                              Icon(HeroiconsOutline.handThumbUp, size: 18.r, color: Theme.of(context).colorScheme.secondaryFixedDim,)
                             ],
                           ),
 
+                          SizedBox(height: 5.h,),
                           Column(
                             children: [
                               Text(
                                 descriptionData.data!.views.toString(),
                                 style: TextStyle(
                                     fontFamily: fontFamily,
-                                    fontSize: 15
+                                    fontSize: 15.sp
                                 ),
                               ),
-                              Text(
-                                  'views',
-                                style: TextStyle(
-                                  fontFamily: fontFamily,
-                                ),
-                              )
+                              SizedBox(height: 5.h,),
+                              Icon(HeroiconsOutline.eye, size: 18.r, color: Theme.of(context).colorScheme.secondaryFixedDim)
                             ],
                           ),
+
 
                           Column(
                             children: [
                               Text(
-                                  formattedDate,
+                                formattedDate,
                                 style: TextStyle(
                                     fontFamily: fontFamily,
-                                    fontSize: 15
+                                    fontSize: 15.sp
                                 ),
                               ),
-                              Text(
-                                  'date',
-                                style: TextStyle(
-                                  fontFamily: fontFamily,
-                                ),
-                              )
+                              SizedBox(height: 5.h,),
+                              Icon(HeroiconsOutline.calendarDays, size: 18.r, color: Theme.of(context).colorScheme.secondaryFixedDim)
                             ],
                           ),
                         ],
@@ -1212,27 +1257,66 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     top: ScreenSize.screenWidth(context) * 0.015
                   ),
                   child: Container(
-                    height: ScreenSize.screenHeight(context) * 0.03,
-                    width: ScreenSize.screenWidth(context) * 0.9,
+                    // height: ScreenSize.screenHeight(context) * 0.03,
+                    // width: ScreenSize.screenWidth(context) * 0.9,
+                    //
+                    //
+                    //
+                    //   child: Container(
+                    //     padding: EdgeInsets.all(8),
+                    //     width: double.infinity,
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(15),
+                    //       color: Theme.of(context).colorScheme.tertiaryFixedDim,
+                    //     ),
+                    //     child: Wrap(
+                    //       spacing: 8.0,
+                    //       runSpacing: 4.0,
+                    //       children: _hashtags
+                    //           .map((hashtag) => Chip(
+                    //         backgroundColor: Theme.of(context)
+                    //             .colorScheme
+                    //             .surfaceDim,
+                    //         side: BorderSide(
+                    //             width: 0, color: Colors.grey.shade600),
+                    //         label: Text(
+                    //           hashtag,
+                    //           style: TextStyle(
+                    //               fontFamily: fontFamily,
+                    //               color: Colors.grey.shade600),
+                    //         ),
+                    //         deleteIconColor: Colors.grey.shade700,
+                    //         onDeleted: () {
+                    //           setState(() {
+                    //             _hashtags.remove(hashtag);
+                    //             _hashtagController.text =
+                    //                 _hashtags.join(' ') + ' ';
+                    //           });
+                    //         },
+                    //       ))
+                    //           .toList(),
+                    //     ),
+                    //   )
+                    //
                     // color: red,
+                    child: Row(
+                      children: [
+                        VideoHastag(
+                            hastag: 'tarakmehta'
+                        ),
+                        SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
 
-                    // child: Row(
-                    //   children: [
-                    //     VideoHastag(
-                    //         hastag: 'tarakmehta'
-                    //     ),
-                    //     SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
-                    //
-                    //     VideoHastag(
-                    //         hastag: 'tmkocsmileofindia'
-                    //     ),
-                    //     SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
-                    //
-                    //     VideoHastag(
-                    //         hastag: 'tmkoc'
-                    //     ),
-                    //   ],
-                    // ),
+                        VideoHastag(
+                            hastag: 'tmkocsmileofindia'
+                        ),
+                        SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
+
+                        VideoHastag(
+                            hastag: 'tmkoc'
+                        ),
+                        SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: ScreenSize.screenHeight(context) * 0.015,),
@@ -1270,11 +1354,18 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   }
 
 
-  String description = 'In this episode, Taarak is excited as he comes to the soda shop, everyone asks for the reason for his excitement. The reason is a shock to everyone as Anjali had cooked Taarak\'s favorite food for him. Purush Mandali starts speculating about why and how this miracle took place. Taarak also informs them about the surprise he is getting in the morning. In the morning, Jetha calls Taarak and requests to come to his place for breakfast. Will Jetha regret going to Taarak\'s place for his breakfast? \n  '
-      'Show Name - Taarak Mehta Ka Ooltah Chashmah \n Star Cast - Dilip Joshi, Disha Vakani, Amit Bhatt \n Produced By - Asit Kumar Modi, Neela Asit Modi \n '
-      'About The Show:\n '
-  '----------------------------\n'
-  'Taarak Mehta Ka Ooltah Chashmah is a comedy show inspired by the famous humorous column \'Duniya Ne Undha Chashmah\' written by the eminent Gujarati writer Mr. Tarak Mehta. This show revolves around the Gada Family which consists of uneducated businessmen Jethalal Champaklal Gada, Jethalal’s Wife Daya & their naughty Son Tipendra Gada living in \'Gokuldham Co-operative Society\' and covers topical issues which are socially relevant. In case of a problem and emergency, Jethalal Gada often rushes to Taarak Mehta to seek his help and guidance as he finds a philosopher in him. The residents of the housing society, help each other find solutions when they face common, real-life challenges and get involved in sticky situations.';
+
+  void showReportDialog(BuildContext context, int videoId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomReportDialog(videoId: videoId,);
+      },
+    );
+  }
+
+
+
 
 
 
@@ -1380,7 +1471,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     final playlist = state.userPlaylist;
                     return BlocBuilder<PlaylistSelectionBloc, PlaylistSelectionState>(
                       builder: (BuildContext context, PlaylistSelectionState state) {
-                        print('SSTTAATTEE :::   $state');
+                        print('STATE :::   $state');
                         if(state is PlaylistSelected){
                           selectedPlaylistIds = state.selectedPlaylistIds;
                           selectedPlaylist = selectedPlaylistIds.first;
@@ -1707,166 +1798,168 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                       if(state is GetCommentsLoaded){
                         return SizedBox(
                           height: 350.h,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: NotificationListener<ScrollNotification>(
-                                    onNotification: (scrollInfo) {
-                                      // Check if the user has scrolled to the end and load more notes if needed
-                                      if (!state.hasReachedMax &&
-                                          scrollInfo.metrics.pixels ==
-                                              scrollInfo.metrics.maxScrollExtent) {
-                                        context.read<GetCommentsBloc>().add(
-                                            LoadMoreGetComments());
-                                      }
-                                      return false;
-                                    },
-                                    child: ListView.builder(
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      // scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      itemCount: state.getCommentsList.length,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        final getComments = state.getCommentsList[index];
-                                        commentLikeCount = getComments.likesCount!;
-                                        isCommentLiked = getComments.isLiked!;
-                                        isCommentDisliked = getComments.isDisliked!;
+                          child: Expanded(
+                            child: NotificationListener<ScrollNotification>(
+                              onNotification: (scrollInfo) {
+                                // Check if the user has scrolled to the end and load more notes if needed
+                                if (!state.hasReachedMax &&
+                                    scrollInfo.metrics.pixels ==
+                                        scrollInfo.metrics.maxScrollExtent) {
+                                  context.read<GetCommentsBloc>().add(
+                                      LoadMoreGetComments());
+                                }
+                                return false;
+                              },
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: AlwaysScrollableScrollPhysics(),
+                                // scrollDirection: Axis.vertical,
+                                itemCount: state.hasReachedMax
+                                    ? state.getCommentsList.length
+                                    : state.getCommentsList.length + 1,
+                                itemBuilder: (BuildContext context, int index) {
+                            
 
+                            
+                                  if (index < state.getCommentsList.length) {
+                                    final getComments = state.getCommentsList[index];
+                                    commentLikeCount = getComments.likesCount!;
+                                    isCommentLiked = getComments.isLiked!;
+                                    isCommentDisliked = getComments.isDisliked!;
 
-                                        print('((((((((((((((((((((     $commentLikeCount');
-                                        print('((((((((((((((((((((     $isCommentLiked');
-                                        print('((((((((((((((((((((     $isCommentDisliked');
+                                    print('uuuuuuuu     ${state.getCommentsList.length}');
 
-                                        if (index == state.getCommentsList.length) {
-                                          return Center(child: CircularProgressIndicator());
-                                        }
-
-                                        return Container(
-                                          // color: Colors.yellow,
-                                          width: double.infinity,
-                                          padding: EdgeInsets.symmetric(vertical: ScreenSize.screenHeight(context) * 0.015),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: ScreenSize.screenWidth(context) * 0.03,
+                                    print('00000000      $index');
+                                    print('((((((((((((((((((((     $commentLikeCount');
+                                    print('((((((((((((((((((((     $isCommentLiked');
+                                    print('((((((((((((((((((((     $isCommentDisliked');
+                                    return Container(
+                                      // color: Colors.yellow,
+                                      width: double.infinity,
+                                      padding: EdgeInsets.symmetric(vertical: ScreenSize.screenHeight(context) * 0.015),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              left: ScreenSize.screenWidth(context) * 0.03,
+                                            ),
+                                            child: CircleAvatar(
+                                              radius: 14,
+                                              backgroundImage: NetworkImage('${getComments.user!.profile}'),
+                                            ),
+                                          ),
+                                          SizedBox(width: ScreenSize.screenWidth(context) * 0.015),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: Text(
+                                                    '${getComments.user!.name} - ${getComments.createdAtHuman}',
+                                                    style: TextStyle(
+                                                      fontFamily: fontFamily,
+                                                      fontSize: 12,
+                                                      color: Colors.grey.shade700,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                    maxLines: 1,
+                                                  ),
                                                 ),
-                                                child: CircleAvatar(
-                                                  radius: 14,
-                                                  backgroundImage: NetworkImage('${getComments.user!.profile}'),
+                                                SizedBox(height: ScreenSize.screenHeight(context) * 0.005),
+                                                Text(
+                                                  getComments.comment!,
+                                                  style: const TextStyle(
+                                                    fontFamily: fontFamily,
+                                                    fontSize: 14,
+                                                    overflow: TextOverflow.visible,
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(width: ScreenSize.screenWidth(context) * 0.015),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                                                SizedBox(height: ScreenSize.screenHeight(context) * 0.025),
+                                                Row(
                                                   children: [
-                                                    SizedBox(
-                                                      width: double.infinity,
-                                                      child: Text(
-                                                        '${getComments.user!.name} - ${getComments.createdAtHuman}',
-                                                        style: TextStyle(
-                                                          fontFamily: fontFamily,
-                                                          fontSize: 12,
-                                                          color: Colors.grey.shade700,
-                                                          overflow: TextOverflow.ellipsis,
-                                                        ),
-                                                        maxLines: 1,
-                                                      ),
+                                                    GestureDetector(
+                                                        onTap: (){
+                                                          context.read<LikeDislikeCommentBloc>().add(LikeCommentRequest(commentId: getComments.id!));
+                                                          setState(() {
+                                                            if (isCommentLiked){
+                                                              isCommentLiked = false;
+                                                              commentLikeCount--;
+                                                            } else {
+                                                              ToastManager().showToast(
+                                                                  context: context,
+                                                                  message: 'Comment liked!'
+                                                              );
+                                                              isCommentLiked = true;
+                                                              commentLikeCount++;
+                                                              if (isCommentDisliked){
+                                                                isCommentDisliked = false;
+                                                              }
+                                                            }
+                                                          });
+                                                          print('LLLIIIKKKEEE');
+                                                          print('88888888888888888888888    comment count ::  $commentLength');
+                                                          print('88888888888888888888888    comment isLiked ::  $isCommentLiked');
+                                                          print('88888888888888888888888    comment isDisliked ::  $isCommentDisliked');
+                                                        },
+                                                        child: isCommentLiked
+                                                            ? const Icon(HeroiconsSolid.handThumbUp, size: 20)
+                                                            : const Icon(HeroiconsOutline.handThumbUp, size: 20)
                                                     ),
-                                                    SizedBox(height: ScreenSize.screenHeight(context) * 0.005),
-                                                    Text(
-                                                      getComments.comment!,
-                                                      style: const TextStyle(
-                                                        fontFamily: fontFamily,
-                                                        fontSize: 14,
-                                                        overflow: TextOverflow.visible,
-                                                      ),
-                                                    ),
+                                                    SizedBox(width: ScreenSize.screenWidth(context) * 0.01),
+                                                    Text('$commentLikeCount'),
+                                                    SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
+                                                    GestureDetector(
+                                                        onTap: (){
+                                                          context.read<LikeDislikeCommentBloc>().add(DislikeCommentRequest(commentId: getComments.id!));
+                                                          setState(() {
+                                                            if (isCommentDisliked) {
+                                                              isCommentDisliked = false;
+                                                            } else {
+                                                              ToastManager().showToast(
+                                                                  context: context,
+                                                                  message: 'Comment disliked!'
+                                                              );
+                                                              isCommentDisliked = true;
+                                                              if (isCommentLiked) {
+                                                                isCommentLiked = false;
+                                                                commentLikeCount--;
+                                                              }
+                                                            }
+                                                          });
 
-                                                    SizedBox(height: ScreenSize.screenHeight(context) * 0.025),
-                                                    Row(
-                                                      children: [
-                                                        GestureDetector(
-                                                            onTap: (){
-                                                              context.read<LikeDislikeCommentBloc>().add(LikeCommentRequest(commentId: getComments.id!));
-                                                              setState(() {
-                                                                if (isCommentLiked){
-                                                                  isCommentLiked = false;
-                                                                  commentLikeCount--;
-                                                                } else {
-                                                                  ToastManager().showToast(
-                                                                      context: context,
-                                                                      message: 'Comment liked!'
-                                                                  );
-                                                                  isCommentLiked = true;
-                                                                  commentLikeCount++;
-                                                                  if (isCommentDisliked){
-                                                                    isCommentDisliked = false;
-                                                                  }
-                                                                }
-                                                              });
-                                                              print('LLLIIIKKKEEE');
-                                                              print('88888888888888888888888    comment count ::  $commentLength');
-                                                              print('88888888888888888888888    comment isLiked ::  $isCommentLiked');
-                                                              print('88888888888888888888888    comment isDisliked ::  $isCommentDisliked');
-                                                            },
-                                                            child: isCommentLiked
-                                                                ? const Icon(HeroiconsSolid.handThumbUp, size: 20)
-                                                                : const Icon(HeroiconsOutline.handThumbUp, size: 20)
-                                                        ),
-                                                        SizedBox(width: ScreenSize.screenWidth(context) * 0.01),
-                                                        Text('$commentLikeCount'),
-                                                        SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
-                                                        GestureDetector(
-                                                            onTap: (){
-                                                              context.read<LikeDislikeCommentBloc>().add(DislikeCommentRequest(commentId: getComments.id!));
-                                                              setState(() {
-                                                                if (isCommentDisliked) {
-                                                                  isCommentDisliked = false;
-                                                                } else {
-                                                                  ToastManager().showToast(
-                                                                      context: context,
-                                                                      message: 'Comment disliked!'
-                                                                  );
-                                                                  isCommentDisliked = true;
-                                                                  if (isCommentLiked) {
-                                                                    isCommentLiked = false;
-                                                                    commentLikeCount--;
-                                                                  }
-                                                                }
-                                                              });
-
-                                                              print('77777777777777777777777    comment count ::  $commentLength');
-                                                              print('77777777777777777777777    comment isLiked ::  $isCommentLiked');
-                                                              print('77777777777777777777777    comment isDisliked ::  $isCommentDisliked');
-                                                            },
-                                                            child: isCommentDisliked
-                                                                ? const Icon(HeroiconsSolid.handThumbDown, size: 20)
-                                                                : const Icon(HeroiconsOutline.handThumbDown, size: 20)
-                                                        ),
-                                                        // SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
-                                                        // Icon(HeroiconsOutline.chatBubbleBottomCenterText, size: 20),
-                                                      ],
+                                                          print('77777777777777777777777    comment count ::  $commentLength');
+                                                          print('77777777777777777777777    comment isLiked ::  $isCommentLiked');
+                                                          print('77777777777777777777777    comment isDisliked ::  $isCommentDisliked');
+                                                        },
+                                                        child: isCommentDisliked
+                                                            ? const Icon(HeroiconsSolid.handThumbDown, size: 20)
+                                                            : const Icon(HeroiconsOutline.handThumbDown, size: 20)
                                                     ),
+                                                    // SizedBox(width: ScreenSize.screenWidth(context) * 0.05),
+                                                    // Icon(HeroiconsOutline.chatBubbleBottomCenterText, size: 20),
                                                   ],
                                                 ),
-                                              ),
-                                              IconButton(
-                                                onPressed: () {},
-                                                icon: const Icon(HeroiconsOutline.ellipsisVertical, size: 18),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                          IconButton(
+                                            onPressed: () {},
+                                            icon: const Icon(HeroiconsOutline.ellipsisVertical, size: 18),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    return Center(child: CircularProgressIndicator());
+                                  }
+                            
+
+                                },
+                              ),
                             ),
                           ),
                         );
@@ -1917,8 +2010,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                             ),
                           ),
                         ),
-
-
                       ],
                     ),
                   ),
@@ -1942,17 +2033,17 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10)
-      ),// This is important for adjusting to the keyboard
+      ),
       builder: (context) {
         return Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom, // This ensures the padding matches the keyboard height
+            bottom: MediaQuery.of(context).viewInsets.bottom,
             left: 5.w,
             right: 5.w,
             // top: 5.h,
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min, // Ensures the sheet is as small as possible
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 height: 30.h,
@@ -1982,18 +2073,20 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
                     suffix: GestureDetector(
                       onTap: (){
-                        final text = _commentController.text;
+                        var text = _commentController.text;
                         if (text.isNotEmpty) {
                           context.read<AddCommentBloc>().add(AddCommentRequest(
                             userComment: text,
                             videoSlug: widget.slug,
                           ));
+                          text = '';
                           ToastManager().showToast(
                             context: context,
                             message: 'Comment added successfully',
                           );
-
+                          
                           context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
+                          
                         }
                         Navigator.pop(context);
                       },
@@ -2011,7 +2104,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                         message: 'Comment added successfully',
                       );
 
-                      print('succcessssss');
                       context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
                     }
                     _commentController.clear();

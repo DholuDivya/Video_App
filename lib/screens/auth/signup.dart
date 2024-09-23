@@ -225,7 +225,7 @@ class _SignupPageState extends State<SignupPage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Center(
                                 child: GestureDetector(
                                   onTap: () {
@@ -264,7 +264,7 @@ class _SignupPageState extends State<SignupPage> {
                                 label: 'Email',
                               ),
 
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
                               CustomTextField(
                                 obscureText: true && !isPasswordVisible,
                                 controller: _passwordController,
@@ -407,7 +407,7 @@ class _SignupPageState extends State<SignupPage> {
                                             borderRadius: BorderRadius.circular(
                                                 10),
                                             border: Border.all(
-                                                color: greyShade400,
+                                                color: Theme.of(context).colorScheme.secondaryContainer,
                                                 width: 0.5
                                             )
                                         ),
@@ -433,7 +433,7 @@ class _SignupPageState extends State<SignupPage> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
-                                            color: Theme.of(context).colorScheme.tertiary,
+                                            color: Theme.of(context).colorScheme.secondaryContainer,
                                             width: 0.5.r
                                         )
                                     ),
@@ -457,7 +457,7 @@ class _SignupPageState extends State<SignupPage> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
-                                            color: Theme.of(context).colorScheme.tertiary,
+                                            color: Theme.of(context).colorScheme.secondaryContainer,
                                             width: 0.5.r
                                         )
                                     ),

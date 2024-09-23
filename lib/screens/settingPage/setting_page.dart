@@ -17,6 +17,7 @@ import 'package:vimeo_clone/config/global_keys.dart';
 import 'package:vimeo_clone/utils/widgets/CustomLogOutWidget.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
+import '../../config/colors.dart';
 import '../../config/constants.dart';
 import '../../routes/myapproute.dart';
 import '../../utils/widgets/custom_text_field_auth.dart';
@@ -205,77 +206,11 @@ class _SettingPageState extends State<SettingPage> {
                   // WITHDRAWALS
                   CustomSettingButton(
                       icon: HeroiconsOutline.buildingLibrary,
-                      btnName: ('Withdrawals'),
-                      onTap: () {}
+                      btnName: ('Transactions'),
+                      onTap: () {
+                        GoRouter.of(context).pushNamed('transactionsPage');
+                      }
                   ),
-
-                  // GO PRO
-                  // CustomSettingButton(
-                  //     icon: Remix.star_fill,
-                  //     btnName: ('Go Pro'),
-                  //     onTap: () {}
-                  // ),
-
-                  // AUTOPLAY
-                  // CustomSettingButton(
-                  //     icon: HeroiconsOutline.checkBadge,
-                  //     btnName: ('Verification'),
-                  //     onTap: () {}
-                  // ),
-
-                  // POINTS
-                  // CustomSettingButton(
-                  //     icon: Remix.sticky_note_line,
-                  //     btnName: ('Points'),
-                  //     onTap: () {}
-                  // ),
-
-                  // BLOCKED USERS
-                  // CustomSettingButton(
-                  //     icon: HeroiconsOutline.noSymbol,
-                  //     btnName: ('Blocked Users'),
-                  //     onTap: () {}
-                  // ),
-
-                  // WALLETS
-                  // CustomSettingButton(
-                  //     icon: HeroiconsOutline.wallet,
-                  //     btnName: ('Wallet'),
-                  //     onTap: () {}
-                  // ),
-
-
-                  // SizedBox(height: 10,),
-                  // Divider(thickness: 0.5, color: Colors.grey,),
-                  // SizedBox(height: 10,),
-                  //
-                  //
-                  // // PASSWORD
-                  // CustomSettingButton(
-                  //     icon: HeroiconsOutline.lockClosed,
-                  //     btnName: ('Password'),
-                  //     onTap: () {}
-                  // ),
-                  //
-                  // // TWO-FACTOR AUTHENTICATION
-                  // CustomSettingButton(
-                  //     icon: HeroiconsOutline.key,
-                  //     btnName: ('Two-factor authentication'),
-                  //     onTap: () {}
-                  // ),
-                  //
-                  // // MANAGE SESSIONS
-                  // CustomSettingButton(
-                  //     icon: HeroiconsOutline.tv,
-                  //     btnName: ('Manage Sessions'),
-                  //     onTap: () {}
-                  // ),
-                  //
-
-                  // SizedBox(height: 10,),
-                  // Divider(thickness: 0.5, color: Colors.grey,),
-                  // SizedBox(height: 10,),
-
 
                   // THEME
                   CustomSettingButton(
@@ -295,33 +230,12 @@ class _SettingPageState extends State<SettingPage> {
                       }
                   ),
 
-
-                  // SizedBox(height: 10,),
-                  // Divider(thickness: 0.5, color: Colors.grey,),
-                  // SizedBox(height: 10,),
-
-
                   // CLEAR WATCHED HISTORY
                   CustomSettingButton(
                       icon: HeroiconsOutline.xCircle,
                       btnName: ('Clear watched history'),
                       onTap: () {}
                   ),
-
-                  // PAUSE WATCH HISTORY
-                  // CustomSettingButton(
-                  //     icon: HeroiconsOutline.pauseCircle,
-                  //     btnName: ('Pause watch history'),
-                  //     onTap: () {}
-                  // ),
-
-                  // CLEAR CACHE
-                  // CustomSettingButton(
-                  //     icon: Remix.brush_2_line,
-                  //     btnName: ('Clear cache'),
-                  //     onTap: () {}
-                  // ),
-
 
                   SizedBox(height: 10,),
                   Divider(thickness: 0.5, color: Colors.grey,),
@@ -407,6 +321,94 @@ class _SettingPageState extends State<SettingPage> {
       );
     }
 
+
+    void deleteConfirmation(){
+      showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            title: Center(
+              child: CircleAvatar(
+                backgroundColor: Colors.red.shade100,
+                child: Icon(HeroiconsSolid.exclamationTriangle,
+                  color: red,
+                ),
+              ),
+            ),
+
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 10.h,),
+                Center(
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    'You\'re going to delete your account. Are you sure?',
+                    style: TextStyle(
+                      fontFamily: fontFamily,
+                      fontSize: 16.sp
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h,),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+
+                        style: ButtonStyle(
+                          padding: WidgetStatePropertyAll(
+                            EdgeInsets.symmetric(horizontal: 10.w)
+                          ),
+                            backgroundColor: WidgetStatePropertyAll(greyShade300)
+                        ),
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'No, Keep it',
+                          style: TextStyle(
+                              fontFamily: fontFamily,
+                              color: greyShade900,
+                            fontSize: 12.sp
+                          ),
+                        )
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                          padding: WidgetStatePropertyAll(
+                              EdgeInsets.symmetric(horizontal: 10.w)
+                          ),
+                        backgroundColor: WidgetStatePropertyAll(red)
+                      ),
+                        onPressed: (){
+                          final password = _passwordController.text;
+                          context.read<AuthBloc>().add(OnDeleteUserAccountRequestEvent(
+                              password: password
+                          ));
+                        },
+                        child: Text(
+                            'Yes, Delete it!',
+                          style: TextStyle(
+                            fontFamily: fontFamily,
+                            color: Colors.white,
+                              fontSize: 12.sp
+                          ),
+                        )
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        }
+      );
+    }
+
+
     void onDeleteAccountShowDialog(){
       showDialog(
           context: context,
@@ -414,8 +416,7 @@ class _SettingPageState extends State<SettingPage> {
             return StatefulBuilder(
               builder: (BuildContext context, void Function(void Function()) setState) {
                 return AlertDialog(
-
-                  title: Center(
+                  title: const Center(
                     child: Text(
                         'Enter your password',
                       style: TextStyle(
@@ -447,13 +448,11 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           SizedBox(height: 15.h,),
                           Container(
+                            height: 30.h,
                             width: double.infinity,
                             child: ElevatedButton(
                                 onPressed: (){
-                                  final password = _passwordController.text;
-                                  context.read<AuthBloc>().add(OnDeleteUserAccountRequestEvent(
-                                      password: password
-                                  ));
+                                  deleteConfirmation();
                                 },
                                 child: Text(
                                     'Submit',

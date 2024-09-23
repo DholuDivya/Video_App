@@ -27,6 +27,7 @@ import 'package:vimeo_clone/screens/help_and_support/help_and_support_page.dart'
 import 'package:vimeo_clone/screens/history_page/all_history_page.dart';
 import 'package:vimeo_clone/screens/plans_page/plans_page.dart';
 import 'package:vimeo_clone/screens/searchScreen/search_data_page.dart';
+import 'package:vimeo_clone/screens/transactions_page/transactions_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/crop_shorts_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/get_shorts_thumbnail_page.dart';
 import 'package:vimeo_clone/screens/upload_shorts/upload_shorts_page.dart';
@@ -323,6 +324,14 @@ final navigatorContext = GlobalKeys.navigatorKey.currentContext;
             name: 'helpAndSupportPage',
             path: '/helpAndSupportPage',
             pageBuilder: (context, state) => const CupertinoPage(child: HelpAndSupportPage())
+        ),
+
+        GoRoute(
+          name: 'transactionsPage',
+          path: '/transactionsPage',
+          pageBuilder: (context, state) => const CupertinoPage (
+            child: TransactionsPage(),
+          ),
         ),
 
 

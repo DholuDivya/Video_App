@@ -40,14 +40,16 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
         _isSubscribed = state.channelData.first.isSubscribed;
         _subscribeCount = state.channelData.first.subscriberCount;
       }
+      print('hihjiiijijijijiji  i     $_isSubscribed');
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('bbbbbbbbbbbbbbbbbbb    $_isSubscribed');
     return DefaultTabController(
-      length: 5,
+      length: 4,
       child: Scaffold(
         body: BlocBuilder<ChannelProfileBloc, ChannelProfileState>(
           builder: (BuildContext context, state) {
@@ -292,7 +294,6 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                 Tab(child: Text('Home', style: TextStyle(fontFamily: fontFamily),)),
                                 Tab(child: Text('Videos', style: TextStyle(fontFamily: fontFamily))),
                                 Tab(child: Text('Shorts', style: TextStyle(fontFamily: fontFamily))),
-                                Tab(child: Text('Live', style: TextStyle(fontFamily: fontFamily))),
                                 Tab(child: Text('Playlist', style: TextStyle(fontFamily: fontFamily))),
                               ],
                             ),
@@ -337,10 +338,6 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                     // SHORTS
                     ShortsPreviewPage(),
                     // Container(),
-
-
-                    // LIVE
-                    LivePreviewPage(),
 
 
                     // PLAYLIST

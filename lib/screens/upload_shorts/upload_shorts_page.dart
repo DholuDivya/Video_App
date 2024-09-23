@@ -193,132 +193,132 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                 SizedBox(height: 20.h,),
 
 
-                BlocBuilder<VideoCategoriesBloc, VideoCategoryState>(
-                  builder: (context, state) {
-                    if (state is VideoCategoriesLoading) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (state is VideoCategoriesLoaded) {
-                      return BlocBuilder<CategorySelectionBloc, CategorySelectionState>(
-                        builder: (context, selectionState) {
-
-                          if (selectionState is CategorySelected) {
-                            selectedCategoryIds = selectionState.selectedCategoryIds;
-                          }
-
-                          // Get the names of the selected categories
-                          selectedCategoryNames = state.categories
-                              .where((category) => selectedCategoryIds.contains(category.id))
-                              .map((category) => category.name)
-                              .join(', ');
-
-                          return GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Center(
-                                      child: Text(
-                                        'Select a category',
-                                        style: TextStyle(
-                                          fontFamily: fontFamily,
-                                          fontSize: 22,
-                                        ),
-                                      ),
-                                    ),
-                                    content: SizedBox(
-                                      width: 400.w,
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: state.categories.length,
-                                        itemBuilder: (context, index) {
-                                          final category = state.categories[index];
-                                          final isSelected = selectedCategoryIds.contains(category.id);
-
-                                          return Container(
-                                            width: double.infinity,
-                                            child: InkWell(
-                                              borderRadius: BorderRadius.circular(15),
-                                              onTap: () {
-                                                if (isSelected) {
-                                                  context.read<CategorySelectionBloc>().add(DeselectCategoryEvent(categoryId: category.id!));
-                                                } else {
-                                                  context.read<CategorySelectionBloc>().add(SelectCategoryEvent(categoryId: category.id!));
-                                                }
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                height: 40.h,
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(15),
-                                                  color: isSelected
-                                                      ? Theme.of(context).colorScheme.tertiaryFixedDim
-                                                      : null,
-                                                ),
-                                                child: Text(
-                                                  '${category.name}',
-                                                  style: TextStyle(
-                                                    fontFamily: fontFamily,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: AbsorbPointer(
-                              child: TextFormField(
-                                // validator: _validateCategory,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Theme.of(context).colorScheme.surfaceDim,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: blue, width: 2.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Theme.of(context).colorScheme.secondary,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Theme.of(context).colorScheme.secondary,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  labelText: 'Select a category',
-                                  labelStyle: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey.shade500,
-                                  ),
-                                  suffixIcon: Icon(Icons.arrow_drop_down),
-                                ),
-                                controller: TextEditingController(
-                                  text: selectedCategoryNames,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    } else if (state is VideoCategoriesFailure) {
-                      return Text('Failed to get categories');
-                    } else {
-                      return Text('No categories available');
-                    }
-                  },
-                ),
+                // BlocBuilder<VideoCategoriesBloc, VideoCategoryState>(
+                //   builder: (context, state) {
+                //     if (state is VideoCategoriesLoading) {
+                //       return Center(child: CircularProgressIndicator());
+                //     } else if (state is VideoCategoriesLoaded) {
+                //       return BlocBuilder<CategorySelectionBloc, CategorySelectionState>(
+                //         builder: (context, selectionState) {
+                //
+                //           if (selectionState is CategorySelected) {
+                //             selectedCategoryIds = selectionState.selectedCategoryIds;
+                //           }
+                //
+                //           // Get the names of the selected categories
+                //           selectedCategoryNames = state.categories
+                //               .where((category) => selectedCategoryIds.contains(category.id))
+                //               .map((category) => category.name)
+                //               .join(', ');
+                //
+                //           return GestureDetector(
+                //             onTap: () {
+                //               showDialog(
+                //                 context: context,
+                //                 builder: (context) {
+                //                   return AlertDialog(
+                //                     title: const Center(
+                //                       child: Text(
+                //                         'Select a category',
+                //                         style: TextStyle(
+                //                           fontFamily: fontFamily,
+                //                           fontSize: 22,
+                //                         ),
+                //                       ),
+                //                     ),
+                //                     content: SizedBox(
+                //                       width: 400.w,
+                //                       child: ListView.builder(
+                //                         shrinkWrap: true,
+                //                         itemCount: state.categories.length,
+                //                         itemBuilder: (context, index) {
+                //                           final category = state.categories[index];
+                //                           final isSelected = selectedCategoryIds.contains(category.id);
+                //
+                //                           return Container(
+                //                             width: double.infinity,
+                //                             child: InkWell(
+                //                               borderRadius: BorderRadius.circular(15),
+                //                               onTap: () {
+                //                                 if (isSelected) {
+                //                                   context.read<CategorySelectionBloc>().add(DeselectCategoryEvent(categoryId: category.id!));
+                //                                 } else {
+                //                                   context.read<CategorySelectionBloc>().add(SelectCategoryEvent(categoryId: category.id!));
+                //                                 }
+                //                                 Navigator.of(context).pop();
+                //                               },
+                //                               child: Container(
+                //                                 alignment: Alignment.center,
+                //                                 height: 40.h,
+                //                                 width: double.infinity,
+                //                                 decoration: BoxDecoration(
+                //                                   borderRadius: BorderRadius.circular(15),
+                //                                   color: isSelected
+                //                                       ? Theme.of(context).colorScheme.tertiaryFixedDim
+                //                                       : null,
+                //                                 ),
+                //                                 child: Text(
+                //                                   '${category.name}',
+                //                                   style: TextStyle(
+                //                                     fontFamily: fontFamily,
+                //                                   ),
+                //                                 ),
+                //                               ),
+                //                             ),
+                //                           );
+                //                         },
+                //                       ),
+                //                     ),
+                //                   );
+                //                 },
+                //               );
+                //             },
+                //             child: AbsorbPointer(
+                //               child: TextFormField(
+                //                 // validator: _validateCategory,
+                //                 decoration: InputDecoration(
+                //                   filled: true,
+                //                   fillColor: Theme.of(context).colorScheme.surfaceDim,
+                //                   focusedBorder: OutlineInputBorder(
+                //                     borderRadius: BorderRadius.circular(10),
+                //                     borderSide: BorderSide(color: blue, width: 2.0),
+                //                   ),
+                //                   enabledBorder: OutlineInputBorder(
+                //                     borderRadius: BorderRadius.circular(10),
+                //                     borderSide: BorderSide(
+                //                       color: Theme.of(context).colorScheme.secondary,
+                //                       width: 1.0,
+                //                     ),
+                //                   ),
+                //                   border: OutlineInputBorder(
+                //                     borderRadius: BorderRadius.circular(10),
+                //                     borderSide: BorderSide(
+                //                       color: Theme.of(context).colorScheme.secondary,
+                //                       width: 0.5,
+                //                     ),
+                //                   ),
+                //                   labelText: 'Select a category',
+                //                   labelStyle: TextStyle(
+                //                     fontSize: 15,
+                //                     color: Colors.grey.shade500,
+                //                   ),
+                //                   suffixIcon: Icon(Icons.arrow_drop_down),
+                //                 ),
+                //                 controller: TextEditingController(
+                //                   text: selectedCategoryNames,
+                //                 ),
+                //               ),
+                //             ),
+                //           );
+                //         },
+                //       );
+                //     } else if (state is VideoCategoriesFailure) {
+                //       return Text('Failed to get categories');
+                //     } else {
+                //       return Text('No categories available');
+                //     }
+                //   },
+                // ),
 
                 SizedBox(height: 15.h),
 

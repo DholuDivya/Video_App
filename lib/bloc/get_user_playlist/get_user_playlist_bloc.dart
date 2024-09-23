@@ -20,8 +20,11 @@ class GetUserPlaylistBloc extends Bloc<GetUserPlaylistEvent, GetUserPlaylistStat
       List<Playlist>? userPlaylistList = [];
       _offset = 0;
       _hasReachedMax = false;
+      print('GGGGGGGGGGGGGGGGGGGGGGGGG');
       Map<String, dynamic> playlistData = await GetUserPlaylistRepo().getUserPlaylist(_limit, _offset);
-      userPlaylistList = List<Playlist>.from(playlistData['playlist'].map((data) => Playlist.fromJson(data)));
+      print('||||||||||||||||||||||||||||| $playlistData');
+      userPlaylistList = List<Playlist>.from(playlistData['data'].map((data) => Playlist.fromJson(data)));
+      print('000...................................');
       _offset += _limit;
       _hasReachedMax = userPlaylistList.length < _limit;
       print('Fetched successfully ::::::::::::       $userPlaylistList');
@@ -38,7 +41,7 @@ class GetUserPlaylistBloc extends Bloc<GetUserPlaylistEvent, GetUserPlaylistStat
         final currentState = state as GetUserPlaylistSuccess;
         final updatedPlaylist = List<Playlist>.from(currentState.userPlaylist);
         Map<String, dynamic> playlistData = await GetUserPlaylistRepo().getUserPlaylist(_limit, _offset);
-        userPlaylistList = List<Playlist>.from(playlistData['playlist'].map((data) => Playlist.fromJson(data)));
+        userPlaylistList = List<Playlist>.from(playlistData['data'].map((data) => Playlist.fromJson(data)));
         _offset += _limit;
         if(userPlaylistList.length < _limit){
           _hasReachedMax = true;

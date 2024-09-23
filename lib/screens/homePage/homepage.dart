@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:vimeo_clone/Screens/ShortsScreen/content_screen.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
@@ -35,7 +34,6 @@ import 'package:vimeo_clone/bloc/report_video/report_video_bloc.dart';
 import 'package:vimeo_clone/bloc/report_video/report_video_event.dart';
 import 'package:vimeo_clone/bloc/report_video/report_video_state.dart';
 import 'package:vimeo_clone/bloc/shorts_visible/shorts_visible_bloc.dart';
-import 'package:vimeo_clone/bloc/shorts_visible/shorts_visible_event.dart';
 import 'package:vimeo_clone/bloc/shorts_visible/shorts_visible_state.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
@@ -46,7 +44,6 @@ import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/config/notification_service.dart';
 import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/screens/ShortsScreen/shorts_page.dart';
-import 'package:vimeo_clone/screens/home_page_shorts/play_home_shorts_page.dart';
 import 'package:vimeo_clone/utils/widgets/custom_bottom_sheet_button.dart';
 import 'package:vimeo_clone/utils/widgets/custom_shorts_preview_homepage.dart';
 import '../../Utils/Widgets/bottom_nav_bar.dart';
@@ -362,173 +359,6 @@ class _HomePageContentState extends State<HomePageContent> {
   ];
 
 
-  // DOWNLOAD VIDEO ________________________________________________________
-
-  // Future<void> downloadFile() async {
-  //   Dio dio = Dio();
-  //
-  //   try {
-  //     // Get the app's documents directory (internal storage)
-  //     var dir = await getApplicationDocumentsDirectory();
-  //     print("App Documents path: ${dir.path}");
-  //
-  //     // File path to save in the app's internal files folder
-  //     String filePath = "${dir.path}/demo.mp4";
-  //
-  //     // Start downloading the file
-  //     await dio.download(
-  //       imgUrl, filePath,
-  //       onReceiveProgress: (rec, total) {
-  //         print("Rec: $rec , Total: $total");
-  //
-  //         setState(() {
-  //           downloading = true;
-  //           progressString = ((rec / total) * 100).toStringAsFixed(0) + "%";
-  //         });
-  //       },
-  //     );
-  //
-  //     // After download completion
-  //     setState(() {
-  //       downloading = false;
-  //       progressString = "Completed";
-  //       localFilePath = filePath;
-  //     });
-  //
-  //     // The video is now saved only in the app's files folder
-  //     print("Video saved to app's files folder: $filePath");
-  //
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-
-
-
-
-  // Future<void> downloadFile(BuildContext context) async {
-  //   Dio dio = Dio();
-  //
-  //   try {
-  //     // Request storage permission
-  //     // bool hasPermission = await requestStoragePermission(context);
-  //     // if (!hasPermission) return;
-  //
-  //     // Get the app's Documents directory
-  //     var dir = await getApplicationDocumentsDirectory();
-  //     String filePath = "${dir.path}/test_shorts.mp4";
-  //
-  //     // Start downloading the file
-  //     await dio.download(
-  //       imgUrl, filePath,
-  //       onReceiveProgress: (rec, total) {
-  //         print("Rec: $rec , Total: $total");
-  //
-  //         // Update UI with download progress
-  //         // ScaffoldMessenger.of(context).showSnackBar(
-  //         //   SnackBar(content: Text('Download progress: ${((rec / total) * 100).toStringAsFixed(0)}%')),
-  //         // );
-  //       },
-  //     );
-  //
-  //
-  //
-  //     if (Platform.isAndroid) {
-  //       // Move the file to Downloads folder on Android
-  //       final externalDir = Directory('/storage/emulated/0/Download');
-  //       if (!await externalDir.exists()) {
-  //         await externalDir.create(recursive: true);
-  //       }
-  //       String newFilePath = "${externalDir.path}/test_shorts.mp4";
-  //       final file = File(filePath);
-  //       await file.copy(newFilePath);
-  //       print("Video saved to Downloads folder: $newFilePath");
-  //
-  //       // Optionally, delete the original file from internal storage
-  //       await file.delete();
-  //
-  //     } else if (Platform.isIOS) {
-  //       // Save the video to the Photos library on iOS
-  //       final asset = await PhotoManager.editor.saveVideo(filePath as File);
-  //       print('Video saved to photo library: $filePath');
-  //     }
-  //
-  //   } catch (e) {
-  //     print(e);
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('An error occurred while downloading the file.')),
-  //     );
-  //   }
-  // }
-
-// Request permission to access storage
-
-
-
-
-  // Future<bool> requestStoragePermission(BuildContext context) async {
-  //   if (Platform.isAndroid) {
-  //     final status = await Permission.storage.status;
-  //
-  //     if (status.isGranted) {
-  //       // Permission already granted
-  //       return true;
-  //     } else if (status.isDenied) {
-  //       // Request permission
-  //       final newStatus = await Permission.storage.request();
-  //       if (newStatus.isGranted) {
-  //         return true;
-  //       } else {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text('Storage permission is required to save the file.')),
-  //         );
-  //         return false;
-  //       }
-  //     } else if (status.isPermanentlyDenied) {
-  //       // Redirect to app settings
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Please enable storage permission in settings.')),
-  //       );
-  //       await Future.delayed(Duration(seconds: 3)); // Optional delay
-  //       await openAppSettings();
-  //       return false;
-  //     }
-  //   } else if (Platform.isIOS) {
-  //     final status = await Permission.photos.status;
-  //
-  //     if (status.isGranted) {
-  //       // Permission already granted
-  //       return true;
-  //     } else if (status.isDenied) {
-  //       // Request permission
-  //       final newStatus = await Permission.photos.request();
-  //       if (newStatus.isGranted) {
-  //         return true;
-  //       } else {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text('Photo library permission is required to save the file.')),
-  //         );
-  //         return false;
-  //       }
-  //     } else if (status.isPermanentlyDenied) {
-  //       // Redirect to app settings
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Please enable photo library access in settings.')),
-  //       );
-  //       await Future.delayed(Duration(seconds: 3)); // Optional delay
-  //       await openAppSettings();
-  //       return false;
-  //     }
-  //   }
-  //   return false;
-  // }
-
-
-
-
-
-
 
   void showReportDialog(BuildContext context, int videoId) {
     showDialog(
@@ -550,27 +380,6 @@ class _HomePageContentState extends State<HomePageContent> {
     if (shortsLength < 4) return 0; // If there are less than 4 shorts, don't adjust the index
     return (index == 1) ? 1 : (index ~/ 5); // 1st shorts at index 1, then every 5th position
   }
-
-
-
-//   int _calculateExtraItems(int videoLength, int shortsLength) {
-//     if (shortsLength < 4) return 0; // If there are less than 4 shorts, don't show any shorts
-//     if (videoLength <= 3) {
-//       return 1; // Only one shorts if there are 3 or fewer videos
-//     } else {
-//       return (videoLength ~/ 4); // Shorts after every 4 videos when there are more than 5 videos
-//     }
-//   }
-//
-// // Helper function to adjust the index for "shorts" inserted in the list
-//   int _calculateShortsBeforeIndex(int index, int videoLength, int shortsLength) {
-//     if (shortsLength < 4) return 0; // If there are less than 4 shorts, don't adjust the index
-//     if (videoLength <= 3) {
-//       return (index > 1) ? 1 : 0;
-//     } else {
-//       return (index > 1) ? (index ~/ 5) : 0;
-//     }
-//   }
 
 
 
@@ -1865,21 +1674,3 @@ class _ReportDialogState extends State<ReportDialog> {
 }
 
 
-
-
-
-class KayPan extends StatefulWidget {
-  const KayPan({super.key});
-
-  @override
-  State<KayPan> createState() => _KayPanState();
-}
-
-class _KayPanState extends State<KayPan> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(color: red,),
-    );
-  }
-}

@@ -59,6 +59,14 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    context.read<CategorySelectionBloc>().add(ClearCategorySelectionEvent());
+    super.initState();
+  }
+
+
+  @override
   void dispose() {
     _hashtagController.dispose();
     finalThumbnail = null;
@@ -76,15 +84,28 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
     if (_formKey.currentState!.validate()) {
       // Perform additional validation after form validation
       if (finalThumbnail == null) {
-        _showCustomDialog('Thumbnail is required');
+        ToastManager().showToast(
+            context: context,
+            message: 'Thumbnail is required'
+        );
+        // _showCustomDialog('Thumbnail is required');
         return;
       }
       if (selectedVideo == null) {
-        _showCustomDialog('Video is required');
+        ToastManager().showToast(
+            context: context,
+            message: 'Video is required'
+        );
+        // _showCustomDialog('Video is required');
         return;
       }
-      if (selectedCategoryIds.isEmpty) {
-        _showCustomDialog('Category is required');
+      if (tempSelectedCategoryIds.isEmpty) {
+        print('ifhishhgfihgfihgfiihih     $selectedCategoryIds');
+        ToastManager().showToast(
+            context: context,
+            message: 'Category is required'
+        );
+        // _showCustomDialog('Category is required');
         return;
       }
 
@@ -94,16 +115,35 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
       final videoHashtag = _hashtags;
 
       if (videoTitle.isEmpty) {
-        _showCustomDialog('Title is required');
+        ToastManager().showToast(
+            context: context,
+            message: 'Title is required'
+        );
+        // _showCustomDialog('Title is required');
         return;
       }
       if (videoDescription.isEmpty) {
-        _showCustomDialog('Description is required');
+        ToastManager().showToast(
+            context: context,
+            message: 'Description is required'
+        );
+        // _showCustomDialog('Description is required');
         return;
       }
       if (selectedVisibility == null || selectedVisibility.isEmpty) {
-        _showCustomDialog('Visibility is required');
+        ToastManager().showToast(
+            context: context,
+            message: 'Visibility is required'
+        );
+        // _showCustomDialog('Visibility is required');
         return;
+      }
+
+      String visibility = '';
+      if(selectedVisibility == 'Public'){
+        visibility = 'public';
+      }else{
+        visibility = 'private';
       }
 
       print("Form is Valid");
@@ -113,8 +153,9 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
       print('Description::::::     ${_descriptionController.text}');
       print('Categories::::::   ${selectedCategoryIds.join(', ')}');
       print("Hashtags:::::::     $videoHashtag");
-      print("Selected Visibility::::::::      $selectedVisibility");
+      print("Selected Visibility::::::::      $visibility");
       print("Comments Enabled:::::::::      $isCommentOn");
+
 
       context.read<UploadVideoBloc>().add(UploadVideoRequestEvent(
           video: selectedVideo,
@@ -123,7 +164,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
           videoDescription: videoDescription,
           videoCategory: selectedCategoryIds,
           videoHashtag: videoHashtag,
-          videoVisibility: selectedVisibility
+          videoVisibility: visibility
       ));
 
     } else {
@@ -147,20 +188,23 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
 
 
   final List visibility = [
-    {"type": "public"},
-    {"type": "private"}
+    {"type": "Public"},
+    {"type": "Private"}
   ];
 
 
-   CroppedFile? finalThumbnail;
+  CroppedFile? finalThumbnail;
   late PlatformFile selectedVideo;
-   List<int> selectedCategoryIds = [];
+  List<int> selectedCategoryIds = [];
   late String selectedCategoryNames;
+  List<int> tempSelectedCategoryIds = [];
+  List<String> tempSelectedCategoryNames = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // leading: Icon(HeroiconsOutline.arrowLeft),
         title: Column(
           children: [
             Text(
@@ -341,46 +385,9 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                   readOnly: false,
                   isEnabled: true,
                     controller: _titleController,
-                    fieldLabel: 'title'
+                    fieldLabel: 'Title'
                 ),
 
-                // TextFormField(
-                //   controller: _titleController,
-                //   // validator: _validateTitle,
-                //   maxLength: 50,
-                //
-                //   keyboardType: TextInputType.multiline,
-                //   decoration: InputDecoration(
-                //     // hintText: ' Title... ',
-                //     labelText: 'Title...',
-                //     labelStyle: TextStyle(
-                //         fontSize: 15,
-                //         color: Theme.of(context).colorScheme.secondaryFixedDim),
-                //
-                //     // floatingLabelStyle: TextStyle(
-                //     //
-                //     // ),
-                //     filled: true,
-                //     fillColor: Theme.of(context).colorScheme.surfaceDim,
-                //     focusedBorder: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10),
-                //       borderSide: BorderSide(color: blue, width: 2.0),
-                //     ),
-                //     enabledBorder: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10),
-                //       borderSide: BorderSide(
-                //         // color: Colors.grey.shade900,
-                //         color: Theme.of(context).colorScheme.secondaryFixedDim,
-                //         width: 1.0,
-                //       ),
-                //     ),
-                //     border: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10),
-                //       borderSide: const BorderSide(color: Colors.red, width: 2.0),
-                //     ),
-                //     counterText: ''
-                //   ),
-                // ),
 
                 SizedBox(height: 15.h),
                 TextFormField(
@@ -552,6 +559,8 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
               //   },
               // ),
 
+
+
               BlocBuilder<VideoCategoriesBloc, VideoCategoryState>(
                 builder: (context, state) {
                   if (state is VideoCategoriesLoading) {
@@ -559,82 +568,153 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                   } else if (state is VideoCategoriesLoaded) {
                     return BlocBuilder<CategorySelectionBloc, CategorySelectionState>(
                       builder: (context, selectionState) {
-                        // Initialize empty selectedCategoryIds if none
-                        final selectedCategoryIds = selectionState is CategorySelected
+                        // Initialize selectedCategoryIds and selectedCategoryNames
+                        selectedCategoryIds = selectionState is CategorySelected
                             ? selectionState.selectedCategoryIds
                             : [];
-
-                        // Get the names of the selected categories
-                        final selectedCategoryNames = state.categories
-                            .where((category) => selectedCategoryIds.contains(category.id))
-                            .map((category) => category.name)
-                            .join(', ');
+                        selectedCategoryNames = selectionState is CategorySelected
+                            ? selectionState.selectedCategoryNames.join(', ')
+                            : '';
 
                         return GestureDetector(
                           onTap: () {
+                            // Open category selection dialog
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return AlertDialog(
-                                  title: const Center(
-                                    child: Text(
-                                      'Select Categories',
-                                      style: TextStyle(fontSize: 22),
-                                    ),
-                                  ),
-                                  content: SizedBox(
-                                    width: 400,
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: state.categories.length,
-                                      itemBuilder: (context, index) {
-                                        final category = state.categories[index];
-                                        final isSelected = selectedCategoryIds.contains(category.id);
+                                // Temporary variables for dialog selections
+                                tempSelectedCategoryIds = List<int>.from(selectedCategoryIds);
+                                tempSelectedCategoryNames = List<String>.from(selectedCategoryNames.isNotEmpty ? selectedCategoryNames.split(', ') : []);
 
-                                        return InkWell(
-                                          borderRadius: BorderRadius.circular(15),
-                                          onTap: () {
-                                            // Update the selection state in Bloc
-                                            if (isSelected) {
-                                              context.read<CategorySelectionBloc>().add(
-                                                DeselectCategoryEvent(categoryId: category.id!),
-                                              );
-                                            } else {
-                                              context.read<CategorySelectionBloc>().add(
-                                                SelectCategoryEvent(categoryId: category.id!),
-                                              );
-                                            }
-                                          },
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            height: 40,
-                                            margin: const EdgeInsets.symmetric(vertical: 5),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(15),
-                                              color: isSelected
-                                                  ? Theme.of(context).colorScheme.tertiaryFixedDim
-                                                  : Theme.of(context).colorScheme.surface,
-                                              border: isSelected
-                                                  ? Border.all(color: Theme.of(context).primaryColor, width: 2)
-                                                  : Border.all(color: Colors.grey.shade300, width: 1),
+                                return StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return AlertDialog(
+                                      title: const Center(
+                                        child: Text(
+                                          'Select Categories',
+                                          style: TextStyle(fontSize: 22),
+                                        ),
+                                      ),
+                                      content: SizedBox(
+                                        width: 400,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: state.categories.length,
+                                              itemBuilder: (context, index) {
+                                                final category = state.categories[index];
+                                                final isSelected = tempSelectedCategoryIds.contains(category.id);
+
+                                                return GestureDetector(
+                                                  // borderRadius: BorderRadius.circular(15),
+                                                  onTap: () {
+                                                    setState(() {
+                                                      if (isSelected) {
+                                                        // Deselect category
+                                                        tempSelectedCategoryIds.remove(category.id);
+                                                        tempSelectedCategoryNames.remove(category.name!);
+                                                      } else {
+                                                        // Select category
+                                                        tempSelectedCategoryIds.add(category.id!);
+                                                        tempSelectedCategoryNames.add(category.name!);
+                                                      }
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    height: 35.h,
+                                                    margin: EdgeInsets.symmetric(vertical: 5.h),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(15),
+                                                      color: isSelected
+                                                          ? primaryLightColor // Color for selected state
+                                                          : Colors.white, // Default color for deselected state
+                                                      border: Border.all(
+                                                        color: isSelected
+                                                            ? primaryColor // Border for selected state
+                                                            : Theme.of(context).colorScheme.secondary, // Border for deselected state
+                                                      ),
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                                      child: Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            category.name!,
+                                                            style: TextStyle(
+                                                              fontFamily: fontFamily,
+                                                              color: Theme.of(context).colorScheme.onTertiaryFixedVariant,
+                                                              // fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, // Bold text for selected
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 10.w,),
+                                                          isSelected ? Icon(HeroiconsSolid.checkCircle , size: 20.r, color: primaryColor,)
+                                                              : Container()
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
                                             ),
-                                            child: Text(
-                                              category.name!,
-                                              style: TextStyle(
-                                                color: isSelected ? Colors.white : Colors.black,
-                                              ),
+                                            const SizedBox(height: 20),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop(); // Close the dialog without changes
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: Theme.of(context).colorScheme.secondaryFixed, // Optional: make Cancel button red
+                                                  ),
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                      fontFamily: fontFamily,
+                                                      color: greyShade900,
+                                                    ),
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: primaryColor, // Optional: make Add button with primary color
+                                                  ),
+                                                  onPressed: () {
+                                                    // On "Add" button press, update the Bloc with selected categories
+                                                    context.read<CategorySelectionBloc>().add(
+                                                      UpdateCategorySelectionEvent(
+                                                        selectedCategoryIds: tempSelectedCategoryIds,
+                                                        selectedCategoryNames: tempSelectedCategoryNames,
+                                                      ),
+                                                    );
+                                                    Navigator.of(context).pop(); // Close the dialog
+                                                  },
+                                                  child: Text(
+                                                    'Ok',
+                                                    style: TextStyle(
+                                                      fontFamily: fontFamily,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
                               },
                             );
                           },
                           child: AbsorbPointer(
                             child: TextFormField(
+                              scribbleEnabled: true,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Theme.of(context).colorScheme.surfaceDim,
@@ -657,7 +737,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                                 suffixIcon: const Icon(Icons.arrow_drop_down),
                               ),
                               controller: TextEditingController(
-                                text: selectedCategoryNames,
+                                text: selectedCategoryNames, // Prevent empty string
                               ),
                             ),
                           ),
@@ -666,11 +746,140 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                     );
                   } else if (state is VideoCategoriesFailure) {
                     return const Text('Failed to load categories');
-                  } else {
-                    return const Text('No categories available');
                   }
+                  return const Text('No categories available');
                 },
               ),
+
+
+
+
+
+
+
+              // BlocBuilder<VideoCategoriesBloc, VideoCategoryState>(
+              //   builder: (context, state) {
+              //     if (state is VideoCategoriesLoading) {
+              //       return const Center(child: CircularProgressIndicator());
+              //     } else if (state is VideoCategoriesLoaded) {
+              //
+              //       return BlocBuilder<CategorySelectionBloc, CategorySelectionState>(
+              //         builder: (context, selectionState) {
+              //
+              //           // Initialize empty selectedCategoryIds if none
+              //           if (state is CategorySelected) {
+              //             final selectedCategoryIds = selectionState is CategorySelected
+              //                 ? selectionState.selectedCategoryIds
+              //                 : [];
+              //
+              //             // Get the names of the selected categories
+              //             final selectedCategoryNames = state.categories
+              //                 .where((category) => selectedCategoryIds.contains(category.id))
+              //                 .map((category) => category.name)
+              //                 .join(', ');
+              //
+              //             return GestureDetector(
+              //               onTap: () {
+              //                 showDialog(
+              //                   context: context,
+              //                   builder: (context) {
+              //                     return AlertDialog(
+              //                       title: const Center(
+              //                         child: Text(
+              //                           'Select Categories',
+              //                           style: TextStyle(fontSize: 22),
+              //                         ),
+              //                       ),
+              //                       content: SizedBox(
+              //                         width: 400,
+              //                         child: ListView.builder(
+              //                           shrinkWrap: true,
+              //                           itemCount: state.categories.length,
+              //                           itemBuilder: (context, index) {
+              //                             final category = state.categories[index];
+              //                             final isSelected = selectedCategoryIds.contains(state.categories);
+              //
+              //                             return InkWell(
+              //                               borderRadius: BorderRadius.circular(15),
+              //                               onTap: () {
+              //                                 // Update the selection state in Bloc
+              //                                 if (isSelected) {
+              //                                   context.read<CategorySelectionBloc>().add(
+              //                                     DeselectCategoryEvent(categoryId: category.id!),
+              //                                   );
+              //                                 } else {
+              //                                   context.read<CategorySelectionBloc>().add(
+              //                                     SelectCategoryEvent(categoryId: category.id!, categoryName: ),
+              //                                   );
+              //                                 }
+              //                               },
+              //                               child: Container(
+              //                                 alignment: Alignment.center,
+              //                                 height: 40,
+              //                                 margin: const EdgeInsets.symmetric(vertical: 5),
+              //                                 decoration: BoxDecoration(
+              //                                   borderRadius: BorderRadius.circular(15),
+              //                                   color: isSelected
+              //                                       ? Theme.of(context).colorScheme.tertiaryFixedDim
+              //                                       : Theme.of(context).colorScheme.surface,
+              //                                   border: isSelected
+              //                                       ? Border.all(color: Theme.of(context).primaryColor, width: 2)
+              //                                       : Border.all(color: Colors.grey.shade300, width: 1),
+              //                                 ),
+              //                                 child: Text(
+              //                                   category.name!,
+              //                                   style: TextStyle(
+              //                                     color: isSelected ? Colors.white : Colors.black,
+              //                                   ),
+              //                                 ),
+              //                               ),
+              //                             );
+              //                           },
+              //                         ),
+              //                       ),
+              //                     );
+              //                   },
+              //                 );
+              //               },
+              //               child: AbsorbPointer(
+              //                 child: TextFormField(
+              //                   decoration: InputDecoration(
+              //                     filled: true,
+              //                     fillColor: Theme.of(context).colorScheme.surfaceDim,
+              //                     focusedBorder: OutlineInputBorder(
+              //                       borderRadius: BorderRadius.circular(10),
+              //                       borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
+              //                     ),
+              //                     enabledBorder: OutlineInputBorder(
+              //                       borderRadius: BorderRadius.circular(10),
+              //                       borderSide: BorderSide(
+              //                         color: Theme.of(context).colorScheme.secondary,
+              //                         width: 1.0,
+              //                       ),
+              //                     ),
+              //                     labelText: 'Select Categories',
+              //                     labelStyle: TextStyle(
+              //                       fontSize: 15,
+              //                       color: Colors.grey.shade500,
+              //                     ),
+              //                     suffixIcon: const Icon(Icons.arrow_drop_down),
+              //                   ),
+              //                   controller: TextEditingController(
+              //                     text: selectedCategoryNames,
+              //                   ),
+              //                 ),
+              //               ),
+              //             );
+              //           }
+              //           return SizedBox.shrink();
+              //           },
+              //       );
+              //     } else if (state is VideoCategoriesFailure) {
+              //       return const Text('Failed to load categories');
+              //     }
+              //       return const Text('No categories available');
+              //   },
+              // ),
 
               SizedBox(height: 15.h),
 

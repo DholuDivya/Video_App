@@ -8,7 +8,7 @@ import 'package:vimeo_clone/model/get_comments_model.dart';
 class GetCommentsBloc extends Bloc<GetCommentsEvent, GetCommentsState>{
 
   int _offset = 0;
-  final int _limit = 10;
+  final int _limit = 5;
   bool _hasReachedMax = false;
   String slug = '';
 
@@ -38,7 +38,7 @@ class GetCommentsBloc extends Bloc<GetCommentsEvent, GetCommentsState>{
       try {
         List<CommentData> getCommentsList = [];
         final currentState = state as GetCommentsLoaded;
-        final updatedShortsList = List<CommentData>.from(currentState.getCommentsList);
+        final updatedCommentList = List<CommentData>.from(currentState.getCommentsList);
         Map<String, dynamic> comment = await GetCommentsRepo().getComments(slug, _limit, _offset);
         getCommentsList = List<CommentData>.from(comment['data'].map((data) => CommentData.fromJson(data)));
         _offset += _limit;
@@ -47,8 +47,8 @@ class GetCommentsBloc extends Bloc<GetCommentsEvent, GetCommentsState>{
         }else{
           _hasReachedMax = false;
         }
-        updatedShortsList.addAll(getCommentsList);
-        emit(GetCommentsLoaded(getCommentsList: getCommentsList, hasReachedMax: _hasReachedMax));
+        updatedCommentList.addAll(getCommentsList);
+        emit(GetCommentsLoaded(getCommentsList: updatedCommentList, hasReachedMax: _hasReachedMax));
       }catch(e){
         emit(GetCommentsFailure(error: e.toString()));
       }

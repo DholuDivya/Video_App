@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import '../../../utils/widgets/customBottomSheet.dart';
 import '../../../utils/widgets/custom_channel_video_preview.dart';
 import '../../../utils/widgets/custom_for_you_preview.dart';
+import '../../../utils/widgets/custom_report_dialog.dart';
 
 class HomePreviewPage extends StatefulWidget {
   // final GetChannelDetailModel channelData;
@@ -28,6 +31,29 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
     {"thumbnail": "assets/images/tmkoc2.jpg", "views": "1.2M"},
     {"thumbnail": "assets/images/tmkoc1.jpg", "views": "144K"},
   ];
+
+
+
+  List<Map<String, dynamic>> bottomSheetListTileField = [
+    {
+      'name': 'Save to playlist',
+      'icon': HeroiconsOutline.bookmark
+    },
+    {
+      'name': 'Download video',
+      'icon': HeroiconsOutline.arrowDownTray
+    },
+    {
+      'name': 'Share',
+      'icon': HeroiconsOutline.share
+    },
+    {
+      'name': 'Report',
+      'icon': HeroiconsOutline.chatBubbleBottomCenterText
+    },
+  ];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +158,22 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                         uploadTime: '${videoData.createdAtHuman}',
                         videoDuration: formattedTime,
                         onShowMorePressed: (){
+                          customShowMoreBottomSheet(
+                            context,
+                            bottomSheetListTileField,
+                                (int index) {
+                              if (index == 0) {
+
+                              } else if (index == 1) {
+                                // GoRouter.of(context).pushNamed('settingPage');
+                              }else if(index == 3){
+                                if(Navigator.canPop(context)){
+                                  Navigator.pop(context);
+                                }
+                                showReportDialog(context, videoData.id);
+                              }
+                            },
+                          );
                           // customShowMoreBottomSheet(
                           //     context,
                           //     bottomSheetListTileField,
@@ -162,4 +204,14 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
       },
     );
   }
+
+  void showReportDialog(BuildContext context, int videoId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomReportDialog(videoId: videoId,);
+      },
+    );
+  }
+
 }
