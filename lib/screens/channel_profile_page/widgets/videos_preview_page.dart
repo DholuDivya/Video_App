@@ -53,13 +53,13 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
   List<Videos> sortVideos(List<Videos> videos, String sortType) {
     switch (sortType) {
       case "Latest":
-        videos.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+        videos.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         break;
       case "Popular":
         videos.sort((a, b) => b.views!.compareTo(a.views!));
         break;
       case "Oldest":
-        videos.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+        videos.sort((a, b) => a.createdAt.compareTo(b.createdAt));
         break;
     }
     return videos;
@@ -134,10 +134,10 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
                       return Padding(
                         padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                         child: CustomVideoPreview(
-                            imageUrl: videoData.thumbnails!,
-                            videoTitle: videoData.title!,
+                            imageUrl: videoData.thumbnails,
+                            videoTitle: videoData.title,
                             videoViews: '${videoData.views}',
-                            uploadTime: videoData.createdAtHuman!,
+                            uploadTime: videoData.createdAtHuman,
                             videoDuration: formattedDuration,
                           onShowMorePressed: (){
                             customShowMoreBottomSheet(

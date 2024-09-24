@@ -64,6 +64,7 @@ import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_video/upload_video_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_video_external/upload_video_external_bloc.dart';
 import 'package:vimeo_clone/bloc/add_user_history/add_user_history_bloc.dart';
+import 'package:vimeo_clone/bloc/user_transaction/user_transaction_bloc.dart';
 import 'package:vimeo_clone/bloc/verify_payment/verify_payment_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_event.dart';
@@ -194,6 +195,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => ReportVideoBloc()),
         BlocProvider(create: (context) => HelpAndSupportBloc()),
         BlocProvider(create: (context) => ShortsVisibleBloc()),
+        BlocProvider(create: (context) => UserTransactionBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

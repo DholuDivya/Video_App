@@ -1,9 +1,13 @@
 class ShowSinglePlaylistModel {
+  bool? error;
+  String? message;
   Playlist? playlist;
 
-  ShowSinglePlaylistModel({this.playlist});
+  ShowSinglePlaylistModel({this.error, this.message, this.playlist});
 
   ShowSinglePlaylistModel.fromJson(Map<String, dynamic> json) {
+    error = json['error'];
+    message = json['message'];
     playlist = json['playlist'] != null
         ? new Playlist.fromJson(json['playlist'])
         : null;
@@ -11,6 +15,8 @@ class ShowSinglePlaylistModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['error'] = this.error;
+    data['message'] = this.message;
     if (this.playlist != null) {
       data['playlist'] = this.playlist!.toJson();
     }
@@ -22,21 +28,15 @@ class Playlist {
   int? id;
   String? title;
   String? description;
-  int? userId;
   String? visibility;
-  String? createdAt;
-  String? updatedAt;
   String? createdAtHuman;
-  List<Videos>? videos;
+  List<SinglePlaylistVideos>? videos;
 
   Playlist(
       {this.id,
         this.title,
         this.description,
-        this.userId,
         this.visibility,
-        this.createdAt,
-        this.updatedAt,
         this.createdAtHuman,
         this.videos});
 
@@ -44,15 +44,12 @@ class Playlist {
     id = json['id'];
     title = json['title'];
     description = json['description'];
-    userId = json['user_id'];
     visibility = json['visibility'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
     createdAtHuman = json['created_at_human'];
     if (json['videos'] != null) {
-      videos = <Videos>[];
+      videos = <SinglePlaylistVideos>[];
       json['videos'].forEach((v) {
-        videos!.add(new Videos.fromJson(v));
+        videos!.add(new SinglePlaylistVideos.fromJson(v));
       });
     }
   }
@@ -62,10 +59,7 @@ class Playlist {
     data['id'] = this.id;
     data['title'] = this.title;
     data['description'] = this.description;
-    data['user_id'] = this.userId;
     data['visibility'] = this.visibility;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
     data['created_at_human'] = this.createdAtHuman;
     if (this.videos != null) {
       data['videos'] = this.videos!.map((v) => v.toJson()).toList();
@@ -74,7 +68,7 @@ class Playlist {
   }
 }
 
-class Videos {
+class SinglePlaylistVideos {
   int? id;
   String? type;
   String? title;
@@ -96,7 +90,7 @@ class Videos {
   int? commentsOnOff;
   int? channelId;
   String? status;
-  String? deletedAt;
+  Null? deletedAt;
   int? views;
   int? likes;
   String? visibility;
@@ -104,11 +98,13 @@ class Videos {
   String? createdAt;
   String? updatedAt;
   String? contentType;
+  Null? reasonForDeactivation;
   String? videoUrl;
   String? createdAtHuman;
+  Channel? channel;
   Pivot? pivot;
 
-  Videos(
+  SinglePlaylistVideos(
       {this.id,
         this.type,
         this.title,
@@ -138,11 +134,13 @@ class Videos {
         this.createdAt,
         this.updatedAt,
         this.contentType,
+        this.reasonForDeactivation,
         this.videoUrl,
         this.createdAtHuman,
+        this.channel,
         this.pivot});
 
-  Videos.fromJson(Map<String, dynamic> json) {
+  SinglePlaylistVideos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     type = json['type'];
     title = json['title'];
@@ -172,8 +170,11 @@ class Videos {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     contentType = json['content_type'];
+    reasonForDeactivation = json['reason_for_deactivation'];
     videoUrl = json['video_url'];
     createdAtHuman = json['created_at_human'];
+    channel =
+    json['channel'] != null ? new Channel.fromJson(json['channel']) : null;
     pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
   }
 
@@ -208,11 +209,52 @@ class Videos {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['content_type'] = this.contentType;
+    data['reason_for_deactivation'] = this.reasonForDeactivation;
     data['video_url'] = this.videoUrl;
     data['created_at_human'] = this.createdAtHuman;
+    if (this.channel != null) {
+      data['channel'] = this.channel!.toJson();
+    }
     if (this.pivot != null) {
       data['pivot'] = this.pivot!.toJson();
     }
+    return data;
+  }
+}
+
+class Channel {
+  int? id;
+  String? name;
+  String? description;
+  String? createdAt;
+  String? logo;
+  String? createdAtHuman;
+
+  Channel(
+      {this.id,
+        this.name,
+        this.description,
+        this.createdAt,
+        this.logo,
+        this.createdAtHuman});
+
+  Channel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    description = json['description'];
+    createdAt = json['created_at'];
+    logo = json['logo'];
+    createdAtHuman = json['created_at_human'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['created_at'] = this.createdAt;
+    data['logo'] = this.logo;
+    data['created_at_human'] = this.createdAtHuman;
     return data;
   }
 }

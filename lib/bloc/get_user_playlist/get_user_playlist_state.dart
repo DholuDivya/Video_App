@@ -14,7 +14,7 @@ class GetUserPlaylistLoading extends GetUserPlaylistState{
 }
 
 class GetUserPlaylistSuccess extends GetUserPlaylistState{
-  final List<Playlist> userPlaylist;
+  final List<PlaylistList> userPlaylist;
   final bool hasReachedMax;
 
   GetUserPlaylistSuccess({required this.userPlaylist, required this.hasReachedMax});

@@ -373,9 +373,7 @@ class AuthRepository{
 
   Future deleteUserAccount(String password) async {
     try{
-      final response = await ApiBaseHelper().deleteAPICall(deleteUserAccountUrl, {
-        'password': password
-      });
+      final response = await ApiBaseHelper().deleteAPICall(deleteUserAccountUrl, {});
 
       if(response.statusCode == 200){
         await Global.clearUserData();

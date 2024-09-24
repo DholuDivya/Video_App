@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -40,6 +41,7 @@ import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_state.dart';
 import 'package:vimeo_clone/bloc/video_list/video_list_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/config/global_keys.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/config/notification_service.dart';
 import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
@@ -130,27 +132,21 @@ class _HomePageState extends State<HomePage> {
     // _navigateToIndex();_navigateToIndex
 
     return Scaffold(
-      // floatingActionButton: _currentIndex == 0 ? FloatingActionButton(
-      //     onPressed: (){
-      //       setState(() {
-      //         shortsVisible = true;
-      //       });
-      //     },
-      //   child: Text('djf'),
-      // ) : null,
-      body: BlocBuilder<ShortsVisibleBloc, ShortsVisibleState>(
-        builder: (BuildContext context, ShortsVisibleState state) {
-          print('fehfuehehfuhf   $state');
-          print('fehfuehehfuhf   $_currentIndex');
-          if(state is ShortsVisibleSuccess){
-            shortsVisible = state.shortVisible;
-            slug = state.slug;
-            print('fehfuehehfuhf zszs  $shortsVisible');
-          }
-          return SafeArea(
-            child:  screens[_currentIndex],
-          );
-        },
+      body: WillPopScope(
+          child: screens[_currentIndex],
+          onWillPop: () async {
+      if(_currentIndex == 0) {
+        SystemNavigator.pop();
+      } else if (GlobalKeys.navigatorKey.currentState!.canPop()) {
+    GlobalKeys.navigatorKey.currentState!.pop();
+        setState(() {
+          _currentIndex = 0;
+          // _lastIndex = _selectedIndex;
+        });
+        return false;
+      }
+      return true;
+    },
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         backgroundColor:

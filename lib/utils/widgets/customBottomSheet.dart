@@ -8,8 +8,9 @@ void customShowMoreBottomSheet(context, List<Map<String, dynamic>> list, Functio
       builder: (BuildContext context){
         return Padding(
           padding: EdgeInsets.only(
-            left: 2.w,
-            right: 2.w,
+            left: 5.w,
+            right: 5.w,
+            bottom: 5.h
           ),
           child: Card(
             child: Column(

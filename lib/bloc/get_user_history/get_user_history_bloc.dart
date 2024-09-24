@@ -7,7 +7,7 @@ import 'package:vimeo_clone/model/user_history_model.dart';
 class GetUserHistoryBloc extends Bloc<GetUserHistoryEvent, GetUserHistoryState>{
 
   int _offset = 0;
-  final int _limit = 3;
+  final int _limit = 12;
   bool _hasReachedMax = false;
 
   GetUserHistoryBloc() : super(GetUserHistoryInitial()){

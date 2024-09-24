@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:vimeo_clone/bloc/get_plans/get_plans_event.dart';
+import 'package:vimeo_clone/bloc/get_plans/get_plans_state.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
@@ -20,6 +22,8 @@ import 'package:vimeo_clone/screens/user_page/widgets/custom_user_page_button.da
 import 'package:vimeo_clone/screens/user_page/widgets/user_header_widget.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_history_widget.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_playlist_widget.dart';
+
+import '../../bloc/get_plans/get_plans_bloc.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -105,7 +109,6 @@ class _UserPageState extends State<UserPage> {
             children: [
               const UserHeaderWidget(),
               // SizedBox(height: ScreenSize.screenHeight(context) * 0.00,),
-
 
               UserHistoryWidget(),
 

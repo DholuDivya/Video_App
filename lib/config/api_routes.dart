@@ -37,3 +37,4 @@ const String appPrivacyContentUrl = "${apiUrl}fetch-page-content";
 const String reportVideoUrl = "${apiUrl}reports";
 const String helpAndSupportUrl = "${apiUrl}help-requests";
 const String getShortsBySlugUrl = "${apiUrl}shorts/show";
+const String userTransactionUrl = "${apiUrl}user/";

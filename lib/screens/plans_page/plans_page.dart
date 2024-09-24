@@ -16,6 +16,7 @@ import 'package:vimeo_clone/bloc/verify_payment/verify_payment_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/plans_page/widgets/custom_plans_container.dart';
 
+import '../../bloc/get_plans/get_plans_event.dart';
 import '../../config/global_variable.dart';
 
 class PlansPage extends StatefulWidget {
@@ -34,6 +35,8 @@ class _PlansPageState extends State<PlansPage> {
   late double selectedPrice = 0.0;
   late int selectedPlanId = -1;
   var planName = '';
+  var activePlanName = '';
+
 
 
 
@@ -44,6 +47,7 @@ class _PlansPageState extends State<PlansPage> {
   @override
   void initState() {
     super.initState();
+    context.read<GetPlansBloc>().add(GetPlansRequest());
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
@@ -67,7 +71,7 @@ class _PlansPageState extends State<PlansPage> {
     String userAmount = (amount * 100).toString();
 
     var options = {
-      'key': 'rzp_test_43YUyaXUhNqIVZ',
+      'key': 'rzp_test_0GJHwISpadNLCD',
       'amount': userAmount,
       'name': userName,
       'description': planName,
@@ -92,9 +96,9 @@ class _PlansPageState extends State<PlansPage> {
   }
 
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
-    print('Payment Success: ${response.orderId}');
-    print('Payment Success: ${response.paymentId}');
-    print('Payment Success: ${response.signature}');
+    print('Payment Order ID: ${response.orderId}');
+    print('Payment Payment ID: ${response.paymentId}');
+    print('Payment Signature: ${response.signature}');
     final razorpayOrderId = response.orderId;
     final razorpayPaymentId = response.paymentId;
     final razorpaySignature = response.signature;
@@ -104,39 +108,42 @@ class _PlansPageState extends State<PlansPage> {
         razorpaySignature: razorpaySignature!,
         planId: selectedPlanId
     ));
+    context.read<GetPlansBloc>().add(GetPlansRequest());
 
-    final verifyPaymentBloc = context.read<VerifyPaymentBloc>();
-    verifyPaymentBloc.stream.listen((state){
-      if(state is VerifyPaymentLoaded){
-        print('yuyuyuyuyuyuyuyuuy    $state');
-        showDialog(
-          context: context,
-          builder: (BuildContext context){
-            return AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Center(
-                      child: Lottie.asset('assets/animation/payment_success.json', height: 80.h, width: 80.w)
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      }else if(state is VerifyPaymentFailure){
-        AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Center(
-                  child: Lottie.asset('assets/animation/payment_failed.json',  height: 80.h, width: 80.w)
-              ),
-            ],
-          ),
-        );
-      }
-    });
+    // final verifyPaymentBloc = context.read<VerifyPaymentBloc>();
+    // verifyPaymentBloc.stream.listen((state){
+    //   if(state is VerifyPaymentLoaded){
+    //     print('yuyuyuyuyuyuyuyuuy    $state');
+    //
+    //
+    //     // showDialog(
+    //     //   context: context,
+    //     //   builder: (BuildContext context){
+    //     //     return AlertDialog(
+    //     //       content: Column(
+    //     //         mainAxisSize: MainAxisSize.min,
+    //     //         children: [
+    //     //           Center(
+    //     //               child: Lottie.asset('assets/animation/payment_success.json', height: 80.h, width: 80.w)
+    //     //           ),
+    //     //         ],
+    //     //       ),
+    //     //     );
+    //     //   },
+    //     // );
+    //   }else if(state is VerifyPaymentFailure){
+    //     AlertDialog(
+    //       content: Column(
+    //         mainAxisSize: MainAxisSize.min,
+    //         children: [
+    //           Center(
+    //               child: Lottie.asset('assets/animation/payment_failed.json',  height: 80.h, width: 80.w)
+    //           ),
+    //         ],
+    //       ),
+    //     );
+    //   }
+    // });
   }
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {
@@ -147,9 +154,19 @@ class _PlansPageState extends State<PlansPage> {
 
 
 
-
   @override
   Widget build(BuildContext context) {
+
+    final plansBloc =  context.read<GetPlansBloc>();
+
+    plansBloc.stream.listen((state){
+      if(state is GetPlansLoaded){
+        activePlanName = state.plansList.first.data!.activePlanName!;
+        print('afaeeaeese   ${state.plansList.first.data!.activePlanName!}');
+      }
+    });
+
+    print('$activePlanName');
 
     return Scaffold(
       appBar: AppBar(
@@ -196,15 +213,25 @@ class _PlansPageState extends State<PlansPage> {
         ),
       ),
 
-      bottomNavigationBar: _selectedPlanIndex >= 0 ? BottomAppBar(
+      bottomNavigationBar: activePlanName == "No active plan" ? _selectedPlanIndex >= 0 ? BottomAppBar(
         child: BlocBuilder<GenerateSignatureBloc, GenerateSignatureState>(
           builder: (BuildContext context, GenerateSignatureState state) {
             var key = '';
             var orderId = '';
+
             if(state is GenerateSignatureSuccess){
               key = state.signatureData[0].keyId!;
               orderId = state.signatureData.first.orderId!;
               print('TTTTTTTTTTTTTTTT     ${state.signatureData.first.orderId}');
+              buyPlan(
+                  userName!,
+                  key,
+                  orderId,
+                  selectedPrice,
+                  planName,
+                  userNumber!,
+                  userEmail!
+              );
             }
             return ElevatedButton(
                 onPressed: (){
@@ -214,15 +241,7 @@ class _PlansPageState extends State<PlansPage> {
                   print('vvvvvvvvvvvv    $key');
                   print('vvvvvvvvvvvv    $orderId');
                   print('vvvvvvvvvvvv    $selectedPrice');
-                   buyPlan(
-                       userName!,
-                       key,
-                       orderId,
-                       selectedPrice,
-                       planName,
-                       userNumber!,
-                       userEmail!
-                   );
+
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -230,7 +249,7 @@ class _PlansPageState extends State<PlansPage> {
                   ),
                 ),
                 child: Text(
-                  'Pay Rs $selectedPrice',
+                  'Buy now',
                   style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 18,
@@ -240,7 +259,7 @@ class _PlansPageState extends State<PlansPage> {
             );
           },
         ),
-      ) : null,
+      ) : SizedBox.shrink() : SizedBox.shrink(),
     );
   }
 
@@ -286,7 +305,7 @@ class _PlansPageState extends State<PlansPage> {
             ),
 
             Text(
-                'Full access subscription ',
+                '${activePlanName}',
                 style: TextStyle(
                     fontSize: 11.sp,
                     fontFamily: fontFamily,
@@ -308,9 +327,9 @@ class _PlansPageState extends State<PlansPage> {
           return ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: state.plansList.first.data!.length,
+            itemCount: state.plansList.first.data!.plans!.length,
             itemBuilder: (BuildContext context, int index) {
-              final plansData = state.plansList.first.data![index];
+              final plansData = state.plansList.first.data!.plans![index];
               return Padding(
                 padding: EdgeInsets.only(bottom: 12.h),
                 child: CustomPlansContainer(
@@ -318,6 +337,8 @@ class _PlansPageState extends State<PlansPage> {
                   planPrice: '${plansData.price}',
                   timePeriod: '${plansData.timePeriod}',
                   feature: plansData.features!,
+                  isActive: plansData.isActive,
+                  activePlanName: state.plansList.first.data!.activePlanName,
                   isPlanSelected: index == _selectedPlanIndex,
                   // isExpanded: index == _selectedPlanIndex,
                   // isExpanded: false,

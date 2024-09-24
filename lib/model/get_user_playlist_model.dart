@@ -1,7 +1,7 @@
 class GetUserPlaylistModel {
   bool? error;
   String? message;
-  List<Playlist>? data;
+  List<PlaylistList>? data;
 
   GetUserPlaylistModel({this.error, this.message, this.data});
 
@@ -9,9 +9,9 @@ class GetUserPlaylistModel {
     error = json['error'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <Playlist>[];
+      data = <PlaylistList>[];
       json['data'].forEach((v) {
-        data!.add(new Playlist.fromJson(v));
+        data!.add(new PlaylistList.fromJson(v));
       });
     }
   }
@@ -27,7 +27,7 @@ class GetUserPlaylistModel {
   }
 }
 
-class Playlist {
+class PlaylistList {
   int? id;
   String? title;
   String? description;
@@ -38,7 +38,7 @@ class Playlist {
   String? createdAtHuman;
   List<Videos>? videos;
 
-  Playlist(
+  PlaylistList(
       {this.id,
         this.title,
         this.description,
@@ -49,7 +49,7 @@ class Playlist {
         this.createdAtHuman,
         this.videos});
 
-  Playlist .fromJson(Map<String, dynamic> json) {
+  PlaylistList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     description = json['description'];

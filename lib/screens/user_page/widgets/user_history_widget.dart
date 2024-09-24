@@ -45,10 +45,6 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
 
   List<Map<String, dynamic>> bottomSheetListTileField = [
     {
-      'name': 'Remove from history',
-      'icon': HeroiconsOutline.trash
-    },
-    {
       'name': 'Save to playlist',
       'icon': HeroiconsOutline.bookmark
     },
@@ -61,8 +57,8 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
       'icon': HeroiconsOutline.share
     },
     {
-      'name': 'Report',
-      'icon': HeroiconsOutline.chatBubbleBottomCenterText
+      'name': 'Remove from history',
+      'icon': HeroiconsOutline.trash
     },
   ];
 
@@ -159,20 +155,18 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
                                     context,
                                     bottomSheetListTileField,
                                         (int index) {
-                                      if (index == 0) {
+                                      if (index == 0) {}
+                                      else if (index == 1) {}
+                                      else if (index == 2) {}
+                                      else if (index == 3) {
+
                                         if (Navigator.canPop(context)) {
                                           Navigator.pop(context);
                                         }
                                         context.read<RemoveVideoFromHistoryBloc>().add(
                                             RemoveVideoFromHistoryRequest(videoIds: selectedToRemove));
                                         context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
-                                      } else if (index == 1) {
-                                        // GoRouter.of(context).pushNamed('settingPage');
-                                      }else if(index == 4){
-                                        if(Navigator.canPop(context)){
-                                          Navigator.pop(context);
-                                        }
-                                        showReportDialog(context, userHistory.id!);
+
                                       }
                                     },
                                   );
@@ -222,16 +216,6 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
       },
     );
   }
-
-  void showReportDialog(BuildContext context, int videoId) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomReportDialog(videoId: videoId,);
-      },
-    );
-  }
-
 
 }
 

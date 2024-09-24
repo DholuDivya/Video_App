@@ -14,7 +14,7 @@ class ShowSinglePlaylistLoading extends ShowSinglePlaylistState{
 }
 
 class ShowSinglePlaylistLoaded extends ShowSinglePlaylistState{
-  final List<ShowSinglePlaylistModel> singlePlaylistData;
+  final List<SinglePlaylistVideos> singlePlaylistData;
   final bool hasReachedMax;
 
   ShowSinglePlaylistLoaded({required this.singlePlaylistData, required this.hasReachedMax});

@@ -34,11 +34,6 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
       'name': 'Delete playlist',
       'icon': HeroiconsOutline.trash
     },
-    {
-      'name': 'Share playlist',
-      'icon': HeroiconsOutline.share
-    },
-
   ];
 
 
@@ -190,8 +185,6 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                                   context.read<DeletePlaylistBloc>().add(
                                       DeletePlaylistRequest(playlistId: userPlaylist.id!));
                                   context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
-                                } else if (index == 1) {
-                                  // GoRouter.of(context).pushNamed('settingPage');
                                 }
                               },
                             );

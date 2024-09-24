@@ -53,6 +53,7 @@ class ApiBaseHelper {
     print('%%%%%%%%%%%%%%      ${headers}');
     print('faihfiahihihif    ${url}');
     try {
+      print('ekjfnjesngjkng');
       final response =
       await dio.post(
           url,
@@ -62,6 +63,7 @@ class ApiBaseHelper {
             headers: headers,
           ),
       );
+      print('anfiaenfinffnf');
       // .timeout(Duration(seconds: timeOut));
       // log('+++ HEADERS  ${headers}');
       if (kDebugMode) {

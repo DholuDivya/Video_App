@@ -72,22 +72,17 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
       body: BlocBuilder<ShowSinglePlaylistBloc, ShowSinglePlaylistState>(
         builder: (BuildContext context, ShowSinglePlaylistState state) {
           if(state is ShowSinglePlaylistLoaded){
-            final userSinglePlaylist = state.singlePlaylistData.first.playlist;
-            return userSinglePlaylist!.videos!.isNotEmpty ? SingleChildScrollView(
+            final playlistTitle = context.read<ShowSinglePlaylistBloc>().playlistTitle;
+            final playlistVisibility = context.read<ShowSinglePlaylistBloc>().playlistVisibility;
+            final userSinglePlaylist = state.singlePlaylistData;
+            return userSinglePlaylist.isNotEmpty ? SingleChildScrollView(
               child: Column(
                 children: [
                   Container(
-                    height: 260.h,
+                    height: 240.h,
                     width: double.infinity,
                     decoration: BoxDecoration(
-
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      // borderRadius: BorderRadius.only(
-                      //  
-                      //   bottomLeft: Radius.circular(20),
-                      //   bottomRight: Radius.circular(20),
-                      //
-                      // ),
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                     child: Stack(
@@ -106,54 +101,57 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                                 borderRadius: BorderRadius.circular(20),
                                 child: AspectRatio(
                                   aspectRatio: 16/9,
-                                  child: Image.network(userSinglePlaylist.videos!.first.thumbnails!, fit: BoxFit.cover,),
+                                  child: Image.network(userSinglePlaylist.first.thumbnails!, fit: BoxFit.cover,),
                                 ),
                               ),
                               SizedBox(height: 10.h,),
 
                               Text(
-                                '${userSinglePlaylist.title}',
+                                playlistTitle,
                                 style: TextStyle(
                                     fontFamily: fontFamily,
-                                    fontSize: 17
+                                    fontSize: 18.sp,
+                                  fontWeight: FontWeight.bold
                                 ),
                               ),
+                              // SizedBox(height: 5.h,),
 
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      // Text(
+                                      //   '${userSinglePlaylist.first.channel!.name}',
+                                      //   style: TextStyle(
+                                      //       fontFamily: fontFamily,
+                                      //       fontSize: 12
+                                      //   ),
+                                      // ),
                                       Text(
-                                        'Channel Name',
+                                        '${userSinglePlaylist.length} videos  -  $playlistVisibility',
                                         style: TextStyle(
                                             fontFamily: fontFamily,
-                                            fontSize: 12
-                                        ),
-                                      ),
-                                      Text(
-                                        '${userSinglePlaylist.videos!.length} videos  -  ${userSinglePlaylist.visibility}',
-                                        style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 10,
+                                            fontSize: 12.sp,
                                             color: greyShade500
                                         ),
                                       )
                                     ],
                                   ),
 
-                                  InkWell(
-                                    onTap: (){},
-                                    child: Container(
-                                      height: 30.h,
-                                      width: 35.w,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(100),
-                                          color: Colors.white.withOpacity(0.4)
-                                      ),
-                                      child: const Icon(HeroiconsOutline.pencilSquare, size: 20,),
-                                    ),
-                                  )
+                                  // InkWell(
+                                  //   onTap: (){},
+                                  //   child: Container(
+                                  //     height: 30.h,
+                                  //     width: 35.w,
+                                  //     decoration: BoxDecoration(
+                                  //         borderRadius: BorderRadius.circular(100),
+                                  //         color: Colors.white.withOpacity(0.4)
+                                  //     ),
+                                  //     child: const Icon(HeroiconsOutline.pencilSquare, size: 20,),
+                                  //   ),
+                                  // )
                                 ],
                               )
 
@@ -182,9 +180,9 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                         // padding: EdgeInsets.only(
                         //   top: ScreenSize.screenHeight(context) * 0.01,
                         // ),
-                        itemCount: state.singlePlaylistData.first.playlist!.videos!.length,
+                        itemCount: state.singlePlaylistData.length,
                         itemBuilder: (context, index){
-                          final userSinglePlaylistData = userSinglePlaylist.videos![index];
+                          final userSinglePlaylistData = userSinglePlaylist[index];
                           final totalSeconds = userSinglePlaylistData.duration;
                           final formattedDuration = formatDuration(totalSeconds!);
                           return InkWell(

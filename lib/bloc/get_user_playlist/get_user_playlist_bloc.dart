@@ -17,13 +17,13 @@ class GetUserPlaylistBloc extends Bloc<GetUserPlaylistEvent, GetUserPlaylistStat
 
   Future<void> _onGetUserPlaylistRequest(GetUserPlaylistEvent event, Emitter<GetUserPlaylistState> emit) async {
     try{
-      List<Playlist>? userPlaylistList = [];
+      List<PlaylistList>? userPlaylistList = [];
       _offset = 0;
       _hasReachedMax = false;
       print('GGGGGGGGGGGGGGGGGGGGGGGGG');
       Map<String, dynamic> playlistData = await GetUserPlaylistRepo().getUserPlaylist(_limit, _offset);
       print('||||||||||||||||||||||||||||| $playlistData');
-      userPlaylistList = List<Playlist>.from(playlistData['data'].map((data) => Playlist.fromJson(data)));
+      userPlaylistList = List<PlaylistList>.from(playlistData['data'].map((data) => PlaylistList.fromJson(data)));
       print('000...................................');
       _offset += _limit;
       _hasReachedMax = userPlaylistList.length < _limit;
@@ -37,11 +37,11 @@ class GetUserPlaylistBloc extends Bloc<GetUserPlaylistEvent, GetUserPlaylistStat
   Future<void> _onLoadMoreUserPlaylist(LoadMoreUserPlaylist event, Emitter<GetUserPlaylistState> emit) async {
     if (state is GetUserPlaylistSuccess && !_hasReachedMax) {
       try {
-        List<Playlist>? userPlaylistList = [];
+        List<PlaylistList>? userPlaylistList = [];
         final currentState = state as GetUserPlaylistSuccess;
-        final updatedPlaylist = List<Playlist>.from(currentState.userPlaylist);
+        final updatedPlaylist = List<PlaylistList>.from(currentState.userPlaylist);
         Map<String, dynamic> playlistData = await GetUserPlaylistRepo().getUserPlaylist(_limit, _offset);
-        userPlaylistList = List<Playlist>.from(playlistData['data'].map((data) => Playlist.fromJson(data)));
+        userPlaylistList = List<PlaylistList>.from(playlistData['data'].map((data) => PlaylistList.fromJson(data)));
         _offset += _limit;
         if(userPlaylistList.length < _limit){
           _hasReachedMax = true;

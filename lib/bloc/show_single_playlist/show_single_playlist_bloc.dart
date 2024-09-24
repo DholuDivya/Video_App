@@ -9,6 +9,8 @@ class ShowSinglePlaylistBloc extends Bloc<ShowSinglePlaylistEvent, ShowSinglePla
   int _offset = 0;
   final int _limit = 3;
   bool _hasReachedMax = false;
+  var playlistTitle = '';
+  var playlistVisibility = '';
 
   ShowSinglePlaylistBloc() : super(ShowSinglePlaylistInitial()) {
     on<ShowSinglePlaylistRequest>(_onShowSinglePlaylistRequest);
@@ -18,11 +20,16 @@ class ShowSinglePlaylistBloc extends Bloc<ShowSinglePlaylistEvent, ShowSinglePla
   Future<void> _onShowSinglePlaylistRequest(ShowSinglePlaylistRequest event,
       Emitter<ShowSinglePlaylistState> emit) async {
     try {
-      List<ShowSinglePlaylistModel>? singlePlaylistData = [];
+      List<SinglePlaylistVideos>? singlePlaylistData = [];
       _offset = 0;
       _hasReachedMax = false;
       Map<String, dynamic> playlistData = await ShowSinglePlaylistRepo().showSinglePlaylist(event.playlistId, _limit, _offset);
-      singlePlaylistData = List<ShowSinglePlaylistModel>.from(playlistData['data'].map((data) => ShowSinglePlaylistModel.fromJson(data)));
+      print('uuiuiiuuiiuuuuuuuuuuu   ');
+      playlistTitle = playlistData['playlist']['title'];
+      playlistVisibility = playlistData['playlist']['visibility'];
+
+      singlePlaylistData = List<SinglePlaylistVideos>.from(playlistData['playlist']['videos'].map((data) => SinglePlaylistVideos.fromJson(data)));
+      print('uuiuiiuuiiuuuuuuuuuuu   $singlePlaylistData');
       _offset += _limit;
       _hasReachedMax = singlePlaylistData.length < _limit;
       emit(ShowSinglePlaylistLoaded(singlePlaylistData: singlePlaylistData, hasReachedMax: _hasReachedMax));

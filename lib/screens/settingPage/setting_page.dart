@@ -296,7 +296,7 @@ class _SettingPageState extends State<SettingPage> {
                     icon: HeroiconsOutline.trash,
                       btnName: 'Delete account',
                       onTap: (){
-                        onDeleteAccountShowDialog();
+                        deleteConfirmation();
                       }
                   ),
 

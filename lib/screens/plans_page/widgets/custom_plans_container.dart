@@ -446,6 +446,8 @@ class CustomPlansContainer extends StatefulWidget {
   final bool isPlanSelected;
   final List<String> feature;
   final VoidCallback onTap;
+  final bool? isActive;
+  final String? activePlanName;
 
   const CustomPlansContainer({
     super.key,
@@ -455,6 +457,8 @@ class CustomPlansContainer extends StatefulWidget {
     required this.isPlanSelected,
     required this.feature,
     required this.onTap,
+    this.isActive,
+    this.activePlanName
   });
 
   @override
@@ -475,157 +479,222 @@ class _CustomPlansContainerState extends State<CustomPlansContainer> {
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: widget.onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15.w),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: widget.isPlanSelected
-              ? Border.all(
-            width: 1.5,
-            color: primaryColor,
-          )
-              : Border.all(
-            width: 1.5,
-            color: greyShade400,
-          ),
-        ),
-        child: Column(
-          children: [
-            Container(
-              height: _isExpanded ? 70.h : 70.h, // Adjust height based on expansion
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        children: [
+          Material(
+            elevation: 5,
+            borderRadius: BorderRadius.circular(15),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: widget.isActive == true
+                    ? Border.all(
+                  width: 1.0,
+                  color: primaryColor,
+                )
+                    : Border.all(
+                  width: 1.0,
+                  color: greyShade400,
+                ),
+              ),
+              child: Column(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        widget.planName,
-                        style: TextStyle(
-                          fontFamily: fontFamily,
-                          fontSize: 14.sp,
-                          // fontWeight: FontWeight.w700,
-                          // color: Colors.white,
+                  Container(
+                    height: _isExpanded ? 70.h : 70.h, // Adjust height based on expansion
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              widget.planName,
+                              style: TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: 14.sp,
+                                // fontWeight: FontWeight.w700,
+                                // color: Colors.white,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  widget.planPrice,
+                                  style: TextStyle(
+                                    fontFamily: fontFamily,
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w500,
+                                    // color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(width: 5.w),
+                                Text(
+                                  '/${widget.timePeriod}',
+                                  style: TextStyle(
+                                    fontFamily: fontFamily,
+                                    color: Theme.of(context).colorScheme.onTertiaryFixedVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
-                      Row(
+                        // Padding(
+                        //   padding: EdgeInsets.only(
+                        //     top: 10.h
+                        //   ),
+                        //   child: Container(
+                        //     height: 14.h,
+                        //     width: 16.w,
+                        //     decoration: BoxDecoration(
+                        //       borderRadius: BorderRadius.circular(100),
+                        //       border: widget.isPlanSelected ? Border.all(
+                        //         width: 5.5,
+                        //         color: primaryColor,
+                        //       ) : Border.all(
+                        //         width: 1.5,
+                        //         color: greyShade500,
+                        //       ),
+                        //     ),
+                        //
+                        //     // child: Text(
+                        //     //     'Activated',
+                        //     //   style: TextStyle(
+                        //     //     fontFamily: fontFamily,
+                        //     //     fontSize: 12.sp
+                        //     //   ),
+                        //     // ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    // borderRadius: BorderRadius.circular(25),
+                    onTap: _toggleExpand,
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: _isExpanded ? 103.w : 108.w,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            widget.planPrice,
+                            _isExpanded ? 'Hide benefits' : 'Show benefits',
                             style: TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).colorScheme.secondaryFixedDim
                               // color: Colors.white,
                             ),
                           ),
-                          SizedBox(width: 5.w),
-                          Text(
-                            '/${widget.timePeriod}',
-                            style: TextStyle(
-                              fontFamily: fontFamily,
-                              color: Theme.of(context).colorScheme.onTertiaryFixedVariant,
-                            ),
-                          ),
+                          SizedBox(width: 3.w,),
+                          _isExpanded
+                              ? Icon(HeroiconsOutline.chevronUp, size: 13.r, color: Theme.of(context).colorScheme.secondaryFixedDim,)
+                              : Icon(HeroiconsOutline.chevronDown, size: 13.r, color: Theme.of(context).colorScheme.secondaryFixedDim,)
                         ],
                       ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(height: 8.h),
-                      Container(
-                        height: 14.h,
-                        width: 16.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: widget.isPlanSelected
-                              ? Border.all(
-                            width: 5.5,
-                            color: primaryColor,
-                          )
-                              : Border.all(
-                            width: 1.2,
-                            color: greyShade500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              // borderRadius: BorderRadius.circular(25),
-              onTap: _toggleExpand,
-              child: Container(
-                alignment: Alignment.center,
-                width: _isExpanded ? 103.w : 108.w,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      _isExpanded ? 'Hide benefits' : 'Show benefits',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondaryFixedDim
-                        // color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(width: 3.w,),
-                    _isExpanded
-                        ? Icon(HeroiconsOutline.chevronUp, size: 13.r, color: Theme.of(context).colorScheme.secondaryFixedDim,)
-                        : Icon(HeroiconsOutline.chevronDown, size: 13.r, color: Theme.of(context).colorScheme.secondaryFixedDim,)
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 10.h,),
-            if (_isExpanded) ...[
-              SizedBox(height: 10.h),
-              Row(
-                children: [
-                  Text(
-                    'Features:',
-                    style: TextStyle(
-                      fontFamily: fontFamily,
-                      fontSize: 14.sp,
-                      // color: Colors.white60,
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 5.h),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: widget.feature.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Row(
+                  SizedBox(height: 10.h,),
+                  if (_isExpanded) ...[
+                    SizedBox(height: 10.h),
+                    Row(
                       children: [
-                        const Icon(Icons.check, color: Colors.green, size: 16.0),
-                        SizedBox(width: 8.0),
                         Text(
-                          widget.feature[index],
+                          'Features:',
                           style: TextStyle(
                             fontFamily: fontFamily,
                             fontSize: 14.sp,
-                            // fontWeight: FontWeight.w200,
                             // color: Colors.white60,
                           ),
                         ),
                       ],
                     ),
-                  );
-                },
+                    SizedBox(height: 5.h),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: widget.feature.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.check, color: Colors.green, size: 16.0),
+                              SizedBox(width: 8.0),
+                              Text(
+                                widget.feature[index],
+                                style: TextStyle(
+                                  fontFamily: fontFamily,
+                                  fontSize: 14.sp,
+                                  // fontWeight: FontWeight.w200,
+                                  // color: Colors.white60,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 10.h),
+                  ],
+                ],
               ),
-              SizedBox(height: 10.h),
-            ],
-          ],
-        ),
+            ),
+          ),
+          widget.isActive == true ? Positioned(
+            top: 0,
+            right: 0,
+              child: Container(
+                height: 22.h,
+                width: 65.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(12),
+                    bottomLeft: Radius.circular(12)
+                  ),
+                  color: primaryColor,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                    'Activated',
+                  style: TextStyle(
+                    fontFamily: fontFamily,
+                    fontSize: 12.sp,
+                    color: Colors.white
+                  ),
+                ),
+              )
+          ) : SizedBox.shrink(),
+
+          widget.activePlanName == "No active plan" ? Positioned(
+            top: 8.h,
+            right: 12.w,
+            child: Container(
+              height: 14.h,
+              width: 16.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                border: widget.isPlanSelected ? Border.all(
+                  width: 5.5,
+                  color: primaryColor,
+                ) : Border.all(
+                  width: 1.5,
+                  color: greyShade500,
+                ),
+              ),
+
+              // child: Text(
+              //     'Activated',
+              //   style: TextStyle(
+              //     fontFamily: fontFamily,
+              //     fontSize: 12.sp
+              //   ),
+              // ),
+            ),
+          ) : SizedBox.shrink()
+        ],
       ),
     );
   }
