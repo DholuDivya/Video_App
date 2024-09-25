@@ -79,6 +79,7 @@ class _HomePageState extends State<HomePage> {
   late File _video;
   bool shortsVisible = false;
   late String slug = "";
+  final channelId = Global.userData!.userChannelId;
 
   int _currentIndex = 0;
   NavigationDestinationLabelBehavior labelBehavior =
@@ -111,7 +112,7 @@ class _HomePageState extends State<HomePage> {
 
     context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
-    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(channelId!)));
     context.read<GetPlansBloc>().add(GetPlansRequest());
     context.read<GetNotificationBloc>().add(GetNotificationRequest());
     _currentIndex = widget.index;
@@ -849,15 +850,24 @@ class _HomePageContentState extends State<HomePageContent> {
                                               }),
                                         ),
                                       )
-                                      : Padding(
-                                          padding: EdgeInsets.only(top: 150.h),
-                                          child: Center(
-                                              child: Image.asset(
-                                            'assets/images/no_data.png',
-                                            width: 200.w,
-                                            height: 200.h,
-                                          )),
-                                        );
+                                      : Container(
+                                        child: Column(
+                                          children: [
+                                            Center(
+                                                child: Image.asset(
+                                              'assets/images/not_found.png',
+                                              width: 150.w,
+                                              height: 150.h,
+                                            )),
+                                            Text(
+                                              'No videos found',
+                                              style: TextStyle(
+                                                fontFamily: fontFamily
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
                                 }
 
                                 return Container();

@@ -19,6 +19,7 @@ import 'package:vimeo_clone/utils/widgets/shimmer.dart';
 import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
 import '../../../bloc/get_user_playlist/get_user_playlist_event.dart';
 import '../../../config/colors.dart';
+import '../../../config/global_variable.dart';
 
 class UserPlaylistWidget extends StatefulWidget {
   UserPlaylistWidget({super.key});
@@ -36,6 +37,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
     },
   ];
 
+  final channelId = Global.userData!.userChannelId;
 
   List<int> selectedToRemove = [];
 
@@ -78,6 +80,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
         ),
         BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
           builder: (BuildContext context, GetUserPlaylistState state) {
+            print('snvibnfbnibnfninin     $state');
             if (state is GetUserPlaylistSuccess) {
               final userPlaylistLength =
                   state.userPlaylist.length;
@@ -184,7 +187,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                                   }
                                   context.read<DeletePlaylistBloc>().add(
                                       DeletePlaylistRequest(playlistId: userPlaylist.id!));
-                                  context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                                  context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(channelId!)));
                                 }
                               },
                             );
@@ -334,7 +337,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                             playlistDescription: playlistDescription,
                             playlistStatus: playlistStatus
                         ));
-                        context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                        context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(channelId!)));
                         print('Get playlist after creating new playlist');
                         Navigator.pop(context);
                       },

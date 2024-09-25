@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,7 +73,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   static const platform = MethodChannel('com.cineplex.app/pip');
   PodPlayerController? _podController;
   late bool _isSubscribed = false;
-  // late bool local = false;
   late int _subscribeCount = 0;
   late int _channelId;
   late bool _isLiked = false;
@@ -97,6 +95,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
   late BannerAd bannerAd;
   bool isAdLoaded = false;
+  final userChannelId = Global.userData!.userChannelId;
 
 
 
@@ -666,7 +665,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                 InkWell(
                                   borderRadius: BorderRadius.circular(20),
                                   onTap: (){
-                                    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                                    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
                                     showPlaylistBottomSheet(state.playVideo);
                                   },
                                     child: const SaveButton()
@@ -1173,7 +1172,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                   ),
                 ),
 
-                Divider(
+                const Divider(
                   thickness: 0.2,
                   color: Colors.grey,
                 ),
@@ -1182,7 +1181,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                 // VIDEO TITLE -------------------------------------------------
                 Text(
                     '${descriptionData.data!.description}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 18,
                     overflow: TextOverflow.ellipsis
@@ -1401,12 +1400,12 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
   late int playlistLength = 0;
   void showPlaylistBottomSheet(List<PlayVideoModel> videoData){
-    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: _channelId));
     final playlistBloc = context.read<GetUserPlaylistBloc>();
     playlistBloc.stream.listen((state){
       if(state is GetUserPlaylistSuccess){
         playlistLength = state.userPlaylist.length;
-      }
+        }
     });
 
     showModalBottomSheet(
@@ -1612,7 +1611,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
   late String playlistStatus = 'public';
   late bool isPublic = true;
 
-
   void createPlaylistAlertDialog(){
 
     showDialog(
@@ -1703,7 +1701,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                             ));
 
                             Navigator.pop(context);
-                            context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+                            context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
                           },
                           child: Container(
                             height: 40.h,

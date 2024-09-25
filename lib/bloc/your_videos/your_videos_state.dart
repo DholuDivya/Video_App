@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
-import 'package:vimeo_clone/model/get_your_videos_model.dart';
 
-import '../../model/get_channel_detail_model.dart';
+import '../../model/your_videos_model.dart';
 
 abstract class YourVideosState extends Equatable{}
 
@@ -17,7 +15,7 @@ class YourVideosLoading extends YourVideosState{
 }
 
 class YourVideosLoaded extends YourVideosState{
-  final List<YourVideoData> yourVideoData;
+  final List<YourVideosData> yourVideoData;
   final bool hasReachedMax;
 
   YourVideosLoaded({required this.yourVideoData, required this.hasReachedMax});

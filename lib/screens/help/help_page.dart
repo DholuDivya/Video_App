@@ -161,7 +161,8 @@ class HelpPageState extends State<HelpPage> {
   void initState() {
     super.initState();
     _nativeAd = NativeAd(
-      adUnitId: "ca-app-pub-2734509756038446/4325909428",
+      adUnitId: "ca-app-pub-3940256099942544/2247696110",
+      // adUnitId: "ca-app-pub-2734509756038446/4325909428",
       request: AdRequest(),
       factoryId: 'adFactoryExample',
       listener: NativeAdListener(
@@ -213,10 +214,83 @@ class HelpPageState extends State<HelpPage> {
         return Container(
           width: 250,
           height: 350,
-          child: child,
           color: Colors.blueGrey,
+          child: child,
         );
       },
     );
   }
 }
+
+
+
+
+
+// import 'dart:async';
+// import 'package:flutter/material.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
+//
+// class HelpPage extends StatefulWidget {
+//   @override
+//   State<StatefulWidget> createState() => HelpPageState();
+// }
+//
+// class HelpPageState extends State<HelpPage> {
+//   late BannerAd _bannerAd;
+//   bool _isAdLoaded = false;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _bannerAd = BannerAd(
+//       adUnitId: "ca-app-pub-3940256099942544/2247696110",
+//       // adUnitId: "ca-app-pub-2734509756038446/4325909428",
+//       size: AdSize.banner,
+//       request: AdRequest(),
+//       listener: BannerAdListener(
+//         onAdLoaded: (Ad ad) {
+//           print('BannerAd loaded.');
+//           setState(() {
+//             _isAdLoaded = true;
+//           });
+//         },
+//         onAdFailedToLoad: (Ad ad, LoadAdError error) {
+//           print('BannerAd failed to load: $error');
+//           ad.dispose();
+//         },
+//         onAdOpened: (Ad ad) => print('BannerAd opened.'),
+//         onAdClosed: (Ad ad) => print('BannerAd closed.'),
+//       ),
+//     );
+//     _bannerAd.load();
+//   }
+//
+//   @override
+//   void dispose() {
+//     _bannerAd.dispose();
+//     super.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Help Page'),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             if (_isAdLoaded)
+//               Container(
+//                 width: _bannerAd.size.width.toDouble(),
+//                 height: _bannerAd.size.height.toDouble(),
+//                 child: AdWidget(ad: _bannerAd),
+//               ),
+//             Text('Help Page Content'),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

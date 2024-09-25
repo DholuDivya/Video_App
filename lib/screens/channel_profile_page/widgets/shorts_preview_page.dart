@@ -84,6 +84,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
+import 'package:vimeo_clone/bloc/your_shorts/your_shorts_bloc.dart';
+import 'package:vimeo_clone/bloc/your_shorts/your_shorts_state.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
@@ -91,8 +93,9 @@ import '../../../config/constants.dart';
 import '../../../utils/widgets/custom_shorts_preview.dart';
 
 class ShortsPreviewPage extends StatefulWidget {
+  final int channelId;
   // final GetChannelDetailModel channelData;
-  const ShortsPreviewPage({super.key});
+  const ShortsPreviewPage({super.key, required this.channelId});
 
   @override
   State<ShortsPreviewPage> createState() => _ShortsPreviewPageState();
@@ -159,9 +162,9 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChannelProfileBloc, ChannelProfileState>(
-      builder: (BuildContext context, ChannelProfileState state) {
-        if(state is ChannelProfileLoaded){
+    return BlocBuilder<YourShortsBloc, YourShortsState>(
+      builder: (BuildContext context, YourShortsState state) {
+        if(state is YourShortsLoaded){
           return SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
             child: Column(
@@ -187,7 +190,7 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
                     top: 0,
                     bottom: ScreenSize.screenHeight(context) * 0.01,
                   ),
-                  itemCount: state.channelData.first.channelShorts.length,
+                  itemCount: state.yourShortsData.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 0.4,
@@ -195,10 +198,10 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
                     mainAxisExtent: 200,
                   ),
                   itemBuilder: (context, index) {
-                    final shortsData = state.channelData.first.channelShorts[index];
+                    final shortsData = state.yourShortsData[index];
                     final type = shortsData.type;
                     return CustomShortsPreview(
-                      thumbNailPath: shortsData.thumbnails!,
+                      thumbNailPath: shortsData.thumbnail!,
                       views: shortsData.views.toString(),
                     );
                   },

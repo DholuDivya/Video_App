@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/Config/colors.dart';
 
 import '../../config/constants.dart';
@@ -24,20 +25,24 @@ class CustomShortsPreview extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            color: greyShade500,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                color: greyShade500,
+              ),
+
             height: ScreenSize.screenHeight(context) * 0.25,
             width: ScreenSize.screenWidth(context) * 0.35,
-            child: thumbNailPath.isNotEmpty 
+            child: thumbNailPath.isNotEmpty
                 ? Image.network(thumbNailPath, fit: BoxFit.cover)
                 : Image.asset(localImage!, fit: BoxFit.cover,)
           ),
 
           Positioned(
-            top: 180,
-            left: 5,
-            child: Text(views, style: TextStyle(
+            bottom: 2.h,
+            left: 5.w,
+            child: Text('$views views', style: TextStyle(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: 13.sp,
               fontFamily: fontFamily
             ),),
           )

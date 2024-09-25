@@ -70,6 +70,7 @@ import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
 import 'package:vimeo_clone/bloc/video_category/video_category_event.dart';
 import 'package:vimeo_clone/bloc/video_list/video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/view_increment/view_increment_bloc.dart';
+import 'package:vimeo_clone/bloc/your_shorts/your_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
@@ -143,7 +144,7 @@ class _MyAppState extends State<MyApp> {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => YourVideosBloc()..add(GetYourVideosEvent())),
+        BlocProvider(create: (context) => YourVideosBloc()),
         BlocProvider(create: (context) => ThemeBloc()),
         BlocProvider(create: (context) => AuthBloc(AuthRepository(ApiBaseHelper()))),
         BlocProvider(create: (context) => VideoCategoriesBloc(VideoCategoriesRepo())..add(GetCategoryEvent())),
@@ -196,6 +197,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => HelpAndSupportBloc()),
         BlocProvider(create: (context) => ShortsVisibleBloc()),
         BlocProvider(create: (context) => UserTransactionBloc()),
+        BlocProvider(create: (context) => YourShortsBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
+import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
+import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/customBottomSheet.dart';
@@ -13,8 +16,8 @@ import '../../../bloc/channel_profile/channel_profile_bloc.dart';
 import '../../../bloc/channel_profile/channel_profile_state.dart';
 
 class VideosPreviewPage extends StatefulWidget {
-  // final GetChannelDetailModel channelData;
-  const VideosPreviewPage({super.key});
+  final int channelId;
+  const VideosPreviewPage({super.key, required this.channelId});
 
   @override
   State<VideosPreviewPage> createState() => _VideosPreviewPageState();
@@ -44,26 +47,22 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
 
   List<Map<String, dynamic>> sortedVideoList = [];
 
-  @override
-  void initState() {
-    super.initState();
-    sortedVideoList = List.from(videoList);
-  }
 
-  List<Videos> sortVideos(List<Videos> videos, String sortType) {
-    switch (sortType) {
-      case "Latest":
-        videos.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        break;
-      case "Popular":
-        videos.sort((a, b) => b.views!.compareTo(a.views!));
-        break;
-      case "Oldest":
-        videos.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-        break;
-    }
-    return videos;
-  }
+
+  // List<Videos> sortVideos(List<Videos> videos, String sortType) {
+  //   switch (sortType) {
+  //     case "Latest":
+  //       videos.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  //       break;
+  //     case "Popular":
+  //       videos.sort((a, b) => b.views!.compareTo(a.views!));
+  //       break;
+  //     case "Oldest":
+  //       videos.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+  //       break;
+  //   }
+  //   return videos;
+  // }
 
   void _onSortTypeChanged(int index) {
     setState(() {
@@ -100,9 +99,9 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
     // String selectedSortType = sortList[selectedIndex]['type'];
     // List<Videos> sortedVideos = sortVideos(widget.channelData.channel!.videos!, selectedSortType);
 
-    return BlocBuilder<ChannelProfileBloc, ChannelProfileState>(
-      builder: (BuildContext context, ChannelProfileState state) {
-        if(state is ChannelProfileLoaded) {
+    return BlocBuilder<YourVideosBloc, YourVideosState>(
+      builder: (BuildContext context, YourVideosState state) {
+        if(state is YourVideosLoaded) {
           return SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
             child: Column(
@@ -126,18 +125,18 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
                       top: 5.h,
                       bottom: ScreenSize.screenHeight(context) * 0.01,
                     ),
-                    itemCount: state.channelData.first.channelVideos.length,
+                    itemCount: state.yourVideoData.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final videoData = state.channelData.first.channelVideos[index];
+                      final videoData = state.yourVideoData[index];
                       final totalSeconds = videoData.duration;
-                      final formattedDuration = formatDuration(totalSeconds);
+                      final formattedDuration = formatDuration(totalSeconds!);
                       return Padding(
                         padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                         child: CustomVideoPreview(
-                            imageUrl: videoData.thumbnails,
-                            videoTitle: videoData.title,
+                            imageUrl: videoData.thumbnail!,
+                            videoTitle: videoData.title!,
                             videoViews: '${videoData.views}',
-                            uploadTime: videoData.createdAtHuman,
+                            uploadTime: videoData.createdAtHuman!,
                             videoDuration: formattedDuration,
                           onShowMorePressed: (){
                             customShowMoreBottomSheet(

@@ -1,17 +1,17 @@
-class YourVideosModel {
+class YourShortsModel {
   String? error;
   String? message;
-  List<YourVideosData>? data;
+  List<YourShortsData>? data;
 
-  YourVideosModel({this.error, this.message, this.data});
+  YourShortsModel({this.error, this.message, this.data});
 
-  YourVideosModel.fromJson(Map<String, dynamic> json) {
+  YourShortsModel.fromJson(Map<String, dynamic> json) {
     error = json['error'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <YourVideosData>[];
+      data = <YourShortsData>[];
       json['data'].forEach((v) {
-        data!.add(new YourVideosData.fromJson(v));
+        data!.add(new YourShortsData.fromJson(v));
       });
     }
   }
@@ -27,7 +27,7 @@ class YourVideosModel {
   }
 }
 
-class YourVideosData {
+class YourShortsData {
   int? id;
   String? title;
   String? description;
@@ -41,8 +41,9 @@ class YourVideosData {
   int? likes;
   String? type;
   String? slug;
+  Channel? channel;
 
-  YourVideosData(
+  YourShortsData(
       {this.id,
         this.title,
         this.description,
@@ -55,9 +56,10 @@ class YourVideosData {
         this.views,
         this.likes,
         this.type,
-        this.slug});
+        this.slug,
+        this.channel});
 
-  YourVideosData.fromJson(Map<String, dynamic> json) {
+  YourShortsData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     description = json['description'];
@@ -71,6 +73,8 @@ class YourVideosData {
     likes = json['likes'];
     type = json['type'];
     slug = json['slug'];
+    channel =
+    json['channel'] != null ? new Channel.fromJson(json['channel']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -88,6 +92,37 @@ class YourVideosData {
     data['likes'] = this.likes;
     data['type'] = this.type;
     data['slug'] = this.slug;
+    if (this.channel != null) {
+      data['channel'] = this.channel!.toJson();
+    }
+    return data;
+  }
+}
+
+class Channel {
+  int? id;
+  String? name;
+  String? logo;
+  String? banner;
+  int? subscriberCount;
+
+  Channel({this.id, this.name, this.logo, this.banner, this.subscriberCount});
+
+  Channel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    logo = json['logo'];
+    banner = json['banner'];
+    subscriberCount = json['subscriber_count'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['logo'] = this.logo;
+    data['banner'] = this.banner;
+    data['subscriber_count'] = this.subscriberCount;
     return data;
   }
 }

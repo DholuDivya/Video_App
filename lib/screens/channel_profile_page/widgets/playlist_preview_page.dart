@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/custom_playlist_preview.dart';
@@ -35,9 +37,9 @@ class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChannelProfileBloc, ChannelProfileState>(
-      builder: (BuildContext context, ChannelProfileState state) {
-        if(state is ChannelProfileLoaded){
+    return BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
+      builder: (BuildContext context, GetUserPlaylistState state) {
+        if(state is GetUserPlaylistSuccess){
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -48,10 +50,10 @@ class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
                       top: 5.h,
                       bottom: ScreenSize.screenHeight(context) * 0.01,
                     ),
-                    itemCount: state.channelData.first.playlists.length,
+                    itemCount: state.userPlaylist.length,
                     itemBuilder: (BuildContext context, int index){
-                      final userPlaylist = state.channelData.first.playlists[index];
-                      return state.channelData.first.playlists.isNotEmpty
+                      final userPlaylist = state.userPlaylist[index];
+                      return state.userPlaylist.isNotEmpty
                           ? Padding(
                         padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                         child: CustomPlaylistPreview(

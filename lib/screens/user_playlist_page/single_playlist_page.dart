@@ -13,6 +13,7 @@ import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_event
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_state.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channel_preview.dart';
 
 import '../../utils/widgets/customBottomSheet.dart';
@@ -27,6 +28,8 @@ class SinglePlaylistPage extends StatefulWidget {
 }
 
 class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
+
+  final channelId = Global.userData!.userChannelId;
 
   List<Map<String, dynamic>> bottomSheetListTileField = [
     {
@@ -57,7 +60,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
       appBar: AppBar(
         leading: IconButton(
             onPressed: (){
-              context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+              context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(channelId!)));
               Navigator.pop(context);
             },
             icon: Icon(CupertinoIcons.back)

@@ -5,9 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
+import 'package:vimeo_clone/bloc/your_shorts/your_shorts_bloc.dart';
+import 'package:vimeo_clone/bloc/your_shorts/your_shorts_event.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/home_preview_page.dart';
@@ -17,6 +21,8 @@ import 'package:vimeo_clone/screens/channel_profile_page/widgets/shorts_preview_
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/videos_preview_page.dart';
 
 import '../../bloc/channel_profile/channel_profile_state.dart';
+import '../../bloc/your_videos/your_videos_bloc.dart';
+import '../../bloc/your_videos/your_videos_event.dart';
 
 class ChannelProfilePage extends StatefulWidget {
   final String channelId;
@@ -34,11 +40,14 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
   @override
   void initState() {
     context.read<ChannelProfileBloc>().add(GetChannelProfileEvent(channelId: widget.channelId));
+    context.read<YourVideosBloc>().add(GetYourVideosEvent(channelId: int.parse(widget.channelId)));
+    context.read<YourShortsBloc>().add(YourShortsRequest(channelId: int.parse(widget.channelId)));
+    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(widget.channelId)));
     final channelBloc = context.read<ChannelProfileBloc>();
     channelBloc.stream.listen((state){
       if(state is ChannelProfileLoaded){
-        _isSubscribed = state.channelData.first.isSubscribed;
-        _subscribeCount = state.channelData.first.subscriberCount;
+        _isSubscribed = state.channelData.first.isSubscribed!;
+        _subscribeCount = state.channelData.first.subscriberCount!;
       }
       print('hihjiiijijijijiji  i     $_isSubscribed');
     });
@@ -57,7 +66,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
             print('ighsirghishgishgisg    $state');
             if(state is ChannelProfileLoaded){
               final channelData = state.channelData.first;
-              _channelId = channelData.channel.id;
+              _channelId = channelData.channel!.id!;
 
               print('************      $_isSubscribed');
               return NestedScrollView(
@@ -76,7 +85,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                               height: 350,
                               width: double.infinity,
                               child: Image.network(
-                                channelData.channel.bannerImage ?? "assets/images/travel.jpg",
+                                channelData.channel!.bannerImage ?? "assets/images/travel.jpg",
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -131,7 +140,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                       CircleAvatar(
                                         radius: 30,
                                         backgroundImage:
-                                        NetworkImage('${channelData.channel.logo}'),
+                                        NetworkImage('${channelData.channel!.logo}'),
                                       ),
                                       SizedBox(
                                         width: ScreenSize.screenWidth(context) * 0.03,
@@ -140,7 +149,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            '${channelData.channel.name}',
+                                            '${channelData.channel!.name}',
                                             style: TextStyle(
                                               fontFamily: fontFamily,
                                               fontSize: 20,
@@ -156,7 +165,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                                 0.005,
                                           ),
                                           Text(
-                                            '$_subscribeCount subscribers - ${channelData.videoCount} videos',
+                                            '$_subscribeCount subscribers - ${state.channelData.first.videoCount} videos',
                                             style: TextStyle(
                                               fontFamily: fontFamily,
                                               fontSize: 12,
@@ -327,16 +336,16 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                 body: TabBarView(
                   children: [
                     // HOME
-                    HomePreviewPage(),
+                    const HomePreviewPage(),
                     // Container(),
 
                     // VIDEOS
-                    VideosPreviewPage(),
+                    VideosPreviewPage(channelId: channelData.channel!.id!,),
                     // Container(),
 
 
                     // SHORTS
-                    ShortsPreviewPage(),
+                    ShortsPreviewPage(channelId: channelData.channel!.id!,),
                     // Container(),
 
 

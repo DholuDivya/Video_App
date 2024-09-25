@@ -4,14 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
-import 'package:vimeo_clone/bloc/get_plans/get_plans_event.dart';
-import 'package:vimeo_clone/bloc/get_plans/get_plans_state.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
+import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
@@ -22,8 +21,8 @@ import 'package:vimeo_clone/screens/user_page/widgets/custom_user_page_button.da
 import 'package:vimeo_clone/screens/user_page/widgets/user_header_widget.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_history_widget.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_playlist_widget.dart';
-
-import '../../bloc/get_plans/get_plans_bloc.dart';
+import '../../bloc/your_shorts/your_shorts_bloc.dart';
+import '../../bloc/your_shorts/your_shorts_event.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -36,6 +35,7 @@ class _UserPageState extends State<UserPage> {
 
   var historyLength = 0;
   var historyData = [];
+  final channelId = Global.userData!.userChannelId;
 
 
   @override
@@ -43,7 +43,7 @@ class _UserPageState extends State<UserPage> {
     print('88888888888888888888888');
 
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
-    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(channelId!)));
 
 
     super.initState();
@@ -58,8 +58,8 @@ class _UserPageState extends State<UserPage> {
         historyData = state.userHistory;
       }
     });
-    print('========== = = =  = = = =$historyLength');
-    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest());
+    print('= = = = = = = = = = = = = = = = =$historyLength');
+    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(channelId!)));
   }
 
 
@@ -127,6 +127,9 @@ class _UserPageState extends State<UserPage> {
                     buttonName: 'Your videos',
                     buttonIcon: HeroiconsOutline.play,
                     onTap: (){
+                      final channelId = Global.userData!.userChannelId;
+                      context.read<YourShortsBloc>().add(YourShortsRequest(channelId: int.parse(channelId!)));
+                      context.read<YourVideosBloc>().add(GetYourVideosEvent(channelId: int.parse(channelId)));
                       Future.delayed(const Duration(milliseconds: 220),(){
                         GoRouter.of(context).pushNamed('yourVideoPage');
                       });
