@@ -7,7 +7,7 @@ import 'package:vimeo_clone/model/user_history_model.dart';
 class GetUserHistoryBloc extends Bloc<GetUserHistoryEvent, GetUserHistoryState>{
 
   int _offset = 0;
-  final int _limit = 12;
+  final int _limit = 7;
   bool _hasReachedMax = false;
 
   GetUserHistoryBloc() : super(GetUserHistoryInitial()){
@@ -49,7 +49,9 @@ class GetUserHistoryBloc extends Bloc<GetUserHistoryEvent, GetUserHistoryState>{
         print('rgsdrhgusdrhsef $_hasReachedMax');
         updatedShortsList.addAll(userHistory);
         emit(GetUserHistorySuccess(userHistory: updatedShortsList, hasReachedMax: _hasReachedMax));
-      } catch(e){}
+      } catch(e){
+        emit(GetUserHistoryFailure(error: e.toString()));
+      }
     }
   }
 

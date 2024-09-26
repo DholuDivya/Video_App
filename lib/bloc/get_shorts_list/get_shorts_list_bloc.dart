@@ -3,7 +3,6 @@ import 'package:vimeo_clone/Repo/get_shorts_by_slug_repo.dart';
 import 'package:vimeo_clone/Repo/get_shorts_list_repo.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_event.dart';
 import 'package:vimeo_clone/bloc/get_shorts_list/get_shorts_list_state.dart';
-import 'package:vimeo_clone/model/get_shorts_by_slug_model.dart';
 import 'package:vimeo_clone/model/get_shorts_list_model.dart';
 
 class GetShortsListBloc extends Bloc<GetShortsListEvent, GetShortsListState>{

@@ -325,11 +325,10 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                                     context,
                                     bottomSheetListTileField,
                                         (int index) {
-                                      if (index == 0) {
-                                        // Save to playlist logic
-                                      } else if (index == 1) {
-                                        // Download video logic
-                                      } else if (index == 3) {
+                                      if (index == 0) {}
+                                      else if (index == 1) {}
+                                      else if (index == 2) {}
+                                      else if (index == 3) {
                                         if (Navigator.canPop(context)) {
                                           Navigator.pop(context);
                                         }
@@ -344,7 +343,27 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                         ),
                       );
                     }
-                    return Container(); // Empty state for YourVideosBloc
+                    return Container(
+                      // color: yellow,
+                        child: Center(child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              // color: red,
+                              height: 120.h,
+                              width: 240.w,
+                              child: Image.asset('assets/images/no_data.png'),
+                            ),
+                            Text(
+                              'Videos not found !!',
+                              style: TextStyle(
+                                  fontFamily: fontFamily,
+                                  fontSize: 15.sp
+                              ),
+                            ),
+                          ],
+                        ),)
+                    ); // Empty state for YourVideosBloc
                   },
                 ),
               ],

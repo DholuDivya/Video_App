@@ -10,7 +10,7 @@ class RemoveVideoFromPlaylistBloc extends Bloc<RemoveVideoFromPlaylistEvent, Rem
 
   Future<void> _onRemoveVideoFromPlaylistRequest(RemoveVideoFromPlaylistRequest event, Emitter<RemoveVideoFromPlaylistState> emit) async {
     try{
-      await RemoveVideoFromPlaylistRepo().RemoveVideoFromPlaylist(event.playlistId, event.videoIds);
+      await RemoveVideoFromPlaylistRepo().removeVideoFromPlaylist(event.playlistId, event.videoId);
       emit(RemoveVideoFromPlaylistSuccess());
     }catch(e){
       emit(RemoveVideoFromPlaylistFailure(error: e.toString()));

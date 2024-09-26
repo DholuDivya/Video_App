@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_download_video_preview.dart';
+import '../../config/constants.dart';
 import '../../model/hive_model/downloaded_video_model/downloaded_video_model.dart';
 
 class DownloadedVideosPage extends StatefulWidget {
@@ -39,8 +40,26 @@ class _DownloadedVideosPageState extends State<DownloadedVideosPage> {
         valueListenable: videoBox.listenable(),
         builder: (context, Box<DownloadedVideoModel> box, _) {
           if (box.isEmpty) {
-            return Center(
-              child: Text('No videos downloaded yet'),
+            return Container(
+                // color: yellow,
+                child: Center(child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      // color: red,
+                      height: 120.h,
+                      width: 240.w,
+                      child: Image.asset('assets/images/no_data.png'),
+                    ),
+                    Text(
+                      'No videos downloaded yet',
+                      style: TextStyle(
+                        fontFamily: fontFamily,
+                        fontSize: 15.sp
+                      ),
+                    ),
+                  ],
+                ),)
             );
           } else {
             return ListView.builder(

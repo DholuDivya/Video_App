@@ -82,6 +82,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
 import 'package:vimeo_clone/bloc/your_shorts/your_shorts_bloc.dart';
@@ -167,7 +168,7 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
         if(state is YourShortsLoaded){
           return SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
-            child: Column(
+            child: state.yourShortsData.isNotEmpty ? Column(
               children: [
 
                 Padding(
@@ -207,7 +208,27 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
                   },
                 ),
               ],
-            ),
+            ) : Container(
+              // color: yellow,
+                child: Center(child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      // color: red,
+                      height: 120.h,
+                      width: 240.w,
+                      child: Image.asset('assets/images/no_data.png'),
+                    ),
+                    Text(
+                      'No videos downloaded yet',
+                      style: TextStyle(
+                          fontFamily: fontFamily,
+                          fontSize: 15.sp
+                      ),
+                    ),
+                  ],
+                ),)
+            )
           );
         }
         return Container();

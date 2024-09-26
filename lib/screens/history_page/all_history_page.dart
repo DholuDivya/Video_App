@@ -6,7 +6,6 @@ import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
-
 import '../../utils/widgets/custom_channel_video_preview.dart';
 
 class AllHistoryPage extends StatelessWidget {
@@ -23,13 +22,13 @@ class AllHistoryPage extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            BlocBuilder<GetUserHistoryBloc, GetUserHistoryState>(
-                builder: (context, state){
-                  if(state is GetUserHistorySuccess){
-                    return NotificationListener<ScrollNotification>(
+      body: Column(
+        children: [
+          BlocBuilder<GetUserHistoryBloc, GetUserHistoryState>(
+              builder: (context, state){
+                if(state is GetUserHistorySuccess){
+                  return Expanded(
+                    child: NotificationListener<ScrollNotification>(
                       onNotification: (scrollInfo) {
                         // Check if the user has scrolled to the end and load more notes if needed
                         if (!state.hasReachedMax &&
@@ -39,17 +38,24 @@ class AllHistoryPage extends StatelessWidget {
                         }
                         return false;
                       },
-                      child: ListView.builder(
+                      child: state.userHistory.isNotEmpty ? ListView.builder(
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                        // physics: const NeverScrollableScrollPhysics(),
                         // padding: EdgeInsets.only(
                         //   top: ScreenSize.screenHeight(context) * 0.01,
                         // ),
-                        itemCount: state.userHistory.length,
+                          itemCount: state.hasReachedMax
+                              ? state.userHistory.length
+                              : state.userHistory.length + 1,
                           itemBuilder: (context, index){
                             final userHistory = state.userHistory[index];
                             final totalSeconds = userHistory.duration;
                             final formattedDuration = formatDuration(totalSeconds!);
+
+                            if (index == state.userHistory.length) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                    
                             return InkWell(
                               onTap: (){
                                 GoRouter.of(context).pushNamed('videoPage',
@@ -59,7 +65,7 @@ class AllHistoryPage extends StatelessWidget {
                                 // WidgetsBinding.instance.addPostFrameCallback((_){
                                 //
                                 // });
-
+                    
                               },
                               child: Padding(
                                 padding: EdgeInsets.only(
@@ -76,14 +82,34 @@ class AllHistoryPage extends StatelessWidget {
                               ),
                             );
                           }
+                      ) : Container(
+                        // color: yellow,
+                          child: Center(child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                // color: red,
+                                height: 120.h,
+                                width: 240.w,
+                                child: Image.asset('assets/images/no_data.png'),
+                              ),
+                              Text(
+                                'No videos downloaded yet',
+                                style: TextStyle(
+                                    fontFamily: fontFamily,
+                                    fontSize: 15.sp
+                                ),
+                              ),
+                            ],
+                          ),)
                       ),
-                    );
+                    ),
+                  );
 
-                  }
-                  return Container();
-            })
-          ],
-        ),
+                }
+                return Container();
+          })
+        ],
       ),
     );
   }

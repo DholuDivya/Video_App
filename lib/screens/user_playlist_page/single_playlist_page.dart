@@ -14,7 +14,6 @@ import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_state
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
-import 'package:vimeo_clone/utils/widgets/custom_channel_preview.dart';
 
 import '../../utils/widgets/customBottomSheet.dart';
 import '../../utils/widgets/custom_channel_video_preview.dart';
@@ -44,15 +43,10 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
       'name': 'Share',
       'icon': HeroiconsOutline.share
     },
-    {
-      'name': 'Report',
-      'icon': HeroiconsOutline.chatBubbleBottomCenterText
-    },
   ];
 
 
-  List<int> selectedToRemove = [];
-
+  int selectedToRemove = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +76,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
               child: Column(
                 children: [
                   Container(
-                    height: 240.h,
+                    height: 250.h,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -211,7 +205,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                                 uploadTime: '${userSinglePlaylistData.createdAtHuman}',
                                 videoDuration: formattedDuration,
                                 onShowMorePressed: (){
-                                  selectedToRemove.add(userSinglePlaylistData.id!);
+                                  selectedToRemove = userSinglePlaylistData.id!;
                                   customShowMoreBottomSheet(
                                     context,
                                     bottomSheetListTileField,
@@ -219,7 +213,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                                       if (index == 0) {
                                         context.read<RemoveVideoFromPlaylistBloc>().add(
                                             RemoveVideoFromPlaylistRequest(
-                                              videoIds: selectedToRemove,
+                                              videoId: selectedToRemove,
                                               playlistId: widget.playlistId
                                             ));
                                         context.read<ShowSinglePlaylistBloc>().add((ShowSinglePlaylistRequest(playlistId: widget.playlistId)));
@@ -244,11 +238,30 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
 
                 ],
               ),
-            ) : const Center(child: Text('Videos not found!!'),);
+            ) : Container(
+              // color: yellow,
+              child: Center(child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    // color: red,
+                    height: 120.h,
+                    width: 250.w,
+                    child: Image.asset('assets/images/no_data.png'),
+                  ),
+                  Text(
+                      'Videos not found!!',
+                      style: TextStyle(
+                        fontFamily: fontFamily,
+                        fontSize: 15.sp
+                      ),
+                  ),
+                ],
+              ),),
+            );
           }else if(state is ShowSinglePlaylistLoading){
             return const Center(child: CircularProgressIndicator(),);
           }
-
           return const Center(child: CircularProgressIndicator(),);
         },
       ),

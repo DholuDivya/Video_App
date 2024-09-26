@@ -782,8 +782,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                   );
                                   // return Center(child: CircularProgressIndicator(),);
                                 } else if (state is VideoListLoaded) {
-                                  return state.videoList.isNotEmpty
-                                      ? Expanded(
+                                  return Expanded(
                                         child: NotificationListener<ScrollNotification>(
                                           onNotification: (scrollInfo) {
                                             // Check if the user has scrolled to the end and load more notes if needed
@@ -794,7 +793,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                             }
                                             return false;
                                           },
-                                          child: ListView.builder(
+                                          child: state.videoList.isNotEmpty ? ListView.builder(
                                               shrinkWrap: true,
                                               physics: const AlwaysScrollableScrollPhysics(),
                                               padding: EdgeInsets.only(
@@ -847,25 +846,26 @@ class _HomePageContentState extends State<HomePageContent> {
                                                     );
                                                   },
                                                 );
-                                              }),
-                                        ),
-                                      )
-                                      : Container(
-                                        child: Column(
-                                          children: [
-                                            Center(
-                                                child: Image.asset(
-                                              'assets/images/not_found.png',
-                                              width: 150.w,
-                                              height: 150.h,
-                                            )),
-                                            Text(
-                                              'No videos found',
-                                              style: TextStyle(
-                                                fontFamily: fontFamily
-                                              ),
-                                            )
-                                          ],
+                                              }) : Container(
+                                            child: Center(child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  // color: red,
+                                                  height: 120.h,
+                                                  width: 250.w,
+                                                  child: Image.asset('assets/images/no_data.png'),
+                                                ),
+                                                Text(
+                                                  'Videos not found!!',
+                                                  style: TextStyle(
+                                                      fontFamily: fontFamily,
+                                                      fontSize: 15.sp
+                                                  ),
+                                                ),
+                                              ],
+                                            ),),
+                                          ),
                                         ),
                                       );
                                 }
@@ -1311,28 +1311,6 @@ class _HomePageContentState extends State<HomePageContent> {
       // ),
     );
   }
-
-
-
-
-  List<Map<String, dynamic>> shortsThumbnail = [
-    {
-      'thumbnail': 'assets/images/tmkoc8.jpg',
-      'title': 'Tarak mehta ka ooltah chashma',
-    },
-    {
-      'thumbnail': 'assets/images/tmkoc2.jpg',
-      'title': 'Jab boss aapko last minute koi kaam dede',
-    },
-    {
-      'thumbnail': 'assets/images/tmkoc6.jpg',
-      'title': 'When your friend believes too much in superstition',
-    },
-    {
-      'thumbnail': 'assets/images/tmkoc10.jpg',
-      'title': 'Mood Nowadays..',
-    }
-  ];
 
 
 

@@ -6,11 +6,11 @@ abstract class RemoveVideoFromPlaylistEvent extends Equatable{
 }
 
 class RemoveVideoFromPlaylistRequest extends RemoveVideoFromPlaylistEvent{
-  final List<int> videoIds;
+  final int videoId;
   final int playlistId;
 
-  RemoveVideoFromPlaylistRequest({required this.videoIds, required this.playlistId});
+  RemoveVideoFromPlaylistRequest({required this.videoId, required this.playlistId});
 
   @override
-  List<Object?> get props => [videoIds, playlistId];
+  List<Object?> get props => [videoId, playlistId];
 }

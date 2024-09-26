@@ -14,6 +14,7 @@ import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
 import '../../../bloc/channel_profile/channel_profile_bloc.dart';
 import '../../../bloc/channel_profile/channel_profile_state.dart';
+import '../../homePage/homepage.dart';
 
 class VideosPreviewPage extends StatefulWidget {
   final int channelId;
@@ -47,8 +48,6 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
 
   List<Map<String, dynamic>> sortedVideoList = [];
 
-
-
   // List<Videos> sortVideos(List<Videos> videos, String sortType) {
   //   switch (sortType) {
   //     case "Latest":
@@ -72,26 +71,21 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
     });
   }
 
-
   List<Map<String, dynamic>> bottomSheetListTileField = [
-    {
-      'name': 'Edit video detail',
-      'icon': HeroiconsOutline.bookmark
-    },
-    {
-      'name': 'Save to playlist',
-      'icon': HeroiconsOutline.arrowDownTray
-    },
-    {
-      'name': 'Share',
-      'icon': HeroiconsOutline.share
-    },
-    {
-      'name': 'Report',
-      'icon': HeroiconsOutline.chatBubbleBottomCenterText
-    },
+    {'name': 'Edit video detail', 'icon': HeroiconsOutline.bookmark},
+    {'name': 'Save to playlist', 'icon': HeroiconsOutline.arrowDownTray},
+    {'name': 'Share', 'icon': HeroiconsOutline.share},
+    {'name': 'Report', 'icon': HeroiconsOutline.chatBubbleBottomCenterText},
   ];
 
+  void showReportDialog(BuildContext context, int videoId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ReportDialog(videoId: videoId,);
+      },
+    );
+  }
 
 
   @override
@@ -101,60 +95,83 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
 
     return BlocBuilder<YourVideosBloc, YourVideosState>(
       builder: (BuildContext context, YourVideosState state) {
-        if(state is YourVideosLoaded) {
+        if (state is YourVideosLoaded) {
           return SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
-            child: Column(
+            child: state.yourVideoData.isNotEmpty
+                ? Column(
               children: [
                 Padding(
                   padding: EdgeInsets.only(
                       top: ScreenSize.screenHeight(context) * 0.01,
-                      left: ScreenSize.screenWidth(context) * 0.015
-                  ),
+                      left: ScreenSize.screenWidth(context) * 0.015),
                   child: VideoSortCategory(
                       sortCategoryList: sortList,
                       selectedIndex: selectedIndex,
-                      onCategorySelected: (index) {}
-                  ),
+                      onCategorySelected: (index) {}),
                 ),
-
                 ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    padding: EdgeInsets.only(
-                      top: 5.h,
-                      bottom: ScreenSize.screenHeight(context) * 0.01,
-                    ),
-                    itemCount: state.yourVideoData.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final videoData = state.yourVideoData[index];
-                      final totalSeconds = videoData.duration;
-                      final formattedDuration = formatDuration(totalSeconds!);
-                      return Padding(
-                        padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
-                        child: CustomVideoPreview(
-                            imageUrl: videoData.thumbnail!,
-                            videoTitle: videoData.title!,
-                            videoViews: '${videoData.views}',
-                            uploadTime: videoData.createdAtHuman!,
-                            videoDuration: formattedDuration,
-                          onShowMorePressed: (){
-                            customShowMoreBottomSheet(
-                                context,
-                                bottomSheetListTileField,
-                                    (int index){
-                                  if(index == 0){
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(
+                          top: 5.h,
+                          bottom: ScreenSize.screenHeight(context) * 0.01,
+                        ),
+                        itemCount: state.yourVideoData.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final videoData = state.yourVideoData[index];
+                          final totalSeconds = videoData.duration;
+                          final formattedDuration =
+                              formatDuration(totalSeconds!);
+                          return Padding(
+                            padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                            child: CustomVideoPreview(
+                              imageUrl: videoData.thumbnail!,
+                              videoTitle: videoData.title!,
+                              videoViews: '${videoData.views}',
+                              uploadTime: videoData.createdAtHuman!,
+                              videoDuration: formattedDuration,
+                              onShowMorePressed: () {
+                                customShowMoreBottomSheet(
+                                    context, bottomSheetListTileField,
+                                    (int index) {
+                                  if (index == 0) {
                                     GoRouter.of(context).pushNamed('editVideoDetailPage');
                                   }
-                                }
-                            );
-                          },
-                        ),
-                      );
-                    }
-                )
+                                  else if (index == 1) {}
+                                  else if (index == 2) {}
+                                  else if (index == 3) {
+                                    if(Navigator.canPop(context)){
+                                      Navigator.pop(context);
+                                    }
+                                    showReportDialog(context, videoData.id!);
+                                  }
+                                });
+                              },
+                            ),
+                          );
+                        })
               ],
-            ),
+            ) : Container(
+          // color: yellow,
+          child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                // color: red,
+                height: 120.h,
+                width: 240.w,
+                child: Image.asset('assets/images/no_data.png'),
+              ),
+              Text(
+                'Videos not found!!',
+                style: TextStyle(
+                    fontFamily: fontFamily, fontSize: 15.sp),
+              ),
+            ],
+          ),
+        )),
           );
         }
         return Container();

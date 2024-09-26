@@ -165,7 +165,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                                 0.005,
                                           ),
                                           Text(
-                                            '$_subscribeCount subscribers - ${state.channelData.first.videoCount} videos',
+                                            '$_subscribeCount Subscribers - ${state.channelData.first.videoCount} Videos',
                                             style: TextStyle(
                                               fontFamily: fontFamily,
                                               fontSize: 12,

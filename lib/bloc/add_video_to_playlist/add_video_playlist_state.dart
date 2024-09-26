@@ -13,8 +13,12 @@ class AddVideoToPlaylistLoading extends AddVideoToPlaylistState{
 }
 
 class AddVideoToPlaylistSuccess extends AddVideoToPlaylistState{
+  final String message;
+
+  AddVideoToPlaylistSuccess({required this.message});
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [message];
 }
 
 class AddVideoToPlaylistFailure extends AddVideoToPlaylistState{

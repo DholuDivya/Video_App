@@ -207,12 +207,24 @@ class _NotificationPageState extends State<NotificationPage> {
                 );
               }
               return Container(
-                alignment: Alignment.center,
-                child: Image.asset(
-                  'assets/images/no_data.png',
-                  width: 200.w,
-                  height: 200.h,
-                )
+                child: Center(child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      // color: red,
+                      height: 120.h,
+                      width: 250.w,
+                      child: Image.asset('assets/images/no_data.png'),
+                    ),
+                    Text(
+                      'Notifications not available!!',
+                      style: TextStyle(
+                          fontFamily: fontFamily,
+                          fontSize: 15.sp
+                      ),
+                    ),
+                  ],
+                ),),
               );
             },
           ),

@@ -30,50 +30,52 @@ class _ShortsPageState extends State<ShortsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      body: Stack(
-        children: [
-          BlocBuilder<GetShortsListBloc, GetShortsListState>(
-          builder: (BuildContext context, state) {
-            if(state is GetShortsListLoaded){
-              final shortsData = state.shortsList;
-              return RefreshIndicator(
-                onRefresh: refreshList,
-                child: Swiper(
-                  loop: false,
-                  scrollDirection: Axis.vertical,
-                  itemCount: shortsData.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ContentScreen(
-                      shortsData: shortsData[index],
-                    );
-                  },
-                ),
-              );
-            }
-              return Container();
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.03,
-              right: MediaQuery.of(context).size.width * 0.0,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            BlocBuilder<GetShortsListBloc, GetShortsListState>(
+            builder: (BuildContext context, state) {
+              if(state is GetShortsListLoaded){
+                final shortsData = state.shortsList;
+                return RefreshIndicator(
+                  onRefresh: refreshList,
+                  child: Swiper(
+                    loop: false,
+                    scrollDirection: Axis.vertical,
+                    itemCount: shortsData.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ContentScreen(
+                        shortsData: shortsData[index],
+                      );
+                    },
+                  ),
+                );
+              }
+                return Container();
+              },
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(HeroiconsSolid.magnifyingGlass, color: Colors.white, size: 22.r,)
-                ),
-                const SizedBox(width: 0,),
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(HeroiconsOutline.ellipsisVertical, color: Colors.white, size: 22.r,),
-                ),
-              ],
+            Padding(
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.03,
+                right: MediaQuery.of(context).size.width * 0.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                      onPressed: () {},
+                      icon: Icon(HeroiconsSolid.magnifyingGlass, color: Colors.white, size: 22.r,)
+                  ),
+                  const SizedBox(width: 0,),
+                  IconButton(
+                      onPressed: () {},
+                      icon: Icon(HeroiconsOutline.ellipsisVertical, color: Colors.white, size: 22.r,),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

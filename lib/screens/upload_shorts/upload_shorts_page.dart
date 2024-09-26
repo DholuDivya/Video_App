@@ -6,26 +6,22 @@ import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/get_shorts_from_user/get_shorts_state.dart';
-import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';
-import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_event.dart';
-import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_state.dart';
 import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_event.dart';
 import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_state.dart';
-import 'package:vimeo_clone/bloc/video_category/video_category_bloc.dart';
-import 'package:vimeo_clone/bloc/video_category/video_category_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 
 import '../../bloc/all_video_list/all_video_list_bloc.dart';
 import '../../bloc/all_video_list/all_video_list_event.dart';
-import '../../bloc/get_video_from_user/get_video_bloc.dart';
-import '../../bloc/get_video_from_user/get_video_state.dart';
-import '../../bloc/upload_video/upload_video_bloc.dart';
-import '../../bloc/upload_video/upload_video_event.dart';
-import '../../bloc/upload_video/upload_video_state.dart';
+import '../../bloc/select_cat_for_video_detail/category_selection_bloc.dart';
+import '../../bloc/select_cat_for_video_detail/category_selection_event.dart';
+import '../../bloc/select_cat_for_video_detail/category_selection_state.dart';
+import '../../bloc/video_category/video_category_bloc.dart';
+import '../../bloc/video_category/video_category_state.dart';
 import '../../config/colors.dart';
 import '../../utils/widgets/custom_alert_dialog.dart';
 import '../../utils/widgets/custom_text_field_upload.dart';
@@ -155,6 +151,8 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
   PlatformFile? selectedVideo;
   List<int> selectedCategoryIds = [];
   late String selectedCategoryNames;
+  List<int> tempSelectedCategoryIds = [];
+  List<String> tempSelectedCategoryNames = [];
 
   @override
   Widget build(BuildContext context) {
@@ -191,6 +189,200 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                 ),
 
                 SizedBox(height: 20.h,),
+
+
+
+                BlocBuilder<VideoCategoriesBloc, VideoCategoryState>(
+                  builder: (context, state) {
+                    if (state is VideoCategoriesLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is VideoCategoriesLoaded) {
+                      return BlocBuilder<CategorySelectionBloc, CategorySelectionState>(
+                        builder: (context, selectionState) {
+                          // Initialize selectedCategoryIds and selectedCategoryNames
+                          selectedCategoryIds = selectionState is CategorySelected
+                              ? selectionState.selectedCategoryIds
+                              : [];
+                          selectedCategoryNames = selectionState is CategorySelected
+                              ? selectionState.selectedCategoryNames.join(', ')
+                              : '';
+
+                          return GestureDetector(
+                            onTap: () {
+                              // Open category selection dialog
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  // Temporary variables for dialog selections
+                                  tempSelectedCategoryIds = List<int>.from(selectedCategoryIds);
+                                  tempSelectedCategoryNames = List<String>.from(selectedCategoryNames.isNotEmpty ? selectedCategoryNames.split(', ') : []);
+
+                                  return StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return AlertDialog(
+                                        title: const Center(
+                                          child: Text(
+                                            'Select Categories',
+                                            style: TextStyle(fontSize: 22),
+                                          ),
+                                        ),
+                                        content: SizedBox(
+                                          width: 400,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: state.categories.length,
+                                                itemBuilder: (context, index) {
+                                                  final category = state.categories[index];
+                                                  final isSelected = tempSelectedCategoryIds.contains(category.id);
+
+                                                  return GestureDetector(
+                                                    // borderRadius: BorderRadius.circular(15),
+                                                    onTap: () {
+                                                      setState(() {
+                                                        if (isSelected) {
+                                                          // Deselect category
+                                                          tempSelectedCategoryIds.remove(category.id);
+                                                          tempSelectedCategoryNames.remove(category.name!);
+                                                        } else {
+                                                          // Select category
+                                                          tempSelectedCategoryIds.add(category.id!);
+                                                          tempSelectedCategoryNames.add(category.name!);
+                                                        }
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      height: 35.h,
+                                                      margin: EdgeInsets.symmetric(vertical: 5.h),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(15),
+                                                        color: isSelected
+                                                            ? primaryLightColor // Color for selected state
+                                                            : Colors.white, // Default color for deselected state
+                                                        border: Border.all(
+                                                          color: isSelected
+                                                              ? primaryColor // Border for selected state
+                                                              : Theme.of(context).colorScheme.secondary, // Border for deselected state
+                                                        ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              category.name!,
+                                                              style: TextStyle(
+                                                                fontFamily: fontFamily,
+                                                                color: Theme.of(context).colorScheme.onTertiaryFixedVariant,
+                                                                // fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, // Bold text for selected
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 10.w,),
+                                                            isSelected ? Icon(HeroiconsSolid.checkCircle , size: 20.r, color: primaryColor,)
+                                                                : Container()
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                              const SizedBox(height: 20),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop(); // Close the dialog without changes
+                                                    },
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor: Theme.of(context).colorScheme.secondaryFixed, // Optional: make Cancel button red
+                                                    ),
+                                                    child: Text(
+                                                      'Cancel',
+                                                      style: TextStyle(
+                                                        fontFamily: fontFamily,
+                                                        color: greyShade900,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor: primaryColor, // Optional: make Add button with primary color
+                                                    ),
+                                                    onPressed: () {
+                                                      // On "Add" button press, update the Bloc with selected categories
+                                                      context.read<CategorySelectionBloc>().add(
+                                                        UpdateCategorySelectionEvent(
+                                                          selectedCategoryIds: tempSelectedCategoryIds,
+                                                          selectedCategoryNames: tempSelectedCategoryNames,
+                                                        ),
+                                                      );
+                                                      Navigator.of(context).pop(); // Close the dialog
+                                                    },
+                                                    child: Text(
+                                                      'Ok',
+                                                      style: TextStyle(
+                                                        fontFamily: fontFamily,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                            child: AbsorbPointer(
+                              child: TextFormField(
+                                scribbleEnabled: true,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Theme.of(context).colorScheme.surfaceDim,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Theme.of(context).colorScheme.secondary,
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  labelText: 'Select Categories',
+                                  labelStyle: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                  suffixIcon: const Icon(Icons.arrow_drop_down),
+                                ),
+                                controller: TextEditingController(
+                                  text: selectedCategoryNames, // Prevent empty string
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else if (state is VideoCategoriesFailure) {
+                      return const Text('Failed to load categories');
+                    }
+                    return const Text('No categories available');
+                  },
+                ),
+
+
 
 
                 // BlocBuilder<VideoCategoriesBloc, VideoCategoryState>(

@@ -8,6 +8,7 @@ import 'package:vimeo_clone/bloc/reset_password/reset_password_event.dart';
 import 'package:vimeo_clone/bloc/reset_password/reset_password_state.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 
+import '../../config/colors.dart';
 import '../../config/constants.dart';
 import '../../utils/widgets/custom_text_field_auth.dart';
 
@@ -164,58 +165,108 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             ),
             SizedBox(height: 50.h,),
 
-            BlocBuilder<ResetPasswordBloc, ResetPasswordState>(
-              builder: (BuildContext context, ResetPasswordState state) {
-                if(state is ResetPasswordSuccess){
-
-                  WidgetsBinding.instance.addPostFrameCallback((_){
-                    GoRouter.of(context).pushReplacementNamed('signupPage');
-                  });
-                  ToastManager().showToast(
-                      context: context,
-                      message: 'Reset password successfully'
-                  );
-                }else if(state is ResetPasswordFailure){
-                  ToastManager().showToast(
-                      context: context,
-                      message: 'Something went wrong'
-                  );
-                }
-                return ElevatedButton(
-                  onPressed: () {
-                    String password = _passwordController.text;
-                    String confirmPassword = _confirmPasswordController.text;
-                    String token = _tokenController.text;
-
-                    context.read<ResetPasswordBloc>().add(ResetPasswordRequest(
-                      email: widget.email,
-                      newPassword: password,
-                        confirmPassword: confirmPassword,
-                      token: token
-                    ));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Continue',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: fontFamily,
-                          color: Colors.white
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+            // BlocBuilder<ResetPasswordBloc, ResetPasswordState>(
+            //   builder: (BuildContext context, ResetPasswordState state) {
+            //     if(state is ResetPasswordSuccess){
+            //
+            //       WidgetsBinding.instance.addPostFrameCallback((_){
+            //         GoRouter.of(context).pushReplacementNamed('signupPage');
+            //       });
+            //       ToastManager().showToast(
+            //           context: context,
+            //           message: 'Reset password successfully'
+            //       );
+            //     }else if(state is ResetPasswordFailure){
+            //       ToastManager().showToast(
+            //           context: context,
+            //           message: 'Something went wrong'
+            //       );
+            //     }
+            //     return ElevatedButton(
+            //       onPressed: () {
+            //         String password = _passwordController.text;
+            //         String confirmPassword = _confirmPasswordController.text;
+            //         String token = _tokenController.text;
+            //
+            //         context.read<ResetPasswordBloc>().add(ResetPasswordRequest(
+            //           email: widget.email,
+            //           newPassword: password,
+            //             confirmPassword: confirmPassword,
+            //           token: token
+            //         ));
+            //       },
+            //       style: ElevatedButton.styleFrom(
+            //         backgroundColor: Colors.blue,
+            //         padding: const EdgeInsets.symmetric(vertical: 16),
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(10),
+            //         ),
+            //       ),
+            //       child: const Center(
+            //         child: Text(
+            //           'Continue',
+            //           style: TextStyle(
+            //               fontSize: 16,
+            //               fontFamily: fontFamily,
+            //               color: Colors.white
+            //           ),
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // ),
           ],
         ),
+      ),
+
+      floatingActionButton: BlocBuilder<ResetPasswordBloc, ResetPasswordState>(
+        builder: (BuildContext context, ResetPasswordState state) {
+          if(state is ResetPasswordSuccess){
+
+            WidgetsBinding.instance.addPostFrameCallback((_){
+              GoRouter.of(context).pushReplacementNamed('signupPage');
+            });
+            ToastManager().showToast(
+                context: context,
+                message: 'Reset password successfully'
+            );
+          }else if(state is ResetPasswordFailure){
+            ToastManager().showToast(
+                context: context,
+                message: 'Something went wrong'
+            );
+          }
+          return ElevatedButton(
+              onPressed: () {
+                String password = _passwordController.text;
+                String confirmPassword = _confirmPasswordController.text;
+                String token = _tokenController.text;
+
+                context.read<ResetPasswordBloc>().add(ResetPasswordRequest(
+                    email: widget.email,
+                    newPassword: password,
+                    confirmPassword: confirmPassword,
+                    token: token
+                ));
+              },
+
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(
+                    horizontal: 138.w, vertical: 13.h),
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text(
+                'Submit',
+                style: TextStyle(
+                    fontFamily: fontFamily,
+                    fontSize: 16.sp
+                ),
+              )
+          );
+        },
       ),
     );
   }

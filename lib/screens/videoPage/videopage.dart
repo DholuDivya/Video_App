@@ -56,6 +56,7 @@ import '../../bloc/add_user_history/add_user_history_event.dart';
 import 'package:floating/floating.dart';
 
 import '../../utils/widgets/custom_report_dialog.dart';
+import '../../utils/widgets/custom_save_to_playlist.dart';
 
 
 class VideoPage extends StatefulWidget {
@@ -348,65 +349,79 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                       overflow: TextOverflow.ellipsis,
                                     ),
 
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '${state.playVideo[0].data!.views} Views - ',
-                                          style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 12.sp,
-                                            color: Colors.grey[700],
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-
-                                        Text(
-                                          '${state.playVideo[0].data!.createdAtHuman}',
-                                          style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 12.sp,
-                                            color: Colors.grey[700],
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
 
 
-                                        Text(
-                                          ' -  ${state.playVideo[0].data!.description}',
-                                          style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 12.sp,
-                                            color: Colors.grey[700],
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-
-                                        Text(
-                                          ' ${state.playVideo[0].data!.hashtag}',
-                                          style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 12.sp,
-                                            color: Colors.grey[700],
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-
-                                        Text(
-                                          '...more',
-                                          style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 12.sp,
-                                            color: Colors.grey[700],
-                                          ),
-                                          maxLines: 1,
-                                        ),
-
-                                      ],
-                                    ),
+                                // Row(
+                                    //   children: [
+                                    //     Container(
+                                    //       // color: red,
+                                    //       constraints: BoxConstraints(
+                                    //         maxWidth: 260.w
+                                    //       ),
+                                    //       height: 30.h,
+                                    //       child: Row(
+                                    //         children: [
+                                    //           Text(
+                                    //             '${state.playVideo[0].data!.views} Views - ',
+                                    //             style: TextStyle(
+                                    //               fontFamily: fontFamily,
+                                    //               fontSize: 12.sp,
+                                    //               color: Colors.grey[700],
+                                    //             ),
+                                    //             maxLines: 1,
+                                    //             overflow: TextOverflow.ellipsis,
+                                    //           ),
+                                    //
+                                    //           Text(
+                                    //             '${state.playVideo[0].data!.createdAtHuman}',
+                                    //             style: TextStyle(
+                                    //               fontFamily: fontFamily,
+                                    //               fontSize: 12.sp,
+                                    //               color: Colors.grey[700],
+                                    //             ),
+                                    //             maxLines: 1,
+                                    //             overflow: TextOverflow.ellipsis,
+                                    //           ),
+                                    //
+                                    //
+                                    //           Text(
+                                    //             ' -  ${state.playVideo[0].data!.description!.trim()}',
+                                    //             style: TextStyle(
+                                    //               fontFamily: fontFamily,
+                                    //               fontSize: 12.sp,
+                                    //               color: Colors.grey[700],
+                                    //             ),
+                                    //             maxLines: 1,
+                                    //             overflow: TextOverflow.ellipsis,
+                                    //           ),
+                                    //
+                                    //           Text(
+                                    //             ' ${state.playVideo[0].data!.hashtag}',
+                                    //             style: TextStyle(
+                                    //               fontFamily: fontFamily,
+                                    //               fontSize: 12.sp,
+                                    //               color: Colors.grey[700],
+                                    //             ),
+                                    //             maxLines: 1,
+                                    //             overflow: TextOverflow.ellipsis,
+                                    //           ),
+                                    //
+                                    //
+                                    //
+                                    //         ],
+                                    //       ),
+                                    //     ),
+                                    //     Text(
+                                    //       '...more',
+                                    //       style: TextStyle(
+                                    //         fontFamily: fontFamily,
+                                    //         fontSize: 12.sp,
+                                    //         color: Colors.grey[700],
+                                    //       ),
+                                    //       maxLines: 1,
+                                    //     ),
+                                    //   ],
+                                    // ),
 
 
                                   ],
@@ -666,7 +681,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                   borderRadius: BorderRadius.circular(20),
                                   onTap: (){
                                     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
-                                    showPlaylistBottomSheet(state.playVideo);
+                                    showPlaylistBottomSheet(state.playVideo.first.data!.id!, userChannelId!);
                                   },
                                     child: const SaveButton()
                                 ),
@@ -1180,7 +1195,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
                 // VIDEO TITLE -------------------------------------------------
                 Text(
-                    '${descriptionData.data!.description}',
+                    '${descriptionData.data!.description!.trim()}',
                   style: const TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 18,
@@ -1329,7 +1344,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                   ),
                   padding: const EdgeInsets.all(10),
                   child: ReadMoreText(
-                    descriptionData.data!.description!,
+                    descriptionData.data!.description!.trim(),
                     trimLength: 400,
                     moreStyle: TextStyle(
                       fontFamily: fontFamily,
@@ -1395,344 +1410,349 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
 
 
-
-
-
-  late int playlistLength = 0;
-  void showPlaylistBottomSheet(List<PlayVideoModel> videoData){
-    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: _channelId));
-    final playlistBloc = context.read<GetUserPlaylistBloc>();
-    playlistBloc.stream.listen((state){
-      if(state is GetUserPlaylistSuccess){
-        playlistLength = state.userPlaylist.length;
-        }
-    });
-
+  void showPlaylistBottomSheet(int videoId, String userChannelId){
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-        context: context,
-        builder: (context){
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                height: 25.h,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1.0,
-                      color: greyShade300
-                    )
-                  )
-                ),
-                padding: EdgeInsets.only(
-                  top: 5.h,
-                  left: 10.w,
-                  right: 10.w,
-                  bottom: 2.h
-                ),
-                // color: Colors.red,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                        'Save to...',
-                      style: TextStyle(
-                        fontFamily: fontFamily,
-                        fontSize: 16
-                      ),
-                    ),
-
-                    MaterialButton(
-                        onPressed: (){
-                          createPlaylistAlertDialog();
-                        },
-                      child: Text(
-                        '+ Create playlist',
-                        style: TextStyle(
-                            fontFamily: fontFamily,
-                          color: primaryColor
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-
-
-              BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
-                builder: (BuildContext context, GetUserPlaylistState state) {
-                  if(state is GetUserPlaylistSuccess){
-                    final playlistLength = state.userPlaylist.length;
-                    final playlist = state.userPlaylist;
-                    return BlocBuilder<PlaylistSelectionBloc, PlaylistSelectionState>(
-                      builder: (BuildContext context, PlaylistSelectionState state) {
-                        print('STATE :::   $state');
-                        if(state is PlaylistSelected){
-                          selectedPlaylistIds = state.selectedPlaylistIds;
-                          selectedPlaylist = selectedPlaylistIds.first;
-                        }
-                        return Container(
-                          height: 120.h,
-                          child: Expanded(
-                            child: NotificationListener<ScrollNotification>(
-
-                              child: ListView.builder(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                itemCount: playlistLength,
-                                itemBuilder: (context, index) {
-                                  final userPlaylist = playlist[index];
-                                  final isSelected =  selectedPlaylistIds.contains(userPlaylist.id);
-                                  return Container(
-                                    padding: EdgeInsets.only(
-                                      // top: 2.h,
-                                        left: 10.w,
-                                        right: 10.w,
-                                        bottom: 4.h
-                                    ),
-                                    width: double.infinity,
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(15),
-                                      onTap: () {
-                                        if(isSelected){
-                                          context.read<PlaylistSelectionBloc>().add(DeselectPlaylistRequest(playlistId: userPlaylist.id!));
-                                        } else {
-                                          context.read<PlaylistSelectionBloc>().add(SelectPlaylistRequest(playlistId: userPlaylist.id!));
-                                        }
-                                      },
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 30.h,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(15),
-                                          color: isSelected
-                                              ? blue
-                                              : Theme.of(context).colorScheme.tertiaryFixedDim,
-                                        ),
-                                        padding: EdgeInsets.only(left: 20.w, right: 20.w),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              '${userPlaylist.title}',
-                                              style: TextStyle(
-                                                fontFamily: fontFamily,
-                                                color: isSelected ? Colors.white : Colors.black
-                                              ),
-                                            ),
-
-                                            Text(
-                                              '${userPlaylist.videos!.length}',
-                                              style: TextStyle(
-                                                fontFamily: fontFamily,
-                                                  color: isSelected ? Colors.white : Colors.black
-                                              ),
-                                            ),
-
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        );
-                        //     : Container(
-                        //   alignment: Alignment.center,
-                        //   height: 100.h,
-                        //   width: double.infinity,
-                        //   child: Text(
-                        //       'Playlist is not created'
-                        //   ),
-                        // );
-                      },
-                    );
-                  }
-                  return const Center(child: CircularProgressIndicator(),);
-                },
-              ),
-
-
-              InkWell(
-                onTap: (){
-                  context.read<AddVideoToPlaylistBloc>().add(AddVideoToPlaylistRequest(
-                      videoId: videoData.first.data!.id!,
-                      playlistId: selectedPlaylist
-                  ));
-                  final addedToVideoPlaylist = context.read<AddVideoToPlaylistBloc>();
-                  addedToVideoPlaylist.stream.listen((state){
-                    if(state is AddVideoToPlaylistSuccess){
-                      ToastManager().showToast(
-                          context: context,
-                          message: 'Video added to playlist'
-                      );
-                    }
-                  });
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  height: 40.h,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        width: 1.0,
-                        color: greyShade300
-                      )
-                    )
-                  ),
-                  child: const Center(
-                    child: Text(
-                        'Done',
-                      style: TextStyle(
-                        fontFamily: fontFamily,
-                        fontSize: 15
-                      ),
-                    ),
-                  ),
-                ),
-              )
-
-            ],
-          );
-        }
-    );
+      context: context,
+      builder: (context) {
+        return PlaylistBottomSheet(
+            videoId: videoId, // Pass your video data
+          userChannelId: userChannelId, // Pass your user channel ID
+        );
+      },
+    ).whenComplete((){
+      context.read<PlaylistSelectionBloc>().add(ClearPlaylistSelectionRequest());
+      context.read<AddVideoToPlaylistBloc>().add(InitializePlaylistBloc());
+    });
   }
 
-  final TextEditingController playlistTitleController = TextEditingController();
-  final TextEditingController playlistDescriptionController = TextEditingController();
-  late String playlistStatus = 'public';
-  late bool isPublic = true;
 
-  void createPlaylistAlertDialog(){
 
-    showDialog(
-        context: context,
-        builder: (BuildContext context){
-          return StatefulBuilder(
-              builder: (BuildContext context, void Function(void Function()) setState){
-                return AlertDialog(
-                  title: Center(
-                      child: Text(
-                        'Create a playlist',
-                        style: TextStyle(
-                            fontFamily: fontFamily,
-                            fontSize: 17.sp
-                        ),
-                      )
-                  ),
-                  content: SizedBox(
-                    width: 400.w,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(height: 8.h,),
-                        CustomTextFieldUpload(
-                          readOnly: false,
-                          isEnabled: true,
-                          maxLines: 1,
-                          controller: playlistTitleController,
-                          fieldLabel: 'title',
-                        ),
-                        SizedBox(height: 10.h,),
 
-                        CustomTextFieldUpload(
-                          readOnly: false,
-                          isEnabled: true,
-                          maxLines: 3,
-                          minLines: 1,
-                          controller: playlistDescriptionController,
-                          fieldLabel: 'description',
-                        ),
-                        SizedBox(height: 10.h,),
+  // late int playlistLength = 0;
+  // void showPlaylistBottomSheet(List<PlayVideoModel> videoData){
+  //   context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
+  //   final playlistBloc = context.read<GetUserPlaylistBloc>();
+  //   playlistBloc.stream.listen((state){
+  //     if(state is GetUserPlaylistSuccess){
+  //       playlistLength = state.userPlaylist.length;
+  //       }
+  //   });
+  //   showModalBottomSheet(
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(10),
+  //     ),
+  //       context: context,
+  //       builder: (context){
+  //         return Column(
+  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             Container(
+  //               height: 25.h,
+  //               decoration: BoxDecoration(
+  //                 border: Border(
+  //                   bottom: BorderSide(
+  //                     width: 1.0,
+  //                     color: greyShade300
+  //                   )
+  //                 )
+  //               ),
+  //               padding: EdgeInsets.only(
+  //                 top: 5.h,
+  //                 left: 10.w,
+  //                 right: 10.w,
+  //                 bottom: 2.h
+  //               ),
+  //               // color: Colors.red,
+  //               child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                 children: [
+  //                   const Text(
+  //                       'Save to...',
+  //                     style: TextStyle(
+  //                       fontFamily: fontFamily,
+  //                       fontSize: 16
+  //                     ),
+  //                   ),
+  //
+  //                   MaterialButton(
+  //                       onPressed: (){
+  //                         createPlaylistAlertDialog();
+  //                       },
+  //                     child: Text(
+  //                       '+ Create playlist',
+  //                       style: TextStyle(
+  //                           fontFamily: fontFamily,
+  //                         color: primaryColor
+  //                       ),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //
+  //
+  //             BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
+  //               builder: (BuildContext context, GetUserPlaylistState state) {
+  //                 if(state is GetUserPlaylistSuccess){
+  //                   final playlistLength = state.userPlaylist.length;
+  //                   final playlist = state.userPlaylist;
+  //                   return BlocBuilder<PlaylistSelectionBloc, PlaylistSelectionState>(
+  //                     builder: (BuildContext context, PlaylistSelectionState state) {
+  //                       print('STATE :::   $state');
+  //                       if(state is PlaylistSelected){
+  //                         selectedPlaylistIds = state.selectedPlaylistIds;
+  //                         selectedPlaylist = selectedPlaylistIds.first;
+  //                       }
+  //                       return Container(
+  //                         height: 120.h,
+  //                         child: Expanded(
+  //                           child: NotificationListener<ScrollNotification>(
+  //
+  //                             child: ListView.builder(
+  //                               padding: EdgeInsets.zero,
+  //                               shrinkWrap: true,
+  //                               itemCount: playlistLength,
+  //                               itemBuilder: (context, index) {
+  //                                 final userPlaylist = playlist[index];
+  //                                 final isSelected =  selectedPlaylistIds.contains(userPlaylist.id);
+  //                                 return Container(
+  //                                   padding: EdgeInsets.only(
+  //                                     // top: 2.h,
+  //                                       left: 10.w,
+  //                                       right: 10.w,
+  //                                       bottom: 4.h
+  //                                   ),
+  //                                   width: double.infinity,
+  //                                   child: InkWell(
+  //                                     borderRadius: BorderRadius.circular(15),
+  //                                     onTap: () {
+  //                                       if(isSelected){
+  //                                         context.read<PlaylistSelectionBloc>().add(DeselectPlaylistRequest(playlistId: userPlaylist.id!));
+  //                                       } else {
+  //                                         context.read<PlaylistSelectionBloc>().add(SelectPlaylistRequest(playlistId: userPlaylist.id!));
+  //                                       }
+  //                                     },
+  //                                     child: Container(
+  //                                       alignment: Alignment.center,
+  //                                       height: 30.h,
+  //                                       width: double.infinity,
+  //                                       decoration: BoxDecoration(
+  //                                         borderRadius: BorderRadius.circular(15),
+  //                                         color: isSelected
+  //                                             ? blue
+  //                                             : Theme.of(context).colorScheme.tertiaryFixedDim,
+  //                                       ),
+  //                                       padding: EdgeInsets.only(left: 20.w, right: 20.w),
+  //                                       child: Row(
+  //                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                                         children: [
+  //                                           Text(
+  //                                             '${userPlaylist.title}',
+  //                                             style: TextStyle(
+  //                                               fontFamily: fontFamily,
+  //                                               color: isSelected ? Colors.white : Colors.black
+  //                                             ),
+  //                                           ),
+  //
+  //                                           Text(
+  //                                             '${userPlaylist.videos!.length}',
+  //                                             style: TextStyle(
+  //                                               fontFamily: fontFamily,
+  //                                                 color: isSelected ? Colors.white : Colors.black
+  //                                             ),
+  //                                           ),
+  //
+  //                                         ],
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                 );
+  //                               },
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       );
+  //                     },
+  //                   );
+  //                 }
+  //                 return const Center(child: CircularProgressIndicator(),);
+  //               },
+  //             ),
+  //
+  //
+  //             InkWell(
+  //               onTap: (){
+  //                 context.read<AddVideoToPlaylistBloc>().add(AddVideoToPlaylistRequest(
+  //                     videoId: videoData.first.data!.id!,
+  //                     playlistId: selectedPlaylist
+  //                 ));
+  //                 final addedToVideoPlaylist = context.read<AddVideoToPlaylistBloc>();
+  //                 addedToVideoPlaylist.stream.listen((state){
+  //                   if(state is AddVideoToPlaylistSuccess){
+  //                     ToastManager().showToast(
+  //                         context: context,
+  //                         message: 'Video added to playlist'
+  //                     );
+  //                   }
+  //                 });
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Container(
+  //                 height: 40.h,
+  //                 width: double.infinity,
+  //                 decoration: BoxDecoration(
+  //                   border: Border(
+  //                     top: BorderSide(
+  //                       width: 1.0,
+  //                       color: greyShade300
+  //                     )
+  //                   )
+  //                 ),
+  //                 child: const Center(
+  //                   child: Text(
+  //                       'Done',
+  //                     style: TextStyle(
+  //                       fontFamily: fontFamily,
+  //                       fontSize: 15
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             )
+  //
+  //           ],
+  //         );
+  //       }
+  //   );
+  // }
 
-                        Material(
-                          child: Container(
-                            height: 70,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Theme.of(context).colorScheme.tertiaryFixedDim,
-                            ),
-                            // padding: EdgeInsets.all(0),
-                            child: CustomToggleButton(
-                                borderRadius: 15.0,
-                                onTap: () {
-                                  setState(() {
-                                    isPublic = !isPublic;
-                                    if(isPublic){
-                                      playlistStatus = 'public';
-                                    }else{
-                                      playlistStatus = 'private';
-                                    }
-                                    print('STATUSSSSSSSSS   :::::::    $playlistStatus');
-                                  });
-                                },
-                                toggleName: 'Privacy',
-                                toggleValue: isPublic,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    isPublic = value;
-                                    print('STATUSSSSSSSSS   :::::::    $isPublic');
-                                  });
-                                },
-                                toggleState: isPublic ? 'Public' : 'Private'),
-                          ),
-                        ),
-                        SizedBox(height: 10.h,),
-
-                        InkWell(
-                          borderRadius: BorderRadius.circular(10),
-                          onTap: (){
-                            final playlistTitle = playlistTitleController.text;
-                            final playlistDescription = playlistDescriptionController.text;
-
-                            context.read<CreatePlaylistBloc>().add(CreatePlaylistRequest(
-                                playlistTitle: playlistTitle,
-                                playlistDescription: playlistDescription,
-                                playlistStatus: playlistStatus
-                            ));
-
-                            Navigator.pop(context);
-                            context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
-                          },
-                          child: Container(
-                            height: 40.h,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: primaryColor
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Create',
-                                style: TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: 15,
-                                    color: Colors.white
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-
-                      ],
-                    ),
-                  ),
-
-                );
-          });
-        }
-    );
-
-  }
+  // final TextEditingController playlistTitleController = TextEditingController();
+  // final TextEditingController playlistDescriptionController = TextEditingController();
+  // late String playlistStatus = 'public';
+  // late bool isPublic = true;
+  //
+  // void createPlaylistAlertDialog(){
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context){
+  //         return StatefulBuilder(
+  //             builder: (BuildContext context, void Function(void Function()) setState){
+  //               return AlertDialog(
+  //                 title: Center(
+  //                     child: Text(
+  //                       'Create a playlist',
+  //                       style: TextStyle(
+  //                           fontFamily: fontFamily,
+  //                           fontSize: 17.sp
+  //                       ),
+  //                     )
+  //                 ),
+  //                 content: SizedBox(
+  //                   width: 400.w,
+  //                   child: Column(
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: [
+  //                       SizedBox(height: 8.h,),
+  //                       CustomTextFieldUpload(
+  //                         readOnly: false,
+  //                         isEnabled: true,
+  //                         maxLines: 1,
+  //                         controller: playlistTitleController,
+  //                         fieldLabel: 'title',
+  //                       ),
+  //                       SizedBox(height: 10.h,),
+  //
+  //                       CustomTextFieldUpload(
+  //                         readOnly: false,
+  //                         isEnabled: true,
+  //                         maxLines: 3,
+  //                         minLines: 1,
+  //                         controller: playlistDescriptionController,
+  //                         fieldLabel: 'description',
+  //                       ),
+  //                       SizedBox(height: 10.h,),
+  //
+  //                       Material(
+  //                         child: Container(
+  //                           height: 70,
+  //                           width: double.infinity,
+  //                           decoration: BoxDecoration(
+  //                             borderRadius: BorderRadius.circular(15),
+  //                             color: Theme.of(context).colorScheme.tertiaryFixedDim,
+  //                           ),
+  //                           // padding: EdgeInsets.all(0),
+  //                           child: CustomToggleButton(
+  //                               borderRadius: 15.0,
+  //                               onTap: () {
+  //                                 setState(() {
+  //                                   isPublic = !isPublic;
+  //                                   if(isPublic){
+  //                                     playlistStatus = 'public';
+  //                                   }else{
+  //                                     playlistStatus = 'private';
+  //                                   }
+  //                                   print('STATUSSSSSSSSS   :::::::    $playlistStatus');
+  //                                 });
+  //                               },
+  //                               toggleName: 'Privacy',
+  //                               toggleValue: isPublic,
+  //                               onChanged: (bool value) {
+  //                                 setState(() {
+  //                                   isPublic = value;
+  //                                   print('STATUSSSSSSSSS   :::::::    $isPublic');
+  //                                 });
+  //                               },
+  //                               toggleState: isPublic ? 'Public' : 'Private'),
+  //                         ),
+  //                       ),
+  //                       SizedBox(height: 10.h,),
+  //
+  //                       InkWell(
+  //                         borderRadius: BorderRadius.circular(10),
+  //                         onTap: (){
+  //                           final playlistTitle = playlistTitleController.text;
+  //                           final playlistDescription = playlistDescriptionController.text;
+  //
+  //                           context.read<CreatePlaylistBloc>().add(CreatePlaylistRequest(
+  //                               playlistTitle: playlistTitle,
+  //                               playlistDescription: playlistDescription,
+  //                               playlistStatus: playlistStatus
+  //                           ));
+  //
+  //                           Navigator.pop(context);
+  //                           context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
+  //                         },
+  //                         child: Container(
+  //                           height: 40.h,
+  //                           width: double.infinity,
+  //                           decoration: BoxDecoration(
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               color: primaryColor
+  //                           ),
+  //                           child: Center(
+  //                             child: Text(
+  //                               'Create',
+  //                               style: TextStyle(
+  //                                   fontFamily: fontFamily,
+  //                                   fontSize: 15,
+  //                                   color: Colors.white
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       )
+  //                     ],
+  //                   ),
+  //                 ),
+  //               );
+  //         });
+  //       }
+  //   );
+  // }
 
 
 

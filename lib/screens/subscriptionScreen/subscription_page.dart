@@ -188,14 +188,25 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                                         : const SizedBox.shrink(),
                                   ),
                                 ),
-                              ) : Padding(
-                                padding: EdgeInsets.only(top: 150.h),
-                                child: Center(
-                                    child: Image.asset(
-                                      'assets/images/no_data.png',
-                                      width: 200.w,
-                                      height: 200.h,
-                                    )),
+                              ) : Container(
+                                child: Center(child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      // color: red,
+                                      height: 120.h,
+                                      width: 250.w,
+                                      child: Image.asset('assets/images/no_data.png'),
+                                    ),
+                                    Text(
+                                      'Subscriptions not found !!',
+                                      style: TextStyle(
+                                          fontFamily: fontFamily,
+                                          fontSize: 15.sp
+                                      ),
+                                    ),
+                                  ],
+                                ),),
                               );
                           }
                         );

@@ -163,7 +163,7 @@ class HelpPageState extends State<HelpPage> {
     _nativeAd = NativeAd(
       adUnitId: "ca-app-pub-3940256099942544/2247696110",
       // adUnitId: "ca-app-pub-2734509756038446/4325909428",
-      request: AdRequest(),
+      request: AdManagerAdRequest(),
       factoryId: 'adFactoryExample',
       listener: NativeAdListener(
         onAdLoaded: (Ad ad) {

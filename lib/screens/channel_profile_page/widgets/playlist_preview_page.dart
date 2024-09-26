@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
-import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
-import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/custom_playlist_preview.dart';
 
-import '../../../config/colors.dart';
 
 class PlaylistPreviewPage extends StatefulWidget {
   // final GetChannelDetailModel channelData;
@@ -41,7 +37,7 @@ class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
       builder: (BuildContext context, GetUserPlaylistState state) {
         if(state is GetUserPlaylistSuccess){
           return SingleChildScrollView(
-            child: Column(
+            child: state.userPlaylist.isNotEmpty ? Column(
               children: [
                 ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
@@ -65,7 +61,26 @@ class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
                     }
                 )
               ],
-            ),
+            ) : Container(
+              // color: yellow,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        // color: red,
+                        height: 120.h,
+                        width: 240.w,
+                        child: Image.asset('assets/images/no_data.png'),
+                      ),
+                      Text(
+                        'Playlist not found',
+                        style: TextStyle(
+                            fontFamily: fontFamily, fontSize: 15.sp),
+                      ),
+                    ],
+                  ),
+                )),
           );
         }
         return Container();

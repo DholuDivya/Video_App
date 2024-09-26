@@ -7,7 +7,7 @@ import 'package:vimeo_clone/model/show_single_playlist_model.dart';
 class ShowSinglePlaylistBloc extends Bloc<ShowSinglePlaylistEvent, ShowSinglePlaylistState> {
 
   int _offset = 0;
-  final int _limit = 3;
+  final int _limit = 6;
   bool _hasReachedMax = false;
   var playlistTitle = '';
   var playlistVisibility = '';

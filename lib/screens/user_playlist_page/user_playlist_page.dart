@@ -10,6 +10,9 @@ import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/utils/widgets/custom_playlist_preview.dart';
 
+import '../../bloc/show_single_playlist/show_single_playlist_bloc.dart';
+import '../../bloc/show_single_playlist/show_single_playlist_event.dart';
+
 class UserPlaylistPage extends StatelessWidget {
   const UserPlaylistPage({super.key});
 
@@ -25,63 +28,83 @@ class UserPlaylistPage extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
-                builder: (BuildContext context, GetUserPlaylistState state){
-                  if(state is GetUserPlaylistSuccess){
-                    return state.userPlaylist.isNotEmpty ? NotificationListener<ScrollNotification>(
-                      onNotification: (scrollInfo) {
-                        // Check if the user has scrolled to the end and load more notes if needed
-                        if (!state.hasReachedMax &&
-                            scrollInfo.metrics.pixels ==
-                                scrollInfo.metrics.maxScrollExtent) {
-                          context.read<GetUserPlaylistBloc>().add(LoadMoreUserPlaylist());
-                        }
-                        return false;
-                      },
-                      child: Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: state.userPlaylist.length,
-                            itemBuilder: (context, index){
-                            final userPlaylist = state.userPlaylist[index];
-                            final playlistId = userPlaylist.id;
-                              return InkWell(
-                                onTap: (){
-                                  Future.delayed(const Duration(milliseconds: 200),(){
-                                    GoRouter.of(context).pushNamed('singlePlaylistPage',
-                                        pathParameters: {
-                                          'playlistId' : playlistId.toString()
-                                        }
-                                    );
-                                  });
-                                },
-                                child: Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 8.h,
-                                      bottom: 6.h
-                                    ),
-                                  child: CustomPlaylistPreview(
-                                      imageUrl: userPlaylist.videos!.isEmpty ? '' : userPlaylist.videos!.first.thumbnails!,
-                                      numberOfVideos: userPlaylist.videos!.length,
-                                      playlistName: userPlaylist.title!,
-                                      channelName: 'Channel'
+      body: Column(
+        children: [
+          BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
+              builder: (BuildContext context, GetUserPlaylistState state){
+                if(state is GetUserPlaylistSuccess){
+                  return state.userPlaylist.isNotEmpty ? NotificationListener<ScrollNotification>(
+                    onNotification: (scrollInfo) {
+                      // Check if the user has scrolled to the end and load more notes if needed
+                      if (!state.hasReachedMax &&
+                          scrollInfo.metrics.pixels ==
+                              scrollInfo.metrics.maxScrollExtent) {
+                        context.read<GetUserPlaylistBloc>().add(LoadMoreUserPlaylist());
+                      }
+                      return false;
+                    },
+                    child: Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+
+                          itemCount: state.userPlaylist.length,
+                          itemBuilder: (context, index){
+                          final userPlaylist = state.userPlaylist[index];
+                          final playlistId = userPlaylist.id;
+                            return InkWell(
+                              onTap: (){
+                                print('nnnnnnnnnnnnnnnnnnnn     $playlistId');
+                                context.read<ShowSinglePlaylistBloc>().add(ShowSinglePlaylistRequest(playlistId: playlistId!));
+                                Future.delayed(const Duration(milliseconds: 500),(){
+                                  GoRouter.of(context).pushNamed('singlePlaylistPage',
+                                      pathParameters: {
+                                        'playlistId' : playlistId.toString()
+                                      }
+                                  );
+                                });
+                              },
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 8.h,
+                                    bottom: 6.h
                                   ),
+                                child: CustomPlaylistPreview(
+                                    imageUrl: userPlaylist.videos!.isEmpty ? '' : userPlaylist.videos!.first.thumbnails!,
+                                    numberOfVideos: userPlaylist.videos!.length,
+                                    playlistName: userPlaylist.title!,
+                                    channelName: 'Channel'
                                 ),
-                              );
-                            }
-                        ),
+                              ),
+                            );
+                          }
                       ),
-                    ) : const Center(child: Text('Playlist not found'),);
-                  }
-                  return Container();
+                    ),
+                  ) : Container(
+                    // color: yellow,
+                    child: Center(child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          // color: red,
+                          height: 120.h,
+                          width: 250.w,
+                          child: Image.asset('assets/images/no_data.png'),
+                        ),
+                        Text(
+                          'Playlist not found!!',
+                          style: TextStyle(
+                              fontFamily: fontFamily,
+                              fontSize: 15.sp
+                          ),
+                        ),
+                      ],
+                    ),),
+                  );
                 }
-            )
-          ],
-        ),
+                return Container();
+              }
+          )
+        ],
       ),
     );
   }

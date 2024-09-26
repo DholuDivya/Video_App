@@ -69,8 +69,8 @@ import 'model/hive_model/user_data_model/user_data_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var devices = ["72F1F8AC829C59E59B0462B951137364"];
   MobileAds.instance.initialize();
+  var devices = ["72F1F8AC829C59E59B0462B951137364"];
 
   RequestConfiguration requestConfiguration = RequestConfiguration(testDeviceIds: ['72F1F8AC829C59E59B0462B951137364']);
   MobileAds.instance.updateRequestConfiguration(requestConfiguration);
