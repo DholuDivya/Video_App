@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/utils/widgets/customBottomSheet.dart';
 import 'package:vimeo_clone/utils/widgets/custom_playlist_preview.dart';
+
+import '../../homePage/homepage.dart';
 
 
 class PlaylistPreviewPage extends StatefulWidget {
@@ -17,19 +22,21 @@ class PlaylistPreviewPage extends StatefulWidget {
 
 class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
 
-  List<Map<String, dynamic>> videoList = [
-    {"thumbnail": "assets/images/tmkoc10.jpg", "views": "1.2M"},
-    {"thumbnail": "assets/images/tmkoc9.jpg", "views": "876K"},
-    {"thumbnail": "assets/images/tmkoc8.jpg", "views": "1M"},
-    {"thumbnail": "assets/images/tmkoc7.jpg", "views": "432K"},
-    {"thumbnail": "assets/images/tmkoc6.jpg", "views": "200K"},
-    {"thumbnail": "assets/images/tmkoc5.jpg", "views": "56.9K"},
-    {"thumbnail": "assets/images/tmkoc4.jpg", "views": "103K"},
-    {"thumbnail": "assets/images/tmkoc3.jpg", "views": "760K"},
-    {"thumbnail": "assets/images/tmkoc2.jpg", "views": "1.2M"},
-    {"thumbnail": "assets/images/tmkoc1.jpg", "views": "144K"},
+
+  List<Map<String, dynamic>> bottomSheetListTileField = [
+    {'name': 'Save to library', 'icon': HeroiconsOutline.bookmark},
+    {'name': 'Share', 'icon': HeroiconsOutline.share},
   ];
 
+
+  void showReportDialog(BuildContext context, int videoId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ReportDialog(videoId: videoId,);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +63,18 @@ class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
                           imageUrl: '',
                           playlistName: userPlaylist.title!,
                           channelName: userPlaylist.visibility!,
-                          numberOfVideos: 0,),
+                          numberOfVideos: 0,
+                          onShowMorePressed: (){
+                            customShowMoreBottomSheet(
+                                context, bottomSheetListTileField,
+                                    (int index) {
+                                  if (index == 0) {
+                                    GoRouter.of(context).pushNamed('editVideoDetailPage');
+                                  }
+                                  else if (index == 1) {}
+                                });
+                          },
+                        ),
                       ) : Container();
                     }
                 )
@@ -76,7 +94,8 @@ class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
                       Text(
                         'Playlist not found',
                         style: TextStyle(
-                            fontFamily: fontFamily, fontSize: 15.sp),
+                            fontFamily: fontFamily, fontSize: 15.sp
+                        ),
                       ),
                     ],
                   ),

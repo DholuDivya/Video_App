@@ -32,8 +32,12 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
 
   List<Map<String, dynamic>> bottomSheetListTileField = [
     {
-      'name': 'Delete playlist',
+      'name': 'Delete',
       'icon': HeroiconsOutline.trash
+    },
+    {
+      'name': 'Share',
+      'icon': HeroiconsOutline.share
     },
   ];
 
@@ -188,7 +192,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                                   context.read<DeletePlaylistBloc>().add(
                                       DeletePlaylistRequest(playlistId: userPlaylist.id!));
                                   context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(channelId!)));
-                                }
+                                } else if (index == 1) {}
                               },
                             );
                           },

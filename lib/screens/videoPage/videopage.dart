@@ -954,9 +954,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                     author: '${recommendedVideos.channel!.name}',
                                     views: '${recommendedVideos.views}',
                                     uploadTime: '${recommendedVideos.createdAtHuman}',
-                                    onMorePressed: () {
-                                      showPopupMenu();
-                                      },
+                                    onShowMorePressed: (){},
                                   ) : null;
                                 }
                               },

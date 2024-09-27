@@ -218,7 +218,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                         });
                                       },
                                       child: Material(
-                                        elevation: 5,
+                                        elevation: 4,
                                         shadowColor: Colors.grey,
                                         borderRadius: BorderRadius.circular(20),
                                         child: Container(
@@ -252,7 +252,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                     GoRouter.of(context).pushNamed('updateChannelPage');
                                   },
                                   child: Material(
-                                    elevation: 5,
+                                    elevation: 4,
                                     shadowColor: Colors.grey,
                                     borderRadius: BorderRadius.circular(20),
                                     child: Container(

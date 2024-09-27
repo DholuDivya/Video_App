@@ -185,15 +185,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_event.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_state.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:vimeo_clone/config/global_variable.dart';
 import '../../../utils/widgets/customBottomSheet.dart';
 import '../../../utils/widgets/custom_channel_video_preview.dart';
 import '../../../utils/widgets/custom_for_you_preview.dart';
 import '../../../utils/widgets/custom_report_dialog.dart';
+import '../../../utils/widgets/custom_save_to_playlist.dart';
 
 class HomePreviewPage extends StatefulWidget {
   const HomePreviewPage({super.key});
@@ -203,18 +212,8 @@ class HomePreviewPage extends StatefulWidget {
 }
 
 class _HomePreviewPageState extends State<HomePreviewPage> {
-  List<Map<String, dynamic>> videoList = [
-    {"thumbnail": "assets/images/tmkoc10.jpg", "views": "1.2M"},
-    {"thumbnail": "assets/images/tmkoc9.jpg", "views": "876K"},
-    {"thumbnail": "assets/images/tmkoc8.jpg", "views": "1M"},
-    {"thumbnail": "assets/images/tmkoc7.jpg", "views": "432K"},
-    {"thumbnail": "assets/images/tmkoc6.jpg", "views": "200K"},
-    {"thumbnail": "assets/images/tmkoc5.jpg", "views": "56.9K"},
-    {"thumbnail": "assets/images/tmkoc4.jpg", "views": "103K"},
-    {"thumbnail": "assets/images/tmkoc3.jpg", "views": "760K"},
-    {"thumbnail": "assets/images/tmkoc2.jpg", "views": "1.2M"},
-    {"thumbnail": "assets/images/tmkoc1.jpg", "views": "144K"},
-  ];
+
+  final userChannelId = Global.userData!.userChannelId;
 
   List<Map<String, dynamic>> bottomSheetListTileField = [
     {'name': 'Save to playlist', 'icon': HeroiconsOutline.bookmark},
@@ -222,6 +221,8 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
     {'name': 'Share', 'icon': HeroiconsOutline.share},
     {'name': 'Report', 'icon': HeroiconsOutline.chatBubbleBottomCenterText},
   ];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -271,6 +272,36 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                                   videoTitle: suggestedVideo.title!,
                                   channelName: channelData.first.channel!.name!,
                                   uploadTime: suggestedVideo.createdAtHuman!,
+                                  onShowMorePressed: (){
+                                    customShowMoreBottomSheet(
+                                      context,
+                                      bottomSheetListTileField,
+                                          (int index) {
+                                        if (index == 0) {
+                                          if(Navigator.canPop(context)){
+                                            Navigator.pop(context);
+                                          }
+                                          context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
+                                          showPlaylistBottomSheet(suggestedVideo.id!, userChannelId!);
+                                        }
+                                        else if (index == 1) {}
+                                        else if (index == 2) {
+                                          final String appLink = '${baseUrl}share?video=${suggestedVideo.slug}';
+                                          if(Navigator.canPop(context)){
+                                            Navigator.pop(context);
+                                          }
+                                          // Use the share_plus package to share the link
+                                          Share.share('Check out this video: $appLink');
+                                        }
+                                        else if (index == 3) {
+                                          if (Navigator.canPop(context)) {
+                                            Navigator.pop(context);
+                                          }
+                                          showReportDialog(context, suggestedVideo.id!);
+                                        }
+                                      },
+                                    );
+                                  },
                                 );
                               }
                               return Container();
@@ -325,9 +356,22 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                                     context,
                                     bottomSheetListTileField,
                                         (int index) {
-                                      if (index == 0) {}
+                                      if (index == 0) {
+                                        if(Navigator.canPop(context)){
+                                          Navigator.pop(context);
+                                        }
+                                        context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
+                                        showPlaylistBottomSheet(videoData.id!, userChannelId!);
+                                      }
                                       else if (index == 1) {}
-                                      else if (index == 2) {}
+                                      else if (index == 2) {
+                                        final String appLink = '${baseUrl}share?video=${videoData.slug}';
+                                        if(Navigator.canPop(context)){
+                                          Navigator.pop(context);
+                                        }
+                                        // Use the share_plus package to share the link
+                                        Share.share('Check out this video: $appLink');
+                                      }
                                       else if (index == 3) {
                                         if (Navigator.canPop(context)) {
                                           Navigator.pop(context);
@@ -385,5 +429,27 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
       },
     );
   }
+
+
+  void showPlaylistBottomSheet(int videoId, String userChannelId){
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      context: context,
+      builder: (context) {
+        return PlaylistBottomSheet(
+          videoId: videoId, // Pass your video data
+          userChannelId: userChannelId, // Pass your user channel ID
+        );
+      },
+    ).whenComplete((){
+      context.read<PlaylistSelectionBloc>().add(ClearPlaylistSelectionRequest());
+      context.read<AddVideoToPlaylistBloc>().add(InitializePlaylistBloc());
+    });
+  }
+
+
+
 }
 

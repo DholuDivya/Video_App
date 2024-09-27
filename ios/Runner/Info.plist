@@ -32,6 +32,9 @@
                 <!-- This should match your reversed client ID from GoogleService-Info.plist -->
                 <string>com.googleusercontent.apps.888231558500-sbba3r7mg1ab06ks5jj7hd5615a9afb7</string>
             </array>
+            <array>
+                  <string>cineplex</string>
+                </array>
         </dict>
         <dict>
             <key>CFBundleTypeRole</key>

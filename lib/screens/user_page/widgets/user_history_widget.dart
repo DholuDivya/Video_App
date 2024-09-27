@@ -3,9 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
 import 'package:vimeo_clone/bloc/get_user_history/get_user_history_state.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_event.dart';
 import 'package:vimeo_clone/bloc/remove_video_from_history/remove_video_from_history_bloc.dart';
 import 'package:vimeo_clone/bloc/remove_video_from_history/remove_video_from_history_event.dart';
 import 'package:vimeo_clone/config/constants.dart';
@@ -13,7 +18,11 @@ import 'package:vimeo_clone/utils/widgets/custom_history_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_report_dialog.dart';
 import 'package:vimeo_clone/utils/widgets/shimmer.dart';
 
+import '../../../bloc/get_user_playlist/get_user_playlist_bloc.dart';
+import '../../../bloc/get_user_playlist/get_user_playlist_event.dart';
+import '../../../config/global_variable.dart';
 import '../../../utils/widgets/customBottomSheet.dart';
+import '../../../utils/widgets/custom_save_to_playlist.dart';
 
 class UserHistoryWidget extends StatefulWidget {
   const UserHistoryWidget({super.key});
@@ -25,6 +34,7 @@ class UserHistoryWidget extends StatefulWidget {
 class _UserHistoryWidgetState extends State<UserHistoryWidget> {
 
   var historyLength = 0;
+  final userChannelId = Global.userData!.userChannelId;
 
   @override
   void initState() {
@@ -61,6 +71,24 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
       'icon': HeroiconsOutline.trash
     },
   ];
+
+  void showPlaylistBottomSheet(int videoId, String userChannelId){
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      context: context,
+      builder: (context) {
+        return PlaylistBottomSheet(
+          videoId: videoId, // Pass your video data
+          userChannelId: userChannelId, // Pass your user channel ID
+        );
+      },
+    ).whenComplete((){
+      context.read<PlaylistSelectionBloc>().add(ClearPlaylistSelectionRequest());
+      context.read<AddVideoToPlaylistBloc>().add(InitializePlaylistBloc());
+    });
+  }
 
 
   List<int> selectedToRemove = [];
@@ -155,9 +183,23 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
                                     context,
                                     bottomSheetListTileField,
                                         (int index) {
-                                      if (index == 0) {}
+                                      if (index == 0) {
+                                        if(Navigator.canPop(context)){
+                                          Navigator.pop(context);
+                                        }
+                                        context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
+                                        showPlaylistBottomSheet(userHistory.id!, userChannelId!);
+                                      }
                                       else if (index == 1) {}
-                                      else if (index == 2) {}
+                                      else if (index == 2) {
+
+                                        final String appLink = '${baseUrl}share?video=${userHistory.slug}';
+                                        if(Navigator.canPop(context)){
+                                          Navigator.pop(context);
+                                        }
+                                        // Use the share_plus package to share the link
+                                        Share.share('Check out this video: $appLink');
+                                      }
                                       else if (index == 3) {
 
                                         if (Navigator.canPop(context)) {

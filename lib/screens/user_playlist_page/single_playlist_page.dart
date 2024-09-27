@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/remove_video_from_playlist/remove_video_from_playlist_bloc.dart';
@@ -59,12 +60,6 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
             },
             icon: Icon(CupertinoIcons.back)
         ),
-        actions: [
-          IconButton(
-              onPressed: (){},
-              icon: Icon(HeroiconsOutline.ellipsisVertical)
-          )
-        ],
       ),
       body: BlocBuilder<ShowSinglePlaylistBloc, ShowSinglePlaylistState>(
         builder: (BuildContext context, ShowSinglePlaylistState state) {
@@ -223,6 +218,13 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                                         });
                                       } else if (index == 1) {
                                         // GoRouter.of(context).pushNamed('settingPage');
+                                      } else if (index == 2){
+                                        final String appLink = '${baseUrl}share?video=${userSinglePlaylistData.slug}';
+                                        if(Navigator.canPop(context)){
+                                          Navigator.pop(context);
+                                        }
+                                        // Use the share_plus package to share the link
+                                        Share.share('Check out this video: $appLink');
                                       }
                                     },
                                   );

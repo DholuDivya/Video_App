@@ -134,23 +134,13 @@ class CustomVideoPreview extends StatelessWidget {
               ],
             ),
             Positioned(
-              top: 0,
-              right: 5,
-              child: InkWell(
+                  top: -4,
+                  right: 0,
+                  child: IconButton(
+                      onPressed: onShowMorePressed,
+                      icon: Icon(HeroiconsOutline.ellipsisVertical, size: 20,)
+                  )
 
-                onTap: onShowMorePressed,
-                borderRadius: BorderRadius.circular(25),
-                child: Container(
-                  height: 35,
-                  width: 35,
-                  // color: Colors.green,
-                  child: Center(
-                      child: Icon(
-                    HeroiconsOutline.ellipsisVertical,
-                    size: 20,
-                  )),
-                ),
-              ),
             )
           ],
         ),

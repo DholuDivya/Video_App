@@ -7,7 +7,7 @@ import 'package:vimeo_clone/model/get_user_playlist_model.dart';
 class GetUserPlaylistBloc extends Bloc<GetUserPlaylistEvent, GetUserPlaylistState>{
 
   int _offset = 0;
-  final int _limit = 3;
+  final int _limit = 5;
   bool _hasReachedMax = false;
   int channelId = 0;
 
@@ -43,16 +43,19 @@ class GetUserPlaylistBloc extends Bloc<GetUserPlaylistEvent, GetUserPlaylistStat
         final currentState = state as GetUserPlaylistSuccess;
         final updatedPlaylist = List<PlaylistList>.from(currentState.userPlaylist);
         Map<String, dynamic> playlistData = await GetUserPlaylistRepo().getUserPlaylist(channelId, _limit, _offset);
-        userPlaylistList = List<PlaylistList>.from(playlistData['data'].map((data) => PlaylistList.fromJson(data)));
+        userPlaylistList = List<PlaylistList>.from(playlistData['playlists'].map((data) => PlaylistList.fromJson(data)));
+
         _offset += _limit;
         if(userPlaylistList.length < _limit){
           _hasReachedMax = true;
         }else{
           _hasReachedMax = false;
         }
+
         print('rgsdrhgusdrhsef $_hasReachedMax');
         updatedPlaylist.addAll(userPlaylistList);
-        emit(GetUserPlaylistSuccess(userPlaylist: userPlaylistList, hasReachedMax: _hasReachedMax));
+        print('nnnnjnjnjnjjnj');
+        emit(GetUserPlaylistSuccess(userPlaylist: updatedPlaylist, hasReachedMax: _hasReachedMax));
       } catch(e){
         emit(GetUserPlaylistFailure(error: e.toString()));
       }

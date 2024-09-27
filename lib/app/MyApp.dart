@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uni_links/uni_links.dart';
 import 'package:vimeo_clone/Config/theme_data.dart';
 import 'package:vimeo_clone/Repo/auth_repo.dart';
 import 'package:vimeo_clone/Repo/video_category_repo.dart';
@@ -54,6 +57,7 @@ import 'package:vimeo_clone/bloc/reset_password/reset_password_bloc.dart';
 import 'package:vimeo_clone/bloc/search_data/search_data_bloc.dart';
 import 'package:vimeo_clone/bloc/search_suggestion/search_suggestion_bloc.dart';
 import 'package:vimeo_clone/bloc/select_cat_for_video_detail/category_selection_bloc.dart';
+import 'package:vimeo_clone/bloc/settings_api/settings_api_bloc.dart';
 import 'package:vimeo_clone/bloc/shorts_visible/shorts_visible_bloc.dart';
 import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
@@ -101,16 +105,16 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // _initializeNotification();
-    // FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
-    //   if (message != null) {
-    //     // App was launched via a notification
-    //     final videoSlug = message.data['extra_data']; // Extract slug or provide a default
-    //     // final videoSlug = 'sajan';
-    //     // Navigate directly to the videoPage
-    //     _handleDirectNavigation(videoSlug);
-    //   }
-    // });
+    _initializeNotification();
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        // App was launched via a notification
+        final videoSlug = message.data['extra_data']; // Extract slug or provide a default
+        // final videoSlug = 'sajan';
+        // Navigate directly to the videoPage
+        _handleDirectNavigation(videoSlug);
+      }
+    });
 
   }
 
@@ -136,10 +140,15 @@ class _MyAppState extends State<MyApp> {
     await NotificationService(context: context).initFirebaseMessaging(context);
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    _appLinksDeepLink.initDeepLinks();
+    _appLinksDeepLink.initDeepLinks(context);
 
 
     return MultiBlocProvider(
@@ -198,6 +207,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => ShortsVisibleBloc()),
         BlocProvider(create: (context) => UserTransactionBloc()),
         BlocProvider(create: (context) => YourShortsBloc()),
+        BlocProvider(create: (context) => SettingsApiBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {
@@ -222,7 +232,6 @@ class _MyAppState extends State<MyApp> {
               // routerDelegate: AppRoutes.router.routerDelegate,
               // routeInformationParser: AppRoutes.router.routeInformationParser,
               routerConfig: router,
-
               scaffoldMessengerKey: GlobalKeys.scaffoldMessengerKey,
 
             ),

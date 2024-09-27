@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/Config/constants.dart';
 import 'package:vimeo_clone/config/colors.dart';
 
@@ -13,7 +14,7 @@ class VideoListItem extends StatelessWidget {
   final String uploadTime;
   final Function()? onTap;
   final Function()? onTapChannel;
-  final Function()? onMorePressed;
+  final Function()? onShowMorePressed;
 
   const VideoListItem({
     super.key,
@@ -25,7 +26,7 @@ class VideoListItem extends StatelessWidget {
     required this.views,
     required this.uploadTime,
     this.onTap,
-    this.onMorePressed,
+    this.onShowMorePressed,
     this.onTapChannel,
   });
 
@@ -135,10 +136,9 @@ class VideoListItem extends StatelessWidget {
 
                   // VERTICAL MORE BUTTON ------------------------------------------------------------------
                   IconButton(
-                    onPressed: onMorePressed ?? () {},
-                    icon: Icon(Icons.more_vert, size: 18,),
-                    color: Colors.grey[700],
-                  ),
+                      onPressed: onShowMorePressed ?? (){},
+                      icon: Icon(HeroiconsOutline.ellipsisVertical, size: 20,)
+                  )
                 ],
               ),
             ),

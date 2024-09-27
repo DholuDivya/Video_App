@@ -11,17 +11,20 @@ class CustomPlaylistPreview extends StatelessWidget {
   final int numberOfVideos;
   final String playlistName;
   final String channelName;
+  final Function()? onShowMorePressed;
 
   const CustomPlaylistPreview({
     super.key,
     required this.imageUrl,
     required this.numberOfVideos,
     required this.playlistName,
-    required this.channelName
+    required this.channelName,
+    this.onShowMorePressed
   });
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       // height: 110,
       // width: double.infinity,
@@ -141,8 +144,9 @@ class CustomPlaylistPreview extends StatelessWidget {
               SizedBox(width: ScreenSize.screenWidth(context) * 0.03,),
 
               Container(
+                // color: red,
                 height: ScreenSize.screenHeight(context) * 0.12,
-                width: ScreenSize.screenHeight(context) * 0.19,
+                width: ScreenSize.screenHeight(context) * 0.15,
                 // color: Colors.blue,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,21 +176,15 @@ class CustomPlaylistPreview extends StatelessWidget {
           ),
 
           Positioned(
-            top: 0,
-            right: 5,
-            child: InkWell(
-              onTap: (){},
-              borderRadius: BorderRadius.circular(25),
-              child: Container(
-                height: 35,
-                width: 35,
-                // color: Colors.green,
-                child: Center(child: Icon(HeroiconsOutline.ellipsisVertical, size: 20,)),
-              ),
-            ),
+            top: -4,
+            right: 0,
+            child: IconButton(
+                onPressed: onShowMorePressed,
+                icon: Icon(HeroiconsOutline.ellipsisVertical, size: 20,)
+            )
           )
         ],
       ),
-    );;
+    );
   }
 }

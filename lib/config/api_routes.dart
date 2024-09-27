@@ -41,3 +41,4 @@ const String userTransactionUrl = "${apiUrl}user/";
 const String yourVideosUrl = "${apiUrl}channels/";
 const String yourShortsUrl = "${apiUrl}channels/";
 const String addVideoToPlaylistUrl = "${apiUrl}playlists/videos";
+const String settingsApiUrl = "${apiUrl}settings";

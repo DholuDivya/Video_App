@@ -187,7 +187,7 @@ class _AllCategoryState extends State<AllCategory> {
             author: filteredList[index]['author'],
             views: filteredList[index]['views'],
             uploadTime: filteredList[index]['uploadTime'],
-            onMorePressed: () {
+            onShowMorePressed: () {
               // Add your onMorePressed logic here
             },
           );

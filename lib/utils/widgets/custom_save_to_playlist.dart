@@ -147,6 +147,9 @@ class _PlaylistBottomSheetState extends State<PlaylistBottomSheet> {
                         ? state.userPlaylist.length
                         : state.userPlaylist.length + 1,
                     itemBuilder: (context, index) {
+                      if(index == state.userPlaylist.length){
+                        return Center(child: CircularProgressIndicator(),);
+                      }
                       final userPlaylist = playlist[index];
                       final isSelected = selectedPlaylistIds.contains(userPlaylist.id);
 

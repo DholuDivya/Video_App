@@ -36,6 +36,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
+import 'package:vimeo_clone/bloc/settings_api/settings_api_bloc.dart';
+import 'package:vimeo_clone/bloc/settings_api/settings_api_event.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
@@ -58,6 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    context.read<SettingsApiBloc>().add(SettingsApiRequest());
     super.initState();
     // getTheme();
     _navigateToNextScreen();

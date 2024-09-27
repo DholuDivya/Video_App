@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/config/constants.dart';
 
+import '../../config/colors.dart';
+
 class ForYouPreview extends StatelessWidget {
   final String videoTitle;
   final String videoThumbnail;
   final String channelName;
   final String uploadTime;
+  final Function()? onShowMorePressed;
 
   const ForYouPreview({
     super.key,
     required this.videoTitle,
     required this.channelName,
     required this.uploadTime,
-    required this.videoThumbnail
+    required this.videoThumbnail,
+    this.onShowMorePressed
   });
 
   @override
@@ -41,13 +45,14 @@ class ForYouPreview extends StatelessWidget {
                 SizedBox(height: ScreenSize.screenHeight(context) * 0.005,),
 
                 Container(
+                  // color: red,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         height: ScreenSize.screenHeight(context) * 0.085,
-                        width: ScreenSize.screenWidth(context) * 0.62,
-                        // color: Colors.red,
+                        width: ScreenSize.screenWidth(context) * 0.56,
+                        // color: yellow,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -73,16 +78,9 @@ class ForYouPreview extends StatelessWidget {
                         ),
                       ),
 
-                      Container(
-                        height: ScreenSize.screenHeight(context) * 0.04,
-                        width: ScreenSize.screenWidth(context) * 0.08,
-
-                        // color: Colors.blue,
-                        child: InkWell(
-                            borderRadius: BorderRadius.circular(50),
-                            onTap: (){},
-                            child: Icon(HeroiconsOutline.ellipsisVertical, size: 22,)),
-                      ),
+                      IconButton(
+                          onPressed: onShowMorePressed,
+                          icon: Icon(HeroiconsOutline.ellipsisVertical, size: 20,)),
 
                     ],
                   ),

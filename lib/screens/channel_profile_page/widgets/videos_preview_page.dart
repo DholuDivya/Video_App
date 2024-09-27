@@ -3,6 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_event.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
+import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
@@ -14,6 +21,8 @@ import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
 
 import '../../../bloc/channel_profile/channel_profile_bloc.dart';
 import '../../../bloc/channel_profile/channel_profile_state.dart';
+import '../../../config/global_variable.dart';
+import '../../../utils/widgets/custom_save_to_playlist.dart';
 import '../../homePage/homepage.dart';
 
 class VideosPreviewPage extends StatefulWidget {
@@ -26,6 +35,7 @@ class VideosPreviewPage extends StatefulWidget {
 
 class _VideosPreviewPageState extends State<VideosPreviewPage> {
   int selectedIndex = 0;
+  final userChannelId = Global.userData!.userChannelId;
 
   List<Map<String, dynamic>> sortList = [
     {"type": "Latest", "isSelected": true},
@@ -77,6 +87,25 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
     {'name': 'Share', 'icon': HeroiconsOutline.share},
     {'name': 'Report', 'icon': HeroiconsOutline.chatBubbleBottomCenterText},
   ];
+
+
+  void showPlaylistBottomSheet(int videoId, String userChannelId){
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      context: context,
+      builder: (context) {
+        return PlaylistBottomSheet(
+          videoId: videoId, // Pass your video data
+          userChannelId: userChannelId, // Pass your user channel ID
+        );
+      },
+    ).whenComplete((){
+      context.read<PlaylistSelectionBloc>().add(ClearPlaylistSelectionRequest());
+      context.read<AddVideoToPlaylistBloc>().add(InitializePlaylistBloc());
+    });
+  }
 
   void showReportDialog(BuildContext context, int videoId) {
     showDialog(
@@ -138,8 +167,21 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
                                   if (index == 0) {
                                     GoRouter.of(context).pushNamed('editVideoDetailPage');
                                   }
-                                  else if (index == 1) {}
-                                  else if (index == 2) {}
+                                  else if (index == 1) {
+                                    if(Navigator.canPop(context)){
+                                      Navigator.pop(context);
+                                    }
+                                    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
+                                    showPlaylistBottomSheet(videoData.id!, userChannelId!);
+                                  }
+                                  else if (index == 2) {
+                                    final String appLink = '${baseUrl}share?video=${videoData.slug}';
+                                    if(Navigator.canPop(context)){
+                                      Navigator.pop(context);
+                                    }
+                                    // Use the share_plus package to share the link
+                                    Share.share('Check out this video: $appLink');
+                                  }
                                   else if (index == 3) {
                                     if(Navigator.canPop(context)){
                                       Navigator.pop(context);
