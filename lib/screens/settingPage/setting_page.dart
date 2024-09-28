@@ -1,19 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:vimeo_clone/Utils/Widgets/setting_page_btn.dart';
-import 'package:vimeo_clone/bloc/about_us/about_us_bloc.dart';
-import 'package:vimeo_clone/bloc/about_us/about_us_event.dart';
-import 'package:vimeo_clone/bloc/about_us/about_us_state.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
-import 'package:vimeo_clone/bloc/terms_and_conditions/terms_and_conditions_bloc.dart';
-import 'package:vimeo_clone/bloc/terms_and_conditions/terms_and_conditions_event.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_event.dart';
-import 'package:vimeo_clone/config/global_keys.dart';
 import 'package:vimeo_clone/utils/widgets/CustomLogOutWidget.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
@@ -21,6 +18,7 @@ import '../../config/colors.dart';
 import '../../config/constants.dart';
 import '../../routes/myapproute.dart';
 import '../../utils/widgets/custom_text_field_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -167,7 +165,7 @@ class _SettingPageState extends State<SettingPage> {
     Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Settings', style: TextStyle(fontFamily: fontFamily),),
+          title: Text(AppLocalizations.of(context)!.settings, style: const TextStyle(fontFamily: fontFamily),),
         ),
         body: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
@@ -184,7 +182,7 @@ class _SettingPageState extends State<SettingPage> {
               GoRouter.of(context).pushReplacementNamed('signupPage');
             }
             else if(state is AuthProgress){
-              Center(
+              const Center(
                 child: CircularProgressIndicator(),
               );
             }
@@ -197,7 +195,7 @@ class _SettingPageState extends State<SettingPage> {
                   // EDIT MY CHANNEL
                   CustomSettingButton(
                       icon: HeroiconsOutline.pencilSquare,
-                      btnName: ('Edit My Channel'),
+                      btnName: AppLocalizations.of(context)!.editMyChannel,
                       onTap: () {
                         GoRouter.of(context).pushNamed('editChannelPage');
                       }
@@ -206,7 +204,7 @@ class _SettingPageState extends State<SettingPage> {
                   // WITHDRAWALS
                   CustomSettingButton(
                       icon: HeroiconsOutline.buildingLibrary,
-                      btnName: ('Transactions'),
+                      btnName: AppLocalizations.of(context)!.transactions,
                       onTap: () {
                         GoRouter.of(context).pushNamed('transactionsPage');
                       }
@@ -215,7 +213,7 @@ class _SettingPageState extends State<SettingPage> {
                   // THEME
                   CustomSettingButton(
                       icon: Remix.palette_line,
-                      btnName: ('Theme'),
+                      btnName: AppLocalizations.of(context)!.theme,
                       onTap: () {
                         showThemeDialog(context);
                       }
@@ -224,7 +222,7 @@ class _SettingPageState extends State<SettingPage> {
                   // PICTURE IN PICTURE
                   CustomSettingButton(
                       icon: Remix.vip_crown_line,
-                      btnName: ('Your plans'),
+                      btnName: AppLocalizations.of(context)!.yourPlans,
                       onTap: () {
                         GoRouter.of(context).pushNamed('plansPage');
                       }
@@ -233,7 +231,7 @@ class _SettingPageState extends State<SettingPage> {
                   // CLEAR WATCHED HISTORY
                   CustomSettingButton(
                       icon: HeroiconsOutline.xCircle,
-                      btnName: ('Clear watched history'),
+                      btnName: AppLocalizations.of(context)!.clearWatchHistory,
                       onTap: () {}
                   ),
 
@@ -245,7 +243,7 @@ class _SettingPageState extends State<SettingPage> {
                   // RATE OUR APP
                   CustomSettingButton(
                       icon: HeroiconsOutline.star,
-                      btnName: ('Rate our app'),
+                      btnName: AppLocalizations.of(context)!.rateOurApp,
                       onTap: () {
                         launchAppStoreOrPlayStore('com.pubg.imobile');
                       }
@@ -254,24 +252,40 @@ class _SettingPageState extends State<SettingPage> {
                   // INVITE FRIENDS
                   CustomSettingButton(
                       icon: HeroiconsOutline.userPlus,
-                      btnName: ('Invite friends'),
-                      onTap: () {}
+                      btnName: AppLocalizations.of(context)!.inviteFriends,
+                      onTap: () async {
+                        try {
+                          const String packageName = 'com.naturalmotion.customstreetracer2';
+                          String url;
+                          if (Platform.isAndroid) {
+                            // Redirect to Google Play Store
+                            url = 'https://play.google.com/store/apps/details?id=$packageName';
+                          } else if (Platform.isIOS) {
+                            // Redirect to Apple App Store
+                            url = 'https://apps.apple.com/app/id$packageName';
+                          } else {
+                            throw Exception('Unsupported platform');
+                          }
+                          Share.share('Check out this amazing app: $url');
+                        } catch (e) {
+                          print('Error launching store or sharing: $e');
+                        }
+                      }
                   ),
 
                   // ABOUT US
                   CustomSettingButton(
                       icon: HeroiconsOutline.informationCircle,
-                      btnName: ('About us'),
+                      btnName: AppLocalizations.of(context)!.aboutUs,
                       onTap: () {
                         GoRouter.of(context).pushNamed('aboutUsPage');
-
                       }
                   ),
 
                   // TERMS OF USE
                   CustomSettingButton(
                       icon: HeroiconsOutline.clipboardDocumentList,
-                      btnName: ('Terms & conditions'),
+                      btnName: AppLocalizations.of(context)!.termsAndConditions,
                       onTap: () {
                         GoRouter.of(context).pushNamed('termsAndConditionsPage');
 
@@ -282,7 +296,7 @@ class _SettingPageState extends State<SettingPage> {
                   // HELP
                   CustomSettingButton(
                       icon: HeroiconsOutline.questionMarkCircle,
-                      btnName: ('Help & support'),
+                      btnName: AppLocalizations.of(context)!.helpAndSupport,
                       onTap: () {
                         router.pushNamed('helpAndSupportPage');
                       }
@@ -294,7 +308,7 @@ class _SettingPageState extends State<SettingPage> {
 
                   CustomLogOutWidget(
                     icon: HeroiconsOutline.trash,
-                      btnName: 'Delete account',
+                      btnName: AppLocalizations.of(context)!.deleteAccount,
                       onTap: (){
                         deleteConfirmation();
                       }
@@ -302,7 +316,7 @@ class _SettingPageState extends State<SettingPage> {
 
                   CustomLogOutWidget(
                     icon: HeroiconsOutline.arrowLeftOnRectangle,
-                      btnName: 'Log Out',
+                      btnName: AppLocalizations.of(context)!.logOut,
                       onTap: () {
                         print('log out');
                         context.read<AuthBloc>().add(OnLogOutRequestEvent());

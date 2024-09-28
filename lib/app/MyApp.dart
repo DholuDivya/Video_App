@@ -14,7 +14,6 @@ import 'package:vimeo_clone/Config/theme_data.dart';
 import 'package:vimeo_clone/Repo/auth_repo.dart';
 import 'package:vimeo_clone/Repo/video_category_repo.dart';
 import 'package:vimeo_clone/Repo/video_list_repo.dart';
-import 'package:vimeo_clone/Screens/SettingPage/setting_page.dart';
 import 'package:vimeo_clone/appLinks.dart';
 import 'package:vimeo_clone/bloc/about_us/about_us_bloc.dart';
 import 'package:vimeo_clone/bloc/about_us/about_us_event.dart';
@@ -76,7 +75,6 @@ import 'package:vimeo_clone/bloc/video_list/video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/view_increment/view_increment_bloc.dart';
 import 'package:vimeo_clone/bloc/your_shorts/your_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
-import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/global_keys.dart';
 import 'package:vimeo_clone/routes/myapproute.dart';
@@ -85,6 +83,7 @@ import '../bloc/download_video/download_video_bloc.dart';
 import '../bloc/edit_video_detail/edit_video_detail_bloc.dart';
 import '../bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
 import '../config/notification_service.dart';
+import '../generated/l10n.dart';
 
 
 //
@@ -115,23 +114,16 @@ class _MyAppState extends State<MyApp> {
         _handleDirectNavigation(videoSlug);
       }
     });
-
   }
 
   void _handleDirectNavigation(String videoSlug) {
     final navigatorContext = GlobalKeys.navigatorKey.currentContext;
     if (navigatorContext != null) {
-
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.push(
             navigatorContext,
             CupertinoPageRoute(builder: (navigatorContext) => VideoPage(slug: videoSlug))
         );
-        // Navigator.pushNamed(
-        //     navigatorContext,
-        //     MaterialPageRoute(builder: (navigatorContext) => )
-        // );
       });
     }
   }
@@ -149,7 +141,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     _appLinksDeepLink.initDeepLinks(context);
-
 
     return MultiBlocProvider(
       providers: [
@@ -217,23 +208,29 @@ class _MyAppState extends State<MyApp> {
               darkTheme: darkTheme,
               themeMode: themeMode,
               debugShowCheckedModeBanner: false,
+              // localizationsDelegates: AppLocalizations.localizationsDelegates,
+              // supportedLocales: AppLocalizations.supportedLocales,
+              // localeResolutionCallback: (locale, supportedLocales) {
+              //   // Add your custom resolution logic
+              //   return locale;
+              // },
               localizationsDelegates: const [
+                // S.delegate,
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
+              // localeResolutionCallback: (locale, supportedLocales) {
+              //   return supportedLocales.contains(locale) ? locale : const Locale('en');
+              // },
               supportedLocales: const [
-                Locale('en'), // English
+                // Locale('en'), // English
                 Locale('hi'), // Hindi
               ],
               builder: FToastBuilder(),
-              // routerConfig: router,
-              // routerDelegate: AppRoutes.router.routerDelegate,
-              // routeInformationParser: AppRoutes.router.routeInformationParser,
               routerConfig: router,
               scaffoldMessengerKey: GlobalKeys.scaffoldMessengerKey,
-
             ),
           );
         }

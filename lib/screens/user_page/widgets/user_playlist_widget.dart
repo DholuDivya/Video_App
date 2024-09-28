@@ -20,6 +20,8 @@ import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
 import '../../../bloc/get_user_playlist/get_user_playlist_event.dart';
 import '../../../config/colors.dart';
 import '../../../config/global_variable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class UserPlaylistWidget extends StatefulWidget {
   UserPlaylistWidget({super.key});
@@ -57,8 +59,8 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Playlist',
+              Text(
+                AppLocalizations.of(context)!.playlist,
                 style: TextStyle(
                     fontSize: 16,
                     fontFamily: fontFamily,
@@ -137,7 +139,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                                 ),
                                 SizedBox(height: 25.h),
                                 Text(
-                                  'Create new playlist',
+                                  AppLocalizations.of(context)!.createNewPlaylist,
                                   style: TextStyle(
                                     fontFamily: fontFamily,
                                     color: Theme.of(context).colorScheme.onSecondaryFixedVariant
@@ -255,7 +257,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
               return AlertDialog(
                 title: Center(
                     child: Text(
-                      'Create a playlist',
+                      AppLocalizations.of(context)!.createNewPlaylist,
                       style: TextStyle(
                           fontFamily: fontFamily,
                           fontSize: 17.sp
@@ -270,7 +272,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                       readOnly: false,
                       maxLines: 1,
                       controller: playlistTitleController,
-                      fieldLabel: 'title',
+                      fieldLabel: AppLocalizations.of(context)!.title,
                     ),
                     SizedBox(height: 10.h,),
 
@@ -279,7 +281,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                       maxLines: 3,
                       minLines: 1,
                       controller: playlistDescriptionController,
-                      fieldLabel: 'description',
+                      fieldLabel: AppLocalizations.of(context)!.description,
                     ),
                     SizedBox(height: 10.h,),
 
@@ -364,7 +366,6 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                         ),
                       ),
                     )
-
                   ],
                 ),
 

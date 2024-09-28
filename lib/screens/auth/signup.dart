@@ -291,7 +291,7 @@ class _SignupPageState extends State<SignupPage> {
                                   'forgotPasswordPage');
                             },
                             child: Text(
-                              'Forgot Password',
+                              'Forgot password',
                               style: TextStyle(
                                   fontFamily: fontFamily,
                                   fontSize: 11,

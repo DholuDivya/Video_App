@@ -13,6 +13,7 @@ import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SubscriptionsPage extends StatefulWidget {
   const SubscriptionsPage({super.key});
@@ -111,7 +112,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                       // right: 10.w
                     ),
                     child: Text(
-                      'Subscriptions',
+                      AppLocalizations.of(context)!.subscriptions,
                       style: TextStyle(
                         fontFamily: fontFamily,
                         fontSize: 25.sp,

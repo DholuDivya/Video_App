@@ -11,6 +11,7 @@ const String apiUrl = "https://cineplex.infinitietech.com/api/";
 const String baseUrl = "https://cineplex.infinitietech.com/";
 const String firebase = "";
 const String adUnitId = "ca-app-pub-2734509756038446/1670883979";
+const String appPackageName = "";
 
 
 // FONT FAMILY

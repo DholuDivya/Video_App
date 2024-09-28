@@ -23,6 +23,7 @@ import 'package:vimeo_clone/screens/user_page/widgets/user_history_widget.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_playlist_widget.dart';
 import '../../bloc/your_shorts/your_shorts_bloc.dart';
 import '../../bloc/your_shorts/your_shorts_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -124,7 +125,7 @@ class _UserPageState extends State<UserPage> {
                     print('&&&&&&&&&&&&&&&&&&   $totalVideos');
                   }
                   return UserPageButton(
-                    buttonName: 'Your videos',
+                    buttonName: AppLocalizations.of(context)!.yourVideos,
                     buttonIcon: HeroiconsOutline.play,
                     onTap: (){
                       final channelId = Global.userData!.userChannelId;
@@ -146,7 +147,7 @@ class _UserPageState extends State<UserPage> {
                       MaterialPageRoute(builder: (context) => DownloadedVideosPage())
                   );
                 },
-                  buttonName: 'Downloads',
+                  buttonName: AppLocalizations.of(context)!.downloads,
                   buttonIcon: HeroiconsOutline.arrowDownTray
               ),
 
@@ -164,7 +165,7 @@ class _UserPageState extends State<UserPage> {
 
 
               UserPageButton(
-                  buttonName: 'Help & feedback',
+                  buttonName: AppLocalizations.of(context)!.helpAndFeedback,
                   buttonIcon: HeroiconsOutline.questionMarkCircle,
                 onTap: (){
                     Navigator.push(
