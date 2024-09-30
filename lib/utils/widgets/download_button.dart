@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DownloadButton extends StatelessWidget {
   const DownloadButton({super.key});
@@ -28,7 +29,7 @@ class DownloadButton extends StatelessWidget {
               children: [
                 Icon(Remix.download_line, size: 15,),
                 SizedBox(width: ScreenSize.screenWidth(context) * 0.02,),
-                Text('Download',
+                Text(AppLocalizations.of(context)!.download,
                   style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 12,

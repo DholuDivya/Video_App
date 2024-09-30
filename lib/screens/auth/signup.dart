@@ -13,6 +13,7 @@ import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_auth.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../config/colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -39,11 +40,11 @@ class _SignupPageState extends State<SignupPage> {
 
   String? _validateEmail(String? value){
     if(value == null || value.isEmpty){
-      return "Please enter Email !";
+      return AppLocalizations.of(context)!.pleaseEnterEmail;
     }
     RegExp regexp = RegExp(emailRegex);
     if(!regexp.hasMatch(value)){
-      return 'Email is not Valid';
+      return AppLocalizations.of(context)!.emailIsNotValid;
     }
     return null;
   }
@@ -51,14 +52,14 @@ class _SignupPageState extends State<SignupPage> {
 
   String? _validatePassword(String? value){
     if(value == null || value.isEmpty){
-      return "Please enter First Name !";
+      return AppLocalizations.of(context)!.pleaseEnterPassword;
     }
     if (value.length < 6) {
-      return "Password must be at least 6 characters";
+      return AppLocalizations.of(context)!.passwordMustBeAtLeast6Characters;
     }
     RegExp regexp = RegExp(pattern);
     if(!regexp.hasMatch(value)){
-      return 'Password must be at least 8 characters long, include an uppercase letter, number, and symbol';
+      return AppLocalizations.of(context)!.passwordMustBeAtLeast8Characters;
     }
     return null;
   }
@@ -217,7 +218,7 @@ class _SignupPageState extends State<SignupPage> {
                             children: [
                               Center(
                                 child: Text(
-                                  'Sign-in with account',
+                                  AppLocalizations.of(context)!.signInWithAccount,
                                   style: TextStyle(
                                     fontFamily: fontFamily,
                                     fontSize: 24.sp,
@@ -235,7 +236,7 @@ class _SignupPageState extends State<SignupPage> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Don\'t have an account?',
+                                        AppLocalizations.of(context)!.dontHaveAnAccount,
                                         style: TextStyle(
                                           fontFamily: fontFamily,
                                           fontSize: 14.sp,
@@ -244,7 +245,7 @@ class _SignupPageState extends State<SignupPage> {
                                         ),
                                       ),
                                       Text(
-                                        ' Register',
+                                        ' ${AppLocalizations.of(context)!.register}',
                                         style: TextStyle(
                                           fontFamily: fontFamily,
                                             fontSize: 14.sp,
@@ -261,7 +262,7 @@ class _SignupPageState extends State<SignupPage> {
                                 obscureText: false,
                                 controller: _emailController,
                                 validator: _validateEmail,
-                                label: 'Email',
+                                label: AppLocalizations.of(context)!.email,
                               ),
 
                               const SizedBox(height: 16),
@@ -269,7 +270,7 @@ class _SignupPageState extends State<SignupPage> {
                                 obscureText: true && !isPasswordVisible,
                                 controller: _passwordController,
                                 validator: _validatePassword,
-                                label: 'Password',
+                                label: AppLocalizations.of(context)!.password,
                                 suffixIcon: IconButton(
                                     onPressed: (){
                                       setState(() {
@@ -291,7 +292,7 @@ class _SignupPageState extends State<SignupPage> {
                                   'forgotPasswordPage');
                             },
                             child: Text(
-                              'Forgot password',
+                              AppLocalizations.of(context)!.forgotPassword,
                               style: TextStyle(
                                   fontFamily: fontFamily,
                                   fontSize: 11,
@@ -305,7 +306,7 @@ class _SignupPageState extends State<SignupPage> {
                                    if(state is LoginAuthSuccess) {
                                     ToastManager().showToast(
                                         context: context,
-                                        message: 'Login successfully'
+                                        message: AppLocalizations.of(context)!.loginSuccessful
                                     );
                                     Future.delayed(const Duration(seconds: 1),(){
                                       GoRouter.of(context).pushReplacementNamed('homePage');
@@ -315,7 +316,7 @@ class _SignupPageState extends State<SignupPage> {
                                   }else if(state is LoginAuthFailure){
                                      ToastManager().showToast(
                                          context: context,
-                                         message: 'Login failed'
+                                         message: AppLocalizations.of(context)!.loginFailed
                                      );
                                   }else if(state is LoginAuthLoading){
                                      return const Center(child: CircularProgressIndicator());
@@ -341,7 +342,7 @@ class _SignupPageState extends State<SignupPage> {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        'Login',
+                                        AppLocalizations.of(context)!.login,
                                         style: TextStyle(
                                             fontSize: 14.sp,
                                             fontFamily: fontFamily,
@@ -361,7 +362,7 @@ class _SignupPageState extends State<SignupPage> {
                                     Expanded(child: Divider(thickness: 0.5.r, color: Theme.of(context).colorScheme.secondaryFixedDim,)),
                                     SizedBox(width: 20.w,),
                                     Text(
-                                      'or',
+                                      AppLocalizations.of(context)!.or,
                                       style: TextStyle(
                                           fontSize: 14.sp,
                                         fontFamily: fontFamily,
@@ -382,7 +383,7 @@ class _SignupPageState extends State<SignupPage> {
                                       if(state is AuthSuccess){
                                         ToastManager().showToast(
                                             context: context,
-                                            message: 'Login successfully'
+                                            message: AppLocalizations.of(context)!.loginSuccessful
                                         );
                                         Future.delayed(const Duration(seconds: 1),(){
                                           GoRouter.of(context).pushReplacementNamed('homePage');
@@ -391,7 +392,7 @@ class _SignupPageState extends State<SignupPage> {
                                       } else if (state is AuthFailure) {
                                         ToastManager().showToast(
                                             context: context,
-                                            message: 'Login failed'
+                                            message: AppLocalizations.of(context)!.loginFailed
                                         );
                                       }
                                     },
@@ -483,7 +484,7 @@ class _SignupPageState extends State<SignupPage> {
                                   child: RichText(
                                     textAlign: TextAlign.center,
                                     text: TextSpan(
-                                      text: 'By clicking Create account you agree to our ',
+                                      text: AppLocalizations.of(context)!.byClickingCreateAccountYouAgreeToOur,
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontFamily: fontFamily,
@@ -491,7 +492,7 @@ class _SignupPageState extends State<SignupPage> {
                                       ),
                                       children: [
                                         TextSpan(
-                                          text: 'Terms of use',
+                                          text: AppLocalizations.of(context)!.termsAndUse,
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontFamily: fontFamily,
@@ -505,10 +506,10 @@ class _SignupPageState extends State<SignupPage> {
                                             },
                                         ),
                                         TextSpan(
-                                          text: ' and ',
+                                          text: ' ${AppLocalizations.of(context)!.and} ',
                                         ),
                                         TextSpan(
-                                          text: 'Privacy policy',
+                                          text: AppLocalizations.of(context)!.privacyPolicy,
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontFamily: fontFamily,

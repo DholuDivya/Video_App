@@ -8,8 +8,8 @@ import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart'
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/customBottomSheet.dart';
 import 'package:vimeo_clone/utils/widgets/custom_playlist_preview.dart';
-
 import '../../homePage/homepage.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class PlaylistPreviewPage extends StatefulWidget {
@@ -92,7 +92,7 @@ class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
                         child: Image.asset('assets/images/no_data.png'),
                       ),
                       Text(
-                        'Playlist not found',
+                        AppLocalizations.of(context)!.playlistNotFound,
                         style: TextStyle(
                             fontFamily: fontFamily, fontSize: 15.sp
                         ),

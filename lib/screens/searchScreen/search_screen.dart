@@ -14,6 +14,7 @@ import '../../config/colors.dart';
 import '../../config/constants.dart';
 import '../../utils/widgets/video_container.dart';
 import '../../utils/widgets/custom_channel_preview.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -134,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Theme.of(context).colorScheme.secondary,
-                        hintText: 'Search...',
+                        hintText: AppLocalizations.of(context)!.search,
                         hintStyle: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 14),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),

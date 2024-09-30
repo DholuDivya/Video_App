@@ -157,7 +157,7 @@ class _UserPageState extends State<UserPage> {
                   onTap: (){
                     GoRouter.of(context).pushNamed('plansPage');
                   },
-                  buttonName: 'Get $appName Premium',
+                  buttonName: '${AppLocalizations.of(context)!.get} $appName ${AppLocalizations.of(context)!.premium}',
                   buttonIcon: Remix.vip_crown_line,
               ),
 

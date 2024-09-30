@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remixicon/remixicon.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vimeo_clone/config/constants.dart';
 
 class ShareButton extends StatefulWidget {
@@ -42,8 +42,8 @@ class _ShareButtonState extends State<ShareButton> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                const Text(
-                  'Share',
+                Text(
+                  AppLocalizations.of(context)!.share,
                   style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 12

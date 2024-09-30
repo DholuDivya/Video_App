@@ -203,6 +203,7 @@ import '../../../utils/widgets/custom_channel_video_preview.dart';
 import '../../../utils/widgets/custom_for_you_preview.dart';
 import '../../../utils/widgets/custom_report_dialog.dart';
 import '../../../utils/widgets/custom_save_to_playlist.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePreviewPage extends StatefulWidget {
   const HomePreviewPage({super.key});
@@ -246,8 +247,8 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                             left: ScreenSize.screenWidth(context) * 0.044,
                             bottom: ScreenSize.screenHeight(context) * 0.015,
                           ),
-                          child: const Text(
-                            'For You',
+                          child: Text(
+                            AppLocalizations.of(context)!.forYou,
                             style: TextStyle(
                                 fontFamily: fontFamily,
                                 fontSize: 18,
@@ -314,8 +315,8 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                           left: ScreenSize.screenWidth(context) * 0.044,
                           bottom: ScreenSize.screenHeight(context) * 0.015,
                         ),
-                        child: const Text(
-                          'Videos',
+                        child: Text(
+                          AppLocalizations.of(context)!.videos,
                           style: TextStyle(
                               fontFamily: fontFamily,
                               fontSize: 18,
@@ -399,7 +400,7 @@ class _HomePreviewPageState extends State<HomePreviewPage> {
                               child: Image.asset('assets/images/no_data.png'),
                             ),
                             Text(
-                              'Videos not found !!',
+                              AppLocalizations.of(context)!.videoNotFound,
                               style: TextStyle(
                                   fontFamily: fontFamily,
                                   fontSize: 15.sp

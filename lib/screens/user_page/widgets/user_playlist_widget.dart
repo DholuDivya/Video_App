@@ -32,6 +32,8 @@ class UserPlaylistWidget extends StatefulWidget {
 
 class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
 
+
+
   List<Map<String, dynamic>> bottomSheetListTileField = [
     {
       'name': 'Delete',
@@ -76,8 +78,8 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                 onPressed: () {
                   GoRouter.of(context).pushNamed('userPlaylistPage');
                 },
-                child: const Text(
-                  'View all',
+                child: Text(
+                  AppLocalizations.of(context)!.viewAll,
                   style: TextStyle(fontSize: 12, fontFamily: fontFamily),
                 ),
               ),
@@ -314,7 +316,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                                 print('STATUSSSSSSSSS   :::::::    $playlistStatus');
                               });
                             },
-                            toggleName: 'Privacy',
+                            toggleName: AppLocalizations.of(context)!.privacy,
                             toggleValue: isPublic,
                             onChanged: (bool value) {
                               setState(() {
@@ -322,7 +324,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                                 print('STATUSSSSSSSSS   :::::::    $isPublic');
                               });
                             },
-                            toggleState: isPublic ? 'Public' : 'Private'),
+                            toggleState: isPublic ? AppLocalizations.of(context)!.public : AppLocalizations.of(context)!.private),
                       ),
                     ),
 
@@ -354,9 +356,9 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                             borderRadius: BorderRadius.circular(10),
                             color: primaryColor
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            'Create',
+                            AppLocalizations.of(context)!.create,
                             style: TextStyle(
                                 fontFamily: fontFamily,
                                 fontSize: 15,

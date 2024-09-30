@@ -10,6 +10,7 @@ import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/edit_video_detail/edit_video_detail_bloc.dart';
 import 'package:vimeo_clone/bloc/edit_video_detail/edit_video_detail_event.dart';
 import 'package:vimeo_clone/bloc/edit_video_detail/edit_video_detail_state.dart';
+import 'package:vimeo_clone/generated/l10n.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
 import '../../bloc/get_thumbnail_from_user/get_thumbnail_bloc.dart';
 import '../../bloc/get_thumbnail_from_user/get_thumbnail_event.dart';
@@ -19,6 +20,7 @@ import '../../bloc/play_video/play_video_event.dart';
 import '../../bloc/play_video/play_video_state.dart';
 import '../../config/colors.dart';
 import '../../config/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditVideoDetailPage extends StatefulWidget {
   final String? videoSlug;
@@ -102,8 +104,8 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Edit video detail',
+        title: Text(
+          AppLocalizations.of(context)!.editVideoDetail,
           style: TextStyle(
             fontFamily: fontFamily,
           ),
@@ -233,7 +235,7 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                         isEnabled: true,
                         autoFocus: false,
                         controller: _titleController,
-                        fieldLabel: 'Title'
+                        fieldLabel: AppLocalizations.of(context)!.title
                     ),
                     SizedBox(height: 15.h),
                     CustomTextFieldUpload(
@@ -242,7 +244,7 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                         readOnly: false,
                         isEnabled: true,
                         controller: _descriptionController,
-                        fieldLabel: 'Description'
+                        fieldLabel: AppLocalizations.of(context)!.description
                     ),
                     SizedBox(height: 15.h),
                     CustomTextFieldUpload(
@@ -251,7 +253,7 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                         controller: TextEditingController(
                           text: videoData.categories!.first.name
                         ),
-                        fieldLabel: 'Category'
+                        fieldLabel: AppLocalizations.of(context)!.category
                     ),
                     SizedBox(height: 15.h),
 
@@ -265,7 +267,7 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                       keyboardType: TextInputType.multiline,
                       cursorColor: Colors.grey,
                       decoration: InputDecoration(
-                        labelText: 'Hashtag...',
+                        labelText: AppLocalizations.of(context)!.hashtag,
                         labelStyle: TextStyle(
                           fontSize: 15,
                           color: Theme.of(context).colorScheme.secondaryFixedDim,
@@ -343,11 +345,10 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                         showDialog(
                           context: context,
                           builder: (context) {
-
                             return AlertDialog(
-                              title: const Center(
+                              title: Center(
                                 child: Text(
-                                  'Select Visibility',
+                                  AppLocalizations.of(context)!.selectVisibility,
                                   style: TextStyle(
                                     fontFamily: fontFamily,
                                     fontSize: 22,
@@ -418,7 +419,7 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(color: Colors.black12, width: 0.5),
                             ),
-                            labelText: 'Select a visibility',
+                            labelText: AppLocalizations.of(context)!.selectVisibility,
                             labelStyle: TextStyle(fontSize: 15, color: Colors.grey.shade500),
                             suffixIcon: const Icon(Icons.arrow_drop_down),
                           ),
@@ -439,7 +440,7 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
 
                           ToastManager().showToast(
                               context: context,
-                              message: 'Channel details is successfully updated!'
+                              message: AppLocalizations.of(context)!.videoDetailsIsSuccessfullyUpdated
                           );
                         }
                         return Container(
@@ -471,8 +472,8 @@ class _EditVideoDetailPageState extends State<EditVideoDetailPage> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              child: const Text(
-                                'Update',
+                              child: Text(
+                                AppLocalizations.of(context)!.update,
                                 style: TextStyle(
                                     fontFamily: fontFamily,
                                     fontSize: 18

@@ -15,14 +15,13 @@ import 'package:vimeo_clone/bloc/remove_video_from_history/remove_video_from_his
 import 'package:vimeo_clone/bloc/remove_video_from_history/remove_video_from_history_event.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/custom_history_video_preview.dart';
-import 'package:vimeo_clone/utils/widgets/custom_report_dialog.dart';
 import 'package:vimeo_clone/utils/widgets/shimmer.dart';
-
 import '../../../bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import '../../../bloc/get_user_playlist/get_user_playlist_event.dart';
 import '../../../config/global_variable.dart';
 import '../../../utils/widgets/customBottomSheet.dart';
 import '../../../utils/widgets/custom_save_to_playlist.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserHistoryWidget extends StatefulWidget {
   const UserHistoryWidget({super.key});
@@ -109,8 +108,8 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'History',
+                    Text(
+                      AppLocalizations.of(context)!.history,
                       style: TextStyle(
                           fontSize: 16,
                           fontFamily: fontFamily,
@@ -127,8 +126,8 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
                       onPressed: (){
                         GoRouter.of(context).pushNamed('allHistoryPage');
                       },
-                      child: const Text(
-                        'View all',
+                      child: Text(
+                        AppLocalizations.of(context)!.viewAll,
                         style: TextStyle(
                             fontSize: 12,
                             fontFamily: fontFamily

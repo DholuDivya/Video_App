@@ -18,7 +18,7 @@ import 'package:vimeo_clone/screens/app_privacy_content_pages/privacy_policy_pag
 import 'package:vimeo_clone/screens/app_privacy_content_pages/terms_and_condition_page.dart';
 import 'package:vimeo_clone/screens/auth/forgot_password_page.dart';
 import 'package:vimeo_clone/screens/auth/registration_page.dart';
-import 'package:vimeo_clone/screens/auth/numebr_signup.dart';
+import 'package:vimeo_clone/screens/auth/number_signup.dart';
 import 'package:vimeo_clone/screens/auth/reset_password.dart';
 import 'package:vimeo_clone/screens/auth/verification_page.dart';
 import 'package:vimeo_clone/screens/download_video/play_downloaded_video_page.dart';

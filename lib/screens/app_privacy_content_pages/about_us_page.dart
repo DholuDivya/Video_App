@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/bloc/about_us/about_us_bloc.dart';
 import 'package:vimeo_clone/bloc/about_us/about_us_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AboutUsPage extends StatelessWidget {
   const AboutUsPage({super.key});
@@ -13,8 +14,8 @@ class AboutUsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'About us',
+        title: Text(
+          AppLocalizations.of(context)!.aboutUs,
           style: TextStyle(
             fontFamily: fontFamily,
           ),

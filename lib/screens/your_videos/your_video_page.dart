@@ -155,14 +155,13 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/bloc/your_shorts/your_shorts_bloc.dart';
-import 'package:vimeo_clone/bloc/your_shorts/your_shorts_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vimeo_clone/bloc/your_shorts/your_shorts_state.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
 import 'package:vimeo_clone/utils/widgets/customBottomSheet.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_shorts_preview.dart';
-import '../../config/colors.dart';
 import '../../config/constants.dart';
 
 class YourVideoPage extends StatefulWidget {
@@ -193,7 +192,7 @@ class _YourVideoPageState extends State<YourVideoPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Your videos',
+            AppLocalizations.of(context)!.yourVideos,
             style: TextStyle(
               fontFamily: fontFamily,
               fontSize: 20.sp,
@@ -208,8 +207,8 @@ class _YourVideoPageState extends State<YourVideoPage> {
             labelColor: Theme.of(context).colorScheme.tertiaryFixed,
             unselectedLabelColor: Theme.of(context).colorScheme.secondaryContainer,
             tabs: [
-              Tab(text: 'Videos'),
-              Tab(text: 'Shorts'),
+              Tab(text: AppLocalizations.of(context)!.videos),
+              Tab(text: AppLocalizations.of(context)!.shorts),
             ],
           ),
         ),
@@ -295,15 +294,26 @@ class _YourVideoPageState extends State<YourVideoPage> {
                                 : Container();
                           },
                         )
-                            : Padding(
-                          padding: EdgeInsets.only(top: 150.h),
-                          child: Center(
-                            child: Image.asset(
-                              'assets/images/no_data.png',
-                              width: 200.w,
-                              height: 200.h,
-                            ),
-                          ),
+                            : Container(
+                          // color: yellow,
+                          child: Center(child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                // color: red,
+                                height: 120.h,
+                                width: 250.w,
+                                child: Image.asset('assets/images/no_data.png'),
+                              ),
+                              Text(
+                                AppLocalizations.of(context)!.videoNotFound,
+                                style: TextStyle(
+                                    fontFamily: fontFamily,
+                                    fontSize: 15.sp
+                                ),
+                              ),
+                            ],
+                          ),),
                         ),
                       ],
                     ),
@@ -349,11 +359,26 @@ class _YourVideoPageState extends State<YourVideoPage> {
                       );
                     },
                   )
-                      : Center(
-                    child: Text(
-                      'No Shorts Available',
-                      style: TextStyle(fontSize: 18.sp),
-                    ),
+                      : Container(
+                    // color: yellow,
+                    child: Center(child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          // color: red,
+                          height: 120.h,
+                          width: 250.w,
+                          child: Image.asset('assets/images/no_data.png'),
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.shortsNotFound,
+                          style: TextStyle(
+                              fontFamily: fontFamily,
+                              fontSize: 15.sp
+                          ),
+                        ),
+                      ],
+                    ),),
                   );
                 }
                 return Container();

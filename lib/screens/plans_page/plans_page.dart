@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:lottie/lottie.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:vimeo_clone/bloc/generate_signature/generate_signature_bloc.dart';
 import 'package:vimeo_clone/bloc/generate_signature/generate_signature_event.dart';
@@ -12,10 +11,9 @@ import 'package:vimeo_clone/bloc/get_plans/get_plans_bloc.dart';
 import 'package:vimeo_clone/bloc/get_plans/get_plans_state.dart';
 import 'package:vimeo_clone/bloc/verify_payment/verify_payment_bloc.dart';
 import 'package:vimeo_clone/bloc/verify_payment/verify_payment_event.dart';
-import 'package:vimeo_clone/bloc/verify_payment/verify_payment_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/plans_page/widgets/custom_plans_container.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../bloc/get_plans/get_plans_event.dart';
 import '../../config/global_variable.dart';
 
@@ -189,8 +187,8 @@ class _PlansPageState extends State<PlansPage> {
                children: [
                  userHeaderWidget(),
                  SizedBox(height: 25.h,),
-                 const Text(
-                     'Choose a plan',
+                 Text(
+                     AppLocalizations.of(context)!.choosePlan,
                      style: const TextStyle(
                          fontFamily: fontFamily,
                          fontSize: 20,
@@ -198,7 +196,7 @@ class _PlansPageState extends State<PlansPage> {
                      )
                  ),
                  Text(
-                     'Monthly or yearly? it\'s your call',
+                     AppLocalizations.of(context)!.monthlyOrYearly,
                      style: TextStyle(
                          fontFamily: fontFamily,
                          fontSize: 13,
@@ -249,7 +247,7 @@ class _PlansPageState extends State<PlansPage> {
                   ),
                 ),
                 child: Text(
-                  'Buy now',
+                  AppLocalizations.of(context)!.buyNow,
                   style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 18,

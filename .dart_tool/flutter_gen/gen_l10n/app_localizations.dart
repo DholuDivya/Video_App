@@ -167,11 +167,11 @@ abstract class AppLocalizations {
   /// **'Hashtag'**
   String get hashtag;
 
-  /// No description provided for @selectAVisibility.
+  /// No description provided for @selectVisibility.
   ///
   /// In en, this message translates to:
-  /// **'Select a visibility'**
-  String get selectAVisibility;
+  /// **'Select visibility'**
+  String get selectVisibility;
 
   /// No description provided for @comments.
   ///
@@ -185,6 +185,12 @@ abstract class AppLocalizations {
   /// **'Upload video'**
   String get uploadVideo;
 
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
   /// No description provided for @public.
   ///
   /// In en, this message translates to:
@@ -196,6 +202,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Private'**
   String get private;
+
+  /// No description provided for @privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get privacy;
 
   /// No description provided for @addDetails.
   ///
@@ -305,11 +317,29 @@ abstract class AppLocalizations {
   /// **'Downloads'**
   String get downloads;
 
-  /// No description provided for @getCineplexPremium.
+  /// No description provided for @download.
   ///
   /// In en, this message translates to:
-  /// **'Get Cineplex Premium'**
-  String get getCineplexPremium;
+  /// **'Download'**
+  String get download;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @premium.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium'**
+  String get premium;
+
+  /// No description provided for @get.
+  ///
+  /// In en, this message translates to:
+  /// **'Get'**
+  String get get;
 
   /// No description provided for @helpAndFeedback.
   ///
@@ -322,6 +352,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Videos'**
   String get videos;
+
+  /// No description provided for @video.
+  ///
+  /// In en, this message translates to:
+  /// **'videos'**
+  String get video;
 
   /// No description provided for @shorts.
   ///
@@ -410,7 +446,7 @@ abstract class AppLocalizations {
   /// No description provided for @updateChannel.
   ///
   /// In en, this message translates to:
-  /// **'UpdateChannel'**
+  /// **'Update Channel'**
   String get updateChannel;
 
   /// No description provided for @name.
@@ -440,25 +476,25 @@ abstract class AppLocalizations {
   /// No description provided for @transactionId.
   ///
   /// In en, this message translates to:
-  /// **'Transaction ID:'**
+  /// **'Transaction ID: '**
   String get transactionId;
 
   /// No description provided for @paymentMethod.
   ///
   /// In en, this message translates to:
-  /// **'Payment method:'**
+  /// **'Payment method: '**
   String get paymentMethod;
 
   /// No description provided for @plan.
   ///
   /// In en, this message translates to:
-  /// **'Plan:'**
+  /// **'Plan: '**
   String get plan;
 
   /// No description provided for @timePeriod.
   ///
   /// In en, this message translates to:
-  /// **'Time period'**
+  /// **'Time period: '**
   String get timePeriod;
 
   /// No description provided for @appearance.
@@ -476,7 +512,7 @@ abstract class AppLocalizations {
   /// No description provided for @darkMode.
   ///
   /// In en, this message translates to:
-  /// **'Dark Mode'**
+  /// **'Dark mode'**
   String get darkMode;
 
   /// No description provided for @apply.
@@ -515,6 +551,12 @@ abstract class AppLocalizations {
   /// **'Submit'**
   String get submit;
 
+  /// No description provided for @views.
+  ///
+  /// In en, this message translates to:
+  /// **'Views'**
+  String get views;
+
   /// No description provided for @noKeepIt.
   ///
   /// In en, this message translates to:
@@ -544,6 +586,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No shorts available'**
   String get noShortsAvailable;
+
+  /// No description provided for @shortsNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Shorts not found!'**
+  String get shortsNotFound;
 
   /// No description provided for @noVideosDownloadedYet.
   ///
@@ -575,6 +623,24 @@ abstract class AppLocalizations {
   /// **'Unsubscribe'**
   String get unsubscribe;
 
+  /// No description provided for @subscriber.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribers'**
+  String get subscriber;
+
+  /// No description provided for @unsubscribedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsubscribed successfully'**
+  String get unsubscribedSuccessfully;
+
+  /// No description provided for @subscribedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribed successfully'**
+  String get subscribedSuccessfully;
+
   /// No description provided for @manage.
   ///
   /// In en, this message translates to:
@@ -590,7 +656,7 @@ abstract class AppLocalizations {
   /// No description provided for @videoNotFound.
   ///
   /// In en, this message translates to:
-  /// **'Videos not found!!'**
+  /// **'Videos not found!'**
   String get videoNotFound;
 
   /// No description provided for @more.
@@ -622,6 +688,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Don\'t have an account?'**
   String get dontHaveAnAccount;
+
+  /// No description provided for @haveAnAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Have an account? '**
+  String get haveAnAccount;
 
   /// No description provided for @register.
   ///
@@ -665,6 +737,12 @@ abstract class AppLocalizations {
   /// **'Terms and use'**
   String get termsAndUse;
 
+  /// No description provided for @termsAndService.
+  ///
+  /// In en, this message translates to:
+  /// **'terms and service'**
+  String get termsAndService;
+
   /// No description provided for @and.
   ///
   /// In en, this message translates to:
@@ -676,6 +754,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy policy'**
   String get privacyPolicy;
+
+  /// No description provided for @privacypolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'privacy policy'**
+  String get privacypolicy;
+
+  /// No description provided for @pleaseAgreeToOurPrivacyFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please agree to our privacy policy first!!'**
+  String get pleaseAgreeToOurPrivacyFirst;
 
   /// No description provided for @confirmPassword.
   ///
@@ -698,7 +788,7 @@ abstract class AppLocalizations {
   /// No description provided for @andAcknowledgeOur.
   ///
   /// In en, this message translates to:
-  /// **'and acknowledge our'**
+  /// **' and acknowledge our '**
   String get andAcknowledgeOur;
 
   /// No description provided for @join.
@@ -707,10 +797,16 @@ abstract class AppLocalizations {
   /// **'Join'**
   String get join;
 
+  /// No description provided for @loginSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Login successfully'**
+  String get loginSuccessful;
+
   /// No description provided for @toResetYourPasswordPleaseEnterYourEmail.
   ///
   /// In en, this message translates to:
-  /// **'ToResetYourPasswordPleaseEnterYourEmail'**
+  /// **'To reset your password please enter your email'**
   String get toResetYourPasswordPleaseEnterYourEmail;
 
   /// No description provided for @verify.
@@ -725,11 +821,47 @@ abstract class AppLocalizations {
   /// **'Reset password'**
   String get resetPassword;
 
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
   /// No description provided for @createStrongPassword.
   ///
   /// In en, this message translates to:
   /// **'Create a strong password that has at least 8 characters long.'**
   String get createStrongPassword;
+
+  /// No description provided for @resetPasswordSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password successfully'**
+  String get resetPasswordSuccessfully;
+
+  /// No description provided for @userCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'User created successfully'**
+  String get userCreatedSuccessfully;
+
+  /// No description provided for @authenticationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication Failed'**
+  String get authenticationFailed;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed'**
+  String get loginFailed;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
 
   /// No description provided for @token.
   ///
@@ -749,11 +881,77 @@ abstract class AppLocalizations {
   /// **'Please enter your name and phone number to log in'**
   String get pleaseEnterYourNameAndPhoneNumberToLogIn;
 
+  /// No description provided for @pleaseTryAgainLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later'**
+  String get pleaseTryAgainLater;
+
+  /// No description provided for @pleaseEnterYourPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your number'**
+  String get pleaseEnterYourPhoneNumber;
+
+  /// No description provided for @pleaseEnterFirstName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter first name!'**
+  String get pleaseEnterFirstName;
+
+  /// No description provided for @pleaseEnterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter email!'**
+  String get pleaseEnterEmail;
+
+  /// No description provided for @emailIsNotValid.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is not valid'**
+  String get emailIsNotValid;
+
+  /// No description provided for @pleaseEnterName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter name!'**
+  String get pleaseEnterName;
+
+  /// No description provided for @pleaseEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter password!'**
+  String get pleaseEnterPassword;
+
+  /// No description provided for @pleaseEnterConfirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter confirm password!'**
+  String get pleaseEnterConfirmPassword;
+
+  /// No description provided for @passwordMustBeAtLeast6Characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordMustBeAtLeast6Characters;
+
+  /// No description provided for @passwordMustBeAtLeast8Characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters long, include an uppercase letter, number, and symbol'**
+  String get passwordMustBeAtLeast8Characters;
+
   /// No description provided for @phoneNumber.
   ///
   /// In en, this message translates to:
   /// **'Phone number'**
   String get phoneNumber;
+
+  /// No description provided for @number.
+  ///
+  /// In en, this message translates to:
+  /// **'number'**
+  String get number;
 
   /// No description provided for @sendCode.
   ///
@@ -776,8 +974,14 @@ abstract class AppLocalizations {
   /// No description provided for @resendCode.
   ///
   /// In en, this message translates to:
-  /// **'Resend code in'**
+  /// **'Resend code'**
   String get resendCode;
+
+  /// No description provided for @resendCodeIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code in'**
+  String get resendCodeIn;
 
   /// No description provided for @saveToPlaylist.
   ///
@@ -808,6 +1012,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @playlistNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist not found!'**
+  String get playlistNotFound;
+
+  /// No description provided for @channelDetailsIsSuccessfullyUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel details is successfully updated!'**
+  String get channelDetailsIsSuccessfullyUpdated;
+
+  /// No description provided for @videoDetailsIsSuccessfullyUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Video details is successfully updated!'**
+  String get videoDetailsIsSuccessfullyUpdated;
+
+  /// No description provided for @editVideoDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit video detail'**
+  String get editVideoDetail;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @weAreHereToHelpWithAnyQuestionsOrIssuesYouMayHave.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re here to help with any questions or issues you may have.'**
+  String get weAreHereToHelpWithAnyQuestionsOrIssuesYouMayHave;
+
+  /// No description provided for @historyNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'History not found!'**
+  String get historyNotFound;
+
+  /// No description provided for @videoDownloadedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Video downloaded successfully'**
+  String get videoDownloadedSuccessfully;
+
+  /// No description provided for @errorInHive.
+  ///
+  /// In en, this message translates to:
+  /// **'Error in hive'**
+  String get errorInHive;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @thisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get thisWeek;
+
+  /// No description provided for @older.
+  ///
+  /// In en, this message translates to:
+  /// **'Older'**
+  String get older;
+
+  /// No description provided for @choosePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a plan'**
+  String get choosePlan;
+
+  /// No description provided for @monthlyOrYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly or yearly? it\'s your call'**
+  String get monthlyOrYearly;
+
+  /// No description provided for @noActivePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'No active plan'**
+  String get noActivePlan;
+
+  /// No description provided for @buyNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy now'**
+  String get buyNow;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search...'**
+  String get search;
+
+  /// No description provided for @youAreGoingToDeleteYourAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re going to delete your account. Are you sure?'**
+  String get youAreGoingToDeleteYourAccount;
+
+  /// No description provided for @videoLiked.
+  ///
+  /// In en, this message translates to:
+  /// **'Video liked!'**
+  String get videoLiked;
+
+  /// No description provided for @videoDisliked.
+  ///
+  /// In en, this message translates to:
+  /// **'Video Disliked'**
+  String get videoDisliked;
+
+  /// No description provided for @noCommentsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments found!'**
+  String get noCommentsFound;
+
+  /// No description provided for @commentAddedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment added successfully'**
+  String get commentAddedSuccessfully;
+
+  /// No description provided for @subscriptionsNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions not found!'**
+  String get subscriptionsNotFound;
+
+  /// No description provided for @personalized.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized'**
+  String get personalized;
+
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
+
+  /// No description provided for @transaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction'**
+  String get transaction;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// No description provided for @failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get failed;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @thumbnailIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Thumbnail is required'**
+  String get thumbnailIsRequired;
+
+  /// No description provided for @videoIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Video is required'**
+  String get videoIsRequired;
+
+  /// No description provided for @categoryIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Category is required'**
+  String get categoryIsRequired;
+
+  /// No description provided for @titleIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Title is required'**
+  String get titleIsRequired;
+
+  /// No description provided for @descriptionIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Description is required'**
+  String get descriptionIsRequired;
+
+  /// No description provided for @visibilityIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Visibility is required'**
+  String get visibilityIsRequired;
+
+  /// No description provided for @pleaseFillAllRequiredFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all required fields'**
+  String get pleaseFillAllRequiredFields;
+
+  /// No description provided for @invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid'**
+  String get invalid;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'Ok'**
+  String get ok;
+
+  /// No description provided for @failToLoadCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Fail to load categories'**
+  String get failToLoadCategories;
+
+  /// No description provided for @noCategoriesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories available'**
+  String get noCategoriesAvailable;
+
+  /// No description provided for @on.
+  ///
+  /// In en, this message translates to:
+  /// **'on'**
+  String get on;
+
+  /// No description provided for @off.
+  ///
+  /// In en, this message translates to:
+  /// **'off'**
+  String get off;
+
+  /// No description provided for @shortsUploadedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Shorts uploaded successfully'**
+  String get shortsUploadedSuccessfully;
+
+  /// No description provided for @failedToUploadShorts.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to upload shorts'**
+  String get failedToUploadShorts;
+
+  /// No description provided for @addVideoDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Add video details'**
+  String get addVideoDetails;
+
+  /// No description provided for @videoUploadedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Video uploaded successfully'**
+  String get videoUploadedSuccessfully;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

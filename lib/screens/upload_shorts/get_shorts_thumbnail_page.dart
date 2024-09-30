@@ -158,7 +158,7 @@
 
 
 import 'dart:io';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -185,7 +185,7 @@ class _GetShortsThumbnailPageState extends State<GetShortsThumbnailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add thumbnail'),
+        title: Text(AppLocalizations.of(context)!.addThumbnail),
       ),
       body: BlocBuilder<GetShortsThumbnailBloc, GetShortsThumbnailState>(
         builder: (BuildContext context, GetShortsThumbnailState state) {
@@ -222,7 +222,7 @@ class _GetShortsThumbnailPageState extends State<GetShortsThumbnailPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Add thumbnail of your shorts',
+                              AppLocalizations.of(context)!.addThumbnailOfYourShorts,
                               style: TextStyle(
                                   fontFamily: fontFamily,
                                   fontSize: 15,
@@ -287,7 +287,7 @@ class _GetShortsThumbnailPageState extends State<GetShortsThumbnailPage> {
                     height: 30.h,
                     width: double.infinity,
                     child: Text(
-                      'Next',
+                      AppLocalizations.of(context)!.next,
                       style: TextStyle(
                         fontFamily: fontFamily,
                         fontSize: 22.sp,

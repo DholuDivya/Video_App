@@ -8,6 +8,7 @@ import 'package:vimeo_clone/bloc/help_and_support/help_and_support_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HelpAndSupportPage extends StatefulWidget {
   const HelpAndSupportPage({super.key});
@@ -28,14 +29,14 @@ class _HelpAndSupportPageState extends State<HelpAndSupportPage> {
     if(value == null || value.isEmpty){
       ToastManager().showToast(
           context: context,
-          message: 'Please enter email'
+          message: AppLocalizations.of(context)!.pleaseEnterEmail
       );
     }
     RegExp regexp = RegExp(emailRegex);
     if(!regexp.hasMatch(value!)){
       ToastManager().showToast(
           context: context,
-          message: 'Email is not valid'
+          message: AppLocalizations.of(context)!.emailIsNotValid
       );
     }
     return null;
@@ -46,7 +47,7 @@ class _HelpAndSupportPageState extends State<HelpAndSupportPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Help & support',
+          AppLocalizations.of(context)!.helpAndSupport,
           style: TextStyle(
             fontFamily: fontFamily,
             fontSize: 18.sp
@@ -68,7 +69,7 @@ class _HelpAndSupportPageState extends State<HelpAndSupportPage> {
                 children: [
                   SizedBox(height: 10.h),
                   Text(
-                      'Need help?',
+                    AppLocalizations.of(context)!.needHelp,
                     style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 20.sp,
@@ -78,7 +79,7 @@ class _HelpAndSupportPageState extends State<HelpAndSupportPage> {
                   SizedBox(height: 5.h,),
 
                   Text(
-                      'We\'re here to help with any questions or issues you may have.',
+                      AppLocalizations.of(context)!.weAreHereToHelpWithAnyQuestionsOrIssuesYouMayHave,
                     style: TextStyle(
                       fontFamily: fontFamily,
                       color: greyShade500
@@ -87,7 +88,7 @@ class _HelpAndSupportPageState extends State<HelpAndSupportPage> {
                   SizedBox(height: 20.h,),
 
                   Text(
-                      'Email',
+                      AppLocalizations.of(context)!.email,
                     style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 16.sp,
@@ -106,7 +107,7 @@ class _HelpAndSupportPageState extends State<HelpAndSupportPage> {
                   SizedBox(height: 20.h,),
 
                   Text(
-                    'Subject',
+                    AppLocalizations.of(context)!.subject,
                     style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 16.sp,
@@ -124,7 +125,7 @@ class _HelpAndSupportPageState extends State<HelpAndSupportPage> {
                   SizedBox(height: 20.h,),
 
                   Text(
-                    'Enter your query',
+                    AppLocalizations.of(context)!.enterYourQuery,
                     style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 16.sp,
@@ -179,7 +180,7 @@ class _HelpAndSupportPageState extends State<HelpAndSupportPage> {
               ),
             ),
             child: Text(
-              'Submit',
+              AppLocalizations.of(context)!.submit,
               style: TextStyle(
                   fontFamily: fontFamily,
                 fontSize: 15.sp

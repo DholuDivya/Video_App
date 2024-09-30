@@ -7,7 +7,7 @@ import 'package:vimeo_clone/bloc/reset_password/reset_password_bloc.dart';
 import 'package:vimeo_clone/bloc/reset_password/reset_password_event.dart';
 import 'package:vimeo_clone/bloc/reset_password/reset_password_state.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../config/colors.dart';
 import '../../config/constants.dart';
 import '../../utils/widgets/custom_text_field_auth.dart';
@@ -31,14 +31,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   String? _validatePassword(String? value){
     if(value == null || value.isEmpty){
-      return "Please enter First Name !";
+      return AppLocalizations.of(context)!.pleaseEnterFirstName;
     }
     if (value.length < 6) {
-      return "Password must be at least 6 characters";
+      return AppLocalizations.of(context)!.passwordMustBeAtLeast6Characters;
     }
     RegExp regexp = RegExp(pattern);
     if(!regexp.hasMatch(value)){
-      return 'Password must be at least 8 characters long, include an uppercase letter, number, and symbol';
+      return AppLocalizations.of(context)!.passwordMustBeAtLeast8Characters;
     }
     return null;
   }
@@ -46,10 +46,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return "Please confirm your password!";
+      return AppLocalizations.of(context)!.pleaseEnterConfirmPassword;
     }
     if (value != _passwordController.text) {
-      return "Passwords do not match";
+      return AppLocalizations.of(context)!.passwordsDoNotMatch;
     }
     return null;
   }
@@ -93,7 +93,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           children: [
             SizedBox(height: 20.h,),
             Text(
-              'Reset Password',
+              AppLocalizations.of(context)!.resetPassword,
               style: TextStyle(
                   fontFamily: fontFamily,
                   fontWeight: FontWeight.bold,
@@ -101,7 +101,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               ),
             ),
 
-            Text('Create a strong password that has at least 8 characters long.',
+            Text(AppLocalizations.of(context)!.createStrongPassword,
               style: TextStyle(
                   fontFamily: fontFamily
               ),
@@ -115,7 +115,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 controller: TextEditingController(
                   text: widget.email
                 ),
-                fieldLabel: 'Email'
+                fieldLabel: AppLocalizations.of(context)!.email
             ),
             SizedBox(height: ScreenSize.screenHeight(context) * 0.02,),
 
@@ -123,7 +123,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               obscureText: true && !_isPasswordVisible,
               controller: _passwordController,
               validator: _validatePassword,
-              label: 'Password',
+              label: AppLocalizations.of(context)!.password,
               suffixIcon: IconButton(
                   onPressed: (){
                     setState(() {
@@ -142,7 +142,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               obscureText: true && !_isConfirmPasswordVisible,
               controller: _confirmPasswordController,
               validator: _validateConfirmPassword,
-              label: 'Confirm Password',
+              label: AppLocalizations.of(context)!.confirmPassword,
               suffixIcon: IconButton(
                   onPressed: (){
                     setState(() {
@@ -161,7 +161,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 readOnly: false,
                 isEnabled: true,
                 controller: _tokenController,
-                fieldLabel: 'Token'
+                fieldLabel: AppLocalizations.of(context)!.token
             ),
             SizedBox(height: 50.h,),
 
@@ -228,12 +228,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             });
             ToastManager().showToast(
                 context: context,
-                message: 'Reset password successfully'
+                message: AppLocalizations.of(context)!.resetPasswordSuccessfully
             );
           }else if(state is ResetPasswordFailure){
             ToastManager().showToast(
                 context: context,
-                message: 'Something went wrong'
+                message: AppLocalizations.of(context)!.somethingWentWrong
             );
           }
           return ElevatedButton(
@@ -259,7 +259,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
               ),
               child: Text(
-                'Submit',
+                AppLocalizations.of(context)!.submit,
                 style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 16.sp

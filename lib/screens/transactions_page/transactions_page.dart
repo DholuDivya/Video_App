@@ -6,6 +6,7 @@ import 'package:vimeo_clone/bloc/user_transaction/user_transaction_event.dart';
 import 'package:vimeo_clone/bloc/user_transaction/user_transaction_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/transactions_page/widgets/custom_transaction_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({super.key});
@@ -28,7 +29,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Transaction',
+          AppLocalizations.of(context)!.transaction,
           style: TextStyle(
             fontFamily: fontFamily
           ),
@@ -46,11 +47,11 @@ class _TransactionsPageState extends State<TransactionsPage> {
                     final transactionData = state.transactionData[index];
                     var status = '';
                     if(transactionData.status == "paid"){
-                      status = "Success";
+                      status = AppLocalizations.of(context)!.success;
                     }else if(transactionData.status == "failed"){
-                      status = "Failed";
+                      status = AppLocalizations.of(context)!.failed;
                     }else if(transactionData.status == "pending"){
-                      status = "Pending";
+                      status = AppLocalizations.of(context)!.pending;
                     }
                     return state.transactionData.length != 0 ? Padding(
                       padding: EdgeInsets.symmetric(

@@ -15,11 +15,10 @@ import 'package:vimeo_clone/bloc/your_shorts/your_shorts_event.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/home_preview_page.dart';
-import 'package:vimeo_clone/screens/channel_profile_page/widgets/live_preview_page.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/playlist_preview_page.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/shorts_preview_page.dart';
 import 'package:vimeo_clone/screens/channel_profile_page/widgets/videos_preview_page.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../bloc/channel_profile/channel_profile_state.dart';
 import '../../bloc/your_videos/your_videos_bloc.dart';
 import '../../bloc/your_videos/your_videos_event.dart';
@@ -165,7 +164,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                                 0.005,
                                           ),
                                           Text(
-                                            '$_subscribeCount Subscribers - ${state.channelData.first.videoCount} Videos',
+                                            '$_subscribeCount ${AppLocalizations.of(context)!.subscriber} - ${state.channelData.first.videoCount} ${AppLocalizations.of(context)!.videos}',
                                             style: TextStyle(
                                               fontFamily: fontFamily,
                                               fontSize: 12,
@@ -195,13 +194,13 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                         if (_isSubscribed) {
                                           ToastManager().showToast(
                                               context: context,
-                                              message: 'Unsubscribed successfully'
+                                              message: AppLocalizations.of(context)!.unsubscribedSuccessfully
                                           );
                                           context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
                                         } else {
                                           ToastManager().showToast(
                                               context: context,
-                                              message: 'Subscribed successfully'
+                                              message: AppLocalizations.of(context)!.subscribedSuccessfully
                                           );
                                           context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
                                         }
@@ -234,7 +233,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              _isSubscribed? 'Unsubscribe' : 'Subscribe',
+                                              _isSubscribed? AppLocalizations.of(context)!.unsubscribe : AppLocalizations.of(context)!.subscribe,
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 color: _isSubscribed? Colors.black : Colors.white,
@@ -264,9 +263,9 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                         color: Colors.grey.shade200,
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      child: const Center(
+                                      child: Center(
                                         child: Text(
-                                          'Manage',
+                                          AppLocalizations.of(context)!.manage,
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.black,
@@ -299,11 +298,11 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                               Theme.of(context).colorScheme.tertiary,
                               labelColor: primaryColor,
                               indicatorColor: primaryColor,
-                              tabs: const [
-                                Tab(child: Text('Home', style: TextStyle(fontFamily: fontFamily),)),
-                                Tab(child: Text('Videos', style: TextStyle(fontFamily: fontFamily))),
-                                Tab(child: Text('Shorts', style: TextStyle(fontFamily: fontFamily))),
-                                Tab(child: Text('Playlist', style: TextStyle(fontFamily: fontFamily))),
+                              tabs: [
+                                Tab(child: Text(AppLocalizations.of(context)!.home, style: TextStyle(fontFamily: fontFamily),)),
+                                Tab(child: Text(AppLocalizations.of(context)!.videos, style: TextStyle(fontFamily: fontFamily))),
+                                Tab(child: Text(AppLocalizations.of(context)!.shorts, style: TextStyle(fontFamily: fontFamily))),
+                                Tab(child: Text(AppLocalizations.of(context)!.playlist, style: TextStyle(fontFamily: fontFamily))),
                               ],
                             ),
                           ],

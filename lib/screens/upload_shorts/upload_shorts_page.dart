@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +11,6 @@ import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_event.dart';
 import 'package:vimeo_clone/bloc/upload_shorts/upload_shorts_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
-
 import '../../bloc/all_video_list/all_video_list_bloc.dart';
 import '../../bloc/all_video_list/all_video_list_event.dart';
 import '../../bloc/select_cat_for_video_detail/category_selection_bloc.dart';
@@ -26,6 +22,7 @@ import '../../config/colors.dart';
 import '../../utils/widgets/custom_alert_dialog.dart';
 import '../../utils/widgets/custom_text_field_upload.dart';
 import '../../utils/widgets/toggle_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UploadShortsPage extends StatefulWidget {
   final CroppedFile thumbnail;
@@ -71,15 +68,24 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
     if (_formKey.currentState!.validate()) {
       // Perform additional validation after form validation
       if (finalThumbnail == null) {
-        _showCustomDialog('Thumbnail is required');
+        ToastManager().showToast(
+            context: context,
+            message: AppLocalizations.of(context)!.thumbnailIsRequired
+        );
         return;
       }
       if (selectedVideo == null) {
-        _showCustomDialog('Video is required');
+        ToastManager().showToast(
+            context: context,
+            message: AppLocalizations.of(context)!.videoIsRequired
+        );
         return;
       }
       if (selectedCategoryIds.isEmpty) {
-        _showCustomDialog('Category is required');
+        ToastManager().showToast(
+            context: context,
+            message: AppLocalizations.of(context)!.categoryIsRequired
+        );
         return;
       }
 
@@ -89,16 +95,32 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
       final videoHashtag = _hashtags;
 
       if (videoTitle.isEmpty) {
-        _showCustomDialog('Title is required');
+        ToastManager().showToast(
+            context: context,
+            message: AppLocalizations.of(context)!.titleIsRequired
+        );
         return;
       }
       if (videoDescription.isEmpty) {
-        _showCustomDialog('Description is required');
+        ToastManager().showToast(
+            context: context,
+            message: AppLocalizations.of(context)!.descriptionIsRequired
+        );
         return;
       }
       if (selectedVisibility == null || selectedVisibility.isEmpty) {
-        _showCustomDialog('Visibility is required');
+        ToastManager().showToast(
+            context: context,
+            message: AppLocalizations.of(context)!.visibilityIsRequired
+        );
         return;
+      }
+
+      String visibility = '';
+      if(selectedVisibility == 'Public'){
+        visibility = 'public';
+      }else{
+        visibility = 'private';
       }
 
       print("Form is Valid");
@@ -108,7 +130,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
       print('Description::::::     ${_descriptionController.text}');
       print('Categories::::::   ${selectedCategoryIds.join(', ')}');
       print("Hashtags:::::::     $videoHashtag");
-      print("Selected Visibility::::::::      $selectedVisibility");
+      print("Selected Visibility::::::::      $visibility");
       print("Comments Enabled:::::::::      $isCommentOn");
 
       context.read<UploadShortsBloc>().add(UploadShortsRequest(
@@ -122,7 +144,10 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
       ));
 
     } else {
-      _showCustomDialog('Please fill all required fields');
+      ToastManager().showToast(
+          context: context,
+          message: AppLocalizations.of(context)!.pleaseFillAllRequiredFields
+      );
     }
   }
 
@@ -132,7 +157,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
       context: context,
       builder: (BuildContext context) {
         return CustomAlertDialog(
-          alertDialogTitle: 'Invalid',
+          alertDialogTitle: AppLocalizations.of(context)!.invalid,
           alertDialogWidgets: Text(message),
         );
       },
@@ -142,8 +167,8 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
 
 
   final List visibility = [
-    {"type": "public"},
-    {"type": "private"}
+    {"type": "Public"},
+    {"type": "Private"}
   ];
 
 
@@ -160,7 +185,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Details'),
+        title: Text(AppLocalizations.of(context)!.addDetails),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -176,7 +201,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                   readOnly: false,
                     isEnabled: true,
                     controller: _titleController,
-                    fieldLabel: 'Title...'
+                    fieldLabel: AppLocalizations.of(context)!.title
                 ),
 
                 SizedBox(height: 20.h),
@@ -185,7 +210,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                   readOnly: false,
                     isEnabled: true,
                     controller: _descriptionController,
-                    fieldLabel: 'Description...'
+                    fieldLabel: AppLocalizations.of(context)!.description
                 ),
 
                 SizedBox(height: 20.h,),
@@ -220,9 +245,9 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                                   return StatefulBuilder(
                                     builder: (context, setState) {
                                       return AlertDialog(
-                                        title: const Center(
+                                        title: Center(
                                           child: Text(
-                                            'Select Categories',
+                                            AppLocalizations.of(context)!.selectCategories,
                                             style: TextStyle(fontSize: 22),
                                           ),
                                         ),
@@ -304,7 +329,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                                                       backgroundColor: Theme.of(context).colorScheme.secondaryFixed, // Optional: make Cancel button red
                                                     ),
                                                     child: Text(
-                                                      'Cancel',
+                                                      AppLocalizations.of(context)!.cancel,
                                                       style: TextStyle(
                                                         fontFamily: fontFamily,
                                                         color: greyShade900,
@@ -326,7 +351,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                                                       Navigator.of(context).pop(); // Close the dialog
                                                     },
                                                     child: Text(
-                                                      'Ok',
+                                                      AppLocalizations.of(context)!.ok,
                                                       style: TextStyle(
                                                         fontFamily: fontFamily,
                                                       ),
@@ -360,7 +385,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                                       width: 1.0,
                                     ),
                                   ),
-                                  labelText: 'Select Categories',
+                                  labelText: AppLocalizations.of(context)!.selectCategories,
                                   labelStyle: TextStyle(
                                     fontSize: 15,
                                     color: Colors.grey.shade500,
@@ -376,9 +401,9 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                         },
                       );
                     } else if (state is VideoCategoriesFailure) {
-                      return const Text('Failed to load categories');
+                      return Text(AppLocalizations.of(context)!.failToLoadCategories);
                     }
-                    return const Text('No categories available');
+                    return Text(AppLocalizations.of(context)!.noCategoriesAvailable);
                   },
                 ),
 
@@ -522,7 +547,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                   keyboardType: TextInputType.multiline,
                   cursorColor: Colors.grey,
                   decoration: InputDecoration(
-                    labelText: 'Hashtag...',
+                    labelText: AppLocalizations.of(context)!.hashtag,
                     labelStyle: TextStyle(
                       fontSize: 15,
                       color: Theme.of(context).colorScheme.secondaryFixedDim,
@@ -600,7 +625,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                           // icon: Icon(HeroiconsOutline.arrowRight),
                           title: Center(
                             child: Text(
-                              'Select a visibility',
+                              AppLocalizations.of(context)!.selectVisibility,
                               style: TextStyle(
                                   fontFamily: fontFamily, fontSize: 22),
                             ),
@@ -683,7 +708,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                           borderSide:
                           const BorderSide(color: Colors.black12, width: 0.5),
                         ),
-                        labelText: 'Select a visibility',
+                        labelText: AppLocalizations.of(context)!.selectVisibility,
                         labelStyle: TextStyle(
                             fontSize: 15, color: Colors.grey.shade500),
                         suffixIcon: const Icon(Icons.arrow_drop_down),
@@ -715,14 +740,14 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                             isCommentOn = !isCommentOn;
                           });
                         },
-                        toggleName: 'Comments',
+                        toggleName: AppLocalizations.of(context)!.comments,
                         toggleValue: isCommentOn,
                         onChanged: (bool value) {
                           setState(() {
                             isCommentOn = value;
                           });
                         },
-                        toggleState: isCommentOn ? 'on' : 'off'),
+                        toggleState: isCommentOn ? AppLocalizations.of(context)!.on : AppLocalizations.of(context)!.off),
                   ),
                 ),
 
@@ -742,7 +767,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
             if(state is UploadShortsSuccess){
               ToastManager().showToast(
                   context: context,
-                  message: 'Shorts uploaded successfully'
+                  message: AppLocalizations.of(context)!.shortsUploadedSuccessfully
               );
               context.read<AllVideoListBloc>().add(GetAllVideoListEvent());
               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -754,7 +779,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
             }else if(state is UploadShortsFailure){
               ToastManager().showToast(
                   context: context,
-                  message: 'Failed to upload shorts'
+                  message: AppLocalizations.of(context)!.failedToUploadShorts
               );
             }
             return BlocBuilder<GetShortsBloc, GetShortsState>(
@@ -775,7 +800,7 @@ class _UploadShortsPageState extends State<UploadShortsPage> {
                     ),
                   ),
                   child: Text(
-                    'Upload Video',
+                    AppLocalizations.of(context)!.uploadVideo,
                     style: TextStyle(
                         fontFamily: fontFamily,
                         fontSize: 15.sp,

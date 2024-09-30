@@ -89,7 +89,7 @@ import 'package:vimeo_clone/bloc/your_shorts/your_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/your_shorts/your_shorts_state.dart';
 import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../config/constants.dart';
 import '../../../utils/widgets/custom_shorts_preview.dart';
 
@@ -186,7 +186,7 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
                 ),
                 GridView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.only(
                     top: 0,
                     bottom: ScreenSize.screenHeight(context) * 0.01,
@@ -220,7 +220,7 @@ class _ShortsPreviewPageState extends State<ShortsPreviewPage> {
                       child: Image.asset('assets/images/no_data.png'),
                     ),
                     Text(
-                      'No videos downloaded yet',
+                      AppLocalizations.of(context)!.noVideosDownloadedYet,
                       style: TextStyle(
                           fontFamily: fontFamily,
                           fontSize: 15.sp

@@ -20,6 +20,7 @@ import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/model/get_shorts_list_model.dart';
 import '../../bloc/like_dislike/like_dislike_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ContentScreen extends StatefulWidget {
   final ShortsListData shortsData;
@@ -192,13 +193,13 @@ class _ContentScreenState extends State<ContentScreen> {
                                       if (_isSubscribed) {
                                         ToastManager().showToast(
                                             context: context,
-                                            message: 'Unsubscribed successfully'
+                                            message: AppLocalizations.of(context)!.unsubscribedSuccessfully
                                         );
                                         context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: widget.shortsData.id!));
                                       } else {
                                         ToastManager().showToast(
                                             context: context,
-                                            message: 'Subscribed successfully'
+                                            message: AppLocalizations.of(context)!.subscribedSuccessfully
                                         );
                                         context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: widget.shortsData.id!));
                                       }
@@ -223,8 +224,8 @@ class _ContentScreenState extends State<ContentScreen> {
                                       child: Center(
                                         child: Text(
                                           _isSubscribed
-                                              ? 'Unsubscribe'
-                                              : 'Subscribe',
+                                              ? AppLocalizations.of(context)!.unsubscribe
+                                              : AppLocalizations.of(context)!.subscribe,
                                           style: TextStyle(
                                             fontSize: 11.sp,
                                             color: _isSubscribed
@@ -290,7 +291,7 @@ class _ContentScreenState extends State<ContentScreen> {
                                       } else {
                                         ToastManager().showToast(
                                             context: context,
-                                            message: 'Video liked!'
+                                            message: AppLocalizations.of(context)!.videoLiked
                                         );
                                         _isLiked = true;
                                         _likeCount++;
@@ -334,7 +335,7 @@ class _ContentScreenState extends State<ContentScreen> {
                                   } else {
                                     ToastManager().showToast(
                                         context: context,
-                                        message: 'Video disliked!'
+                                        message: AppLocalizations.of(context)!.videoDisliked
                                     );
                                     _isDisliked = true;
                                     if (_isLiked) {
@@ -431,7 +432,7 @@ class _ContentScreenState extends State<ContentScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Comments',
+                            AppLocalizations.of(context)!.comments,
                             style: TextStyle(
                               fontFamily: fontFamily,
                               fontSize: 15.sp,
@@ -596,7 +597,7 @@ class _ContentScreenState extends State<ContentScreen> {
                                           ),
                                         ],
                                       ),
-                                    ) : Container(color: red,child: Text('No comment found!!!!!'),);
+                                    ) : Container(color: red,child: Text(AppLocalizations.of(context)!.noCommentsFound),);
                                   },
                                 ),
                               ],
@@ -642,7 +643,7 @@ class _ContentScreenState extends State<ContentScreen> {
                             child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                    'Add Comment...',
+                                    AppLocalizations.of(context)!.addAComment,
                                     style: TextStyle(
                                       fontFamily: fontFamily,
                                     )
@@ -696,7 +697,7 @@ class _ContentScreenState extends State<ContentScreen> {
                   controller: _commentController,
                   focusNode: _focusNode,
                   decoration: InputDecoration(
-                      hintText: 'Add Comment...',
+                      hintText: AppLocalizations.of(context)!.addAComment,
                       hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
                           fontFamily: fontFamily
@@ -723,7 +724,7 @@ class _ContentScreenState extends State<ContentScreen> {
                             ));
                             ToastManager().showToast(
                               context: context,
-                              message: 'Comment added successfully',
+                              message: AppLocalizations.of(context)!.commentAddedSuccessfully,
                             );
 
                             context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.shortsData.slug!));
@@ -741,7 +742,7 @@ class _ContentScreenState extends State<ContentScreen> {
                       ));
                       ToastManager().showToast(
                         context: context,
-                        message: 'Comment added successfully',
+                        message: AppLocalizations.of(context)!.commentAddedSuccessfully,
                       );
 
                       print('succcessssss');

@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:vimeo_clone/utils/widgets/like_dislike.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../config/constants.dart';
 import '../../model/hive_model/downloaded_video_model/downloaded_video_model.dart';
 import '../../utils/widgets/download_button.dart';
@@ -72,7 +72,7 @@ class _PlayDownloadedVideoPageState extends State<PlayDownloadedVideoPage> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           AutoSizeText(
-                            '${widget.downloadedVideo.videoViews} Views - ${widget.downloadedVideo.videoCreateAtHuman}',
+                            '${widget.downloadedVideo.videoViews} ${AppLocalizations.of(context)!.views} - ${widget.downloadedVideo.videoCreateAtHuman}',
                             style: TextStyle(
                               fontFamily: fontFamily,
                               fontSize: 12,

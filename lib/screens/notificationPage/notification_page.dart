@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/Config/colors.dart';
 import 'package:vimeo_clone/Config/constants.dart';
 import 'package:vimeo_clone/Screens/NotificationPage/Widgets/notification_card.dart';
@@ -11,6 +9,7 @@ import 'package:vimeo_clone/bloc/get_notification/get_notification_bloc.dart';
 import 'package:vimeo_clone/bloc/get_notification/get_notification_event.dart';
 import 'package:vimeo_clone/bloc/get_notification/get_notification_state.dart';
 import 'package:vimeo_clone/model/get_notification_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -41,7 +40,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications',
+        title: Text(AppLocalizations.of(context)!.notifications,
           style: TextStyle(
             fontFamily: fontFamily
           ),
@@ -68,7 +67,7 @@ class _NotificationPageState extends State<NotificationPage> {
                         left: 15.h
                       ),
                       child: Text(
-                        'Today',
+                        AppLocalizations.of(context)!.today,
                         style: TextStyle(
                             fontFamily: fontFamily,
                             color: greyShade500,
@@ -115,7 +114,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           left: 5.h
                       ),
                       child: Text(
-                        'This week',
+                        AppLocalizations.of(context)!.thisWeek,
                         style: TextStyle(
                             fontFamily: fontFamily,
                             color: greyShade500,
@@ -163,7 +162,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           left: 5.h
                       ),
                       child: Text(
-                        'Older',
+                        AppLocalizations.of(context)!.older,
                         style: TextStyle(
                             fontFamily: fontFamily,
                             color: greyShade500,
@@ -203,7 +202,7 @@ class _NotificationPageState extends State<NotificationPage> {
               else if(state is GetNotificationFailure){
                 ToastManager().showToast(
                     context: context,
-                    message: 'Something went wrong'
+                    message: AppLocalizations.of(context)!.somethingWentWrong
                 );
               }
               return Container(
@@ -217,7 +216,7 @@ class _NotificationPageState extends State<NotificationPage> {
                       child: Image.asset('assets/images/no_data.png'),
                     ),
                     Text(
-                      'Notifications not available!!',
+                      AppLocalizations.of(context)!.notificationsNotAvailable,
                       style: TextStyle(
                           fontFamily: fontFamily,
                           fontSize: 15.sp

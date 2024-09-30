@@ -17,6 +17,7 @@ import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditChannelPage extends StatefulWidget {
   const EditChannelPage({super.key});
@@ -60,8 +61,8 @@ class _EditChannelPageState extends State<EditChannelPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-            'Update channel',
+        title: Text(
+            AppLocalizations.of(context)!.updateChannel,
           style: TextStyle(
             fontFamily: fontFamily,
           ),
@@ -154,7 +155,7 @@ class _EditChannelPageState extends State<EditChannelPage> {
                 readOnly: false,
                   isEnabled: true,
                   controller: _nameController,
-                  fieldLabel: 'Name',
+                  fieldLabel: AppLocalizations.of(context)!.name,
                 onChange: (value){
                   print('909090090909090909    $value');
                 },
@@ -169,7 +170,7 @@ class _EditChannelPageState extends State<EditChannelPage> {
                 controller: TextEditingController(
                   text: 'Channel URL'
                 ),
-                fieldLabel: 'Channel URL',
+                fieldLabel: AppLocalizations.of(context)!.channelUrl,
                 suffix: InkWell(
                   splashColor: greyShade500,
                   onTap: (){
@@ -188,7 +189,7 @@ class _EditChannelPageState extends State<EditChannelPage> {
                   controller: TextEditingController(
                       text: Global.userData!.userEmail
                   ),
-                  fieldLabel: 'Email'
+                  fieldLabel: AppLocalizations.of(context)!.email
               ),
               SizedBox(
                 height: 15.h,
@@ -200,7 +201,7 @@ class _EditChannelPageState extends State<EditChannelPage> {
                   controller: TextEditingController(
                       text: Global.userData!.userNumber
                   ),
-                  fieldLabel: 'Phone number'
+                  fieldLabel: AppLocalizations.of(context)!.phoneNumber
               ),
               SizedBox(
                 height: 15.h,
@@ -221,7 +222,7 @@ class _EditChannelPageState extends State<EditChannelPage> {
             });
             ToastManager().showToast(
                 context: context,
-                message: 'Channel details is successfully updated!'
+                message: AppLocalizations.of(context)!.channelDetailsIsSuccessfullyUpdated
             );
           }
           return ElevatedButton(
@@ -256,8 +257,8 @@ class _EditChannelPageState extends State<EditChannelPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text(
-                'Update',
+              child: Text(
+                AppLocalizations.of(context)!.update,
                 style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 18

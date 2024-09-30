@@ -29,25 +29,6 @@ class SettingPage extends StatefulWidget {
 
 
 class _SettingPageState extends State<SettingPage> {
-  TextEditingController _passwordController = TextEditingController();
-  bool isPasswordVisible = false;
-  String pattern = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$';
-
-
-  String? _validatePassword(String? value){
-    if(value == null || value.isEmpty){
-      return "Please enter First Name !";
-    }
-    if (value.length < 6) {
-      return "Password must be at least 6 characters";
-    }
-    RegExp regexp = RegExp(pattern);
-    if(!regexp.hasMatch(value)){
-      return 'Password must be at least 8 characters long, include an uppercase letter, number, and symbol';
-    }
-    return null;
-  }
-
 
   void showThemeDialog(BuildContext context) {
     ThemeMode? _selectedTheme = context.read<ThemeBloc>().state;
@@ -359,7 +340,7 @@ class _SettingPageState extends State<SettingPage> {
                 Center(
                   child: Text(
                     textAlign: TextAlign.center,
-                    'You\'re going to delete your account. Are you sure?',
+                    AppLocalizations.of(context)!.youAreGoingToDeleteYourAccount,
                     style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 16.sp
@@ -383,7 +364,7 @@ class _SettingPageState extends State<SettingPage> {
                           Navigator.pop(context);
                         },
                         child: Text(
-                          'No, Keep it',
+                          AppLocalizations.of(context)!.noKeepIt,
                           style: TextStyle(
                               fontFamily: fontFamily,
                               color: greyShade900,
@@ -399,13 +380,11 @@ class _SettingPageState extends State<SettingPage> {
                         backgroundColor: WidgetStatePropertyAll(red)
                       ),
                         onPressed: (){
-                          final password = _passwordController.text;
-                          context.read<AuthBloc>().add(OnDeleteUserAccountRequestEvent(
-                              password: password
-                          ));
+                          // final password = _passwordController.text;
+                          context.read<AuthBloc>().add(OnDeleteUserAccountRequestEvent());
                         },
                         child: Text(
-                            'Yes, Delete it!',
+                            AppLocalizations.of(context)!.yesDeleteIt,
                           style: TextStyle(
                             fontFamily: fontFamily,
                             color: Colors.white,
@@ -419,70 +398,6 @@ class _SettingPageState extends State<SettingPage> {
             ),
           );
         }
-      );
-    }
-
-
-    void onDeleteAccountShowDialog(){
-      showDialog(
-          context: context,
-          builder: (context){
-            return StatefulBuilder(
-              builder: (BuildContext context, void Function(void Function()) setState) {
-                return AlertDialog(
-                  title: const Center(
-                    child: Text(
-                        'Enter your password',
-                      style: TextStyle(
-                        fontFamily: fontFamily,
-                        fontSize: 15
-                      ),
-                    ),
-                  ),
-                    content: Container(
-                      height: 110.h,
-                      child: Column(
-                        children: [
-                          SizedBox(height: 10.h,),
-                          CustomTextField(
-                            obscureText: true && !isPasswordVisible,
-                            controller: _passwordController,
-                            validator: _validatePassword,
-                            label: 'Password',
-                            suffixIcon: IconButton(
-                                onPressed: (){
-                                  setState(() {
-                                    isPasswordVisible = !isPasswordVisible;
-                                  });
-                                },
-                                icon: Icon(
-                                    isPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash
-                                )
-                            ),
-                          ),
-                          SizedBox(height: 15.h,),
-                          Container(
-                            height: 30.h,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                                onPressed: (){
-                                  deleteConfirmation();
-                                },
-                                child: Text(
-                                    'Submit',
-                                  style: TextStyle(
-                                    fontFamily: fontFamily
-                                  ),
-                                )
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                );
-              },
-            );
-          }
       );
     }
 }

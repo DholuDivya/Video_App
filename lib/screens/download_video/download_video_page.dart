@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/custom_download_video_preview.dart';
 import '../../config/constants.dart';
 import '../../model/hive_model/downloaded_video_model/downloaded_video_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DownloadedVideosPage extends StatefulWidget {
   const DownloadedVideosPage({super.key});
@@ -32,10 +32,10 @@ class _DownloadedVideosPageState extends State<DownloadedVideosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Downloads'),
+        title: Text(AppLocalizations.of(context)!.downloads),
       ),
       body: videoBox == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ValueListenableBuilder(
         valueListenable: videoBox.listenable(),
         builder: (context, Box<DownloadedVideoModel> box, _) {
@@ -52,7 +52,7 @@ class _DownloadedVideosPageState extends State<DownloadedVideosPage> {
                       child: Image.asset('assets/images/no_data.png'),
                     ),
                     Text(
-                      'No videos downloaded yet',
+                      AppLocalizations.of(context)!.noVideosDownloadedYet,
                       style: TextStyle(
                         fontFamily: fontFamily,
                         fontSize: 15.sp

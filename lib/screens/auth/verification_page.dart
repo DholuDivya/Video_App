@@ -11,10 +11,9 @@ import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
-import 'package:vimeo_clone/routes/myapproute.dart';
-
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VerificationPage extends StatefulWidget {
   final String verificationId;
@@ -100,7 +99,7 @@ class _VerificationPageState extends State<VerificationPage> {
           children: [
             SizedBox(height: 20.h,),
             Text(
-              'OTP Verificaton',
+              AppLocalizations.of(context)!.otpVerification,
               style: TextStyle(
                 fontFamily: fontFamily,
                 fontWeight: FontWeight.bold,
@@ -108,7 +107,7 @@ class _VerificationPageState extends State<VerificationPage> {
               ),
             ),
 
-            Text('We have send an OTP on given \n number +91-98****4571',
+            Text('${AppLocalizations.of(context)!.weHaveSendAnOtpOnGivenNumber} \n ${AppLocalizations.of(context)!.number} +91-98****4571',
               style: TextStyle(
                 fontFamily: fontFamily
               ),
@@ -174,7 +173,7 @@ class _VerificationPageState extends State<VerificationPage> {
                     ? TextButton(
                   onPressed: _resendCode,
                   child: Text(
-                    'Resend Code',
+                    AppLocalizations.of(context)!.resendCode,
                     style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: 15.sp,
@@ -183,7 +182,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   ),
                 )
                     : Text(
-                  'Resend Code in ${_resendCodeTime ~/ 60}:${(_resendCodeTime % 60).toString().padLeft(2, '0')}',
+                  '${AppLocalizations.of(context)!.resendCodeIn} ${_resendCodeTime ~/ 60}:${(_resendCodeTime % 60).toString().padLeft(2, '0')}',
                   style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 15.sp,

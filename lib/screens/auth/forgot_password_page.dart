@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +8,7 @@ import 'package:vimeo_clone/bloc/forgot_password/forgot_password_state.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_auth.dart';
 import '../../config/colors.dart';
 import '../../config/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -63,11 +62,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   String? _validateEmail(String? value){
     if(value == null || value.isEmpty){
-      return "Please enter Email !";
+      return AppLocalizations.of(context)!.pleaseEnterEmail;
     }
     RegExp regexp = RegExp(emailRegex);
     if(!regexp.hasMatch(value)){
-      return 'Email is not Valid';
+      return AppLocalizations.of(context)!.emailIsNotValid;
     }
     return null;
   }
@@ -86,7 +85,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           children: [
             SizedBox(height: 20.h,),
             Text(
-              'Forgot Password',
+              AppLocalizations.of(context)!.forgotPassword,
               style: TextStyle(
                   fontFamily: fontFamily,
                   fontWeight: FontWeight.bold,
@@ -94,7 +93,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
             ),
 
-            const Text('To reset your password, please enter your email',
+            Text(AppLocalizations.of(context)!.toResetYourPasswordPleaseEnterYourEmail,
               style: TextStyle(
                   fontFamily: fontFamily
               ),
@@ -106,7 +105,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               obscureText: false,
               controller: _emailController,
               validator: _validateEmail,
-              label: 'Email',
+              label: AppLocalizations.of(context)!.email,
             ),
             
             
@@ -142,7 +141,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ),
               ),
               child: Text(
-                'Verify',
+                AppLocalizations.of(context)!.verify,
                 style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 18.sp

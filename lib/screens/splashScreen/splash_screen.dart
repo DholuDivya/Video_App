@@ -66,11 +66,6 @@ class _SplashScreenState extends State<SplashScreen> {
     _navigateToNextScreen();
   }
 
-  // void getTheme() async {
-  //   final box = await Hive.openBox('themebox');
-  //   mode = box.get('themeMode');
-  // }
-
   void _navigateToNextScreen() async {
     await Future.delayed(Duration(seconds: 2), () {});
 

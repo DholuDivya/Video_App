@@ -200,7 +200,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                                       child: Image.asset('assets/images/no_data.png'),
                                     ),
                                     Text(
-                                      'Subscriptions not found !!',
+                                      AppLocalizations.of(context)!.subscriptionsNotFound,
                                       style: TextStyle(
                                           fontFamily: fontFamily,
                                           fontSize: 15.sp
@@ -250,7 +250,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
         return StatefulBuilder(
           builder: (BuildContext context, setState) {
             return AlertDialog(
-              title: const Text('Notifications',
+              title: Text(AppLocalizations.of(context)!.notifications,
                 style: TextStyle(
                   fontFamily: fontFamily,
                   fontSize: 20
@@ -261,7 +261,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                 children: [
                   CustomNotificationRow(
                     notificationIcon: HeroiconsSolid.bellAlert,
-                    type: 'All',
+                    type: AppLocalizations.of(context)!.all,
                     onTap: () {
                       setState(() {
                         isSelectedAll = true;
@@ -275,7 +275,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                   ),
                   CustomNotificationRow(
                     notificationIcon: HeroiconsOutline.bell,
-                    type: 'Personalized',
+                    type: AppLocalizations.of(context)!.personalized,
                     onTap: (){
                       setState(() {
                         isSelectedAll = false;
@@ -289,7 +289,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                   ),
                   CustomNotificationRow(
                     notificationIcon: HeroiconsOutline.bellSlash,
-                    type: 'None',
+                    type: AppLocalizations.of(context)!.none,
                     onTap: (){
                       setState(() {
                         isSelectedAll = false;
@@ -307,7 +307,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
 
                    CustomNotificationRow(
                         notificationIcon: HeroiconsOutline.userMinus,
-                        type: 'Unsubscribe',
+                        type: AppLocalizations.of(context)!.unsubscribe,
                         onTap: (){
                           print('fgioshgosh    $channelId \$\$\$\$\$');
                           context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: channelId));

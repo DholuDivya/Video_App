@@ -110,12 +110,8 @@ class OnLogOutRequestEvent extends AuthEvent{
 
 
 class OnDeleteUserAccountRequestEvent extends AuthEvent{
-  final String password;
-
-  OnDeleteUserAccountRequestEvent({required this.password});
-
   @override
-  List<Object?> get props => [password];
+  List<Object?> get props => [];
 }
 
 

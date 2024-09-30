@@ -66,6 +66,7 @@ import '../../utils/widgets/custom_radio_button_list.dart';
 import '../../utils/widgets/custom_save_to_playlist.dart';
 import '../../utils/widgets/video_container.dart';
 import '../user_page/user_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 
@@ -209,13 +210,13 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         context.read<GetShortsBloc>().add(GetShortsFromFile(context: context));
                       },
-                      buttonName: 'Create short',
+                      buttonName: AppLocalizations.of(context)!.createShort,
                       buttonIcon: HeroiconsOutline.camera,
                     );
                   })),
                   BottomSheetButton(
                     onTap: uploadVideoBottomSheet,
-                    buttonName: 'Upload a Video',
+                    buttonName: AppLocalizations.of(context)!.uploadAVideo,
                     buttonIcon: HeroiconsOutline.arrowUpOnSquare,
                   ),
                 ],
@@ -248,7 +249,7 @@ class _HomePageState extends State<HomePage> {
                     if (state is GetVideoFailure) {
                       ToastManager().showToast(
                           context: context,
-                          message: 'Fail to pick video'
+                          message: AppLocalizations.of(context)!.failToPickVideo
                       );
                     }
                     return BottomSheetButton(
@@ -258,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                         // }
                         context.read<GetVideoBloc>().add(OpenFilesToGetVideo());
                       },
-                      buttonName: 'From files',
+                      buttonName: AppLocalizations.of(context)!.fromFiles,
                       buttonIcon: HeroiconsOutline.folder,
                     );
                   }, listener: (context, state) {
@@ -277,7 +278,7 @@ class _HomePageState extends State<HomePage> {
                       }
                       GoRouter.of(context).pushNamed('uploadVideoFromUrl');
                     },
-                    buttonName: 'From external sources',
+                    buttonName: AppLocalizations.of(context)!.fromExternalSources,
                     buttonIcon: HeroiconsOutline.link,
                   ),
                 ],
@@ -665,12 +666,12 @@ class _HomePageContentState extends State<HomePageContent> {
                                               else if (state is DownloadVideoSuccess) {
                                                 ToastManager().showToast(
                                                     context: context,
-                                                    message: 'Video downloaded successfully'
+                                                    message: AppLocalizations.of(context)!.videoDownloadedSuccessfully
                                                 );
                                               } else if (state is DownloadVideoFailure) {
                                                 ToastManager().showToast(
                                                     context: context,
-                                                    message: 'Errrrroorr in Hive'
+                                                    message: AppLocalizations.of(context)!.errorInHive
                                                 );
                                               }
                             
@@ -911,7 +912,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                                   child: Image.asset('assets/images/no_data.png'),
                                                 ),
                                                 Text(
-                                                  'Videos not found!!',
+                                                  AppLocalizations.of(context)!.videoNotFound,
                                                   style: TextStyle(
                                                       fontFamily: fontFamily,
                                                       fontSize: 15.sp
@@ -1382,7 +1383,7 @@ class _HomePageContentState extends State<HomePageContent> {
               Icon(HeroiconsSolid.fire, color: primaryColor),
               SizedBox(width: 3.w,),
               Text(
-                'Shorts',
+                AppLocalizations.of(context)!.shorts,
                 style: TextStyle(
                   fontFamily: fontFamily,
                   fontWeight: FontWeight.w600,
@@ -1537,7 +1538,7 @@ class _HomePageContentState extends State<HomePageContent> {
                       ),
                       child: Center(
                         child: Text(
-                          'All',
+                          AppLocalizations.of(context)!.all,
                           style: TextStyle(
                             color: isAllCategorySelected
                                 ? Colors.white
@@ -1646,14 +1647,14 @@ class _ReportDialogState extends State<ReportDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15)
       ),
-      title: const Text('Report Content'),
+      title: Text(AppLocalizations.of(context)!.reportContent),
       content: RadioButtonList<String>(
-        options: const [
-          'Violent Content',
-          'Hateful Content',
-          'Harmful Content',
-          'Spam',
-          'Child Abuse'
+        options: [
+          AppLocalizations.of(context)!.violentContent,
+          AppLocalizations.of(context)!.hatefulContent,
+          AppLocalizations.of(context)!.harmfulContent,
+          AppLocalizations.of(context)!.spam,
+          AppLocalizations.of(context)!.childAbuse
         ],
         selectedValue: _selectedValue,
         onChanged: (String newValue) {
@@ -1667,7 +1668,7 @@ class _ReportDialogState extends State<ReportDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('Cancel',
+          child: Text(AppLocalizations.of(context)!.cancel,
             style: TextStyle(
               fontFamily: fontFamily,
               color: greyShade500
@@ -1699,7 +1700,7 @@ class _ReportDialogState extends State<ReportDialog> {
 
           },
           child: Text(
-              'Report',
+            AppLocalizations.of(context)!.report,
             style: TextStyle(
               fontFamily: fontFamily,
               color: primaryColor

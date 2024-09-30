@@ -18,12 +18,13 @@ import 'package:vimeo_clone/model/get_channel_detail_model.dart';
 import 'package:vimeo_clone/utils/widgets/customBottomSheet.dart';
 import 'package:vimeo_clone/utils/widgets/custom_channel_video_preview.dart';
 import 'package:vimeo_clone/utils/widgets/latest_popular_oldest.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../bloc/channel_profile/channel_profile_bloc.dart';
 import '../../../bloc/channel_profile/channel_profile_state.dart';
 import '../../../config/global_variable.dart';
 import '../../../utils/widgets/custom_save_to_playlist.dart';
 import '../../homePage/homepage.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VideosPreviewPage extends StatefulWidget {
   final int channelId;
@@ -207,7 +208,7 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
                 child: Image.asset('assets/images/no_data.png'),
               ),
               Text(
-                'Videos not found!!',
+                AppLocalizations.of(context)!.videoNotFound,
                 style: TextStyle(
                     fontFamily: fontFamily, fontSize: 15.sp),
               ),

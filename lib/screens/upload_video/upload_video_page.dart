@@ -30,7 +30,7 @@ import '../../bloc/get_video_from_user/get_video_state.dart';
 import '../../bloc/select_cat_for_video_detail/category_selection_bloc.dart';
 import '../../bloc/select_cat_for_video_detail/category_selection_state.dart';
 import '../../config/colors.dart';
-import '../../model/video_categories_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UploadVideoPage extends StatefulWidget {
   const UploadVideoPage({super.key});
@@ -86,26 +86,22 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
       if (finalThumbnail == null) {
         ToastManager().showToast(
             context: context,
-            message: 'Thumbnail is required'
+            message: AppLocalizations.of(context)!.thumbnailIsRequired
         );
-        // _showCustomDialog('Thumbnail is required');
         return;
       }
       if (selectedVideo == null) {
         ToastManager().showToast(
             context: context,
-            message: 'Video is required'
+            message: AppLocalizations.of(context)!.videoIsRequired
         );
-        // _showCustomDialog('Video is required');
         return;
       }
       if (tempSelectedCategoryIds.isEmpty) {
-        print('ifhishhgfihgfihgfiihih     $selectedCategoryIds');
         ToastManager().showToast(
             context: context,
-            message: 'Category is required'
+            message: AppLocalizations.of(context)!.categoryIsRequired
         );
-        // _showCustomDialog('Category is required');
         return;
       }
 
@@ -117,25 +113,22 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
       if (videoTitle.isEmpty) {
         ToastManager().showToast(
             context: context,
-            message: 'Title is required'
+            message: AppLocalizations.of(context)!.titleIsRequired
         );
-        // _showCustomDialog('Title is required');
         return;
       }
       if (videoDescription.isEmpty) {
         ToastManager().showToast(
             context: context,
-            message: 'Description is required'
+            message: AppLocalizations.of(context)!.descriptionIsRequired
         );
-        // _showCustomDialog('Description is required');
         return;
       }
       if (selectedVisibility == null || selectedVisibility.isEmpty) {
         ToastManager().showToast(
             context: context,
-            message: 'Visibility is required'
+            message: AppLocalizations.of(context)!.visibilityIsRequired
         );
-        // _showCustomDialog('Visibility is required');
         return;
       }
 
@@ -168,7 +161,10 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
       ));
 
     } else {
-      _showCustomDialog('Please fill all required fields');
+      ToastManager().showToast(
+          context: context,
+          message: AppLocalizations.of(context)!.pleaseFillAllRequiredFields
+      );
     }
   }
 
@@ -178,7 +174,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
       context: context,
       builder: (BuildContext context) {
         return CustomAlertDialog(
-          alertDialogTitle: 'Invalid',
+          alertDialogTitle: AppLocalizations.of(context)!.invalid,
           alertDialogWidgets: Text(message),
         );
       },
@@ -204,11 +200,10 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // leading: Icon(HeroiconsOutline.arrowLeft),
         title: Column(
           children: [
             Text(
-              'Add video details',
+              AppLocalizations.of(context)!.addVideoDetails,
               style: TextStyle(
                 fontFamily: fontFamily,
                 // fontWeight: FontWeight.bold,
@@ -344,7 +339,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Add thumbnail of your video',
+                                  AppLocalizations.of(context)!.addThumbnailOfYourVideo,
                                   style: TextStyle(
                                       fontFamily: fontFamily,
                                       fontSize: 15,
@@ -385,7 +380,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                   readOnly: false,
                   isEnabled: true,
                     controller: _titleController,
-                    fieldLabel: 'Title'
+                    fieldLabel: AppLocalizations.of(context)!.title
                 ),
 
 
@@ -400,7 +395,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                   cursorColor: Colors.grey,
                   decoration: InputDecoration(
                     // hintText: 'Description...',
-                    labelText: 'Description...',
+                    labelText: AppLocalizations.of(context)!.description,
                     labelStyle: TextStyle(
                         fontSize: 15,
                         color: Theme.of(context).colorScheme.secondaryFixedDim),
@@ -589,9 +584,9 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                                 return StatefulBuilder(
                                   builder: (context, setState) {
                                     return AlertDialog(
-                                      title: const Center(
+                                      title: Center(
                                         child: Text(
-                                          'Select Categories',
+                                          AppLocalizations.of(context)!.selectCategories,
                                           style: TextStyle(fontSize: 22),
                                         ),
                                       ),
@@ -673,7 +668,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                                                     backgroundColor: Theme.of(context).colorScheme.secondaryFixed, // Optional: make Cancel button red
                                                   ),
                                                   child: Text(
-                                                    'Cancel',
+                                                    AppLocalizations.of(context)!.cancel,
                                                     style: TextStyle(
                                                       fontFamily: fontFamily,
                                                       color: greyShade900,
@@ -695,7 +690,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                                                     Navigator.of(context).pop(); // Close the dialog
                                                   },
                                                   child: Text(
-                                                    'Ok',
+                                                    AppLocalizations.of(context)!.ok,
                                                     style: TextStyle(
                                                       fontFamily: fontFamily,
                                                     ),
@@ -729,7 +724,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                                     width: 1.0,
                                   ),
                                 ),
-                                labelText: 'Select Categories',
+                                labelText: AppLocalizations.of(context)!.selectCategories,
                                 labelStyle: TextStyle(
                                   fontSize: 15,
                                   color: Colors.grey.shade500,
@@ -745,9 +740,9 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                       },
                     );
                   } else if (state is VideoCategoriesFailure) {
-                    return const Text('Failed to load categories');
+                    return Text(AppLocalizations.of(context)!.failToLoadCategories);
                   }
-                  return const Text('No categories available');
+                  return Text(AppLocalizations.of(context)!.noCategoriesAvailable);
                 },
               ),
 
@@ -891,7 +886,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                   keyboardType: TextInputType.multiline,
                   cursorColor: Colors.grey,
                   decoration: InputDecoration(
-                    labelText: 'Hashtag...',
+                    labelText: AppLocalizations.of(context)!.hashtag,
                     labelStyle: TextStyle(
                       fontSize: 15,
                       color: Theme.of(context).colorScheme.secondaryFixedDim,
@@ -969,7 +964,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                           // icon: Icon(HeroiconsOutline.arrowRight),
                           title: Center(
                             child: Text(
-                              'Select a visibility',
+                              AppLocalizations.of(context)!.selectVisibility,
                               style: TextStyle(
                                   fontFamily: fontFamily, fontSize: 22),
                             ),
@@ -1052,7 +1047,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                           borderSide:
                               const BorderSide(color: Colors.black12, width: 0.5),
                         ),
-                        labelText: 'Select a visibility',
+                        labelText: AppLocalizations.of(context)!.selectVisibility,
                         labelStyle: TextStyle(
                             fontSize: 15, color: Colors.grey.shade500),
                         suffixIcon: const Icon(Icons.arrow_drop_down),
@@ -1084,14 +1079,14 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                             isCommentOn = !isCommentOn;
                           });
                         },
-                        toggleName: 'Comments',
+                        toggleName: AppLocalizations.of(context)!.comments,
                         toggleValue: isCommentOn,
                         onChanged: (bool value) {
                           setState(() {
                             isCommentOn = value;
                           });
                         },
-                        toggleState: isCommentOn ? 'on' : 'off'),
+                        toggleState: isCommentOn ? AppLocalizations.of(context)!.on : AppLocalizations.of(context)!.off),
                   ),
                 ),
 
@@ -1106,7 +1101,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                       if(state is UploadVideoSuccess){
                         ToastManager().showToast(
                             context: context,
-                            message: 'Video uploaded successfully'
+                            message: AppLocalizations.of(context)!.videoUploadedSuccessfully
                         );
                         context.read<AllVideoListBloc>().add(GetAllVideoListEvent());
                         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1134,7 +1129,7 @@ class _UploadVideoPageState extends State<UploadVideoPage> {
                           ),
                         ),
                         child: Text(
-                          'Upload Video',
+                          AppLocalizations.of(context)!.uploadVideo,
                           style: TextStyle(
                               fontFamily: fontFamily,
                               fontSize: 15.sp,

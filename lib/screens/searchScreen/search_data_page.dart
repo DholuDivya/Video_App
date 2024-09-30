@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
-
 import '../../bloc/search_data/search_data_bloc.dart';
 import '../../bloc/search_data/search_data_state.dart';
 import '../../config/constants.dart';

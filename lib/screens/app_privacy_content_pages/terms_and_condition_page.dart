@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vimeo_clone/bloc/terms_and_conditions/terms_and_conditions_bloc.dart';
 import 'package:vimeo_clone/bloc/terms_and_conditions/terms_and_conditions_state.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TermsAndConditionPage extends StatelessWidget {
   const TermsAndConditionPage({super.key});
@@ -13,8 +14,8 @@ class TermsAndConditionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Terms & conditions',
+        title: Text(
+          AppLocalizations.of(context)!.termsAndConditions,
           style: TextStyle(
             fontFamily: fontFamily,
           ),

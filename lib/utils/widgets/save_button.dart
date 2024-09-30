@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/config/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SaveButton extends StatelessWidget {
   const SaveButton ({super.key});
@@ -22,12 +23,12 @@ class SaveButton extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(Remix.bookmark_line, size: 15,),
+              const Icon(Remix.bookmark_line, size: 15,),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.02,
               ),
               Text(
-                'Save',
+                AppLocalizations.of(context)!.save,
                 style: TextStyle(
                     fontFamily: fontFamily,
                     fontSize: 12

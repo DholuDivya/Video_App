@@ -20,6 +20,7 @@ import '../../bloc/remove_video_from_history/remove_video_from_history_event.dar
 import '../../utils/widgets/customBottomSheet.dart';
 import '../../utils/widgets/custom_channel_video_preview.dart';
 import '../../utils/widgets/custom_save_to_playlist.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AllHistoryPage extends StatelessWidget {
   const AllHistoryPage({super.key});
@@ -58,8 +59,8 @@ class AllHistoryPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-            'History',
+        title: Text(
+            AppLocalizations.of(context)!.history,
           style: TextStyle(
             fontFamily: fontFamily
           ),
@@ -172,7 +173,7 @@ class AllHistoryPage extends StatelessWidget {
                                 child: Image.asset('assets/images/no_data.png'),
                               ),
                               Text(
-                                'No videos downloaded yet',
+                                AppLocalizations.of(context)!.historyNotFound,
                                 style: TextStyle(
                                     fontFamily: fontFamily,
                                     fontSize: 15.sp

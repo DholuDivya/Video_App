@@ -5,6 +5,7 @@ import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import '../../../utils/widgets/dash_divider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomTransactionWidget extends StatelessWidget {
   final String userName;
@@ -91,9 +92,9 @@ class CustomTransactionWidget extends StatelessWidget {
                         // Transaction Status & Date
                         Row(
                           children: [
-                            if(transactionStatus == "Success") Icon(Remix.circle_fill, size: 10.r, color: green),
-                            if(transactionStatus == "Failed") Icon(Remix.circle_fill, size: 10.r, color: red),
-                            if(transactionStatus == "Pending") Icon(Remix.circle_fill, size: 10.r, color: yellow),
+                            if(transactionStatus == AppLocalizations.of(context)!.success) Icon(Remix.circle_fill, size: 10.r, color: green),
+                            if(transactionStatus == AppLocalizations.of(context)!.failed) Icon(Remix.circle_fill, size: 10.r, color: red),
+                            if(transactionStatus == AppLocalizations.of(context)!.pending) Icon(Remix.circle_fill, size: 10.r, color: yellow),
                             SizedBox(width: 5.w),
                             Container(
                               width: 120.w,
@@ -121,7 +122,7 @@ class CustomTransactionWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if(transactionStatus == "Success")Text(
+                      if(transactionStatus == AppLocalizations.of(context)!.success)Text(
                         "$currency $amount",
                         style: TextStyle(
                           fontFamily: fontFamily,
@@ -130,7 +131,7 @@ class CustomTransactionWidget extends StatelessWidget {
                           color: green,
                         ),
                       ),
-                      if(transactionStatus == "Failed")Text(
+                      if(transactionStatus == AppLocalizations.of(context)!.failed)Text(
                         "$currency $amount",
                         style: TextStyle(
                           fontFamily: fontFamily,
@@ -139,7 +140,7 @@ class CustomTransactionWidget extends StatelessWidget {
                           color: green,
                         ),
                       ),
-                      if(transactionStatus == "Pending")Text(
+                      if(transactionStatus == AppLocalizations.of(context)!.pending)Text(
                         "$currency $amount",
                         style: TextStyle(
                           fontFamily: fontFamily,
@@ -174,7 +175,7 @@ class CustomTransactionWidget extends StatelessWidget {
                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Transaction ID: ',
+                      AppLocalizations.of(context)!.transactionId,
                       style: TextStyle(
                         fontFamily: fontFamily,
                         fontSize: 12.sp,
@@ -198,7 +199,7 @@ class CustomTransactionWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Payment Method: ',
+                      AppLocalizations.of(context)!.paymentMethod,
                       style: TextStyle(
                         fontFamily: fontFamily,
                         fontSize: 12.sp,
@@ -230,7 +231,7 @@ class CustomTransactionWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Plan: ',
+                      AppLocalizations.of(context)!.plan,
                       style: TextStyle(
                         fontFamily: fontFamily,
                         fontSize: 12.sp,
@@ -253,7 +254,7 @@ class CustomTransactionWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Time period: ',
+                      AppLocalizations.of(context)!.timePeriod,
                       style: TextStyle(
                         fontFamily: fontFamily,
                         fontSize: 12.sp,
@@ -261,7 +262,7 @@ class CustomTransactionWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      timePeriod!,
+                      timePeriod,
                       style: TextStyle(
                         fontFamily: fontFamily,
                         fontSize: 12.sp,

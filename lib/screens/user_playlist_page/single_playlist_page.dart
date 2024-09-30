@@ -15,7 +15,7 @@ import 'package:vimeo_clone/bloc/show_single_playlist/show_single_playlist_state
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../utils/widgets/customBottomSheet.dart';
 import '../../utils/widgets/custom_channel_video_preview.dart';
 
@@ -122,7 +122,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                                       //   ),
                                       // ),
                                       Text(
-                                        '${userSinglePlaylist.length} videos  -  $playlistVisibility',
+                                        '${userSinglePlaylist.length} ${AppLocalizations.of(context)!.video}  -  $playlistVisibility',
                                         style: TextStyle(
                                             fontFamily: fontFamily,
                                             fontSize: 12.sp,
@@ -252,7 +252,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                     child: Image.asset('assets/images/no_data.png'),
                   ),
                   Text(
-                      'Videos not found!!',
+                      AppLocalizations.of(context)!.videoNotFound,
                       style: TextStyle(
                         fontFamily: fontFamily,
                         fontSize: 15.sp

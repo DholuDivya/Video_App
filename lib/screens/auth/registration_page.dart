@@ -12,6 +12,7 @@ import 'package:vimeo_clone/bloc/auth/auth_state.dart';
 import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/utils/widgets/custom_text_field_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../bloc/auth/auth_bloc.dart';
 
@@ -37,7 +38,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   String? _validateName(String? value){
     if(value == null || value.isEmpty){
-      return "Please enter Name !";
+      return AppLocalizations.of(context)!.pleaseEnterName;
     }
     return null;
   }
@@ -45,14 +46,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   String? _validatePassword(String? value){
     if(value == null || value.isEmpty){
-      return "Please enter Password !";
+      return AppLocalizations.of(context)!.pleaseEnterPassword;
     }
     if (value.length < 6) {
-      return "Password must be at least 6 characters";
+      return AppLocalizations.of(context)!.passwordMustBeAtLeast6Characters;
     }
     RegExp regexp = RegExp(pattern);
     if(!regexp.hasMatch(value)){
-      return 'Password must be at least 8 characters long, include an uppercase letter, number, and symbol';
+      return AppLocalizations.of(context)!.passwordMustBeAtLeast8Characters;
     }
     return null;
   }
@@ -60,10 +61,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return "Please confirm your password!";
+      return AppLocalizations.of(context)!.pleaseEnterConfirmPassword;
     }
     if (value != _passwordController.text) {
-      return "Passwords do not match";
+      return AppLocalizations.of(context)!.passwordsDoNotMatch;
     }
     return null;
   }
@@ -71,11 +72,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   String? _validateEmail(String? value){
     if(value == null || value.isEmpty){
-      return "Please enter Email !";
+      return AppLocalizations.of(context)!.pleaseEnterEmail;
     }
     RegExp regexp = RegExp(emailRegex);
     if(!regexp.hasMatch(value)){
-      return 'Email is not Valid';
+      return AppLocalizations.of(context)!.emailIsNotValid;
     }
     return null;
   }
@@ -153,7 +154,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 obscureText: false,
                 controller: _nameController,
                 validator: _validateName,
-                label: 'Name',
+                label: AppLocalizations.of(context)!.name,
               ),
                 SizedBox(height: ScreenSize.screenHeight(context) * 0.02,),
 
@@ -162,7 +163,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 obscureText: false,
                 controller: _emailController,
                 validator: _validateEmail,
-                label: 'Email',
+                label: AppLocalizations.of(context)!.email,
               ),
                 SizedBox(height: ScreenSize.screenHeight(context) * 0.02,),
 
@@ -171,7 +172,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   obscureText: true && !isPasswordVisible,
                   controller: _passwordController,
                   validator: _validatePassword,
-                  label: 'Password',
+                  label: AppLocalizations.of(context)!.password,
                   suffixIcon: IconButton(
                       onPressed: (){
                         setState(() {
@@ -191,7 +192,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     obscureText: true && !isConfirmPasswordVisible,
                   controller: _confirmPasswordController,
                   validator: _validateConfirmPassword,
-                  label: 'Confirm Password',
+                  label: AppLocalizations.of(context)!.confirmPassword,
                   suffixIcon: IconButton(
                       onPressed: (){
                         setState(() {
@@ -225,13 +226,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         });
                         ToastManager().showToast(
                             context: context,
-                            message: 'User created successfully'
+                            message: AppLocalizations.of(context)!.userCreatedSuccessfully
                         );
                       }else if(state is RegisterAuthFailure){
                         print('failure');
                         ToastManager().showToast(
                             context: context,
-                            message: 'Please try again later'
+                            message: ''
                         );
                       }
                       return joinButton();
@@ -274,7 +275,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     isConfirmPasswordVisible ? HeroiconsOutline.eye : HeroiconsOutline.eyeSlash
                 )
             ),
-            labelText: "Confirm Password",
+            labelText: AppLocalizations.of(context)!.confirmPassword,
             labelStyle: TextStyle(
                 color: Theme.of(context).colorScheme.tertiary
             ),
@@ -305,7 +306,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         Expanded(
           child: RichText(
             text: TextSpan(
-              text: 'By $appName, you agree to our ',
+              text: '${AppLocalizations.of(context)!.by} $appName, ${AppLocalizations.of(context)!.youAgreeToOur} ',
               style: TextStyle(
                 fontSize: 10.sp,
                 fontFamily: fontFamily,
@@ -313,7 +314,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ),
               children: [
                 TextSpan(
-                  text: 'terms of service',
+                  text: AppLocalizations.of(context)!.termsAndService,
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontFamily: fontFamily,
@@ -327,7 +328,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     },
                 ),
                 TextSpan(
-                  text: ' and acknowledge our ',
+                  text: AppLocalizations.of(context)!.andAcknowledgeOur,
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontFamily: fontFamily,
@@ -335,7 +336,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
                 TextSpan(
-                  text: 'privacy policy',
+                  text: AppLocalizations.of(context)!.privacypolicy,
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontFamily: fontFamily,
@@ -386,7 +387,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               }else{
                 ToastManager().showToast(
                     context: context,
-                    message: 'Please agree to our privacy policy first !!'
+                    message: AppLocalizations.of(context)!.pleaseAgreeToOurPrivacyFirst
                 );
               }
 
@@ -396,7 +397,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               print("Form is not Valid");
             }
           },
-        child: const Text("Join",
+        child: Text(AppLocalizations.of(context)!.join,
           style: TextStyle(
             fontSize: 17,
               fontFamily: fontFamily,
@@ -413,7 +414,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       children: [
         Expanded(child: Divider(thickness: 0.3,)),
         SizedBox(width: ScreenSize.screenWidth(context) * 0.025,),
-        AutoSizeText("or", style: TextStyle(color: Colors.grey[500], fontFamily: fontFamily),),
+        AutoSizeText(AppLocalizations.of(context)!.or, style: TextStyle(color: Colors.grey[500], fontFamily: fontFamily),),
         SizedBox(width: ScreenSize.screenWidth(context) * 0.025,),
         Expanded(child: Divider(thickness: 0.3,)),
       ],
@@ -421,35 +422,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
 
-  Widget googleLogin(){
-    return Container(
-      height: ScreenSize.screenHeight(context) * 0.070,
-      width: double.infinity,
-      decoration: BoxDecoration(
-          // color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(15)
-      ),
-      child: ElevatedButton(
-        onPressed: (){},
-        child: const Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Icon(Remix.google_fill),
-            AutoSizeText("Continue with Google", style: TextStyle(fontSize: 17, fontFamily: fontFamily),),
-          ],
-        ),
-      ),
-    );
-  }
+
 
 
   Widget logInButton(){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const AutoSizeText(
-          'Have an account? ',
+        AutoSizeText(
+          AppLocalizations.of(context)!.haveAnAccount,
           style: TextStyle(
             fontSize: 15,
             fontFamily: fontFamily
@@ -457,8 +438,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
         GestureDetector(
           onTap: () {},
-          child: const AutoSizeText(
-            'Log in.',
+          child: AutoSizeText(
+            AppLocalizations.of(context)!.login,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
               fontFamily: fontFamily
