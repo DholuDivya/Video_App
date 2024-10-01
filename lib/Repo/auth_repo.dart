@@ -281,15 +281,15 @@ class AuthRepository{
   // LOGIN USER
   Future<dynamic> loginUser(String email, String password) async {
     try{
-      final fcmId = await NotificationService().getFcmToken();
-      print('FCM ID  ::::  $fcmId');
+      // final fcmId = await NotificationService().getFcmToken();
+      // print('FCM ID  ::::  $fcmId');
       print('2000000000000000000');
       final response = await apiHelper.loginUserEmail(loginUserUrl,
           {
             'email': email,
             'password': password,
-            'fcm_id': fcmId
-            // 'fcm_id': 'c5X1eG26RBSOATeCLt8CKL:APA91bEQaashdO5Gh81HkZSQbD_Qho56p37WQmkriJRg2wiAuLEHgNa9HWb6E1t2yNoTqY6-c83rtlXeRiX3uKsVQqze3bqgZMRGxyJvmYWm1NfyEax-DYUOphCM6HMd6GIT0WQ76Vlm',
+            // 'fcm_id': 'ergsrgbhsrbhsr'
+            'fcm_id': 'c5X1eG26RBSOATeCLt8CKL:APA91bEQaashdO5Gh81HkZSQbD_Qho56p37WQmkriJRg2wiAuLEHgNa9HWb6E1t2yNoTqY6-c83rtlXeRiX3uKsVQqze3bqgZMRGxyJvmYWm1NfyEax-DYUOphCM6HMd6GIT0WQ76Vlm',
           });
       print('srbgirswugbhuswgbhusrhsbhvjuvjubhvujjuhvujhbd');
       print('${response.data}');
@@ -298,12 +298,19 @@ class AuthRepository{
         // STORING THE TOKEN IN HIVE ------
         if(response.data != null){
           final String userToken = response.data['data']['token'] ?? '';
+          print('1');
           final String userId = response.data['data']['user']['id'].toString() ?? '';
+          print('2');
           final String userName = response.data['data']['user']['name'] ?? '';
+          print('3');
           final String userNumber = response.data['data']['user']['phone_number'] ?? '';
+          print('4');
           final String userEmail = response.data['data']['user']['email'] ?? '';
+          print('5');
           final String userProfilePhoto = response.data['data']['user']['profile'] ?? '';
+          print('6');
           final String userChannelId = response.data['data']['channel'][0]['id'].toString();
+          print('7');
           final String language = '';
           print('++++++++    ${userToken}'
               '++++++++    ${userId}'

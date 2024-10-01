@@ -106,7 +106,7 @@ class ApiBaseHelper {
       // log('+++ HEADERS  ${headers}');
       if (kDebugMode) {
         log(
-            'response api****$url***************${response.statusCode}*********${response.data['token']}');
+            'response api****$url***************${response.statusCode}*********${response.data['data']['token']}');
       }
 
       // responseJson = _response(response);

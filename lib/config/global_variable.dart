@@ -30,7 +30,7 @@ class Global {
       userEmail: userEmail ?? '',
       userProfilePhoto: userProfilePhoto ?? '',
       userChannelId: userChannelId ?? '',
-      language: language ?? ''
+      language: language ?? 'en'
     );
     await box.put('UserData', userData);
     _userData = userData;

@@ -115,8 +115,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
       }
     });
 
-
-
     final videoBloc = context.read<PlayVideoBloc>();
     videoBloc.stream.listen((state) {
       if (state is PlayVideoLoaded) {
@@ -137,7 +135,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
               context.read<ViewIncrementBloc>().add(ViewIncrementRequest(videoSlug: widget.slug));
               print('Video has been initialized successfully!');
             });
-
             _podController?.addListener(() {
               if (_podController?.isInitialised ?? false) {
                 // Make the initial API call when the video is initialized
@@ -147,7 +144,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     _lastReachedDuration = currentPosition;
                     _lastReachedDurationString = formatLastDuration(currentPosition);
                     context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
-
                     // Start the timer to make API calls every 10 seconds
                     _startTimer();
                   }
@@ -183,8 +179,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
     bannerAd.load();
   }
 
-
-
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 15), (timer) {
       final currentPosition = _podController?.currentVideoPosition;
@@ -192,15 +186,18 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
         setState(() {
           _lastReachedDuration = currentPosition;
           _lastReachedDurationString = formatLastDuration(currentPosition);
-          context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
         });
       }
     });
   }
 
+  void storeHistoryApiCall() {
+    context.read<UserHistoryBloc>().add(UserHistoryRequest(lastDuration: _lastReachedDurationString!, videoSlug: widget.slug));
+  }
 
   @override
   void dispose() {
+    storeHistoryApiCall();
     _timer?.cancel();
     _podController?.dispose();
     _videoBlocSubscription?.cancel();
