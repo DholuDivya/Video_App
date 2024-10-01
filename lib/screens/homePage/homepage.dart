@@ -344,24 +344,30 @@ class _HomePageContentState extends State<HomePageContent> {
     }
   }
 
-  List<Map<String, dynamic>> bottomSheetListTileField = [
-    {
-      'name': 'Save to playlist',
-      'icon': HeroiconsOutline.bookmark
-    },
-    {
-      'name': 'Download video',
-      'icon': HeroiconsOutline.arrowDownTray
-    },
-    {
-      'name': 'Share',
-      'icon': HeroiconsOutline.share
-    },
-    {
-      'name': 'Report',
-      'icon': HeroiconsOutline.chatBubbleBottomCenterText
-    },
-  ];
+
+
+
+
+  List<Map<String, dynamic>> bottomSheetListTileField(BuildContext context){
+    return [
+      {
+        'name': AppLocalizations.of(context)!.saveToPlaylist,
+        'icon': HeroiconsOutline.bookmark
+      },
+      {
+        'name': AppLocalizations.of(context)!.downloadVideo,
+        'icon': HeroiconsOutline.arrowDownTray
+      },
+      {
+        'name': AppLocalizations.of(context)!.share,
+        'icon': HeroiconsOutline.share
+      },
+      {
+        'name': AppLocalizations.of(context)!.report,
+        'icon': HeroiconsOutline.chatBubbleBottomCenterText
+      },
+    ];
+  }
 
 
 
@@ -701,7 +707,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                               onShowMorePressed: (){
                                                 customShowMoreBottomSheet(
                                                     context,
-                                                    bottomSheetListTileField,
+                                                    bottomSheetListTileField(context),
                                                         (int index){
                                                       if(index == 0){
                                                         if(Navigator.canPop(context)){
@@ -878,7 +884,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                                   onShowMorePressed: (){
                                                     customShowMoreBottomSheet(
                                                         context,
-                                                        bottomSheetListTileField,
+                                                        bottomSheetListTileField(context),
                                                             (int index){
                                                           if(index == 0){
                                                             if(Navigator.canPop(context)){

@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+
 part 'user_data_model.g.dart';
 
 @HiveType(typeId: 0)
@@ -24,6 +25,9 @@ class UserDataModel{
   @HiveField(6)
   String? userChannelId;
 
+  @HiveField(7)
+  String? language;
+
   UserDataModel({
     this.userToken,
     this.userId,
@@ -31,6 +35,7 @@ class UserDataModel{
     this.userEmail,
     this.userNumber,
     this.userProfilePhoto,
-    this.userChannelId
+    this.userChannelId,
+    this.language
   });
 }

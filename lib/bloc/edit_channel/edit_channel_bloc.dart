@@ -65,6 +65,7 @@ class EditChannelBloc extends Bloc<EditChannelEvent, EditChannelState>{
         print('6  :::   $userProfilePhoto');
         final String userChannelId = Global.userData!.userChannelId!;
         print('7  :::   $userChannelId');
+        final String language = '';
 
         await Global.setUserData(
           userToken,
@@ -74,6 +75,7 @@ class EditChannelBloc extends Bloc<EditChannelEvent, EditChannelState>{
           userEmail,
           userProfilePhoto,
           userChannelId,
+          language
         );
 
         print('^v^v^v^v^v^v^v^v^v^v    ::::   ${Global.userData!.userName}');

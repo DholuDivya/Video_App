@@ -28,12 +28,14 @@ class AllHistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    List<Map<String, dynamic>> bottomSheetListTileField = [
-      {'name': 'Save to playlist', 'icon': HeroiconsOutline.bookmark},
-      {'name': 'Download video', 'icon': HeroiconsOutline.arrowDownTray},
-      {'name': 'Share', 'icon': HeroiconsOutline.share},
-      {'name': 'Remove from history', 'icon': HeroiconsOutline.trash},
-    ];
+    List<Map<String, dynamic>> bottomSheetListTileField(BuildContext context) {
+      return [
+        {'name': AppLocalizations.of(context)!.saveToPlaylist, 'icon': HeroiconsOutline.bookmark},
+        {'name': AppLocalizations.of(context)!.downloadVideo, 'icon': HeroiconsOutline.arrowDownTray},
+        {'name': AppLocalizations.of(context)!.share, 'icon': HeroiconsOutline.share},
+        {'name': AppLocalizations.of(context)!.removeFromHistory, 'icon': HeroiconsOutline.trash},
+      ];
+    }
 
     void showPlaylistBottomSheet(int videoId, String userChannelId){
       showModalBottomSheet(
@@ -126,7 +128,7 @@ class AllHistoryPage extends StatelessWidget {
                                     selectedToRemove.add(userHistory.id!);
                                     customShowMoreBottomSheet(
                                       context,
-                                      bottomSheetListTileField,
+                                      bottomSheetListTileField(context),
                                           (int index) {
                                         if (index == 0) {
                                           if(Navigator.canPop(context)){

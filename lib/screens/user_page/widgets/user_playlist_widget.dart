@@ -34,16 +34,18 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
 
 
 
-  List<Map<String, dynamic>> bottomSheetListTileField = [
-    {
-      'name': 'Delete',
-      'icon': HeroiconsOutline.trash
-    },
-    {
-      'name': 'Share',
-      'icon': HeroiconsOutline.share
-    },
-  ];
+  List<Map<String, dynamic>> bottomSheetListTileField(BuildContext context) {
+    return [
+      {
+        'name': AppLocalizations.of(context)!.delete,
+        'icon': HeroiconsOutline.trash
+      },
+      {
+        'name': AppLocalizations.of(context)!.share,
+        'icon': HeroiconsOutline.share
+      },
+    ];
+  }
 
   final channelId = Global.userData!.userChannelId;
 
@@ -187,7 +189,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                           onShowMorePressed: (){
                             customShowMoreBottomSheet(
                                 context,
-                                bottomSheetListTileField,
+                                bottomSheetListTileField(context),
                                   (int index) {
                                 if (index == 0) {
                                   if (Navigator.canPop(context)) {

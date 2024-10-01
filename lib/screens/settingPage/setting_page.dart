@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,11 +13,15 @@ import 'package:vimeo_clone/bloc/theme/theme_event.dart';
 import 'package:vimeo_clone/utils/widgets/CustomLogOutWidget.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
+import '../../bloc/change_app_language/change_app_language_bloc.dart';
+import '../../bloc/change_app_language/change_app_language_event.dart';
 import '../../config/colors.dart';
 import '../../config/constants.dart';
 import '../../routes/myapproute.dart';
-import '../../utils/widgets/custom_text_field_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../utils/widgets/customBottomSheet.dart';
+import '../../utils/widgets/custom_radio_bottom_sheet.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -44,7 +47,12 @@ class _SettingPageState extends State<SettingPage> {
             actionsPadding: EdgeInsets.only(
                 right: ScreenSize.screenWidth(context) * 0.03,
                 bottom: ScreenSize.screenHeight(context) * 0.01),
-            title: Text("Appearance"),
+            title: Text(
+              AppLocalizations.of(context)!.appearance,
+              style: TextStyle(
+                fontFamily: fontFamily
+              ),
+            ),
             content: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
                 return Column(
@@ -54,7 +62,8 @@ class _SettingPageState extends State<SettingPage> {
                     RadioListTile<ThemeMode>(
                       visualDensity: const VisualDensity(horizontal: -4),
                       activeColor: Colors.blue,
-                      title: const Text('Light Mode',
+                      title: Text(
+                          AppLocalizations.of(context)!.lightMode,
                           style: TextStyle(
                               fontSize: 15,
                               fontFamily: fontFamily
@@ -72,7 +81,7 @@ class _SettingPageState extends State<SettingPage> {
                       visualDensity: const VisualDensity(horizontal: -4),
                       activeColor: Colors.blue,
                       title: Text(
-                        'Dark Mode',
+                        AppLocalizations.of(context)!.darkMode,
                         style:
                         TextStyle(fontSize: 15,
                             fontFamily: fontFamily
@@ -120,8 +129,8 @@ class _SettingPageState extends State<SettingPage> {
               //   },
               // ),
               TextButton(
-                child: const Text(
-                  'Apply',
+                child: Text(
+                  AppLocalizations.of(context)!.apply,
                   style: TextStyle(
                       color: Colors.blue,
                       fontSize: 16,
@@ -140,6 +149,58 @@ class _SettingPageState extends State<SettingPage> {
           );
         });
   }
+
+  String selectedValue = 'en';
+  final List<Map<String, String>> languageOptions = [
+    {'code': 'en', 'name': 'English'},
+    {'code': 'hi', 'name': 'Hindi'},
+  ];
+
+  // void languageBottomSheet()async{
+  //   customRadioBottomSheet<String>(
+  //     bottomSheetTitle: AppLocalizations.of(context)!.chooseLanguage,
+  //     context: context,
+  //     options: languageOptions.map((lang) => lang['name']!).toList(),
+  //     selectedValue: languageOptions.firstWhere((lang) => lang['code'] == selectedValue),
+  //     onChanged: (Map<String, String> newValue) {
+  //       // Dispatch event to change app language
+  //       context.read<ChangeAppLanguageBloc>().add(ChangeAppLanguageRequest(appLanguage: newValue['code']!));
+  //
+  //       setState(() {
+  //         selectedValue = newValue['code']!; // Update the local selected value
+  //       });
+  //     },
+  //   );
+  // }
+
+
+  void languageBottomSheet() async {
+    customRadioBottomSheet<String>(
+      bottomSheetTitle: AppLocalizations.of(context)!.chooseLanguage,
+      context: context,
+      options: languageOptions.map((lang) => lang['name']!).toList(), // Only show names
+      selectedValue: languageOptions.firstWhere((lang) => lang['code'] == selectedValue)['name']!,
+      onChanged: (String newValue) {
+        // Find the selected language code based on the name
+        final selectedLang = languageOptions.firstWhere((lang) => lang['name'] == newValue);
+        context.read<ChangeAppLanguageBloc>().add(ChangeAppLanguageRequest(appLanguage: selectedLang['code']!));
+
+        setState(() {
+          selectedValue = selectedLang['code']!; // Update the local selected value
+        });
+      },
+    );
+  }
+
+
+
+  // List<Map<String, dynamic>> bottomSheetListTileField(BuildContext context) {
+  //   return [
+  //     {'name': 'English', 'icon': HeroiconsOutline.bookmark},
+  //     {'name': 'Hindi', 'icon': HeroiconsOutline.arrowDownTray},
+  //   ];
+  // }
+
 
 
     @override
@@ -214,6 +275,15 @@ class _SettingPageState extends State<SettingPage> {
                       icon: HeroiconsOutline.xCircle,
                       btnName: AppLocalizations.of(context)!.clearWatchHistory,
                       onTap: () {}
+                  ),
+
+                  // LANGUAGE
+                  CustomSettingButton(
+                      icon: HeroiconsOutline.language,
+                      btnName: AppLocalizations.of(context)!.changeLanguage,
+                      onTap: () {
+                        languageBottomSheet();
+                      }
                   ),
 
                   SizedBox(height: 10,),

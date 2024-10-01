@@ -10,7 +10,7 @@ import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart'
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/utils/widgets/custom_playlist_preview.dart';
-
+ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../bloc/show_single_playlist/show_single_playlist_bloc.dart';
 import '../../bloc/show_single_playlist/show_single_playlist_event.dart';
 import '../../utils/widgets/customBottomSheet.dart';
@@ -22,16 +22,18 @@ class UserPlaylistPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print('channellllllllll :::::::::   ${Global.userData!.userChannelId}');
 
-    List<Map<String, dynamic>> bottomSheetListTileField = [
-      {'name': 'Delete', 'icon': HeroiconsOutline.trash},
-      {'name': 'Share', 'icon': HeroiconsOutline.share},
-    ];
+    List<Map<String, dynamic>> bottomSheetListTileField(BuildContext context) {
+      return [
+        {'name': AppLocalizations.of(context)!.delete, 'icon': HeroiconsOutline.trash},
+        {'name': AppLocalizations.of(context)!.share, 'icon': HeroiconsOutline.share},
+      ];
+    }
 
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-            'Playlists',
+        title: Text(
+          AppLocalizations.of(context)!.playlist,
           style: TextStyle(
             fontFamily: fontFamily
           ),
@@ -84,7 +86,7 @@ class UserPlaylistPage extends StatelessWidget {
                                     channelName: 'Channel',
                                   onShowMorePressed: (){
                                     customShowMoreBottomSheet(
-                                        context, bottomSheetListTileField,
+                                        context, bottomSheetListTileField(context),
                                             (int index) {
                                           if (index == 0) {}
                                           else if (index == 1) {}
@@ -108,7 +110,7 @@ class UserPlaylistPage extends StatelessWidget {
                           child: Image.asset('assets/images/no_data.png'),
                         ),
                         Text(
-                          'Playlist not found!!',
+                          AppLocalizations.of(context)!.playlistNotFound,
                           style: TextStyle(
                               fontFamily: fontFamily,
                               fontSize: 15.sp

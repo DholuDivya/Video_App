@@ -164,7 +164,7 @@ class _ChannelProfilePageState extends State<ChannelProfilePage> {
                                                 0.005,
                                           ),
                                           Text(
-                                            '$_subscribeCount ${AppLocalizations.of(context)!.subscriber} - ${state.channelData.first.videoCount} ${AppLocalizations.of(context)!.videos}',
+                                            '$_subscribeCount ${AppLocalizations.of(context)!.subscribers} - ${state.channelData.first.videoCount} ${AppLocalizations.of(context)!.videos}',
                                             style: TextStyle(
                                               fontFamily: fontFamily,
                                               fontSize: 12,

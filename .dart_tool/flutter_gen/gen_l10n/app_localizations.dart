@@ -623,11 +623,11 @@ abstract class AppLocalizations {
   /// **'Unsubscribe'**
   String get unsubscribe;
 
-  /// No description provided for @subscriber.
+  /// No description provided for @subscribers.
   ///
   /// In en, this message translates to:
   /// **'Subscribers'**
-  String get subscriber;
+  String get subscribers;
 
   /// No description provided for @unsubscribedSuccessfully.
   ///
@@ -1136,7 +1136,7 @@ abstract class AppLocalizations {
   /// No description provided for @videoDisliked.
   ///
   /// In en, this message translates to:
-  /// **'Video Disliked'**
+  /// **'Video Disliked!'**
   String get videoDisliked;
 
   /// No description provided for @noCommentsFound.
@@ -1294,6 +1294,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Video uploaded successfully'**
   String get videoUploadedSuccessfully;
+
+  /// No description provided for @pleaseEnterVideoUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter Video URL!'**
+  String get pleaseEnterVideoUrl;
+
+  /// No description provided for @invalidVideoUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Video URL'**
+  String get invalidVideoUrl;
+
+  /// No description provided for @commentLiked.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment liked!'**
+  String get commentLiked;
+
+  /// No description provided for @commentDisliked.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment disliked!'**
+  String get commentDisliked;
+
+  /// No description provided for @addComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add comment...'**
+  String get addComment;
+
+  /// No description provided for @saveToLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to library'**
+  String get saveToLibrary;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @deleteVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete video'**
+  String get deleteVideo;
+
+  /// No description provided for @removeFromHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from history'**
+  String get removeFromHistory;
+
+  /// No description provided for @removeFromPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from playlist'**
+  String get removeFromPlaylist;
+
+  /// No description provided for @changeLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Change language'**
+  String get changeLanguage;
+
+  /// No description provided for @chooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose language'**
+  String get chooseLanguage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

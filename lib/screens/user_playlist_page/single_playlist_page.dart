@@ -31,20 +31,22 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
 
   final channelId = Global.userData!.userChannelId;
 
-  List<Map<String, dynamic>> bottomSheetListTileField = [
-    {
-      'name': 'Remove from playlist',
-      'icon': HeroiconsOutline.trash
-    },
-    {
-      'name': 'Download video',
-      'icon': HeroiconsOutline.arrowDownTray
-    },
-    {
-      'name': 'Share',
-      'icon': HeroiconsOutline.share
-    },
-  ];
+  List<Map<String, dynamic>> bottomSheetListTileField(BuildContext context) {
+    return [
+      {
+        'name': AppLocalizations.of(context)!.removeFromPlaylist,
+        'icon': HeroiconsOutline.trash
+      },
+      {
+        'name': AppLocalizations.of(context)!.downloadVideo,
+        'icon': HeroiconsOutline.arrowDownTray
+      },
+      {
+        'name': AppLocalizations.of(context)!.share,
+        'icon': HeroiconsOutline.share
+      },
+    ];
+  }
 
 
   int selectedToRemove = 0;
@@ -203,7 +205,7 @@ class _SinglePlaylistPageState extends State<SinglePlaylistPage> {
                                   selectedToRemove = userSinglePlaylistData.id!;
                                   customShowMoreBottomSheet(
                                     context,
-                                    bottomSheetListTileField,
+                                    bottomSheetListTileField(context),
                                         (int index) {
                                       if (index == 0) {
                                         context.read<RemoveVideoFromPlaylistBloc>().add(

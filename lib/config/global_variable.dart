@@ -19,7 +19,8 @@ class Global {
       String? userNumber,
       String? userEmail,
       String? userProfilePhoto,
-      String? userChannelId) async {
+      String? userChannelId,
+      String? language) async {
     var box = await Hive.openBox<UserDataModel>('UserDataBox');
     var userData = UserDataModel(
       userToken: userToken ?? '',
@@ -29,6 +30,7 @@ class Global {
       userEmail: userEmail ?? '',
       userProfilePhoto: userProfilePhoto ?? '',
       userChannelId: userChannelId ?? '',
+      language: language ?? ''
     );
     await box.put('UserData', userData);
     _userData = userData;
@@ -43,75 +45,6 @@ class Global {
 
   static UserDataModel? get userData => _userData;
 }
-
-
-
-
-
-
-
-// import 'package:hive/hive.dart';
-//
-// class Global {
-//   static String? _token;
-//
-//   static Future<void> initialize() async {
-//     var box = await Hive.openBox('UserData');
-//     _token = box.get('token');
-//
-//   }
-//   static Future<void> setToken(String token) async {
-//     var box = await Hive.openBox('UserData');
-//     await box.put('token', token);
-//     _token = token;
-//   }
-//
-//
-//   static Future<void> clearUserData() async {
-//     var box = await Hive.openBox('UserData');
-//     await box.delete('token');
-//     _token = null;
-//   }
-//
-//
-//   static String? get token => _token;
-// }
-
-
-// void saveToken(String token) async {
-//   await Global.setToken(token);
-// }
-
-
-
-// _name = box.get('name');
-// _profilePhoto = box.get('profilePhoto');
-
-
-
-// await box.put('name', name);
-// await box.put('profilePhoto', profilePhoto);
-// _name = name;
-// _profilePhoto = profilePhoto;
-
-
-
-
-// await box.delete('name');
-// await box.delete('profilePhoto');
-
-
-
-
-// static String? get name => _name;
-// static String? get profilePhoto => _profilePhoto;
-
-
-
-
-// static String? _name;
-// static String? _profilePhoto;
-
 
 
 

@@ -14,15 +14,11 @@ import 'package:vimeo_clone/bloc/add_comment/add_comment_bloc.dart';
 import 'package:vimeo_clone/bloc/add_comment/add_comment_event.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_event.dart';
-import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_state.dart';
-import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
-import 'package:vimeo_clone/bloc/create_playlist/create_playlist_event.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_bloc.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_event.dart';
 import 'package:vimeo_clone/bloc/get_comments/get_comments_state.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
-import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_state.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_bloc.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_event.dart';
 import 'package:vimeo_clone/bloc/like_dislike/like_dislike_state.dart';
@@ -33,13 +29,11 @@ import 'package:vimeo_clone/bloc/play_video/play_video_event.dart';
 import 'package:vimeo_clone/bloc/play_video/play_video_state.dart';
 import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_bloc.dart';
 import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_event.dart';
-import 'package:vimeo_clone/bloc/playlist_selection/playlist_selection_state.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_bloc.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart';
 import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_state.dart';
 import 'package:vimeo_clone/bloc/view_increment/view_increment_bloc.dart';
 import 'package:vimeo_clone/bloc/view_increment/view_increment_event.dart';
-import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/Utils/Widgets/download_button.dart';
 import 'package:vimeo_clone/Utils/Widgets/report_button.dart';
@@ -49,12 +43,10 @@ import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
 import 'package:vimeo_clone/Utils/Widgets/video_container.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/model/play_video_model.dart';
-import 'package:vimeo_clone/utils/widgets/custom_text_field_upload.dart';
-import 'package:vimeo_clone/utils/widgets/toggle_button.dart';
 import '../../bloc/add_user_history/add_user_history_bloc.dart';
 import '../../bloc/add_user_history/add_user_history_event.dart';
 import 'package:floating/floating.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../utils/widgets/custom_report_dialog.dart';
 import '../../utils/widgets/custom_save_to_playlist.dart';
 
@@ -503,13 +495,13 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                         if (_isSubscribed) {
                                           ToastManager().showToast(
                                               context: context,
-                                              message: 'Unsubscribed successfully'
+                                              message: AppLocalizations.of(context)!.unsubscribedSuccessfully
                                           );
                                           context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
                                         } else {
                                           ToastManager().showToast(
                                               context: context,
-                                              message: 'Subscribed successfully'
+                                              message: AppLocalizations.of(context)!.subscribedSuccessfully
                                           );
                                           context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
                                         }
@@ -536,7 +528,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                         ),
                                         child: Center(
                                           child: Text(
-                                            _isSubscribed ? 'Unsubscribe' : 'Subscribe',
+                                            _isSubscribed ? AppLocalizations.of(context)!.unsubscribe : AppLocalizations.of(context)!.subscribe,
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: _isSubscribed ? Colors.black : Colors.white,
@@ -593,7 +585,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                       } else {
                                                         ToastManager().showToast(
                                                             context: context,
-                                                            message: 'Video liked!'
+                                                            message: AppLocalizations.of(context)!.videoLiked
                                                         );
                                                         _isLiked = true;
                                                         _likeCount++;
@@ -639,7 +631,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                       } else {
                                                         ToastManager().showToast(
                                                             context: context,
-                                                            message: 'Video disliked!'
+                                                            message: AppLocalizations.of(context)!.videoDisliked
                                                         );
                                                         _isDisLiked = true;
                                                         if (_isLiked) {
@@ -730,7 +722,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                           Row(
                                             children: [
                                               Text(
-                                                  'Comments',
+                                                  AppLocalizations.of(context)!.comments,
                                                   style: TextStyle(
                                                       fontWeight: FontWeight.bold
                                                   )
@@ -808,7 +800,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                   Row(
                                     children: [
                                       Text(
-                                          'Comments',
+                                          AppLocalizations.of(context)!.comments,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold
                                           )
@@ -855,12 +847,15 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                             ),
                                             child: Align(
                                                 alignment: Alignment.centerLeft,
-                                                child: Text('Add Comment...')
+                                                child: Text(
+                                                    AppLocalizations.of(context)!.addAComment,
+                                                  style: TextStyle(
+                                                    fontFamily: fontFamily,
+                                                  ),
+                                                )
                                             ),
                                           ),
                                         ),
-
-
                                       ],
                                     ),
                                   ),
@@ -1169,7 +1164,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Description',
+                        AppLocalizations.of(context)!.description,
                         style: TextStyle(
                           fontFamily: fontFamily,
                           fontSize: 18.sp
@@ -1313,18 +1308,18 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                     // color: red,
                     child: Row(
                       children: [
-                        VideoHastag(
-                            hastag: 'tarakmehta'
+                        VideoHashtag(
+                            hashtag: 'tarakmehta'
                         ),
                         SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
 
-                        VideoHastag(
-                            hastag: 'tmkocsmileofindia'
+                        VideoHashtag(
+                            hashtag: 'tmkocsmileofindia'
                         ),
                         SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
 
-                        VideoHastag(
-                            hastag: 'tmkoc'
+                        VideoHashtag(
+                            hashtag: 'tmkoc'
                         ),
                         SizedBox(width: ScreenSize.screenWidth(context) * 0.01,),
                       ],
@@ -1378,36 +1373,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
 
 
 
-
-
-
-  MenuAnchor showPopupMenu(){
-    return MenuAnchor(
-        builder:
-            (BuildContext context, MenuController controller, Widget? child) {
-          return IconButton(
-            onPressed: () {
-              if (controller.isOpen) {
-                controller.close();
-              } else {
-                controller.open();
-              }
-            },
-            icon: const Icon(Icons.more_horiz),
-            tooltip: 'Show menu',
-          );
-        },
-        menuChildren: List<MenuItemButton>.generate(
-            3,
-                (int index) => MenuItemButton(
-            onPressed: (){},
-                  child: Text('Item ${index + 1}'),
-    )
-    ));
-  }
-
-
-
   void showPlaylistBottomSheet(int videoId, String userChannelId){
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
@@ -1425,332 +1390,6 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
       context.read<AddVideoToPlaylistBloc>().add(InitializePlaylistBloc());
     });
   }
-
-
-
-
-  // late int playlistLength = 0;
-  // void showPlaylistBottomSheet(List<PlayVideoModel> videoData){
-  //   context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
-  //   final playlistBloc = context.read<GetUserPlaylistBloc>();
-  //   playlistBloc.stream.listen((state){
-  //     if(state is GetUserPlaylistSuccess){
-  //       playlistLength = state.userPlaylist.length;
-  //       }
-  //   });
-  //   showModalBottomSheet(
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(10),
-  //     ),
-  //       context: context,
-  //       builder: (context){
-  //         return Column(
-  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             Container(
-  //               height: 25.h,
-  //               decoration: BoxDecoration(
-  //                 border: Border(
-  //                   bottom: BorderSide(
-  //                     width: 1.0,
-  //                     color: greyShade300
-  //                   )
-  //                 )
-  //               ),
-  //               padding: EdgeInsets.only(
-  //                 top: 5.h,
-  //                 left: 10.w,
-  //                 right: 10.w,
-  //                 bottom: 2.h
-  //               ),
-  //               // color: Colors.red,
-  //               child: Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                 children: [
-  //                   const Text(
-  //                       'Save to...',
-  //                     style: TextStyle(
-  //                       fontFamily: fontFamily,
-  //                       fontSize: 16
-  //                     ),
-  //                   ),
-  //
-  //                   MaterialButton(
-  //                       onPressed: (){
-  //                         createPlaylistAlertDialog();
-  //                       },
-  //                     child: Text(
-  //                       '+ Create playlist',
-  //                       style: TextStyle(
-  //                           fontFamily: fontFamily,
-  //                         color: primaryColor
-  //                       ),
-  //                     ),
-  //                   )
-  //                 ],
-  //               ),
-  //             ),
-  //
-  //
-  //             BlocBuilder<GetUserPlaylistBloc, GetUserPlaylistState>(
-  //               builder: (BuildContext context, GetUserPlaylistState state) {
-  //                 if(state is GetUserPlaylistSuccess){
-  //                   final playlistLength = state.userPlaylist.length;
-  //                   final playlist = state.userPlaylist;
-  //                   return BlocBuilder<PlaylistSelectionBloc, PlaylistSelectionState>(
-  //                     builder: (BuildContext context, PlaylistSelectionState state) {
-  //                       print('STATE :::   $state');
-  //                       if(state is PlaylistSelected){
-  //                         selectedPlaylistIds = state.selectedPlaylistIds;
-  //                         selectedPlaylist = selectedPlaylistIds.first;
-  //                       }
-  //                       return Container(
-  //                         height: 120.h,
-  //                         child: Expanded(
-  //                           child: NotificationListener<ScrollNotification>(
-  //
-  //                             child: ListView.builder(
-  //                               padding: EdgeInsets.zero,
-  //                               shrinkWrap: true,
-  //                               itemCount: playlistLength,
-  //                               itemBuilder: (context, index) {
-  //                                 final userPlaylist = playlist[index];
-  //                                 final isSelected =  selectedPlaylistIds.contains(userPlaylist.id);
-  //                                 return Container(
-  //                                   padding: EdgeInsets.only(
-  //                                     // top: 2.h,
-  //                                       left: 10.w,
-  //                                       right: 10.w,
-  //                                       bottom: 4.h
-  //                                   ),
-  //                                   width: double.infinity,
-  //                                   child: InkWell(
-  //                                     borderRadius: BorderRadius.circular(15),
-  //                                     onTap: () {
-  //                                       if(isSelected){
-  //                                         context.read<PlaylistSelectionBloc>().add(DeselectPlaylistRequest(playlistId: userPlaylist.id!));
-  //                                       } else {
-  //                                         context.read<PlaylistSelectionBloc>().add(SelectPlaylistRequest(playlistId: userPlaylist.id!));
-  //                                       }
-  //                                     },
-  //                                     child: Container(
-  //                                       alignment: Alignment.center,
-  //                                       height: 30.h,
-  //                                       width: double.infinity,
-  //                                       decoration: BoxDecoration(
-  //                                         borderRadius: BorderRadius.circular(15),
-  //                                         color: isSelected
-  //                                             ? blue
-  //                                             : Theme.of(context).colorScheme.tertiaryFixedDim,
-  //                                       ),
-  //                                       padding: EdgeInsets.only(left: 20.w, right: 20.w),
-  //                                       child: Row(
-  //                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                                         children: [
-  //                                           Text(
-  //                                             '${userPlaylist.title}',
-  //                                             style: TextStyle(
-  //                                               fontFamily: fontFamily,
-  //                                               color: isSelected ? Colors.white : Colors.black
-  //                                             ),
-  //                                           ),
-  //
-  //                                           Text(
-  //                                             '${userPlaylist.videos!.length}',
-  //                                             style: TextStyle(
-  //                                               fontFamily: fontFamily,
-  //                                                 color: isSelected ? Colors.white : Colors.black
-  //                                             ),
-  //                                           ),
-  //
-  //                                         ],
-  //                                       ),
-  //                                     ),
-  //                                   ),
-  //                                 );
-  //                               },
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       );
-  //                     },
-  //                   );
-  //                 }
-  //                 return const Center(child: CircularProgressIndicator(),);
-  //               },
-  //             ),
-  //
-  //
-  //             InkWell(
-  //               onTap: (){
-  //                 context.read<AddVideoToPlaylistBloc>().add(AddVideoToPlaylistRequest(
-  //                     videoId: videoData.first.data!.id!,
-  //                     playlistId: selectedPlaylist
-  //                 ));
-  //                 final addedToVideoPlaylist = context.read<AddVideoToPlaylistBloc>();
-  //                 addedToVideoPlaylist.stream.listen((state){
-  //                   if(state is AddVideoToPlaylistSuccess){
-  //                     ToastManager().showToast(
-  //                         context: context,
-  //                         message: 'Video added to playlist'
-  //                     );
-  //                   }
-  //                 });
-  //                 Navigator.pop(context);
-  //               },
-  //               child: Container(
-  //                 height: 40.h,
-  //                 width: double.infinity,
-  //                 decoration: BoxDecoration(
-  //                   border: Border(
-  //                     top: BorderSide(
-  //                       width: 1.0,
-  //                       color: greyShade300
-  //                     )
-  //                   )
-  //                 ),
-  //                 child: const Center(
-  //                   child: Text(
-  //                       'Done',
-  //                     style: TextStyle(
-  //                       fontFamily: fontFamily,
-  //                       fontSize: 15
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             )
-  //
-  //           ],
-  //         );
-  //       }
-  //   );
-  // }
-
-  // final TextEditingController playlistTitleController = TextEditingController();
-  // final TextEditingController playlistDescriptionController = TextEditingController();
-  // late String playlistStatus = 'public';
-  // late bool isPublic = true;
-  //
-  // void createPlaylistAlertDialog(){
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context){
-  //         return StatefulBuilder(
-  //             builder: (BuildContext context, void Function(void Function()) setState){
-  //               return AlertDialog(
-  //                 title: Center(
-  //                     child: Text(
-  //                       'Create a playlist',
-  //                       style: TextStyle(
-  //                           fontFamily: fontFamily,
-  //                           fontSize: 17.sp
-  //                       ),
-  //                     )
-  //                 ),
-  //                 content: SizedBox(
-  //                   width: 400.w,
-  //                   child: Column(
-  //                     mainAxisSize: MainAxisSize.min,
-  //                     children: [
-  //                       SizedBox(height: 8.h,),
-  //                       CustomTextFieldUpload(
-  //                         readOnly: false,
-  //                         isEnabled: true,
-  //                         maxLines: 1,
-  //                         controller: playlistTitleController,
-  //                         fieldLabel: 'title',
-  //                       ),
-  //                       SizedBox(height: 10.h,),
-  //
-  //                       CustomTextFieldUpload(
-  //                         readOnly: false,
-  //                         isEnabled: true,
-  //                         maxLines: 3,
-  //                         minLines: 1,
-  //                         controller: playlistDescriptionController,
-  //                         fieldLabel: 'description',
-  //                       ),
-  //                       SizedBox(height: 10.h,),
-  //
-  //                       Material(
-  //                         child: Container(
-  //                           height: 70,
-  //                           width: double.infinity,
-  //                           decoration: BoxDecoration(
-  //                             borderRadius: BorderRadius.circular(15),
-  //                             color: Theme.of(context).colorScheme.tertiaryFixedDim,
-  //                           ),
-  //                           // padding: EdgeInsets.all(0),
-  //                           child: CustomToggleButton(
-  //                               borderRadius: 15.0,
-  //                               onTap: () {
-  //                                 setState(() {
-  //                                   isPublic = !isPublic;
-  //                                   if(isPublic){
-  //                                     playlistStatus = 'public';
-  //                                   }else{
-  //                                     playlistStatus = 'private';
-  //                                   }
-  //                                   print('STATUSSSSSSSSS   :::::::    $playlistStatus');
-  //                                 });
-  //                               },
-  //                               toggleName: 'Privacy',
-  //                               toggleValue: isPublic,
-  //                               onChanged: (bool value) {
-  //                                 setState(() {
-  //                                   isPublic = value;
-  //                                   print('STATUSSSSSSSSS   :::::::    $isPublic');
-  //                                 });
-  //                               },
-  //                               toggleState: isPublic ? 'Public' : 'Private'),
-  //                         ),
-  //                       ),
-  //                       SizedBox(height: 10.h,),
-  //
-  //                       InkWell(
-  //                         borderRadius: BorderRadius.circular(10),
-  //                         onTap: (){
-  //                           final playlistTitle = playlistTitleController.text;
-  //                           final playlistDescription = playlistDescriptionController.text;
-  //
-  //                           context.read<CreatePlaylistBloc>().add(CreatePlaylistRequest(
-  //                               playlistTitle: playlistTitle,
-  //                               playlistDescription: playlistDescription,
-  //                               playlistStatus: playlistStatus
-  //                           ));
-  //
-  //                           Navigator.pop(context);
-  //                           context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(userChannelId!)));
-  //                         },
-  //                         child: Container(
-  //                           height: 40.h,
-  //                           width: double.infinity,
-  //                           decoration: BoxDecoration(
-  //                               borderRadius: BorderRadius.circular(10),
-  //                               color: primaryColor
-  //                           ),
-  //                           child: Center(
-  //                             child: Text(
-  //                               'Create',
-  //                               style: TextStyle(
-  //                                   fontFamily: fontFamily,
-  //                                   fontSize: 15,
-  //                                   color: Colors.white
-  //                               ),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       )
-  //                     ],
-  //                   ),
-  //                 ),
-  //               );
-  //         });
-  //       }
-  //   );
-  // }
 
 
 
@@ -1788,8 +1427,8 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Comments',
+                          Text(
+                            AppLocalizations.of(context)!.comments,
                             style: TextStyle(
                               fontFamily: fontFamily,
                               fontSize: 22,
@@ -1907,7 +1546,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                             } else {
                                                               ToastManager().showToast(
                                                                   context: context,
-                                                                  message: 'Comment liked!'
+                                                                  message: AppLocalizations.of(context)!.commentLiked
                                                               );
                                                               isCommentLiked = true;
                                                               commentLikeCount++;
@@ -1937,7 +1576,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                                                             } else {
                                                               ToastManager().showToast(
                                                                   context: context,
-                                                                  message: 'Comment disliked!'
+                                                                  message: AppLocalizations.of(context)!.commentDisliked
                                                               );
                                                               isCommentDisliked = true;
                                                               if (isCommentLiked) {
@@ -2018,7 +1657,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                             child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  'Add Comment...',
+                                    AppLocalizations.of(context)!.addAComment,
                                   style: TextStyle(
                                     fontFamily: fontFamily,
                                   )
@@ -2070,7 +1709,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                   controller: _commentController,
                   focusNode: _focusNode,
                   decoration: InputDecoration(
-                    hintText: 'Add Comment...',
+                    hintText: AppLocalizations.of(context)!.addComment,
                     hintStyle: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
                       fontFamily: fontFamily
@@ -2098,7 +1737,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                           text = '';
                           ToastManager().showToast(
                             context: context,
-                            message: 'Comment added successfully',
+                            message: AppLocalizations.of(context)!.commentAddedSuccessfully,
                           );
                           
                           context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
@@ -2117,7 +1756,7 @@ class _VideoPageState extends State<VideoPage>  with SingleTickerProviderStateMi
                       ));
                       ToastManager().showToast(
                         context: context,
-                        message: 'Comment added successfully',
+                        message: AppLocalizations.of(context)!.commentAddedSuccessfully,
                       );
 
                       context.read<GetCommentsBloc>().add(GetCommentsRequest(videoSlug: widget.slug));
@@ -2189,7 +1828,7 @@ class _AddCommentFieldState extends State<AddCommentField> {
               controller: _controller,
               focusNode: _focusNode,
               decoration: InputDecoration(
-                hintText: 'Add Comment...',
+                hintText: AppLocalizations.of(context)!.addComment,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
@@ -2215,10 +1854,9 @@ class _AddCommentFieldState extends State<AddCommentField> {
 }
 
 
-
-class VideoHastag extends StatelessWidget {
-  final String hastag;
-  const VideoHastag({super.key, required this.hastag});
+class VideoHashtag extends StatelessWidget {
+  final String hashtag;
+  const VideoHashtag({super.key, required this.hashtag});
 
   @override
   Widget build(BuildContext context) {
@@ -2232,7 +1870,7 @@ class VideoHastag extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Text(
-        '#${hastag}',
+        '#${hashtag}',
         style: TextStyle(
           // fontFamily: fontFamily,
           fontSize: 12,
@@ -2247,81 +1885,3 @@ class VideoHastag extends StatelessWidget {
 
 
 
-
-// GestureDetector(
-//   onTap: () {
-//     if(_isSubscribed == true) {
-//       context.read<SubscribeChannelBloc>().add(UnsubscribeChannelRequest(channelId: _channelId));
-//       final subscribeBloc = context.read<SubscribeChannelBloc>();
-//       subscribeBloc.stream.listen((state){
-//         if(state is SubscribeChannelSuccess){
-//           _isSubscribed = state.subscribeChannel.first.isSubscribed!;
-//           print('SUBSCRIBE   STATE ::::::::::       $_isSubscribed');
-//         }
-//       });
-//     }
-//     if(_isSubscribed == false){
-//       context.read<SubscribeChannelBloc>().add(SubscribeChannelRequest(channelId: _channelId));
-//       final subscribeBloc = context.read<SubscribeChannelBloc>();
-//       subscribeBloc.stream.listen((state){
-//         if(state is UnsubscribeChannelSuccess){
-//           _isSubscribed = state.subscribeChannel.first.isSubscribed!;
-//           print('SUBSCRIBE   STATE ::::::::::       $_isSubscribed');
-//         }
-//       });
-//     }
-//     setState(() {
-//       _isSubscribed = _isSubscribed;
-//       print('SUBSCRIBE   STATE ::::::::::       $_isSubscribed');
-//     });
-//   },
-//   child: Container(
-//     height: ScreenSize.screenHeight(context) * 0.045,
-//     width: _isSubscribed
-//         ? ScreenSize.screenWidth(context) * 0.28
-//         : ScreenSize.screenWidth(context) * 0.25,
-//     decoration: BoxDecoration(
-//       color: _isSubscribed ? Colors.grey.shade200 : Colors.red,
-//       borderRadius: BorderRadius.circular(20),
-//     ),
-//     child: Center(
-//       child: Text(
-//         _isSubscribed ? 'Unsubscribe' : 'Subscribe',
-//         style: TextStyle(
-//           fontSize: 12,
-//           color: _isSubscribed ? Colors.black : Colors.white,
-//           fontFamily: fontFamily,
-//         ),
-//       ),
-//     ),
-//   ),
-// ),
-
-
-
-
-
-
-
-
-
-
-
-
-// BlocBuilder<SubscribeChannelBloc, SubscribeChannelState>(
-//   builder: (BuildContext context, SubscribeChannelState state) {
-//     print(' *******************    ${state}');
-//     if (state is SubscribeChannelSuccess) {
-//       // _subscribeCount = state.subscribeChannel[0].subscriberCount;
-//       _isSubscribed = state.subscribeChannel.first.isSubscribed!;
-//       print('IS SUBSCRIBED ::::::   $_isSubscribed  ');
-//     }
-//     if(state is UnsubscribeChannelSuccess){
-//       _isSubscribed = state.subscribeChannel.first.isSubscribed;
-//       print('IS SUBSCRIBED ::::::   $_isSubscribed  ');
-//       // _subscribeCount = state.subscribeChannel[0].subscriberCount;
-//     }
-//
-//     return
-//   },
-// ),

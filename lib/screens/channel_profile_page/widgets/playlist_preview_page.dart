@@ -23,10 +23,18 @@ class PlaylistPreviewPage extends StatefulWidget {
 class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
 
 
-  List<Map<String, dynamic>> bottomSheetListTileField = [
-    {'name': 'Save to library', 'icon': HeroiconsOutline.bookmark},
-    {'name': 'Share', 'icon': HeroiconsOutline.share},
-  ];
+  List<Map<String, dynamic>> bottomSheetListTileField(BuildContext context) {
+    return [
+      {
+        'name': AppLocalizations.of(context)!.saveToLibrary,
+        'icon': HeroiconsOutline.bookmark
+      },
+      {
+        'name': AppLocalizations.of(context)!.share,
+        'icon': HeroiconsOutline.share
+      },
+    ];
+  }
 
 
   void showReportDialog(BuildContext context, int videoId) {
@@ -66,7 +74,7 @@ class _PlaylistPreviewPageState extends State<PlaylistPreviewPage> {
                           numberOfVideos: 0,
                           onShowMorePressed: (){
                             customShowMoreBottomSheet(
-                                context, bottomSheetListTileField,
+                                context, bottomSheetListTileField(context),
                                     (int index) {
                                   if (index == 0) {
                                     GoRouter.of(context).pushNamed('editVideoDetailPage');

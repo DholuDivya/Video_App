@@ -82,12 +82,14 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
     });
   }
 
-  List<Map<String, dynamic>> bottomSheetListTileField = [
-    {'name': 'Edit video detail', 'icon': HeroiconsOutline.bookmark},
-    {'name': 'Save to playlist', 'icon': HeroiconsOutline.arrowDownTray},
-    {'name': 'Share', 'icon': HeroiconsOutline.share},
-    {'name': 'Report', 'icon': HeroiconsOutline.chatBubbleBottomCenterText},
-  ];
+  List<Map<String, dynamic>> bottomSheetListTileField(BuildContext context) {
+    return [
+      {'name': AppLocalizations.of(context)!.editVideoDetail, 'icon': HeroiconsOutline.bookmark},
+      {'name': AppLocalizations.of(context)!.saveToPlaylist, 'icon': HeroiconsOutline.arrowDownTray},
+      {'name': AppLocalizations.of(context)!.share, 'icon': HeroiconsOutline.share},
+      {'name': AppLocalizations.of(context)!.report, 'icon': HeroiconsOutline.chatBubbleBottomCenterText},
+    ];
+  }
 
 
   void showPlaylistBottomSheet(int videoId, String userChannelId){
@@ -163,7 +165,7 @@ class _VideosPreviewPageState extends State<VideosPreviewPage> {
                               videoDuration: formattedDuration,
                               onShowMorePressed: () {
                                 customShowMoreBottomSheet(
-                                    context, bottomSheetListTileField,
+                                    context, bottomSheetListTileField(context),
                                     (int index) {
                                   if (index == 0) {
                                     GoRouter.of(context).pushNamed('editVideoDetailPage');

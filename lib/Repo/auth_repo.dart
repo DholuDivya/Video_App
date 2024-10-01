@@ -153,6 +153,7 @@ class AuthRepository{
           final String userEmail = response.data['user']['email'] ?? '';
           final String userProfilePhoto = response.data['user']['profile'] ?? '';
           final String userChannelId = response.data['channels'][0]['id'].toString() ?? '';
+          final String language = '';
           print('++++++++    ${userToken}'
               '++++++++    ${userId}'
               '++++++++    ${userName}'
@@ -170,6 +171,7 @@ class AuthRepository{
             userEmail,
             userProfilePhoto,
             userChannelId,
+            language
           );
           print('iiiiiiiiiiiiiiiiiiiiiiiiiiiii');
           log('${Global.userData}');
@@ -225,6 +227,7 @@ class AuthRepository{
         final String userEmail = response.data['user']['email'] ?? '';
         final String userProfilePhoto = response.data['user']['profile'] ?? '';
         final String userChannelId = response.data['channels'][0]['id'].toString() ?? '';
+        final String language = '';
         print('++++++++    ${userToken}'
             '++++++++    ${userId}'
             '++++++++    ${userName}'
@@ -242,6 +245,7 @@ class AuthRepository{
           userEmail,
           userProfilePhoto,
           userChannelId,
+          language
         );
 
         print('${Global.userData}');
@@ -300,6 +304,7 @@ class AuthRepository{
           final String userEmail = response.data['data']['user']['email'] ?? '';
           final String userProfilePhoto = response.data['data']['user']['profile'] ?? '';
           final String userChannelId = response.data['data']['channel'][0]['id'].toString();
+          final String language = '';
           print('++++++++    ${userToken}'
               '++++++++    ${userId}'
               '++++++++    ${userName}'
@@ -317,6 +322,7 @@ class AuthRepository{
             userEmail,
             userProfilePhoto,
             userChannelId,
+            language
           );
           print('iiiiiiiiiiiiiiiiiiiiiiiiiiiii');
           log('${Global.userData}');

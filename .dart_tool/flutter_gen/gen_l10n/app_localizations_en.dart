@@ -271,7 +271,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unsubscribe => 'Unsubscribe';
 
   @override
-  String get subscriber => 'Subscribers';
+  String get subscribers => 'Subscribers';
 
   @override
   String get unsubscribedSuccessfully => 'Unsubscribed successfully';
@@ -526,7 +526,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get videoLiked => 'Video liked!';
 
   @override
-  String get videoDisliked => 'Video Disliked';
+  String get videoDisliked => 'Video Disliked!';
 
   @override
   String get noCommentsFound => 'No comments found!';
@@ -605,4 +605,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get videoUploadedSuccessfully => 'Video uploaded successfully';
+
+  @override
+  String get pleaseEnterVideoUrl => 'Please enter Video URL!';
+
+  @override
+  String get invalidVideoUrl => 'Invalid Video URL';
+
+  @override
+  String get commentLiked => 'Comment liked!';
+
+  @override
+  String get commentDisliked => 'Comment disliked!';
+
+  @override
+  String get addComment => 'Add comment...';
+
+  @override
+  String get saveToLibrary => 'Save to library';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get deleteVideo => 'Delete video';
+
+  @override
+  String get removeFromHistory => 'Remove from history';
+
+  @override
+  String get removeFromPlaylist => 'Remove from playlist';
+
+  @override
+  String get changeLanguage => 'Change language';
+
+  @override
+  String get chooseLanguage => 'Choose language';
 }

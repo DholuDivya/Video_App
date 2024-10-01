@@ -22,6 +22,7 @@ import 'package:vimeo_clone/bloc/add_video_to_playlist/add_video_playlist_bloc.d
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_bloc.dart';
+import 'package:vimeo_clone/bloc/change_app_language/change_app_language_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/delete_playlist/delete_playlist_bloc.dart';
@@ -79,6 +80,7 @@ import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/global_keys.dart';
 import 'package:vimeo_clone/routes/myapproute.dart';
 import 'package:vimeo_clone/screens/videoPage/videopage.dart';
+import '../bloc/change_app_language/change_app_language_state.dart';
 import '../bloc/download_video/download_video_bloc.dart';
 import '../bloc/edit_video_detail/edit_video_detail_bloc.dart';
 import '../bloc/get_subscribed_channel_list/get_subscribed_channel_list_bloc.dart';
@@ -199,6 +201,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => UserTransactionBloc()),
         BlocProvider(create: (context) => YourShortsBloc()),
         BlocProvider(create: (context) => SettingsApiBloc()),
+        BlocProvider(create: (context) => ChangeAppLanguageBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {
@@ -221,11 +224,14 @@ class _MyAppState extends State<MyApp> {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              // localeResolutionCallback: (locale, supportedLocales) {
-              //   return supportedLocales.contains(locale) ? locale : const Locale('en');
-              // },
+              locale: context.select((ChangeAppLanguageBloc bloc) {
+                if (bloc.state is ChangeAppLanguageSuccess) {
+                  return Locale((bloc.state as ChangeAppLanguageSuccess).appLanguage);
+                }
+                return Locale('en'); // Default locale
+              }),
               supportedLocales: const [
-                // Locale('en'), // English
+                Locale('en'), // English
                 Locale('hi'), // Hindi
               ],
               builder: FToastBuilder(),
