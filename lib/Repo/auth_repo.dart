@@ -130,9 +130,12 @@ class AuthRepository{
   // VERIFY TOKEN FROM FIREBASE
   Future<String?> loginWithGoogle(String firebaseUserToken) async {
     try{
-      final fcmId = await NotificationService().getFcmToken();
+      // final fcmId = await NotificationService().getFcmToken();
+      final fcmId = 'gbodpkhbdokotdkodknodkonkdgton';
       print('FCM ID  ::::  $fcmId');
-      final response = await apiHelper.firebaseLoginPostAPICall(loginWithGoogleUrl, {}, firebaseUserToken);
+      final response = await apiHelper.firebaseLoginPostAPICall(loginWithGoogleUrl, {
+        'fcm_id': fcmId
+      }, firebaseUserToken);
 
       if (response.statusCode == 200) {
         // STORING THE TOKEN IN HIVE
@@ -196,10 +199,9 @@ class AuthRepository{
 
   Future<String?> loginWithPhone(String firebaseUserToken, String userName) async {
     try{
-      final fcmId = await NotificationService().getFcmToken();
+      // final fcmId = await NotificationService().getFcmToken();
+      final fcmId = 'gbodpkhbdokotdkodknodkonkdgton';
       print('FCM ID  ::::  $fcmId');
-      print('11111111111111111111111111111111');
-      print('MIIIIIIIIIIIIIIIIIII     $userName');
       final response = await apiHelper.firebaseLoginPostAPICall(loginWithPhoneUrl,
           {
             'name': userName,
@@ -282,14 +284,13 @@ class AuthRepository{
   Future<dynamic> loginUser(String email, String password) async {
     try{
       // final fcmId = await NotificationService().getFcmToken();
-      // print('FCM ID  ::::  $fcmId');
-      print('2000000000000000000');
+      final fcmId = 'gbodpkhbdokotdkodknodkonkdgton';
+      print('FCM ID  ::::  $fcmId');
       final response = await apiHelper.loginUserEmail(loginUserUrl,
           {
             'email': email,
             'password': password,
-            // 'fcm_id': 'ergsrgbhsrbhsr'
-            'fcm_id': 'c5X1eG26RBSOATeCLt8CKL:APA91bEQaashdO5Gh81HkZSQbD_Qho56p37WQmkriJRg2wiAuLEHgNa9HWb6E1t2yNoTqY6-c83rtlXeRiX3uKsVQqze3bqgZMRGxyJvmYWm1NfyEax-DYUOphCM6HMd6GIT0WQ76Vlm',
+            'fcm_id': fcmId
           });
       print('srbgirswugbhuswgbhusrhsbhvjuvjubhvujjuhvujhbd');
       print('${response.data}');

@@ -130,6 +130,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                   SizedBox(height: 5.h,),
                   BlocBuilder<GetSubscribedChannelListBloc, GetSubscribedChannelListState>(
                     builder: (BuildContext context, GetSubscribedChannelListState state) {
+                      print('wrgnjiorgheirhje   $state');
                       int unsubscribeChannelId = 0 ;
                       if(state is GetSubscribedChannelListLoaded){
                         print('''''''''''''''''''''' object '''''''''''''''''''''' ');
@@ -142,7 +143,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                               channelLength = state.channelList.length;
                               unsubscribeChannelId = channelsList.channelId!;
                               // isSubscribed = channelsList.
-                              return channelLength > 0 ? SizedBox(
+                              return state.channelList.isNotEmpty ? SizedBox(
                                 height: 60,
                                 child: InkWell(
                                   onTap: (){
@@ -212,7 +213,26 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                           }
                         );
                       }
-                      return Container();
+                      return Container(
+                        child: Center(child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              // color: red,
+                              height: 120.h,
+                              width: 250.w,
+                              child: Image.asset('assets/images/no_data.png'),
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!.subscriptionsNotFound,
+                              style: TextStyle(
+                                  fontFamily: fontFamily,
+                                  fontSize: 15.sp
+                              ),
+                            ),
+                          ],
+                        ),),
+                      );
                       // return ListView.builder(
                       //   shrinkWrap: true,
                       //   itemCount: 15,
@@ -261,7 +281,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                 children: [
                   CustomNotificationRow(
                     notificationIcon: HeroiconsSolid.bellAlert,
-                    type: AppLocalizations.of(context)!.all,
+                    type: 'All',
                     onTap: () {
                       setState(() {
                         isSelectedAll = true;

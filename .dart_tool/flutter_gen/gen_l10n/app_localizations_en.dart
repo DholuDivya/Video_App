@@ -460,9 +460,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get share => 'Share';
 
   @override
-  String get all => 'All';
-
-  @override
   String get delete => 'Delete';
 
   @override

@@ -869,10 +869,6 @@ class _HomePageContentState extends State<HomePageContent> {
                                                         });
                                                   },
 
-
-
-
-
                                                   channelPhoto: state.videoList[index].channel?.logo ?? 'assets/images/sonysab.jpg',
                                                   thumbnailUrl: '${state.videoList[index].thumbnails}',
                                                   duration: formattedTime,
@@ -1544,7 +1540,7 @@ class _HomePageContentState extends State<HomePageContent> {
                       ),
                       child: Center(
                         child: Text(
-                          AppLocalizations.of(context)!.all,
+                          'All',
                           style: TextStyle(
                             color: isAllCategorySelected
                                 ? Colors.white

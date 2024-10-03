@@ -78,6 +78,7 @@ import 'package:vimeo_clone/bloc/your_shorts/your_shorts_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/global_keys.dart';
+import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/routes/myapproute.dart';
 import 'package:vimeo_clone/screens/videoPage/videopage.dart';
 import '../bloc/change_app_language/change_app_language_state.dart';
@@ -228,11 +229,13 @@ class _MyAppState extends State<MyApp> {
                 if (bloc.state is ChangeAppLanguageSuccess) {
                   return Locale((bloc.state as ChangeAppLanguageSuccess).appLanguage);
                 }
-                return Locale('en'); // Default locale
+                return Locale(Global.userData?.language ?? 'en'); // Default locale
               }),
               supportedLocales: const [
                 Locale('en'), // English
                 Locale('hi'), // Hindi
+                Locale('ar'), // Arabic
+                Locale('fr'), // French
               ],
               builder: FToastBuilder(),
               routerConfig: router,

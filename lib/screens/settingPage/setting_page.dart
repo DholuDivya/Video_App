@@ -10,6 +10,7 @@ import 'package:vimeo_clone/Utils/Widgets/setting_page_btn.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_event.dart';
+import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/utils/widgets/CustomLogOutWidget.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
@@ -150,10 +151,12 @@ class _SettingPageState extends State<SettingPage> {
         });
   }
 
-  String selectedValue = 'en';
+  String selectedValue = Global.userData!.language ?? 'en';
   final List<Map<String, String>> languageOptions = [
     {'code': 'en', 'name': 'English'},
     {'code': 'hi', 'name': 'Hindi'},
+    {'code': 'ar', 'name': 'Arabic'},
+    {'code': 'fr', 'name': 'French'},
   ];
 
   // void languageBottomSheet()async{
@@ -184,9 +187,8 @@ class _SettingPageState extends State<SettingPage> {
         // Find the selected language code based on the name
         final selectedLang = languageOptions.firstWhere((lang) => lang['name'] == newValue);
         context.read<ChangeAppLanguageBloc>().add(ChangeAppLanguageRequest(appLanguage: selectedLang['code']!));
-
         setState(() {
-          selectedValue = selectedLang['code']!; // Update the local selected value
+          selectedValue = selectedLang['code']!;
         });
       },
     );

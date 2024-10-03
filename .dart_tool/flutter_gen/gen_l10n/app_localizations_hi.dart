@@ -16,7 +16,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get uploadAVideo => 'एक वीडियो अपलोड करें';
 
   @override
-  String get fromFiles => 'फाइल्स से';
+  String get fromFiles => 'फाइलों से';
 
   @override
   String get fromExternalSources => 'बाहरी स्रोतों से';
@@ -37,13 +37,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get description => 'विवरण';
 
   @override
-  String get selectCategories => 'श्रेणियाँ चुनें';
+  String get selectCategories => 'श्रेणियां चुनें';
 
   @override
   String get hashtag => 'हैशटैग';
 
   @override
-  String get selectVisibility => 'Select visibility';
+  String get selectVisibility => 'दृश्यता चुनें';
 
   @override
   String get comments => 'टिप्पणियाँ';
@@ -97,7 +97,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get report => 'रिपोर्ट करें';
 
   @override
-  String get subscriptions => 'सदस्यताएँ';
+  String get subscriptions => 'सदस्यता';
 
   @override
   String get viewChannel => 'चैनल देखें';
@@ -130,7 +130,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get get => 'प्राप्त करें';
 
   @override
-  String get helpAndFeedback => 'मदद और प्रतिक्रिया';
+  String get helpAndFeedback => 'सहायता और प्रतिक्रिया';
 
   @override
   String get videos => 'वीडियो';
@@ -154,10 +154,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get theme => 'थीम';
 
   @override
-  String get yourPlans => 'आपकी योजनाएँ';
+  String get yourPlans => 'आपकी योजनाएं';
 
   @override
-  String get clearWatchHistory => 'देखे गए इतिहास को साफ़ करें';
+  String get clearWatchHistory => 'देखा गया इतिहास साफ़ करें';
 
   @override
   String get rateOurApp => 'हमारे ऐप को रेट करें';
@@ -172,7 +172,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get termsAndConditions => 'नियम और शर्तें';
 
   @override
-  String get helpAndSupport => 'मदद और समर्थन';
+  String get helpAndSupport => 'सहायता और समर्थन';
 
   @override
   String get deleteAccount => 'खाता हटाएं';
@@ -196,16 +196,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get update => 'अपडेट करें';
 
   @override
-  String get transactionId => 'लेन-देन आईडी:';
+  String get transactionId => 'लेनदेन ID: ';
 
   @override
-  String get paymentMethod => 'भुगतान का तरीका:';
+  String get paymentMethod => 'भुगतान विधि: ';
 
   @override
-  String get plan => 'योजना:';
+  String get plan => 'योजना: ';
 
   @override
-  String get timePeriod => 'समय अवधि';
+  String get timePeriod => 'समय अवधि: ';
 
   @override
   String get appearance => 'दिखावट';
@@ -223,7 +223,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get needHelp => 'मदद चाहिए?';
 
   @override
-  String get helpAndSupportInfoText => 'हम आपके किसी भी प्रश्न या समस्या में मदद के लिए यहाँ हैं।';
+  String get helpAndSupportInfoText => 'हम आपके किसी भी प्रश्न या समस्या में सहायता के लिए यहाँ हैं।';
 
   @override
   String get subject => 'विषय';
@@ -238,46 +238,46 @@ class AppLocalizationsHi extends AppLocalizations {
   String get views => 'दृश्य';
 
   @override
-  String get noKeepIt => 'नहीं, इसे रखें';
+  String get noKeepIt => 'नहीं, रहने दें';
 
   @override
   String get yesDeleteIt => 'हाँ, इसे हटा दें!';
 
   @override
-  String get confirmDeleteText => 'आप अपना खाता हटाने जा रहे हैं। क्या आप सुनिश्चित हैं?';
+  String get confirmDeleteText => 'आप अपना खाता हटाने जा रहे हैं। क्या आपको यकीन है?';
 
   @override
   String get createNewPlaylist => 'नई प्लेलिस्ट बनाएं';
 
   @override
-  String get noShortsAvailable => 'कोई शॉर्ट्स उपलब्ध नहीं है';
+  String get noShortsAvailable => 'कोई शॉर्ट्स उपलब्ध नहीं हैं';
 
   @override
-  String get shortsNotFound => 'शॉर्ट्स नहीं मिला!!';
+  String get shortsNotFound => 'शॉर्ट्स नहीं मिला!';
 
   @override
   String get noVideosDownloadedYet => 'अभी तक कोई वीडियो डाउनलोड नहीं हुआ है';
 
   @override
-  String get notifications => 'सूचनाएँ';
+  String get notifications => 'सूचनाएं';
 
   @override
-  String get notificationsNotAvailable => 'सूचनाएँ उपलब्ध नहीं हैं';
+  String get notificationsNotAvailable => 'सूचनाएं उपलब्ध नहीं हैं';
 
   @override
   String get subscribe => 'सदस्यता लें';
 
   @override
-  String get unsubscribe => 'सदस्यता समाप्त करें';
+  String get unsubscribe => 'सदस्यता रद्द करें';
 
   @override
-  String get subscribers => 'Subscribers';
+  String get subscribers => 'सदस्य';
 
   @override
-  String get unsubscribedSuccessfully => 'Unsubscribed successfully';
+  String get unsubscribedSuccessfully => 'सदस्यता सफलतापूर्वक रद्द कर दी गई';
 
   @override
-  String get subscribedSuccessfully => 'Subscribed successfully';
+  String get subscribedSuccessfully => 'सदस्यता सफलतापूर्वक ले ली गई';
 
   @override
   String get manage => 'प्रबंधित करें';
@@ -286,28 +286,28 @@ class AppLocalizationsHi extends AppLocalizations {
   String get forYou => 'आपके लिए';
 
   @override
-  String get videoNotFound => 'वीडियो नहीं मिला!!';
+  String get videoNotFound => 'वीडियो नहीं मिला!';
 
   @override
   String get more => 'अधिक';
 
   @override
-  String get addAComment => 'एक टिप्पणी जोड़ें';
+  String get addAComment => 'टिप्पणी जोड़ें';
 
   @override
-  String get failToPickVideo => 'वीडियो चुनने में विफल';
+  String get failToPickVideo => 'वीडियो चुनने में असफल';
 
   @override
-  String get signInWithAccount => 'खाते से साइन-इन करें';
+  String get signInWithAccount => 'खाते से साइन इन करें';
 
   @override
   String get dontHaveAnAccount => 'खाता नहीं है?';
 
   @override
-  String get haveAnAccount => 'Have an account? ';
+  String get haveAnAccount => 'क्या आपके पास खाता है? ';
 
   @override
-  String get register => 'पंजीकरण करें';
+  String get register => 'रजिस्टर करें';
 
   @override
   String get password => 'पासवर्ड';
@@ -322,13 +322,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get or => 'या';
 
   @override
-  String get byClickingCreateAccountYouAgreeToOur => 'खाता बनाने पर आप हमारे ';
+  String get byClickingCreateAccountYouAgreeToOur => 'खाता बनाएं पर क्लिक करके, आप हमारी शर्तों से सहमत होते हैं ';
 
   @override
-  String get termsAndUse => 'नियमों और उपयोग';
+  String get termsAndUse => 'उपयोग की शर्तें';
 
   @override
-  String get termsAndService => 'नियमों और सेवा';
+  String get termsAndService => 'शर्तें और सेवा';
 
   @override
   String get and => 'और';
@@ -337,10 +337,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get privacyPolicy => 'गोपनीयता नीति';
 
   @override
-  String get privacypolicy => 'privacy policy';
+  String get privacypolicy => 'गोपनीयता नीति';
 
   @override
-  String get pleaseAgreeToOurPrivacyFirst => 'Please agree to our privacy policy first!!';
+  String get pleaseAgreeToOurPrivacyFirst => 'कृपया पहले हमारी गोपनीयता नीति से सहमत हों!!';
 
   @override
   String get confirmPassword => 'पासवर्ड की पुष्टि करें';
@@ -349,16 +349,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get by => 'द्वारा';
 
   @override
-  String get youAgreeToOur => 'आप हमारे लिए सहमत हैं';
+  String get youAgreeToOur => 'आप हमारी शर्तों से सहमत हैं';
 
   @override
-  String get andAcknowledgeOur => 'और हमारी सहमति स्वीकार करें';
+  String get andAcknowledgeOur => ' और हमारी नीति को स्वीकार करते हैं ';
 
   @override
   String get join => 'शामिल हों';
 
   @override
-  String get loginSuccessful => 'Login successfully';
+  String get loginSuccessful => 'लॉगिन सफल रहा';
 
   @override
   String get toResetYourPasswordPleaseEnterYourEmail => 'अपना पासवर्ड रीसेट करने के लिए कृपया अपना ईमेल दर्ज करें';
@@ -370,43 +370,43 @@ class AppLocalizationsHi extends AppLocalizations {
   String get resetPassword => 'पासवर्ड रीसेट करें';
 
   @override
-  String get passwordsDoNotMatch => 'Passwords do not match';
+  String get passwordsDoNotMatch => 'पासवर्ड मेल नहीं खा रहे हैं';
 
   @override
-  String get createStrongPassword => 'एक मजबूत पासवर्ड बनाएं जिसमें कम से कम 8 वर्ण हों।';
+  String get createStrongPassword => 'एक मजबूत पासवर्ड बनाएं जिसमें कम से कम 8 अक्षर हों।';
 
   @override
-  String get resetPasswordSuccessfully => 'Reset password successfully';
+  String get resetPasswordSuccessfully => 'पासवर्ड सफलतापूर्वक रीसेट किया गया';
 
   @override
-  String get userCreatedSuccessfully => 'User created successfully';
+  String get userCreatedSuccessfully => 'उपयोगकर्ता सफलतापूर्वक बनाया गया';
 
   @override
-  String get authenticationFailed => 'Authentication Failed';
+  String get authenticationFailed => 'प्रमाणीकरण विफल';
 
   @override
-  String get loginFailed => 'Login failed';
+  String get loginFailed => 'लॉगिन विफल';
 
   @override
-  String get somethingWentWrong => 'Something went wrong';
+  String get somethingWentWrong => 'कुछ गलत हो गया';
 
   @override
   String get token => 'टोकन';
 
   @override
-  String get welcomeChief => 'स्वागत है प्रमुख';
+  String get welcomeChief => 'स्वागत है, प्रमुख';
 
   @override
   String get pleaseEnterYourNameAndPhoneNumberToLogIn => 'लॉग इन करने के लिए कृपया अपना नाम और फोन नंबर दर्ज करें';
 
   @override
-  String get pleaseTryAgainLater => 'Please try again later';
+  String get pleaseTryAgainLater => 'कृपया बाद में पुनः प्रयास करें';
 
   @override
   String get pleaseEnterYourPhoneNumber => 'कृपया अपना नंबर दर्ज करें';
 
   @override
-  String get pleaseEnterFirstName => 'Please enter first name!';
+  String get pleaseEnterFirstName => 'कृपया पहला नाम दर्ज करें!';
 
   @override
   String get pleaseEnterEmail => 'कृपया ईमेल दर्ज करें!';
@@ -424,16 +424,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get pleaseEnterConfirmPassword => 'कृपया पुष्टि पासवर्ड दर्ज करें!';
 
   @override
-  String get passwordMustBeAtLeast6Characters => 'Password must be at least 6 characters';
+  String get passwordMustBeAtLeast6Characters => 'पासवर्ड कम से कम 6 अक्षरों का होना चाहिए';
 
   @override
-  String get passwordMustBeAtLeast8Characters => 'पासवर्ड कम से कम 8 वर्ण का होना चाहिए, जिसमें एक बड़ा अक्षर, संख्या और प्रतीक हो';
+  String get passwordMustBeAtLeast8Characters => 'पासवर्ड कम से कम 8 अक्षर लंबा होना चाहिए, जिसमें एक बड़ा अक्षर, नंबर और प्रतीक शामिल हो';
 
   @override
   String get phoneNumber => 'फोन नंबर';
 
   @override
-  String get number => 'number';
+  String get number => 'नंबर';
 
   @override
   String get sendCode => 'कोड भेजें';
@@ -442,13 +442,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get otpVerification => 'ओटीपी सत्यापन';
 
   @override
-  String get weHaveSendAnOtpOnGivenNumber => 'हमने दिए गए नंबर पर ओटीपी भेजा है';
+  String get weHaveSendAnOtpOnGivenNumber => 'हमने दिए गए नंबर पर एक ओटीपी भेजा है';
 
   @override
   String get resendCode => 'कोड पुनः भेजें';
 
   @override
-  String get resendCodeIn => 'Resend code in';
+  String get resendCodeIn => 'पुनः कोड भेजें';
 
   @override
   String get saveToPlaylist => 'प्लेलिस्ट में सहेजें';
@@ -460,185 +460,182 @@ class AppLocalizationsHi extends AppLocalizations {
   String get share => 'साझा करें';
 
   @override
-  String get all => 'सभी';
-
-  @override
   String get delete => 'हटाएं';
 
   @override
-  String get home => 'Home';
+  String get home => 'होम';
 
   @override
-  String get playlistNotFound => 'Playlist not found!';
+  String get playlistNotFound => 'प्लेलिस्ट नहीं मिली!';
 
   @override
-  String get channelDetailsIsSuccessfullyUpdated => 'Channel details is successfully updated!';
+  String get channelDetailsIsSuccessfullyUpdated => 'चैनल विवरण सफलतापूर्वक अपडेट किया गया!';
 
   @override
-  String get videoDetailsIsSuccessfullyUpdated => 'Video details is successfully updated!';
+  String get videoDetailsIsSuccessfullyUpdated => 'वीडियो विवरण सफलतापूर्वक अपडेट किया गया!';
 
   @override
-  String get editVideoDetail => 'Edit video detail';
+  String get editVideoDetail => 'वीडियो विवरण संपादित करें';
 
   @override
-  String get category => 'Category';
+  String get category => 'श्रेणी';
 
   @override
-  String get weAreHereToHelpWithAnyQuestionsOrIssuesYouMayHave => 'We\'re here to help with any questions or issues you may have.';
+  String get weAreHereToHelpWithAnyQuestionsOrIssuesYouMayHave => 'हम आपकी किसी भी प्रश्न या समस्या में सहायता के लिए यहाँ हैं।';
 
   @override
-  String get historyNotFound => 'History not found!';
+  String get historyNotFound => 'इतिहास नहीं मिला!';
 
   @override
-  String get videoDownloadedSuccessfully => 'Video downloaded successfully';
+  String get videoDownloadedSuccessfully => 'वीडियो सफलतापूर्वक डाउनलोड हो गया';
 
   @override
-  String get errorInHive => 'Error in hive';
+  String get errorInHive => 'हाइव में त्रुटि';
 
   @override
-  String get today => 'Today';
+  String get today => 'आज';
 
   @override
-  String get thisWeek => 'This week';
+  String get thisWeek => 'इस सप्ताह';
 
   @override
-  String get older => 'Older';
+  String get older => 'पुराना';
 
   @override
-  String get choosePlan => 'Choose a plan';
+  String get choosePlan => 'योजना चुनें';
 
   @override
-  String get monthlyOrYearly => 'Monthly or yearly? it\'s your call';
+  String get monthlyOrYearly => 'मासिक या वार्षिक? यह आपका निर्णय है';
 
   @override
-  String get noActivePlan => 'No active plan';
+  String get noActivePlan => 'कोई सक्रिय योजना नहीं है';
 
   @override
-  String get buyNow => 'Buy now';
+  String get buyNow => 'अभी खरीदें';
 
   @override
-  String get search => 'Search...';
+  String get search => 'खोजें...';
 
   @override
-  String get youAreGoingToDeleteYourAccount => 'You\'re going to delete your account. Are you sure?';
+  String get youAreGoingToDeleteYourAccount => 'आप अपना खाता हटाने जा रहे हैं। क्या आपको यकीन है?';
 
   @override
-  String get videoLiked => 'Video liked!';
+  String get videoLiked => 'वीडियो पसंद किया गया!';
 
   @override
-  String get videoDisliked => 'Video Disliked!';
+  String get videoDisliked => 'वीडियो नापसंद किया गया!';
 
   @override
-  String get noCommentsFound => 'No comments found!';
+  String get noCommentsFound => 'कोई टिप्पणियाँ नहीं मिलीं!';
 
   @override
-  String get commentAddedSuccessfully => 'Comment added successfully';
+  String get commentAddedSuccessfully => 'टिप्पणी सफलतापूर्वक जोड़ी गई';
 
   @override
-  String get subscriptionsNotFound => 'Subscriptions not found!';
+  String get subscriptionsNotFound => 'सदस्यता नहीं मिली!';
 
   @override
-  String get personalized => 'Personalized';
+  String get personalized => 'व्यक्तिगत';
 
   @override
-  String get none => 'None';
+  String get none => 'कोई नहीं';
 
   @override
-  String get transaction => 'Transaction';
+  String get transaction => 'लेनदेन';
 
   @override
-  String get success => 'Success';
+  String get success => 'सफलता';
 
   @override
-  String get failed => 'Failed';
+  String get failed => 'विफल';
 
   @override
-  String get pending => 'Pending';
+  String get pending => 'लंबित';
 
   @override
-  String get thumbnailIsRequired => 'Thumbnail is required';
+  String get thumbnailIsRequired => 'थंबनेल आवश्यक है';
 
   @override
-  String get videoIsRequired => 'Video is required';
+  String get videoIsRequired => 'वीडियो आवश्यक है';
 
   @override
-  String get categoryIsRequired => 'Category is required';
+  String get categoryIsRequired => 'श्रेणी आवश्यक है';
 
   @override
-  String get titleIsRequired => 'Title is required';
+  String get titleIsRequired => 'शीर्षक आवश्यक है';
 
   @override
-  String get descriptionIsRequired => 'Description is required';
+  String get descriptionIsRequired => 'विवरण आवश्यक है';
 
   @override
-  String get visibilityIsRequired => 'Visibility is required';
+  String get visibilityIsRequired => 'दृश्यता आवश्यक है';
 
   @override
-  String get pleaseFillAllRequiredFields => 'Please fill all required fields';
+  String get pleaseFillAllRequiredFields => 'कृपया सभी आवश्यक फ़ील्ड भरें';
 
   @override
-  String get invalid => 'Invalid';
+  String get invalid => 'अमान्य';
 
   @override
-  String get ok => 'Ok';
+  String get ok => 'ठीक है';
 
   @override
-  String get failToLoadCategories => 'Fail to load categories';
+  String get failToLoadCategories => 'श्रेणियाँ लोड करने में असफल';
 
   @override
-  String get noCategoriesAvailable => 'No categories available';
+  String get noCategoriesAvailable => 'कोई श्रेणियाँ उपलब्ध नहीं हैं';
 
   @override
-  String get on => 'on';
+  String get on => 'चालू';
 
   @override
-  String get off => 'off';
+  String get off => 'बंद';
 
   @override
-  String get shortsUploadedSuccessfully => 'Shorts uploaded successfully';
+  String get shortsUploadedSuccessfully => 'शॉर्ट्स सफलतापूर्वक अपलोड किए गए';
 
   @override
-  String get failedToUploadShorts => 'Failed to upload shorts';
+  String get failedToUploadShorts => 'शॉर्ट्स अपलोड करने में विफल';
 
   @override
-  String get addVideoDetails => 'Add video details';
+  String get addVideoDetails => 'वीडियो विवरण जोड़ें';
 
   @override
-  String get videoUploadedSuccessfully => 'Video uploaded successfully';
+  String get videoUploadedSuccessfully => 'वीडियो सफलतापूर्वक अपलोड हो गया';
 
   @override
-  String get pleaseEnterVideoUrl => 'Please enter Video URL!';
+  String get pleaseEnterVideoUrl => 'कृपया वीडियो URL दर्ज करें!';
 
   @override
-  String get invalidVideoUrl => 'Invalid Video URL';
+  String get invalidVideoUrl => 'अमान्य वीडियो URL';
 
   @override
-  String get commentLiked => 'Comment liked!';
+  String get commentLiked => 'टिप्पणी पसंद की गई!';
 
   @override
-  String get commentDisliked => 'Comment disliked!';
+  String get commentDisliked => 'टिप्पणी नापसंद की गई!';
 
   @override
-  String get addComment => 'Add comment...';
+  String get addComment => 'टिप्पणी जोड़ें...';
 
   @override
-  String get saveToLibrary => 'Save to library';
+  String get saveToLibrary => 'लाइब्रेरी में सहेजें';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'संपादित करें';
 
   @override
-  String get deleteVideo => 'Delete video';
+  String get deleteVideo => 'वीडियो हटाएं';
 
   @override
-  String get removeFromHistory => 'Remove from history';
+  String get removeFromHistory => 'इतिहास से हटाएं';
 
   @override
-  String get removeFromPlaylist => 'Remove from playlist';
+  String get removeFromPlaylist => 'प्लेलिस्ट से हटाएं';
 
   @override
-  String get changeLanguage => 'Change language';
+  String get changeLanguage => 'भाषा बदलें';
 
   @override
-  String get chooseLanguage => 'Choose language';
+  String get chooseLanguage => 'भाषा चुनें';
 }

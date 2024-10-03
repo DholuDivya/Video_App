@@ -129,6 +129,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/videos/
@@ -168,7 +169,6 @@ flutter:
     - family: Lato
       fonts:
         - asset: assets/fonts/lato/Lato-Regular.ttf
-
 
     - family: NotoSans
       fonts:
