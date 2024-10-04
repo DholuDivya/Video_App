@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_event.dart';
@@ -52,19 +53,25 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
 
  @override
   Widget build(BuildContext context) {
-   mode = context.read<ThemeBloc>().mode;
-   print('$mode   222222');
+   // mode = context.read<ThemeBloc>().mode;
+   // print('$mode   222222');
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: refreshData,
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              title: Container(
-                padding: EdgeInsets.only(left: 15.w),
-                child: mode == 1
-                    ? Image.asset('assets/images/homepage_logo_light.png', height: 75.h, width: 115.w,)
-                    : Image.asset('assets/images/homepage_logo_dark.png', height: 75.h, width: 115.w,),
+              title: BlocBuilder<ThemeBloc, ThemeMode>(
+                builder: (BuildContext context, ThemeMode state) {
+                  final box = Hive.box('themebox');
+                  final currentTheme = state;
+                  return Container(
+                    padding: EdgeInsets.only(left: 15.w),
+                    child: currentTheme == ThemeMode.light
+                        ? Image.asset('assets/images/homepage_logo_light.png', height: 75.h, width: 115.w,)
+                        : Image.asset('assets/images/homepage_logo_dark.png', height: 75.h, width: 115.w,),
+                  );
+                },
               ),
               // centerTitle: true,
               titleSpacing: 1.0,

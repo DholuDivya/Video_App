@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:vimeo_clone/Utils/Widgets/shimmer.dart';
@@ -417,17 +418,23 @@ class _HomePageContentState extends State<HomePageContent> {
   @override
   Widget build(BuildContext context) {
 
-    mode = context.read<ThemeBloc>().mode;
-    print('$mode   222222');
+    // mode = context.read<ThemeBloc>().mode;
+    // print('$mode   222222');
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
                   backgroundColor: Theme.of(context).colorScheme.surface,
-                  title: Container(
-                    padding: EdgeInsets.only(left: 15.w),
-                    child: mode == 1
-                        ? Image.asset('assets/images/homepage_logo_light.png', height: 75.h, width: 115.w,)
-                        : Image.asset('assets/images/homepage_logo_dark.png', height: 75.h, width: 115.w,),
+                  title: BlocBuilder<ThemeBloc, ThemeMode>(
+                    builder: (BuildContext context, ThemeMode state) {
+                      final box = Hive.box('themebox');
+                      final currentTheme = state;
+                      return Container(
+                        padding: EdgeInsets.only(left: 15.w),
+                        child: currentTheme == ThemeMode.light
+                            ? Image.asset('assets/images/homepage_logo_light.png', height: 75.h, width: 115.w,)
+                            : Image.asset('assets/images/homepage_logo_dark.png', height: 75.h, width: 115.w,),
+                      );
+                    },
                   ),
 
                   titleSpacing: 1.0,

@@ -93,8 +93,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    mode = context.read<ThemeBloc>().mode;
-    print('$mode       44444444');
 
     // print('1111   ::::    ${Global.userData!.userProfilePhoto}');
     // print('1111   ::::    ${Global.userData!.userName}');
@@ -106,10 +104,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Center(
-        child: mode == 1
-            ? Image.asset('assets/images/splash_logo_light.png', height: 100.h, width: 100.w,)
-            : Image.asset('assets/images/splash_logo_dark.png', height: 100.h, width: 100.w,)
+      body: BlocBuilder<ThemeBloc, ThemeMode>(
+        builder: (BuildContext context, ThemeMode state) {
+          final box = Hive.box('themebox');
+          final currentTheme = state;
+          return Center(
+              child: currentTheme == ThemeMode.light
+                  ? Image.asset('assets/images/splash_logo_light.png', height: 100.h, width: 100.w,)
+                  : Image.asset('assets/images/splash_logo_dark.png', height: 100.h, width: 100.w,)
+          );
+        },
       ),
     );
   }

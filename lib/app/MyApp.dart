@@ -24,6 +24,7 @@ import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_bloc.dart';
 import 'package:vimeo_clone/bloc/change_app_language/change_app_language_bloc.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
+import 'package:vimeo_clone/bloc/clear_all_history/clear_all_history_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/delete_playlist/delete_playlist_bloc.dart';
 import 'package:vimeo_clone/bloc/edit_channel/edit_channel_bloc.dart';
@@ -203,6 +204,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => YourShortsBloc()),
         BlocProvider(create: (context) => SettingsApiBloc()),
         BlocProvider(create: (context) => ChangeAppLanguageBloc()),
+        BlocProvider(create: (context) => ClearAllHistoryBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {

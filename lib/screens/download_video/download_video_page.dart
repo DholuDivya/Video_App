@@ -34,8 +34,32 @@ class _DownloadedVideosPageState extends State<DownloadedVideosPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.downloads),
       ),
-      body: videoBox == null
-          ? const Center(child: CircularProgressIndicator())
+      body: videoBox == null || !videoBox.isOpen // Check if videoBox is initialized and open
+          ? Center(
+        child: CircularProgressIndicator(), // Show a loading indicator while videoBox is being initialized
+      )
+          :videoBox.isEmpty
+          ? Container(
+              // color: yellow,
+              child: Center(child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    // color: red,
+                    height: 120.h,
+                    width: 240.w,
+                    child: Image.asset('assets/images/no_data.png'),
+                  ),
+                  Text(
+                    AppLocalizations.of(context)!.noVideosDownloadedYet,
+                    style: TextStyle(
+                        fontFamily: fontFamily,
+                        fontSize: 15.sp
+                    ),
+                  ),
+                ],
+                ),)
+              )
           : ValueListenableBuilder(
         valueListenable: videoBox.listenable(),
         builder: (context, Box<DownloadedVideoModel> box, _) {
@@ -69,7 +93,7 @@ class _DownloadedVideosPageState extends State<DownloadedVideosPage> {
 
 
                 return Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     // top: 10.h
                   ),
                   child: CustomDownloadVideoPreview(

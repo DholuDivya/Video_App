@@ -318,7 +318,9 @@ class ApiBaseHelper {
     print('#@###########   ${params}');
     print('%%%%%%%%%%%%%%      ${headers}');
     print('faihfiahihihif    ${url}');
+
     try {
+      print('ssbbdfb');
       final response =
       await dio.delete(
         url,
@@ -328,6 +330,7 @@ class ApiBaseHelper {
           headers: headers,
         ),
       );
+      print('hiushgs');
       // .timeout(Duration(seconds: timeOut));
       log('+++ HEADERS  ${headers}');
       if (kDebugMode) {

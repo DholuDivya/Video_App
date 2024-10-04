@@ -194,7 +194,13 @@ class _YourVideoPageState extends State<YourVideoPage> {
                   final shorts = state.yourShortsData;
 
                   return shorts.isNotEmpty
-                      ? ListView.builder(
+                      ? GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 0.4,
+                      mainAxisSpacing: 0.4,
+                      mainAxisExtent: 200,
+                    ),
                     shrinkWrap: true,
                     itemCount: shorts.length,
                     itemBuilder: (BuildContext context, int index) {

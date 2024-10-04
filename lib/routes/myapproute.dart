@@ -335,6 +335,15 @@ final navigatorContext = GlobalKeys.navigatorKey.currentContext;
         ),
 
 
+        GoRoute(
+          name: 'downloadVideoPage',
+          path: '/downloadVideoPage',
+          pageBuilder: (context, state) => const CupertinoPage (
+            child: DownloadedVideosPage(),
+          ),
+        ),
+
+
       ]
   );
 // }

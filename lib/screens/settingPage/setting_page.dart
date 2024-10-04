@@ -7,7 +7,13 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:vimeo_clone/Utils/Widgets/setting_page_btn.dart';
+import 'package:vimeo_clone/bloc/add_user_history/add_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
+import 'package:vimeo_clone/bloc/clear_all_history/clear_all_history_bloc.dart';
+import 'package:vimeo_clone/bloc/clear_all_history/clear_all_history_event.dart';
+import 'package:vimeo_clone/bloc/get_user_history/get_user_history_event.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_bloc.dart';
+import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart';
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_event.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
@@ -16,6 +22,7 @@ import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
 import '../../bloc/change_app_language/change_app_language_bloc.dart';
 import '../../bloc/change_app_language/change_app_language_event.dart';
+import '../../bloc/get_user_history/get_user_history_bloc.dart';
 import '../../config/colors.dart';
 import '../../config/constants.dart';
 import '../../routes/myapproute.dart';
@@ -33,6 +40,20 @@ class SettingPage extends StatefulWidget {
 
 
 class _SettingPageState extends State<SettingPage> {
+
+  final int channelId = int.parse(Global.userData!.userChannelId!);
+
+  void disposeApi(){
+    context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
+    context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: channelId));
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    disposeApi();
+    super.dispose();
+  }
 
   void showThemeDialog(BuildContext context) {
     ThemeMode? _selectedTheme = context.read<ThemeBloc>().state;
@@ -276,7 +297,9 @@ class _SettingPageState extends State<SettingPage> {
                   CustomSettingButton(
                       icon: HeroiconsOutline.xCircle,
                       btnName: AppLocalizations.of(context)!.clearWatchHistory,
-                      onTap: () {}
+                      onTap: () {
+                        clearAllHistory();
+                      }
                   ),
 
                   // LANGUAGE
@@ -425,7 +448,6 @@ class _SettingPageState extends State<SettingPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
-
                         style: ButtonStyle(
                           padding: WidgetStatePropertyAll(
                             EdgeInsets.symmetric(horizontal: 10.w)
@@ -456,7 +478,7 @@ class _SettingPageState extends State<SettingPage> {
                           context.read<AuthBloc>().add(OnDeleteUserAccountRequestEvent());
                         },
                         child: Text(
-                            AppLocalizations.of(context)!.yesDeleteIt,
+                            'Yes, I\'m sure',
                           style: TextStyle(
                             fontFamily: fontFamily,
                             color: Colors.white,
@@ -472,6 +494,95 @@ class _SettingPageState extends State<SettingPage> {
         }
       );
     }
+
+
+  void clearAllHistory(){
+    showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            title: Center(
+              child: CircleAvatar(
+                backgroundColor: Colors.red.shade100,
+                child: Icon(HeroiconsSolid.exclamationTriangle,
+                  color: red,
+                ),
+              ),
+            ),
+
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 10.h,),
+                Center(
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    'Are you sure? Your history cannot be restored.',
+                    style: TextStyle(
+                        fontFamily: fontFamily,
+                        fontSize: 16.sp
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h,),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+
+                        style: ButtonStyle(
+                            padding: WidgetStatePropertyAll(
+                                EdgeInsets.symmetric(horizontal: 10.w)
+                            ),
+                            backgroundColor: WidgetStatePropertyAll(greyShade300)
+                        ),
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'No',
+                          style: TextStyle(
+                              fontFamily: fontFamily,
+                              color: greyShade900,
+                              fontSize: 12.sp
+                          ),
+                        )
+                    ),
+                    ElevatedButton(
+                        style: ButtonStyle(
+                            padding: WidgetStatePropertyAll(
+                                EdgeInsets.symmetric(horizontal: 10.w)
+                            ),
+                            backgroundColor: WidgetStatePropertyAll(red)
+                        ),
+                        onPressed: (){
+                          // final password = _passwordController.text;
+                          context.read<ClearAllHistoryBloc>().add(ClearAllHistoryRequest());
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'Yes, I\'m sure',
+                          style: TextStyle(
+                              fontFamily: fontFamily,
+                              color: Colors.white,
+                              fontSize: 12.sp
+                          ),
+                        )
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        }
+    );
+  }
+
+
+
 }
 
 

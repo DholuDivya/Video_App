@@ -142,10 +142,11 @@ class _UserPageState extends State<UserPage> {
 
               UserPageButton(
                 onTap: (){
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DownloadedVideosPage())
-                  );
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(builder: (context) => DownloadedVideosPage())
+                  // );
+                  GoRouter.of(context).pushNamed('downloadVideoPage');
                 },
                   buttonName: AppLocalizations.of(context)!.downloads,
                   buttonIcon: HeroiconsOutline.arrowDownTray
