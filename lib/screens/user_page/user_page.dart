@@ -1,6 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
@@ -12,10 +16,10 @@ import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart'
 import 'package:vimeo_clone/bloc/your_videos/your_videos_bloc.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_event.dart';
 import 'package:vimeo_clone/bloc/your_videos/your_videos_state.dart';
+import 'package:vimeo_clone/config/colors.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 import 'package:vimeo_clone/config/security.dart';
-import 'package:vimeo_clone/screens/download_video/download_video_page.dart';
 import 'package:vimeo_clone/screens/help/help_page.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/custom_user_page_button.dart';
 import 'package:vimeo_clone/screens/user_page/widgets/user_header_widget.dart';
@@ -24,6 +28,8 @@ import 'package:vimeo_clone/screens/user_page/widgets/user_playlist_widget.dart'
 import '../../bloc/your_shorts/your_shorts_bloc.dart';
 import '../../bloc/your_shorts/your_shorts_event.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../config/internet_connectivity.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -37,12 +43,32 @@ class _UserPageState extends State<UserPage> {
   var historyLength = 0;
   var historyData = [];
   final channelId = Global.userData!.userChannelId;
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
 
   @override
   void initState() {
     print('88888888888888888888888');
 
+    CheckInternet.initConnectivity().then((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        setState(() {
+          _connectionStatus = results;
+        });
+      }
+    });
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        CheckInternet.updateConnectionStatus(results).then((value) {
+          setState(() {
+            _connectionStatus = value;
+          });
+        });
+      }
+    });
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(channelId!)));
 
@@ -63,9 +89,18 @@ class _UserPageState extends State<UserPage> {
     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(channelId!)));
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
+
+
     final historyBloc = context.read<GetUserHistoryBloc>();
     historyBloc.stream.listen((state){
       if(state is GetUserHistorySuccess){
@@ -98,7 +133,6 @@ class _UserPageState extends State<UserPage> {
               log('***********************${Global.userData!.userChannelId}*********************');
               GoRouter.of(context).pushNamed('settingPage');
             },
-
           ),
         ],
       ),
@@ -116,7 +150,8 @@ class _UserPageState extends State<UserPage> {
               // SizedBox(height: 10.h,),
               UserPlaylistWidget(),
 
-              BlocBuilder<YourVideosBloc, YourVideosState>(
+              _connectionStatus.contains(connectivityCheck)
+                  ? SizedBox.shrink() : BlocBuilder<YourVideosBloc, YourVideosState>(
                 builder: (BuildContext context, YourVideosState state) {
                   int? totalVideos;
                   print('pppppppppppppp   $state');
@@ -152,9 +187,12 @@ class _UserPageState extends State<UserPage> {
                   buttonIcon: HeroiconsOutline.arrowDownTray
               ),
 
-              const Divider(thickness: 0.2, color: Colors.grey,),
+              // _connectionStatus.contains(connectivityCheck)
+              //     ? SizedBox.shrink() :
+              Divider(thickness: 0.2, color: Colors.grey,),
 
-              UserPageButton(
+              _connectionStatus.contains(connectivityCheck)
+                  ? SizedBox.shrink() : UserPageButton(
                   onTap: (){
                     GoRouter.of(context).pushNamed('plansPage');
                   },
@@ -165,7 +203,8 @@ class _UserPageState extends State<UserPage> {
               // const Divider(thickness: 0.2, color: Colors.grey,),
 
 
-              UserPageButton(
+              _connectionStatus.contains(connectivityCheck)
+                  ? SizedBox.shrink() : UserPageButton(
                   buttonName: AppLocalizations.of(context)!.helpAndFeedback,
                   buttonIcon: HeroiconsOutline.questionMarkCircle,
                 onTap: (){
@@ -175,6 +214,11 @@ class _UserPageState extends State<UserPage> {
                     );
                 },
               ),
+
+              _connectionStatus.contains(connectivityCheck)
+                  ? Container(
+                child: Center(child: CircularProgressIndicator(color: primaryColor,)),
+              ) : SizedBox.shrink()
 
             ],
           ),

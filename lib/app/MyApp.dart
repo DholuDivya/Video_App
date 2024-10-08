@@ -23,6 +23,7 @@ import 'package:vimeo_clone/bloc/all_video_list/all_video_list_bloc.dart';
 import 'package:vimeo_clone/bloc/all_video_list/all_video_list_event.dart';
 import 'package:vimeo_clone/bloc/auth/auth_bloc.dart';
 import 'package:vimeo_clone/bloc/change_app_language/change_app_language_bloc.dart';
+import 'package:vimeo_clone/bloc/change_app_language/change_app_language_event.dart';
 import 'package:vimeo_clone/bloc/channel_profile/channel_profile_bloc.dart';
 import 'package:vimeo_clone/bloc/clear_all_history/clear_all_history_bloc.dart';
 import 'package:vimeo_clone/bloc/create_playlist/create_playlist_bloc.dart';
@@ -150,6 +151,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider(create: (context) => YourVideosBloc()),
         BlocProvider(create: (context) => ThemeBloc()),
+        BlocProvider(create: (context) => ChangeAppLanguageBloc()),
         BlocProvider(create: (context) => AuthBloc(AuthRepository(ApiBaseHelper()))),
         BlocProvider(create: (context) => VideoCategoriesBloc(VideoCategoriesRepo())..add(GetCategoryEvent())),
         BlocProvider(create: (context) => VideoListBloc(VideoListRepo())),
@@ -203,47 +205,99 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => UserTransactionBloc()),
         BlocProvider(create: (context) => YourShortsBloc()),
         BlocProvider(create: (context) => SettingsApiBloc()),
-        BlocProvider(create: (context) => ChangeAppLanguageBloc()),
         BlocProvider(create: (context) => ClearAllHistoryBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (BuildContext context, themeMode) {
+
           return ScreenUtilInit(
-            child: MaterialApp.router(
-              theme: lightTheme,
-              darkTheme: darkTheme,
-              themeMode: themeMode,
-              debugShowCheckedModeBanner: false,
-              // localizationsDelegates: AppLocalizations.localizationsDelegates,
-              // supportedLocales: AppLocalizations.supportedLocales,
-              // localeResolutionCallback: (locale, supportedLocales) {
-              //   // Add your custom resolution logic
-              //   return locale;
-              // },
-              localizationsDelegates: const [
-                // S.delegate,
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              locale: context.select((ChangeAppLanguageBloc bloc) {
-                if (bloc.state is ChangeAppLanguageSuccess) {
-                  return Locale((bloc.state as ChangeAppLanguageSuccess).appLanguage);
-                }
-                return Locale(Global.userData?.language ?? 'en'); // Default locale
-              }),
-              supportedLocales: const [
-                Locale('en'), // English
-                Locale('hi'), // Hindi
-                Locale('ar'), // Arabic
-                Locale('fr'), // French
-              ],
-              builder: FToastBuilder(),
-              routerConfig: router,
-              scaffoldMessengerKey: GlobalKeys.scaffoldMessengerKey,
+            child: BlocBuilder<ThemeBloc, ThemeMode>(
+              builder: (context, themeMode) {
+                return BlocBuilder<ChangeAppLanguageBloc, ChangeAppLanguageState>(
+                  builder: (context, languageState) {
+                    // Ensure appLanguage is not null or empty, else fallback to 'en'
+                    String? appLanguage = 'en';
+                    print('ogkodsg   $appLanguage');
+                    if (languageState is ChangeAppLanguageSuccess && languageState.appLanguage.isNotEmpty) {
+                      print('snksgsihi   ${languageState.appLanguage}');
+                      appLanguage = languageState.appLanguage;
+                    } else {
+                      // Fallback to language stored in Global.userData or default to 'en'
+                      print('gighirg    $appLanguage');
+                      appLanguage = Global.userData!.language ?? 'en';
+                      print('brgurugbhurgurgbhur     $appLanguage');
+                      print('brgurugbhurgurgbhur     ${Global.userData!.language}');
+                    }
+
+                    // Create the Locale object
+                    Locale appLocale = Locale(appLanguage);
+
+                    return MaterialApp.router(
+                      theme: lightTheme,
+                      darkTheme: darkTheme,
+                      themeMode: themeMode,
+                      debugShowCheckedModeBanner: false,
+                      localizationsDelegates: const [
+                        AppLocalizations.delegate,
+                        GlobalMaterialLocalizations.delegate,
+                        GlobalWidgetsLocalizations.delegate,
+                        GlobalCupertinoLocalizations.delegate,
+                      ],
+                      locale: appLocale,  // Pass the validated Locale
+                      supportedLocales: const [
+                        Locale('en'), // English
+                        Locale('hi'), // Hindi
+                        Locale('ar'), // Arabic
+                        Locale('fr'), // French
+                      ],
+                      builder: FToastBuilder(),
+                      routerConfig: router,
+                      scaffoldMessengerKey: GlobalKeys.scaffoldMessengerKey,
+                    );
+                  },
+                );
+              },
             ),
           );
+
+
+
+
+          // return ScreenUtilInit(
+          //   child: MaterialApp.router(
+          //     theme: lightTheme,
+          //     darkTheme: darkTheme,
+          //     themeMode: themeMode,
+          //     debugShowCheckedModeBanner: false,
+          //     // localizationsDelegates: AppLocalizations.localizationsDelegates,
+          //     // supportedLocales: AppLocalizations.supportedLocales,
+          //     // localeResolutionCallback: (locale, supportedLocales) {
+          //     //   // Add your custom resolution logic
+          //     //   return locale;
+          //     // },
+          //     localizationsDelegates: const [
+          //       AppLocalizations.delegate,
+          //       GlobalMaterialLocalizations.delegate,
+          //       GlobalWidgetsLocalizations.delegate,
+          //       GlobalCupertinoLocalizations.delegate,
+          //     ],
+          //     locale: context.select((ChangeAppLanguageBloc bloc) {
+          //       if (bloc.state is ChangeAppLanguageSuccess) {
+          //         return Locale((bloc.state as ChangeAppLanguageSuccess).appLanguage);
+          //       }
+          //       return Locale(Global.userData?.language ?? 'en'); // Fallback to English if no language is set
+          //     }),
+          //     supportedLocales: const [
+          //       Locale('en'), // English
+          //       Locale('hi'), // Hindi
+          //       Locale('ar'), // Arabic
+          //       Locale('fr'), // French
+          //     ],
+          //     builder: FToastBuilder(),
+          //     routerConfig: router,
+          //     scaffoldMessengerKey: GlobalKeys.scaffoldMessengerKey,
+          //   ),
+          // );
         }
       ),
     );

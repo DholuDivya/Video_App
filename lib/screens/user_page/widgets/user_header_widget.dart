@@ -18,6 +18,8 @@ class UserHeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final String userName = Global.userData!.userName!;
     final String channelLogo = Global.userData!.userProfilePhoto!;
+
+    print('mjsfijgio    $channelLogo');
     return Container(
       // color: red,
       height: ScreenSize.screenHeight(context) * 0.12,

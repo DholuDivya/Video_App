@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +9,6 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:vimeo_clone/Utils/Widgets/setting_page_btn.dart';
-import 'package:vimeo_clone/bloc/add_user_history/add_user_history_bloc.dart';
 import 'package:vimeo_clone/bloc/auth/auth_event.dart';
 import 'package:vimeo_clone/bloc/clear_all_history/clear_all_history_bloc.dart';
 import 'package:vimeo_clone/bloc/clear_all_history/clear_all_history_event.dart';
@@ -17,6 +18,7 @@ import 'package:vimeo_clone/bloc/get_user_playlist/get_user_playlist_event.dart'
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/bloc/theme/theme_event.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
+import 'package:vimeo_clone/config/internet_connectivity.dart';
 import 'package:vimeo_clone/utils/widgets/CustomLogOutWidget.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
@@ -27,8 +29,6 @@ import '../../config/colors.dart';
 import '../../config/constants.dart';
 import '../../routes/myapproute.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../utils/widgets/customBottomSheet.dart';
 import '../../utils/widgets/custom_radio_bottom_sheet.dart';
 
 class SettingPage extends StatefulWidget {
@@ -42,10 +42,38 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
 
   final int channelId = int.parse(Global.userData!.userChannelId!);
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   void disposeApi(){
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: channelId));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    CheckInternet.initConnectivity().then((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        setState(() {
+          _connectionStatus = results;
+        });
+      }
+    });
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        CheckInternet.updateConnectionStatus(results).then((value) {
+          setState(() {
+            _connectionStatus = value;
+          });
+        });
+      }
+    });
+
+    super.initState();
   }
 
   @override
@@ -71,7 +99,7 @@ class _SettingPageState extends State<SettingPage> {
                 bottom: ScreenSize.screenHeight(context) * 0.01),
             title: Text(
               AppLocalizations.of(context)!.appearance,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: fontFamily
               ),
             ),
@@ -105,7 +133,7 @@ class _SettingPageState extends State<SettingPage> {
                       title: Text(
                         AppLocalizations.of(context)!.darkMode,
                         style:
-                        TextStyle(fontSize: 15,
+                        const TextStyle(fontSize: 15,
                             fontFamily: fontFamily
                         ),
                       ),
@@ -258,7 +286,8 @@ class _SettingPageState extends State<SettingPage> {
                 children: [
 
                   // EDIT MY CHANNEL
-                  CustomSettingButton(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomSettingButton(
                       icon: HeroiconsOutline.pencilSquare,
                       btnName: AppLocalizations.of(context)!.editMyChannel,
                       onTap: () {
@@ -267,7 +296,8 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // WITHDRAWALS
-                  CustomSettingButton(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomSettingButton(
                       icon: HeroiconsOutline.buildingLibrary,
                       btnName: AppLocalizations.of(context)!.transactions,
                       onTap: () {
@@ -285,7 +315,8 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // PICTURE IN PICTURE
-                  CustomSettingButton(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomSettingButton(
                       icon: Remix.vip_crown_line,
                       btnName: AppLocalizations.of(context)!.yourPlans,
                       onTap: () {
@@ -294,7 +325,8 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // CLEAR WATCHED HISTORY
-                  CustomSettingButton(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomSettingButton(
                       icon: HeroiconsOutline.xCircle,
                       btnName: AppLocalizations.of(context)!.clearWatchHistory,
                       onTap: () {
@@ -311,13 +343,17 @@ class _SettingPageState extends State<SettingPage> {
                       }
                   ),
 
-                  SizedBox(height: 10,),
-                  Divider(thickness: 0.5, color: Colors.grey,),
-                  SizedBox(height: 10,),
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : SizedBox(height: 10,),
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : Divider(thickness: 0.5, color: Colors.grey,),
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : SizedBox(height: 10,),
 
 
                   // RATE OUR APP
-                  CustomSettingButton(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomSettingButton(
                       icon: HeroiconsOutline.star,
                       btnName: AppLocalizations.of(context)!.rateOurApp,
                       onTap: () {
@@ -326,7 +362,8 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // INVITE FRIENDS
-                  CustomSettingButton(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomSettingButton(
                       icon: HeroiconsOutline.userPlus,
                       btnName: AppLocalizations.of(context)!.inviteFriends,
                       onTap: () async {
@@ -350,7 +387,8 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // ABOUT US
-                  CustomSettingButton(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomSettingButton(
                       icon: HeroiconsOutline.informationCircle,
                       btnName: AppLocalizations.of(context)!.aboutUs,
                       onTap: () {
@@ -359,7 +397,8 @@ class _SettingPageState extends State<SettingPage> {
                   ),
 
                   // TERMS OF USE
-                  CustomSettingButton(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomSettingButton(
                       icon: HeroiconsOutline.clipboardDocumentList,
                       btnName: AppLocalizations.of(context)!.termsAndConditions,
                       onTap: () {
@@ -370,7 +409,8 @@ class _SettingPageState extends State<SettingPage> {
 
 
                   // HELP
-                  CustomSettingButton(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomSettingButton(
                       icon: HeroiconsOutline.questionMarkCircle,
                       btnName: AppLocalizations.of(context)!.helpAndSupport,
                       onTap: () {
@@ -378,11 +418,15 @@ class _SettingPageState extends State<SettingPage> {
                       }
                   ),
 
-                  const SizedBox(height: 10,),
-                  const Divider(thickness: 0.5, color: Colors.grey,),
-                  const SizedBox(height: 10,),
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : const SizedBox(height: 10,),
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : const Divider(thickness: 0.5, color: Colors.grey,),
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : const SizedBox(height: 10,),
 
-                  CustomLogOutWidget(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomLogOutWidget(
                     icon: HeroiconsOutline.trash,
                       btnName: AppLocalizations.of(context)!.deleteAccount,
                       onTap: (){
@@ -390,7 +434,8 @@ class _SettingPageState extends State<SettingPage> {
                       }
                   ),
 
-                  CustomLogOutWidget(
+                  _connectionStatus.contains(connectivityCheck)
+                      ? SizedBox.shrink() : CustomLogOutWidget(
                     icon: HeroiconsOutline.arrowLeftOnRectangle,
                       btnName: AppLocalizations.of(context)!.logOut,
                       onTap: () {
@@ -398,9 +443,6 @@ class _SettingPageState extends State<SettingPage> {
                         context.read<AuthBloc>().add(OnLogOutRequestEvent());
                       }
                   ),
-
-
-
                 ],
               ),
             );

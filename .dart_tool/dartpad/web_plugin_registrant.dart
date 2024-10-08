@@ -7,6 +7,7 @@
 // ignore_for_file: type=lint
 
 import 'package:app_links_web/app_links_web.dart';
+import 'package:connectivity_plus/src/connectivity_plus_web.dart';
 import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:firebase_analytics_web/firebase_analytics_web.dart';
 import 'package:firebase_auth_web/firebase_auth_web.dart';
@@ -29,6 +30,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 void registerPlugins([final Registrar? pluginRegistrar]) {
   final Registrar registrar = pluginRegistrar ?? webPluginRegistrar;
   AppLinksPluginWeb.registerWith(registrar);
+  ConnectivityPlusWebPlugin.registerWith(registrar);
   FilePickerWeb.registerWith(registrar);
   FirebaseAnalyticsWeb.registerWith(registrar);
   FirebaseAuthWeb.registerWith(registrar);

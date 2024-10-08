@@ -133,6 +133,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         print('${event.password}');
 
         final userToken = await authRepository.loginUser(event.email, event.password);
+        print('jgifsjrigjgirjrig    $userToken');
         if(userToken != null){
           emit(LoginAuthSuccess(userToken: userToken));
         }else{

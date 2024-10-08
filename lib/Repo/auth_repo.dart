@@ -8,6 +8,7 @@ import 'package:vimeo_clone/config/ApiBaseHelper.dart';
 import 'package:vimeo_clone/config/api_routes.dart';
 import 'package:vimeo_clone/config/global_variable.dart';
 
+import '../config/constants.dart';
 import '../config/notification_service.dart';
 
 class AuthRepository{
@@ -130,8 +131,8 @@ class AuthRepository{
   // VERIFY TOKEN FROM FIREBASE
   Future<String?> loginWithGoogle(String firebaseUserToken) async {
     try{
-      // final fcmId = await NotificationService().getFcmToken();
-      final fcmId = 'gbodpkhbdokotdkodknodkonkdgton';
+      final fcmId = await NotificationService().getFcmToken();
+      // final fcmId = 'gbodpkhbdokotdkodknodkonkdgton';
       print('FCM ID  ::::  $fcmId');
       final response = await apiHelper.firebaseLoginPostAPICall(loginWithGoogleUrl, {
         'fcm_id': fcmId
@@ -155,14 +156,15 @@ class AuthRepository{
           final String userNumber = response.data['user']['phone_number'] ?? '';
           final String userEmail = response.data['user']['email'] ?? '';
           final String userProfilePhoto = response.data['user']['profile'] ?? '';
+          final String localProfilePath = await downloadAndSaveProfilePicture(userProfilePhoto);
           final String userChannelId = response.data['channels'][0]['id'].toString() ?? '';
-          final String language = '';
+          final String language = 'en';
           print('++++++++    ${userToken}'
               '++++++++    ${userId}'
               '++++++++    ${userName}'
               '++++++++    ${userNumber}'
               '++++++++    ${userEmail}'
-              '++++++++    ${userProfilePhoto}'
+              '++++++++    ${localProfilePath}'
               '++++++++    ${userChannelId}');
 
           print('88888888888888888888888');
@@ -172,7 +174,7 @@ class AuthRepository{
             userName,
             userNumber,
             userEmail,
-            userProfilePhoto,
+              localProfilePath,
             userChannelId,
             language
           );
@@ -199,8 +201,8 @@ class AuthRepository{
 
   Future<String?> loginWithPhone(String firebaseUserToken, String userName) async {
     try{
-      // final fcmId = await NotificationService().getFcmToken();
-      final fcmId = 'gbodpkhbdokotdkodknodkonkdgton';
+      final fcmId = await NotificationService().getFcmToken();
+      // final fcmId = 'gbodpkhbdokotdkodknodkonkdgton';
       print('FCM ID  ::::  $fcmId');
       final response = await apiHelper.firebaseLoginPostAPICall(loginWithPhoneUrl,
           {
@@ -228,14 +230,15 @@ class AuthRepository{
         final String userNumber = response.data['user']['phone_number'] ?? '';
         final String userEmail = response.data['user']['email'] ?? '';
         final String userProfilePhoto = response.data['user']['profile'] ?? '';
+        final String localProfilePath = await downloadAndSaveProfilePicture(userProfilePhoto);
         final String userChannelId = response.data['channels'][0]['id'].toString() ?? '';
-        final String language = '';
+        final String language = 'en';
         print('++++++++    ${userToken}'
             '++++++++    ${userId}'
             '++++++++    ${userName}'
             '++++++++    ${userNumber}'
             '++++++++    ${userEmail}'
-            '++++++++    ${userProfilePhoto}'
+            '++++++++    ${localProfilePath}'
             '++++++++    ${userChannelId}');
 
         print('88888888888888888888888');
@@ -245,7 +248,7 @@ class AuthRepository{
           userName,
           userNumber,
           userEmail,
-          userProfilePhoto,
+            localProfilePath,
           userChannelId,
           language
         );
@@ -283,8 +286,8 @@ class AuthRepository{
   // LOGIN USER
   Future<dynamic> loginUser(String email, String password) async {
     try{
-      // final fcmId = await NotificationService().getFcmToken();
-      final fcmId = 'gbodpkhbdokotdkodknodkonkdgton';
+      final fcmId = await NotificationService().getFcmToken();
+      // final fcmId = 'gbodpkhbdokotdkodknodkonkdgton';
       print('FCM ID  ::::  $fcmId');
       final response = await apiHelper.loginUserEmail(loginUserUrl,
           {
@@ -299,26 +302,29 @@ class AuthRepository{
         // STORING THE TOKEN IN HIVE ------
         if(response.data != null){
           final String userToken = response.data['data']['token'] ?? '';
-          print('1');
+          print('1 :::  $userToken');
           final String userId = response.data['data']['user']['id'].toString() ?? '';
-          print('2');
+          print('2 :::  $userId');
           final String userName = response.data['data']['user']['name'] ?? '';
-          print('3');
+          print('3 :::  $userName');
           final String userNumber = response.data['data']['user']['phone_number'] ?? '';
-          print('4');
+          print('4 :::  $userNumber');
           final String userEmail = response.data['data']['user']['email'] ?? '';
-          print('5');
+          print('5 :::  $userEmail');
           final String userProfilePhoto = response.data['data']['user']['profile'] ?? '';
-          print('6');
-          final String userChannelId = response.data['data']['channel'][0]['id'].toString();
-          print('7');
-          final String language = '';
+          print('6 :::  $userProfilePhoto');
+          final String userChannelId = response.data['data']['channels'][0]['id'].toString();
+          print('7 :::  $userChannelId');
+          final String language = 'en';
+
+          final String localProfilePath = await downloadAndSaveProfilePicture(userProfilePhoto);
+
           print('++++++++    ${userToken}'
               '++++++++    ${userId}'
               '++++++++    ${userName}'
               '++++++++    ${userNumber}'
               '++++++++    ${userEmail}'
-              '++++++++    ${userProfilePhoto}'
+              '++++++++    ${localProfilePath}'
               '++++++++    ${userChannelId}');
 
           print('88888888888888888888888');
@@ -328,7 +334,7 @@ class AuthRepository{
             userName,
             userNumber,
             userEmail,
-            userProfilePhoto,
+            localProfilePath,
             userChannelId,
             language
           );

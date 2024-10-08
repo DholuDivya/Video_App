@@ -15,6 +15,8 @@ import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../routes/myapproute.dart';
+
 class VerificationPage extends StatefulWidget {
   final String verificationId;
   // final String name;
@@ -119,8 +121,8 @@ class _VerificationPageState extends State<VerificationPage> {
                 if(state is AuthSuccess){
                   log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${Global.userData}');
                   // log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${Global.userName}');
-                  GoRouter.of(context).pushReplacementNamed('homePage');
-                  // router.goNamed('homePage');
+                  // GoRouter.of(context).pushReplacementNamed('homePage');
+                  router.goNamed('homePage');
                 }else if(state is AuthFailure){
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid OTP')));
                 }

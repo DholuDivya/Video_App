@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +25,8 @@ import '../../../config/colors.dart';
 import '../../../config/global_variable.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../config/internet_connectivity.dart';
+
 
 class UserPlaylistWidget extends StatefulWidget {
   UserPlaylistWidget({super.key});
@@ -31,6 +36,33 @@ class UserPlaylistWidget extends StatefulWidget {
 }
 
 class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    CheckInternet.initConnectivity().then((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        setState(() {
+          _connectionStatus = results;
+        });
+      }
+    });
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        CheckInternet.updateConnectionStatus(results).then((value) {
+          setState(() {
+            _connectionStatus = value;
+          });
+        });
+      }
+    });
+    super.initState();
+  }
+
 
 
 
@@ -51,10 +83,17 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
 
   List<int> selectedToRemove = [];
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return _connectionStatus.contains(connectivityCheck)
+        ? SizedBox.shrink() : Column(
       children: [
         Padding(
           padding: EdgeInsets.only(
@@ -65,7 +104,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
             children: [
               Text(
                 AppLocalizations.of(context)!.playlist,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 16,
                     fontFamily: fontFamily,
                     fontWeight: FontWeight.w500),
@@ -82,7 +121,7 @@ class _UserPlaylistWidgetState extends State<UserPlaylistWidget> {
                 },
                 child: Text(
                   AppLocalizations.of(context)!.viewAll,
-                  style: TextStyle(fontSize: 12, fontFamily: fontFamily),
+                  style: const TextStyle(fontSize: 12, fontFamily: fontFamily),
                 ),
               ),
             ],

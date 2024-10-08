@@ -11,7 +11,7 @@ class VideoCategoriesInitial extends VideoCategoryState{
 
 class VideoCategoriesLoading extends VideoCategoryState{
   @override
-  List<Object?> get props => throw [];
+  List<Object?> get props => [];
 }
 
 class VideoCategoriesLoaded extends VideoCategoryState{

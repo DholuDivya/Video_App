@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vimeo_clone/Config/colors.dart';
 
 const String appName = "Cineplex";
 const String apiUrl = "https://cineplex.infinitietech.com/api/";
@@ -12,6 +15,7 @@ const String baseUrl = "https://cineplex.infinitietech.com/";
 const String firebase = "";
 const String adUnitId = "ca-app-pub-2734509756038446/1670883979";
 const String appPackageName = "";
+const ConnectivityResult connectivityCheck = ConnectivityResult.none;
 
 
 // FONT FAMILY
@@ -69,6 +73,17 @@ String formatLastDuration(Duration duration) {
 }
 
 
+// Define the custom CircularProgressIndicator as a constant.
+SizedBox customCircularProgressIndicator = SizedBox(
+  child: Center(
+    child: CircularProgressIndicator(
+      color: primaryColor,
+    ),
+  ),
+);
+
+
+
 class ToastManager {
   static final ToastManager _instance = ToastManager._internal();
   factory ToastManager() => _instance;
@@ -106,6 +121,30 @@ class ToastManager {
     _toastTimer = Timer(Duration(seconds: 1), () {
       _isToastShowing = false;
     });
+  }
+}
+
+
+Future<String> downloadAndSaveProfilePicture(String url) async {
+  try {
+    // Get the directory to save the file
+    final directory = await getApplicationDocumentsDirectory();
+
+    // Generate a file path for the profile picture
+    final filePath = '${directory.path}/profile_picture.jpg';
+
+    // Download the image from the network
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      // Save the file locally
+      final file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+      return filePath;  // Return the local path
+    } else {
+      throw Exception('Failed to download profile picture');
+    }
+  } catch (e) {
+    throw Exception('Error saving profile picture: $e');
   }
 }
 

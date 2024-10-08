@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -15,6 +19,7 @@ import 'package:vimeo_clone/bloc/subscribe_channel/subscribe_channel_event.dart'
 import 'package:vimeo_clone/bloc/theme/theme_bloc.dart';
 import 'package:vimeo_clone/config/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:vimeo_clone/config/internet_connectivity.dart';
 
 class SubscriptionsPage extends StatefulWidget {
   const SubscriptionsPage({super.key});
@@ -30,6 +35,9 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
   bool isSubscribed = false;
   int? mode;
   var channelLength = 0;
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
  Future<void> refreshData() async {
    context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
@@ -39,6 +47,24 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
  @override
   void initState() {
     // TODO: implement initState
+
+   CheckInternet.initConnectivity().then((List<ConnectivityResult> results) {
+     if (results.isNotEmpty) {
+       setState(() {
+         _connectionStatus = results;
+       });
+     }
+   });
+
+   _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+     if (results.isNotEmpty) {
+       CheckInternet.updateConnectionStatus(results).then((value) {
+         setState(() {
+           _connectionStatus = value;
+         });
+       });
+     }
+   });
 
     context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
     final subscriptionBloc = context.read<GetSubscribedChannelListBloc>();
@@ -50,6 +76,12 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
 
  @override
   Widget build(BuildContext context) {
@@ -87,7 +119,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    GoRouter.of(context).pushNamed('searchPage');
+                    GoRouter.of(context).pushNamed('searchSuggestionPage');
                   },
                   icon: const Icon(
                     HeroiconsOutline.magnifyingGlass,
@@ -109,7 +141,8 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
             ),
 
             SliverToBoxAdapter(
-              child: Column(
+              child: _connectionStatus.contains(connectivityCheck)
+                  ? customCircularProgressIndicator : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 10.h,),
@@ -127,13 +160,6 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: EdgeInsets.only(
-                  //     left: 15.w,
-                  //     right: 15.w
-                  //   ),
-                  //   child: Divider(thickness: 0.5, color: greyShade500,),
-                  // ),
                   SizedBox(height: 5.h,),
                   BlocBuilder<GetSubscribedChannelListBloc, GetSubscribedChannelListState>(
                     builder: (BuildContext context, GetSubscribedChannelListState state) {

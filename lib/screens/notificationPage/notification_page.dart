@@ -1,15 +1,22 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vimeo_clone/Config/colors.dart';
-import 'package:vimeo_clone/Config/constants.dart';
 import 'package:vimeo_clone/Screens/NotificationPage/Widgets/notification_card.dart';
 import 'package:vimeo_clone/bloc/get_notification/get_notification_bloc.dart';
 import 'package:vimeo_clone/bloc/get_notification/get_notification_event.dart';
 import 'package:vimeo_clone/bloc/get_notification/get_notification_state.dart';
 import 'package:vimeo_clone/model/get_notification_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:vimeo_clone/utils/widgets/no_internet_screen.dart';
+
+import '../../Config/colors.dart';
+import '../../config/constants.dart';
+import '../../config/internet_connectivity.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -23,10 +30,32 @@ class _NotificationPageState extends State<NotificationPage> {
   List<Today> today_data = [];
   List<Today> this_week_data = [];
   List<Today> older_data = [];
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   @override
   void initState() {
     // TODO: implement initState
+
+    CheckInternet.initConnectivity().then((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        setState(() {
+          _connectionStatus = results;
+        });
+      }
+    });
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        CheckInternet.updateConnectionStatus(results).then((value) {
+          setState(() {
+            _connectionStatus = value;
+          });
+        });
+      }
+    });
+
     context.read<GetNotificationBloc>().add(GetNotificationRequest());
     super.initState();
   }
@@ -34,6 +63,13 @@ class _NotificationPageState extends State<NotificationPage> {
 
   Future<void> _refreshNotification() async {
     context.read<GetNotificationBloc>().add(GetNotificationRequest());
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -49,8 +85,9 @@ class _NotificationPageState extends State<NotificationPage> {
 
       body: RefreshIndicator(
         onRefresh: _refreshNotification,
-        child: SingleChildScrollView(
-          child: BlocBuilder<GetNotificationBloc, GetNotificationState>(
+        child: _connectionStatus.contains(connectivityCheck)
+            ? customCircularProgressIndicator : SingleChildScrollView(
+          child:  BlocBuilder<GetNotificationBloc, GetNotificationState>(
             builder: (BuildContext context, GetNotificationState state) {
               if(state is GetNotificationLoaded){
 
@@ -200,10 +237,10 @@ class _NotificationPageState extends State<NotificationPage> {
                 );
               }
               else if(state is GetNotificationFailure){
-                ToastManager().showToast(
-                    context: context,
-                    message: AppLocalizations.of(context)!.somethingWentWrong
-                );
+                // ToastManager().showToast(
+                //     context: context,
+                //     message: AppLocalizations.of(context)!.somethingWentWrong
+                // );
               }
               return Container(
                 child: Center(child: Column(

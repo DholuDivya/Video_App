@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:hive/hive.dart';
@@ -51,6 +54,7 @@ import 'package:vimeo_clone/screens/SubscriptionScreen/subscription_page.dart';
 import 'package:vimeo_clone/screens/ShortsScreen/shorts_page.dart';
 import 'package:vimeo_clone/utils/widgets/custom_bottom_sheet_button.dart';
 import 'package:vimeo_clone/utils/widgets/custom_shorts_preview_homepage.dart';
+import 'package:vimeo_clone/utils/widgets/no_internet_screen.dart';
 import '../../Utils/Widgets/bottom_nav_bar.dart';
 import '../../bloc/add_video_to_playlist/add_video_playlist_bloc.dart';
 import '../../bloc/add_video_to_playlist/add_video_playlist_event.dart';
@@ -62,6 +66,7 @@ import '../../bloc/video_category/video_category_event.dart';
 import '../../bloc/video_list/video_list_bloc.dart';
 import '../../bloc/video_list/video_list_event.dart';
 import '../../config/colors.dart';
+import '../../config/internet_connectivity.dart';
 import '../../utils/widgets/customBottomSheet.dart';
 import '../../utils/widgets/custom_radio_button_list.dart';
 import '../../utils/widgets/custom_save_to_playlist.dart';
@@ -118,6 +123,7 @@ class _HomePageState extends State<HomePage> {
 
     NotificationService(context: context);
 
+    context.read<VideoCategoriesBloc>().add(GetCategoryEvent());
     context.read<GetSubscribedChannelListBloc>().add(GetSubscribedChannelListRequest());
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
     context.read<GetUserPlaylistBloc>().add(GetUserPlaylistRequest(channelId: int.parse(channelId!)));
@@ -309,9 +315,32 @@ class _HomePageContentState extends State<HomePageContent> {
   String localFilePath = "";
   late var shortsLength = 0;
   final userChannelId = Global.userData!.userChannelId;
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   @override
   void initState() {
+
+
+    CheckInternet.initConnectivity().then((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        setState(() {
+          _connectionStatus = results;
+        });
+      }
+    });
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        CheckInternet.updateConnectionStatus(results).then((value) {
+          setState(() {
+            _connectionStatus = value;
+          });
+        });
+      }
+    });
+
 
     context.read<GetShortsListBloc>().add(GetShortsListRequest());
     final shortBloc = context.read<GetShortsListBloc>();
@@ -346,9 +375,6 @@ class _HomePageContentState extends State<HomePageContent> {
   }
 
 
-
-
-
   List<Map<String, dynamic>> bottomSheetListTileField(BuildContext context){
     return [
       {
@@ -370,8 +396,6 @@ class _HomePageContentState extends State<HomePageContent> {
     ];
   }
 
-
-
   void showReportDialog(BuildContext context, int videoId) {
     showDialog(
       context: context,
@@ -380,7 +404,6 @@ class _HomePageContentState extends State<HomePageContent> {
       },
     );
   }
-
 
   void showPlaylistBottomSheet(int videoId, String userChannelId){
     showModalBottomSheet(
@@ -415,8 +438,18 @@ class _HomePageContentState extends State<HomePageContent> {
 
 
 
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    print('7777777777777777777    ${_connectionStatus}');
 
     // mode = context.read<ThemeBloc>().mode;
     // print('$mode   222222');
@@ -476,7 +509,9 @@ class _HomePageContentState extends State<HomePageContent> {
                         ],
                       )),
                   ),
-                  body: RefreshIndicator(
+                  body: _connectionStatus.contains(connectivityCheck)
+                      ? const NoInternetScreen()
+                      : RefreshIndicator(
                     onRefresh: _refreshVideosList,
                     child: Column(
                     children: [
@@ -491,7 +526,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                       shrinkWrap: true,
                                       itemCount: 8,
                                       itemBuilder: (context, index) {
-                            
+
                                         if (index == 2) {
                                           return Container(
                                             height: 400.h,
@@ -520,8 +555,8 @@ class _HomePageContentState extends State<HomePageContent> {
                                             ),
                                           );
                                         }
-                            
-                            
+
+
                                         return Padding(
                                           padding: EdgeInsets.only(top: 20.h),
                                           child: Column(
@@ -662,7 +697,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                         //     }
                                         //   }
                                         // }
-                            
+
                                         // Adjust the index to access the correct video item
                                         // final adjustedIndex = index - ((index + 4) ~/ 5);
                                         final adjustedIndex = index - _calculateShortsBeforeIndex(index, videoLength, shortsLength);
@@ -687,7 +722,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                                     message: AppLocalizations.of(context)!.errorInHive
                                                 );
                                               }
-                            
+
                                             },
                                             child: VideoListItem(
                                               onTap: () {
@@ -769,7 +804,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                         }else{
                                           return const Center(child: CircularProgressIndicator(),);
                                         }
-                            
+
                                       },
                                     ),
                                   );
@@ -787,7 +822,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                         shrinkWrap: true,
                                         itemCount: 8,
                                         itemBuilder: (context, index) {
-                                    
+
                                           return Padding(
                                             padding: EdgeInsets.only(top: 20.h),
                                             child: Column(
@@ -1513,7 +1548,8 @@ class _HomePageContentState extends State<HomePageContent> {
           );
           // return Center(child: CircularProgressIndicator(),);
         } else if (state is VideoCategoriesLoaded) {
-          return Container(
+          return _connectionStatus.contains(connectivityCheck)
+              ? SizedBox.shrink() : Container(
             height: ScreenSize.screenHeight(context) * 0.04,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,

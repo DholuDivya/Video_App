@@ -15,17 +15,12 @@ class DownloadedVideosPage extends StatefulWidget {
 }
 
 class _DownloadedVideosPageState extends State<DownloadedVideosPage> {
-  late Box<DownloadedVideoModel> videoBox;
+  Future<Box<DownloadedVideoModel>>? videoBoxFuture;
 
   @override
   void initState() {
     super.initState();
-    openVideoBox();
-  }
-
-  Future<void> openVideoBox() async {
-    videoBox = await Hive.openBox<DownloadedVideoModel>('videos');
-    setState(() {});
+    videoBoxFuture = Hive.openBox<DownloadedVideoModel>('videos');
   }
 
   @override
@@ -34,43 +29,23 @@ class _DownloadedVideosPageState extends State<DownloadedVideosPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.downloads),
       ),
-      body: videoBox == null || !videoBox.isOpen // Check if videoBox is initialized and open
-          ? Center(
-        child: CircularProgressIndicator(), // Show a loading indicator while videoBox is being initialized
-      )
-          :videoBox.isEmpty
-          ? Container(
-              // color: yellow,
-              child: Center(child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    // color: red,
-                    height: 120.h,
-                    width: 240.w,
-                    child: Image.asset('assets/images/no_data.png'),
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.noVideosDownloadedYet,
-                    style: TextStyle(
-                        fontFamily: fontFamily,
-                        fontSize: 15.sp
-                    ),
-                  ),
-                ],
-                ),)
-              )
-          : ValueListenableBuilder(
-        valueListenable: videoBox.listenable(),
-        builder: (context, Box<DownloadedVideoModel> box, _) {
-          if (box.isEmpty) {
-            return Container(
-                // color: yellow,
-                child: Center(child: Column(
+      body: FutureBuilder<Box<DownloadedVideoModel>>(
+        future: videoBoxFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return customCircularProgressIndicator;
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(AppLocalizations.of(context)!.somethingWentWrong),
+            );
+          } else if (snapshot.hasData) {
+            final videoBox = snapshot.data!;
+            if (videoBox.isEmpty) {
+              return Center(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      // color: red,
                       height: 120.h,
                       width: 240.w,
                       child: Image.asset('assets/images/no_data.png'),
@@ -79,41 +54,46 @@ class _DownloadedVideosPageState extends State<DownloadedVideosPage> {
                       AppLocalizations.of(context)!.noVideosDownloadedYet,
                       style: TextStyle(
                         fontFamily: fontFamily,
-                        fontSize: 15.sp
+                        fontSize: 15.sp,
                       ),
                     ),
                   ],
-                ),)
-            );
-          } else {
-            return ListView.builder(
-              itemCount: box.length,
-              itemBuilder: (context, index) {
-                DownloadedVideoModel video = box.getAt(index)!;
-
-
-                return Padding(
-                  padding: const EdgeInsets.only(
-                    // top: 10.h
-                  ),
-                  child: CustomDownloadVideoPreview(
-                    onTap: (){
-                      Future.delayed(const Duration(milliseconds: 200), () {
-                        GoRouter.of(context).pushNamed('playDownloadedVideo', extra: video);
-                      });
+                ),
+              );
+            } else {
+              return ValueListenableBuilder(
+                valueListenable: videoBox.listenable(),
+                builder: (context, Box<DownloadedVideoModel> box, _) {
+                  return ListView.builder(
+                    itemCount: box.length,
+                    itemBuilder: (context, index) {
+                      DownloadedVideoModel video = box.getAt(index)!;
+                      return Padding(
+                        padding: const EdgeInsets.only(),
+                        child: CustomDownloadVideoPreview(
+                          onTap: () {
+                            Future.delayed(const Duration(milliseconds: 200), () {
+                              GoRouter.of(context).pushNamed('playDownloadedVideo', extra: video);
+                            });
+                          },
+                          onShowMorePressed: () async {
+                            await box.deleteAt(index);
+                          },
+                          imageUrl: video.videoThumbnail!,
+                          videoTitle: video.videoTitle!,
+                          videoViews: video.videoViews!,
+                          uploadTime: video.videoCreateAtHuman!,
+                          videoDuration: video.videoDuration!,
+                        ),
+                      );
                     },
-                      onShowMorePressed: () async {
-                        await box.deleteAt(index);
-                      },
-                      imageUrl: video.videoThumbnail!,
-                      videoTitle: video.videoTitle!,
-                      videoViews: video.videoViews!,
-                      uploadTime: video.videoCreateAtHuman!,
-                      videoDuration: video.videoDuration!
-                  ),
-                );
-
-              },
+                  );
+                },
+              );
+            }
+          } else {
+            return Center(
+              child: Text(AppLocalizations.of(context)!.noVideosDownloadedYet),
             );
           }
         },

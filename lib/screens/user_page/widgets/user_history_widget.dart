@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +22,7 @@ import 'package:vimeo_clone/utils/widgets/shimmer.dart';
 import '../../../bloc/get_user_playlist/get_user_playlist_bloc.dart';
 import '../../../bloc/get_user_playlist/get_user_playlist_event.dart';
 import '../../../config/global_variable.dart';
+import '../../../config/internet_connectivity.dart';
 import '../../../utils/widgets/customBottomSheet.dart';
 import '../../../utils/widgets/custom_save_to_playlist.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -34,10 +38,32 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
 
   var historyLength = 0;
   final userChannelId = Global.userData!.userChannelId;
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   @override
   void initState() {
     // TODO: implement initState
+
+    CheckInternet.initConnectivity().then((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        setState(() {
+          _connectionStatus = results;
+        });
+      }
+    });
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      if (results.isNotEmpty) {
+        CheckInternet.updateConnectionStatus(results).then((value) {
+          setState(() {
+            _connectionStatus = value;
+          });
+        });
+      }
+    });
+
     context.read<GetUserHistoryBloc>().add(GetUserHistoryRequest());
 
     final historyBloc = context.read<GetUserHistoryBloc>();
@@ -91,16 +117,22 @@ class _UserHistoryWidgetState extends State<UserHistoryWidget> {
     });
   }
 
-
   List<int> selectedToRemove = [];
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GetUserHistoryBloc, GetUserHistoryState>(
       builder: (BuildContext context, GetUserHistoryState state) {
         if(state is GetUserHistorySuccess){
-          return state.userHistory.length != 0 ? Column(
+          return _connectionStatus.contains(connectivityCheck)
+              ? SizedBox.shrink() : state.userHistory.length >= 2 ? Column(
             children: [
               Padding(
                 padding: EdgeInsets.only(
